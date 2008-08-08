@@ -18,8 +18,9 @@ require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'wp-plugins'.DIRECTORY_SEPARA
 $db->create_openid_tables();
 
 $blogdata = array(
-  'name'=>'',
-  'description'=>'',
+  'home'=>$request->base,
+  'name'=>'Latest Updates',
+  'description'=>'all the latest info',
   'wpurl'=>$request->base,
   'url'=>$request->base,
   'atom_url'=>$request->base."?posts.atom",
@@ -33,6 +34,8 @@ $blogdata = array(
 );
 
 $optiondata = array(
+  'date_format'=>'F j, Y',
+  'gmt_offset'=>(date('Z') / 3600),
   'xrds_simple'=>array(),
   'oauth_services'=>array(),
   'oauth_version'=>0.12,
@@ -53,7 +56,7 @@ define('ARRAY_N', 'ARRAY_N', false);
 
 $wp_version = 2.6;
 $wpdb = new wpdb();
-$wp_query = new wpquery();
+$wp_query = new WP_Query();
 $post = new wppost();
 $limit_max = get_option( 'posts_per_page' );
 $limit_offset = 0;
@@ -359,12 +362,21 @@ class dbfield {
   }
 }
 
-class wpquery {
+class WP_Query {
   var $in_the_loop = false;
   function get_queried_object() {
     return array();
   }
-  function wpquery() {
+  function WP_Query() {
+  }
+  function get() {
+    return array();
+  }
+  function have_posts() {
+    return have_posts();
+  }
+  function the_post() {
+    return the_post();
   }
 }
 
@@ -477,7 +489,21 @@ function is_user_logged_in() {
 function wp_clearcookie() {
   
 }
-
+ function timer_stop(){
+ return;
+ }
+function the_title_attribute() {
+  the_title();
+}
+function get_num_queries() {
+  return 0;
+}
+function wp_meta() {
+  echo "";
+}
+function trackback_rdf() {
+  echo "";
+}
 function wp_setcookie( $userlogin, $md5pass, $var1 = true, $var2 = '', $var3 = '', $var4 = true ) {
   
 }
@@ -633,7 +659,25 @@ function get_header() {
   
   include('header.php');
 }
+function is_page() {
+  return false;
+}
+function is_category() {
+  return false;
+}
 
+function comments_link() {
+  echo "";
+}
+function is_day() {
+  return false;
+}
+function is_month() {
+  return false;
+}
+function is_year() {
+  return false;
+}
 function get_header_image() {
   return "there-is-no-image.jpg";
 }
@@ -675,6 +719,15 @@ function get_objects_in_term( $category_id, $post_tag ) {
   return array();
 }
 
+function wp_list_pages() {
+  return array();
+}
+function next_posts_link() {
+  echo "";
+}
+function previous_posts_link() {
+  echo "";
+}
 function get_term( $category_id, $post_tag ) {
   return new wptag();
 }
@@ -709,12 +762,39 @@ function the_post() {
   }
   return "";
 }
-
+function get_links() {
+  echo "";
+}
+function the_excerpt() {
+  echo "";
+}
+function get_post_meta() {
+  return array();
+}
+function wp_link_pages() {
+  echo "";
+}
+function the_search_query() {
+  echo "";
+}
+function comments_open() {
+  return true;
+}
+function wp_list_categories() {
+  echo "";
+}
+function post_comments_feed_link() {
+  echo "";
+}
 function the_permalink() {
   global $the_post;
   url_for(array('resource'=>'posts','id'=>$the_post->id));
 }
-
+function the_date($timestamp=false) {
+  if (!$timestamp)
+      $timestamp = time();
+  echo date( get_settings('date_format'), $timestamp );
+}
 function the_time( $format = "g:i A" ) {
   global $the_post;
   $timestamp = strtotime($the_post->created);
@@ -722,7 +802,12 @@ function the_time( $format = "g:i A" ) {
       $timestamp = time();
   echo date( $format, $timestamp );
 }
-
+function wp_loginout() {
+  echo "";
+}
+function wp_register() {
+  echo "";
+}
 function the_tags( $var1="", $var2="", $var3="" ) {
   echo "";
 }
@@ -898,7 +983,43 @@ function posts_nav_link() {
   }
 
 }
-
+function is_author() {
+  return true;
+}
+function is_single() {
+  return false;
+}
+function is_attachment() {
+  return false;
+}
+function is_paged() {
+  return false;
+}
+function is_search() {
+  return false;
+}
+function is_date() {
+  return true;
+}
+function is_archive() {
+ return false;
+}
+function get_settings($opt) {
+  global $optiondata;
+  return $optiondata[$opt];
+}
+function wp_specialchars($var) {
+  return htmlspecialchars($var);
+}
+function is_home() {
+  return true;
+}
+function is_404() {
+  return false;
+}
+function load_theme_textdomain() {
+  return "";
+}
 function language_attributes() {
   echo "";
 }
