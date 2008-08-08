@@ -1,0 +1,13 @@
+<?php print "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"; ?>
+<opml version="1.1">
+
+  <head>
+    <title>Untitled OPML Collection</title>
+    <dateCreated><?php print $collection->updated; ?></dateCreated>
+  </head>
+
+  <body>
+    <?php content_for_layout(); ?>
+  </body>
+
+</opml>

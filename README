@@ -1,0 +1,8 @@
+edit the app/config/config.yml with your database settings
+
+the ajaxy uploader with progress bar requires a /cache folder with permissions for the Web server process owner to create files
+
+dbscript will create the database tables as they are needed
+
+and you are done!
+

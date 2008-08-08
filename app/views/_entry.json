@@ -1,0 +1,13 @@
+<?php
+
+lib_include( 'json' );
+
+$json = new Services_JSON();
+
+$data = array();
+
+$Member = $collection->MoveFirst();
+
+print $json->encode( $Member->attributes );
+
+?>

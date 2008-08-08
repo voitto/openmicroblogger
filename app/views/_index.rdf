@@ -1,0 +1,113 @@
+<?php
+
+global $db;
+
+$config = array(
+
+  "db_host"=>$db->host,
+  "db_name"=>$db->dbname,
+  "db_user"=>$db->user,
+  "db_pwd"=>$db->pass,
+  
+  #"obj_props"=>array(), // a list of object property IRIs
+  #"dt_props"=>array(), // a list of datatype property IRIs
+  
+  /* add_data parameters */
+  #"loader_id2val_sql_buffer_size"=>200000,
+  #"loader_triple_sql_buffer_size"=>200000,
+  #"loader_id_cache_size"=>2000,
+  
+  /* misc */
+  #"api_val2id_cache_size"=>2000, 
+  #"max_describe_depth"=>3, /* DESCRIBE: bnode-path-depth */
+  
+  /* proxy */
+  #"proxy_host"=>"192.168.0.2",
+  #"proxy_port"=>8080
+  
+  /* store prefix */
+  "prefix"=>"db_",
+  
+  /* store */
+  "store_type"=>"basic+",            // (basic|basic+|split)
+  "id_type"=>"incr_int",             // (hash_int|hash_md5|hash_sha1|incr_int)
+  "reversible_consolidation"=>false, // adds additional columns
+  "index_type"=>"advanced",          // (basic|advanced)
+  "index_graph_iris"=>false,         // add graph columns to indexes
+  "index_words"=>false,              // creates FULLTEXT index on values
+  "charset"=>"utf8"                  // for MySQL, if supported
+  
+);
+
+$arc_inc_path = library_path()."arc".DIRECTORY_SEPARATOR;
+
+include( $arc_inc_path."ARC_api.php" );
+
+$api = new ARC_api( array( "inc_path"=>$arc_inc_path, "config"=>$config ));
+
+if(!$api->db_connect()){
+  header("Content-Type: text/plain; charset=utf-8");
+  echo "An error occurred:\n ".$api->print_errors(1);
+  exit;
+}
+
+$success = $api->create_store();
+
+foreach(array("output", "result_type", "format", "query", "jsonp", "jsonc", "jsoni") as $cur_arg){
+  
+  $$cur_arg="";
+  
+  if(isset($_POST[$cur_arg])){
+    $$cur_arg=(strpos($_POST[$cur_arg], "%20")) ? stripslashes(rawurldecode($_POST[$cur_arg])) : stripslashes(urldecode($_POST[$cur_arg]));
+  }
+  
+  elseif(isset($_GET[$cur_arg])){
+    $$cur_arg=(strpos($_GET[$cur_arg], "%20")) ? stripslashes(rawurldecode($_GET[$cur_arg])) : stripslashes(urldecode($_GET[$cur_arg]));
+  }
+
+}
+
+// That's a bit hacky
+
+if(!$query){
+  header("Content-Type: text/plain; charset=utf-8");
+  echo "Missing parameter: 'query'";
+  exit;
+}
+
+$rt=$output ? $output : ($format ? $format : ($result_type ? $result_type : "xml"));
+
+$args = array(
+  "query"=>$query,
+  "result_type"=>$rt, 
+  "result_type_args"=>array("jsonp"=>$jsonp, "jsonc"=>$jsonc, "jsoni"=>$jsoni)
+);
+
+$qr = $api->query($args);
+
+if ($qr["error"]){
+
+  echo $qr["error"];
+
+} else {
+  
+  if($rt=="xml"){
+    //header("Content-Type: text/xml; charset=utf-8");
+    #header("Content-Type: application/sparql-results+xml; charset=utf-8");
+  }
+  elseif($rt=="json"){
+    //header("Content-Type: text/plain; charset=utf-8");
+    #header("Content-Type: application/sparql-results+json; charset=utf-8");
+  }
+  elseif($rt=="rdfxml"){
+    //header("Content-Type: text/xml; charset=utf-8");
+    #header("Content-Type: application/rdf+xml; charset=utf-8");
+  }
+  
+  echo $qr["result"];
+  
+}
+
+
+
+?>

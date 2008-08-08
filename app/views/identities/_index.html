@@ -1,0 +1,20 @@
+
+
+<?php if (isset($collection)) : ?>
+
+  <!-- list of collection members -->
+  <?php while ( $Member = $collection->MoveNext() ) : ?>
+    <a href="<?php print url_for( array( 'resource'=>$collection->resource, 'id'=>$Member->id,'action'=>'edit' ) ); ?>">
+      <?php print $Member->email_value . " "  . "<br>"; ?>
+    </a>
+  <?php endwhile; ?>
+  
+  <!-- empty collection message -->
+  <?php if ( count($collection->members) == 0 ) print "no entries found"; ?>
+  <br>
+  <!-- link to New Member page -->
+  <a href="<?php print url_for( array( 'resource'=>$collection->resource, 'action'=>'new' ) ); ?>">
+    Create a new <?php print classify($collection->resource); ?>
+  </a>
+  
+ <?php endif; ?>

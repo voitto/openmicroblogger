@@ -1,0 +1,29 @@
+
+<form action="<?php url_for( array( 'resource'=>$Member->table, 'id'=>$Member->id ) ); ?>" method="post" name="<?php echo $Member->table; ?>" id="<?php echo $Member->table; ?>" enctype="multipart/form-data">
+<div>
+<input name="method" type="hidden" value="delete" />
+<input name="entry[etag]" type="hidden" value="<?php print $Entry->etag; ?>" />
+<table border="0">
+
+<tr><th colspan="2">
+
+</th></tr>
+
+  <tr>
+    <td align="right"><b>Are you sure you want to delete the <b><?php print $Member->name; ?> category?</b></td>
+    <td valign="top" align="left"></td>
+  </tr>
+  <tr>
+    <td align="right"></td>
+    <td valign="top" align="left"></td>
+  </tr>
+
+  <tr>
+    <td align="right"><b></b></td>
+    <td valign="top" align="left"><br><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="Cancel" type="button" />
+
+<input value="Delete Category" type="submit" name="button_group" /></td>
+  </tr>
+</table>
+</div>
+</form>

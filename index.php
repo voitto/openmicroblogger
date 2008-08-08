@@ -1,0 +1,1 @@
+<?php include 'db' . DIRECTORY_SEPARATOR . 'boot.php'; ?>

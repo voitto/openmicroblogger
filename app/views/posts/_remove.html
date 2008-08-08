@@ -1,0 +1,32 @@
+<?php 
+
+  global $request;
+  $post = strtolower(classify($request->resource));
+
+?>
+
+
+<form action="<?php url_for( $request->resource ); ?>" method="post" name="<?php url_for( $request->resource ); ?>" id="<?php url_for( $request->resource ); ?>" enctype="multipart/form-data">
+<div>
+<input name="method" type="hidden" value="delete" />
+<input name="entry[etag]" type="hidden" value="<?php print $Entry->etag; ?>" />
+<table border="0">
+
+<tr><th colspan="2">
+<?php breadcrumbs(); ?>
+</th></tr>
+
+  <tr>
+    <td align="right" valign="top"><b><BR><BR></b></td>
+    <td valign="top" align="left"><BR><BR><?php print $Member->title; ?><BR><BR></td>
+
+  <tr>
+    <td align="right" valign="top"><b></b></td>
+    <td valign="top" align="left"><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="Cancel" type="button" />
+
+<input value="Delete" type="submit" name="button_group" /></td>
+  </tr>
+</table>
+</div>
+</form>
+

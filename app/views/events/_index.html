@@ -1,0 +1,11 @@
+<?php
+
+while ( $Member = $collection->MoveNext() ) {
+  render_partial( array(
+    'resource'=>'events',
+    'id'=>$Member->id,
+    'action'=>'entry'
+  ));
+}
+
+?>

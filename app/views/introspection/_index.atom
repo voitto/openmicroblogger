@@ -1,0 +1,17 @@
+  <workspace>
+    <atom:title><?php print "Resources"; ?></atom:title>
+<?php if (isset($collection)) : ?>
+<?php foreach ( $collection->members as $resource ) : ?>
+    <collection
+        href="<?php url_for( $resource ); ?>">
+      <atom:title><?php print ucwords($resource); ?></atom:title>
+      <accept>entry</accept>
+      <categories fixed="yes">
+        <atom:category
+          scheme=""
+          term="" />
+      </categories>
+    </collection>
+<?php endforeach; ?>
+<?php endif; ?>
+  </workspace>

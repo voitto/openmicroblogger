@@ -1,0 +1,46 @@
+<?php $link_type_options = array('Web page'=>'text/html','Atom feed'=>'application/atom+xml', 'RSS feed'=>'application/rss+xml'); ?>
+<form action="<?php url_for( 'links' ); ?>" method="post" name="links" id="links">
+<div>
+<input name="method" type="hidden" value="put" />
+<input name="entry[etag]" type="hidden" value="<?php print $Entry->etag; ?>" />
+<table border="0">
+
+<tr><th colspan="2">
+<?php breadcrumbs(); ?>
+</th></tr>
+
+  <tr>
+    <td align="right" valign="top"><b>Title</b></td>
+    <td valign="top" align="left"><input size="50" maxlength="255" id="link_title" name="link[title]" type="text" value="<?php print $Member->title; ?>" /></td>
+  </tr>
+  <tr>
+    <td align="right" valign="top"><b>Type</b></td>
+    <td valign="top" align="left"><select name="link[type]" size="1">
+    <?php foreach( $link_type_options as $opt=>$val ) : ?>
+
+    <option<?php if ( $Link->type == $val ) { print " selected"; } ?> value="<?php print $val; ?>"><?php print $opt; ?></option>
+
+  <?php endforeach; ?>
+
+
+</select></td>
+
+  </tr>
+  <tr>
+    <td align="right" valign="top"><b>Link</b></td>
+    <td valign="top" align="left"><input size="50" maxlength="255" id="link_href" name="link[href]" type="text" value="<?php print $Member->href; ?>" /></td>
+  </tr>
+  <tr>
+    <td align="right" valign="top"><b>Alternate Link</b></td>
+    <td valign="top" align="left"><input size="50" maxlength="255" id="link_xref" name="link[xref]" type="text" value="<?php print $Member->xref; ?>" /></td>
+  </tr>
+  <tr>
+    <td align="right" valign="top"><b></b></td>
+    <td valign="top" align="left"><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="Cancel" type="button" />
+
+<input value="Save Changes" type="submit" name="button_group" /></td>
+  </tr>
+</table>
+</div>
+</form>
+

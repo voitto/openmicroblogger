@@ -1,0 +1,267 @@
+#
+#    dbscript config file - config.yml
+#
+# author: [Brian Hendrickson, brian@dbscript.net]
+# websites: [http://dbscript.net, http://brianhendrickson.com]
+# copyright: (c) 2008 Brian Hendrickson
+#
+--- %YAML:1.1
+
+
+
+# database settings
+
+development:
+  adapter: mysql
+  database: test
+  username: root
+  password: 
+  host: localhost
+
+test:
+  adapter: mysql
+  database: test
+  username: root
+  password: 
+  host: localhost
+
+production:
+  adapter: mysql
+  database: test
+  username: root
+  password: 
+  host: localhost
+
+
+
+# environment settings
+
+env:
+  
+  site_title: 
+  
+  theme:
+  
+  remote_sources:
+    dbscript: dbscript.net/?apps
+  
+  enable_db: development
+  
+  goes: introspection
+  
+  authentication: email
+  
+  debug_enabled: true
+    
+  plugins:
+    - sessions
+    - validation
+    - security
+  
+  profile:
+    - postcode
+    - timezone
+    - country
+    - gender
+    - language
+    - fullname
+    - dob
+    - email
+  
+  email_from: root@localhost
+  email_name: Notifier
+  email_server: localhost
+  email_port: 25
+  email_user: 
+  email_pass: 
+  
+  openid_server: 
+  
+  xrds_services:
+    oauth:
+        type: 
+        uri: 
+        namespace_id: oauth
+        namespace_uri: 
+        priority: 10
+        local_id_handler: 
+    openid:
+        type: 
+        uri: 
+        namespace_id: openid
+        namespace_uri: http://openid.net/xmlns/1.0
+        priority: 10
+        local_id_handler: 
+  
+  awsAccessKey: 
+  awsSecretKey: 
+  awsBucket: 
+  
+  ldap_server: 
+  ldap_context: 
+  ldap_user_field: 
+  
+  ping_server: 
+  
+  blocks:
+    -categories
+  
+  collection_cache:
+    - posts:
+      duration : 0
+      location : cache
+    - identities:
+      duration : 0
+      location : cache
+  
+  content_types:
+    - 0:
+      id       : xhtml
+      qs       : "1.000"
+      type     : application/xhtml+xml
+      encoding : null
+      charset  : utf-8
+      language : en
+      size     : 1500
+    - 1:
+      id       : html
+      qs       : "1.000"
+      type     : text/html
+      encoding : null
+      charset  : iso-8859-1
+      language : en
+      size     : 3000
+    - 2:
+      id       : atom
+      qs       : "0.900"
+      type     : application/atom+xml
+      encoding : gzip
+      charset  : utf-8
+      language : en
+      size     : 1500
+    - 3:
+      id       : json
+      qs       : "0.000"
+      type     : application/javascript
+      encoding : gzip
+      charset  : utf-8
+      language : en
+      size     : 1500
+    - 4:
+      id       : wml
+      qs       : "0.900"
+      type     : text/vnd.wap.wml
+      encoding : null
+      charset  : utf-8
+      language : en
+      size     : 1500
+    - 5:
+      id       : ics
+      qs       : "0.000"
+      type     : text/plain
+      encoding : null
+      charset  : iso-8859-1
+      language : en
+      size     : 3000
+    - 6:
+      id       : vcf
+      qs       : "0.000"
+      type     : text/plain
+      encoding : null
+      charset  : iso-8859-1
+      language : en
+      size     : 3000
+    - 7:
+      id       : xml
+      qs       : "0.000"
+      type     : text/xml
+      encoding : null
+      charset  : utf-8w
+      language : en
+      size     : 1500
+    - 8:
+      id       : xrds
+      qs       : "0.100"
+      type     : application/xrds+xml
+      encoding : null
+      charset  : utf-8
+      language : en
+      size     : 1500
+    - 9:
+      id       : sqljson
+      qs       : "0.000"
+      type     : application/sparql-results+json
+      encoding : null
+      charset  : utf-8
+      language : en
+      size     : 1500
+    - 10:
+      id       : sqlxml
+      qs       : "0.000"
+      type     : application/sparql-results+xml
+      encoding : null
+      charset  : utf-8
+      language : en
+      size     : 1500
+    - 11:
+      id       : js
+      qs       : "0.000"
+      type     : application/javascript
+      encoding : gzip
+      charset  : utf-8
+      language : en
+      size     : 1500
+    - 12:
+      id       : rss
+      qs       : "0.900"
+      type     : application/rss+xml
+      encoding : null
+      charset  : utf-8
+      language : en
+      size     : 1500
+    - 13:
+      id       : rdf
+      qs       : "0.000"
+      type     : application/rdf+xml
+      encoding : null
+      charset  : utf-8
+      language : en
+      size     : 1500
+    - 14:
+      id       : foaf
+      qs       : "0.000"
+      type     : application/rdf+xml
+      encoding : null
+      charset  : utf-8
+      language : en
+      size     : 1500
+  
+  app_folder: app
+  view_folder: views
+  layout_folder: views
+  show_timer: false
+  
+  enable_db_sessions: yes
+  enable_db_versions: yes
+  
+  project_name: 
+  
+  package_name: 
+  package_version:
+  
+  load_paths:
+    model              : models
+    apphome            : 
+    apppath            : 
+    lib                : 
+    controller         : 
+    config             : 
+    router             : 
+    log                : 
+    public             : 
+    stylesheet         : 
+    javascript         : 
+    image              : 
+  
+  
+  

@@ -1,0 +1,14 @@
+<rdf:RDF 
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" 
+      xmlns:foaf="http://xmlns.com/foaf/0.1/"> 
+ 
+<foaf:Person>
+  <foaf:name><?php print $Member->given_name . " " . $Member->family_name; ?></foaf:name>
+  <foaf:homepage rdf:resource="http://<?php print $Member->url; ?>"/> 
+  <foaf:depiction rdf:resource="http://<?php url_for( array( 'resource'=>'identities', 'id'=>$Member->id, 'action'=>'photo.jpg' )); ?>"/> 
+  <foaf:mbox rdf:resource="mailto:<?php print $Member->email_value; ?>"/> 
+  <foaf:mbox_sha1sum><?php print sha1($Member->email_value); ?></foaf:mbox_sha1sum> 
+</foaf:Person>
+
+</rdf:RDF>
