@@ -162,6 +162,10 @@ function wp_set_post_fields( &$model, &$rec ) {
   
   if (isset( $_POST['link']['href'] )) {
     $href = trim($_POST['link']['href']);
+    
+    if (strpos($href, 'http') === false)
+      $href = 'http://'.$href;
+      
     $tinyapi = 'http://tinyurl.com/api-create.php?url=' . $href;
     $result = false;
     if (!empty($href)) {
