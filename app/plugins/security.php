@@ -2,7 +2,7 @@
 
   /** 
    * dbscript -- restful openid framework
-   * @version 0.5.0 -- 8-August-2008
+   * @version 0.5.0 -- 12-August-2008
    * @author Brian Hendrickson <brian@dbscript.net>
    * @link http://dbscript.net/
    * @copyright Copyright 2008 Brian Hendrickson
@@ -334,6 +334,7 @@ function _email( &$vars ) {
     $ident = $Identity->find_by('token',$request->params['ident']);
     if ($ident) {
       $email = $ident->email_value;
+      $_SESSION['openid_email'] = $email;
       $ident->set_value('token','');
       $ident->save_changes();
     } else {
@@ -374,6 +375,7 @@ function _register( &$vars ) {
     $ident = $Identity->find_by('token',$request->params['ident']);
     if ($ident) {
       $email = $ident->email_value;
+      $_SESSION['openid_email'] = $email;
       $ident->set_value('token','');
       $ident->save_changes();
     } else {

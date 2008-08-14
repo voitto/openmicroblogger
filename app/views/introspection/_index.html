@@ -78,20 +78,18 @@
 <?php if (member_of('administrators')) : ?>
       
       <table align="center" >
-      <tr><tr><p><b>Manage:</b></p></td></tr>
+      <tr><tr><p><b>Admin:</b></p></td></tr>
       <?php $tabs = introspect_tables(); ?>
       <?php foreach ( $tabs as $resource ) : ?>
+          <?php if (in_array($resource,array('groups','categories','identities','links','posts','pages'))) : ?>
         <tr>
           <td>
-          <?php if (in_array($resource,array('posts','categories'))) : ?>
-            <a href="<?php url_for( array( 'resource'=>$resource, 'action'=>'manage/partial' )); ?>">
-            <?php else : ?>
             <a href="<?php url_for( $resource ); ?>">
-            <?php endif; ?>
              <p><?php print ucwords($resource) . ""; ?></p>
             </a>
           </td>
         </tr>
+            <?php endif; ?>
       <?php endforeach; ?>
       </table>
       

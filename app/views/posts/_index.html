@@ -2,12 +2,12 @@
 <table align="center" cellpadding="3" cellspacing="0" border="0">
 
 
-
+<?php global $request; ?>
   <?php while( $Member = $collection->MoveNext() ) : ?>
 
     <tr>
       <td>
-        <h1><a href="<?php url_for( array( 'resource'=>'posts', 'id'=>$Member->id )); ?>">
+        <h1><a href="<?php url_for( array( 'resource'=>$request->resource, 'id'=>$Member->id )); ?>">
         <?php print $Member->title; ?>
         </a></h1>
       </td>

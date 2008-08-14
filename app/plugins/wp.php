@@ -19,7 +19,8 @@ $db->create_openid_tables();
 
 $blogdata = array(
   'home'=>$request->base,
-  'name'=>'Latest Updates',
+  'name'=>environment('site_title'),
+  'name'=>environment('site_subtitle'),
   'description'=>'all the latest info',
   'wpurl'=>$request->base,
   'url'=>$request->base,
@@ -572,7 +573,7 @@ function wp_head() {
       echo '<meta http-equiv="X-XRDS-Location" content="'.$request->uri.'.xrds" />'."\n";
       echo '<meta http-equiv="X-Yadis-Location" content="'.$request->uri.'.xrds" />'."\n";
     }
-    echo '<link rel="stylesheet" type="text/css" href="app/views/wp-themes/prologue-theme/menu.css" />'."\n";
+    echo '<link rel="stylesheet" type="text/css" href="'.$request->layout_path.'wp-themes/prologue-theme/menu.css" />'."\n";
     echo '<script src="stuHover.js" type="text/javascript"></script>'."\n";
 }
 
@@ -617,7 +618,13 @@ function wp_insert_post( $arr ) {
 }
 
 function wp_list_cats() {
-  echo "";
+  global $request;
+  $blocks = environment('blocks');
+  if (!empty($blocks)) {
+    foreach ($blocks as $b) {
+      echo '<script type="text/javascript" src="'.$request->url_for(array('resource'=>$b,'action'=>'block.js')).'"></script>';
+    }
+  }
 }
 
 function wp_get_current_commenter() {
@@ -634,7 +641,6 @@ function wp_get_archives($type) {
 
 function get_header() {
   global $request;
-  
   // this should be a separate filter, but it catches
   // folks who are not completely set-up and sends them
   // to the identity edit form to add a photo and nickname
@@ -864,11 +870,12 @@ function the_content( $linklabel ) {
   $title = $the_post->title;
   
   if (strpos($title, 'http') !== false || strpos($title, '@') !== false) {
+    $title = str_replace("\n"," ",$title);
     $expl = explode( " ", $title );
     if (is_array($expl)){
       foreach($expl as $k=>$v) {
         if (substr($v,0,1) == '@') {
-          $expl[$k] = "<a href=\"".$request->url_for(array('resource'=>''.$v))."\">@".substr($v,1)."</a>";
+          $expl[$k] = "@<a href=\"".$request->url_for(array('resource'=>''.substr($v,1)))."\">".substr($v,1)."</a>";
         }
         if (substr($v,0,4) == 'http') {
           $expl[$k] = "<a href=\"".$v."\">".$v."</a>";
@@ -1161,13 +1168,20 @@ function setup_postdata( $post ) {
 
 function dynamic_sidebar() {
   global $request;
+  
+  $app = environment('app_folder') . DIRECTORY_SEPARATOR;
+  if ( is_dir( $app . environment('view_folder') ) )
+    $app = $app . environment('view_folder').DIRECTORY_SEPARATOR;
+  else
+    $app = environment('view_folder').DIRECTORY_SEPARATOR;
+  
   $blocks = environment('blocks');
   if (!empty($blocks)) {
     foreach ($blocks as $b) {
       echo '<script type="text/javascript" src="'.$request->url_for(array('resource'=>$b,'action'=>'block.js')).'"></script>';
     }
   }
-    echo '<a href="http://openmicroblogger.org"><img src="app/views/wp-themes/prologue-theme/omb.gif" style="border:none;" alt="openmicroblogger.org" /></a>'."\n";
+    echo '<a href="http://openmicroblogger.org"><img src="'.$app.'wp-themes/prologue-theme/omb.gif" style="border:none;" alt="openmicroblogger.org" /></a>'."\n";
   return true;
 }
 

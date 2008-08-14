@@ -49,6 +49,8 @@ $request->connect(
 
 before_filter( 'omb_filter_posts', 'get_query' );
 
+// this sucks this should be in /controllers/posts.php
+
 function omb_filter_posts( &$model, &$db ) {
   global $request;
   if (isset($request->params['byid']) && $request->resource == 'posts' && $model->table == 'posts'){
@@ -60,7 +62,7 @@ function omb_filter_posts( &$model, &$db ) {
       'subscriptions.subscriber'=>$request->params['byid']
     );
     $model->set_param( 'find_by', $where );
-  } elseif (isset($request->params['forid']) && $request->resource == 'posts' && $model->table == 'posts') {
+  } elseif ($request->action == 'index' && isset($request->params['for']) && $request->resource == 'posts' && $model->table == 'posts') {
     trigger_error('The replies tab is to be implemented here', E_USER_ERROR);
     //$model->has_many( 'profile_id:subscriptions.subscribed' );
     //$model->set_groupby( 'id' );
@@ -70,13 +72,11 @@ function omb_filter_posts( &$model, &$db ) {
     //  'subscriptions.subscriber'=>$request->params['byid']
     //);
     //$model->set_param( 'find_by', $where );
-  } elseif ($model->table == 'posts' && $request->resource == 'posts' && $request->id == 0) {
+  } elseif ($request->action == 'index' && $model->table == 'posts' && $request->resource == 'posts' && $request->id == 0) {
     $where = array(
       'local'=>1
     );
     $model->set_param( 'find_by', $where );
-  } elseif ($model->table == 'posts' && $request->resource == 'posts') {
-    // meh
   }
 }
 
@@ -163,13 +163,13 @@ function wp_set_post_fields( &$model, &$rec ) {
   if (isset( $_POST['link']['href'] )) {
     $href = trim($_POST['link']['href']);
     
-    if (strpos($href, 'http') === false)
-      $href = 'http://'.$href;
-      
-    $tinyapi = 'http://tinyurl.com/api-create.php?url=' . $href;
     $result = false;
     if (!empty($href)) {
       
+    if (strpos($href, 'http') === false)
+      $href = 'http://'.$href;
+      
+      $tinyapi = 'http://tinyurl.com/api-create.php?url=' . $href;
       //$ch = curl_init($tinyapi);
       //$result = curl_exec($ch);
       //curl_close($ch);

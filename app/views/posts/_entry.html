@@ -1,6 +1,7 @@
 <?php 
 
   global $request;
+  $post = strtolower(classify($request->resource));
 
 ?>
 <table align="center" cellpadding="3" cellspacing="0" border="0"><tr><td colspan="2"><br></td></tr>
@@ -110,7 +111,8 @@
 <td align="right"><p></p></td>
   <td>
   <table align="center" cellpadding="3" cellspacing="0" border="0">
-  <?php $Post =& $db->model('Post'); $Post->has_one('profile_id:identities'); $Post->find_by('parent_id',$Member->id); ?>
+  <?php global $request; ?>
+  <?php $Post =& $db->model(tableize($request->resource)); $Post->has_one('profile_id:identities'); $Post->find_by('parent_id',$Member->id); ?>
   <?php while ($c = $Post->MoveNext()) : ?>
   <?php $replyauthor = $c->FirstChild('identities'); ?>
   <?php echo "<tr><td><p><font size=\"-1\">".'reply by '.$replyauthor->nickname."&nbsp; ".time_of($c->created)."</font></p></td></tr><tr><td><p>".htmlentities($c->title)."</p><br></td></tr>"; ?>
@@ -127,12 +129,12 @@
 <?php $i = 0; ?>
 
 <?php while ($i < $r->rating) : ?>
-<img src="app/views/reviews/full_star.gif" alt="*">
+<img src="<?php echo $request->layout_path; ?>reviews/full_star.gif" alt="*">
 <?php $i++; ?>
 <?php endwhile; ?>
 
 <?php while ($i < 5) : ?>
-<img src="app/views/reviews/empty_star.gif" alt="">
+<img src="<?php echo $request->layout_path; ?>reviews/empty_star.gif" alt="">
 <?php $i++; ?>
 <?php endwhile; ?>
 <?php print "<font size=\"-1\">".$reviewer->nickname." ".time_of($r->created)."</font><br>"; ?>
@@ -180,12 +182,12 @@
 
 <tr><td colspan="2"><p>Reply:</p>
 
-<form name="replypost" method="post" action="<?php url_for(array('resource'=>'posts')); ?>">
+<form name="replypost" method="post" action="<?php url_for(array('resource'=>$request->resource)); ?>">
 <input type="hidden" name="method" value="post">
-<textarea cols="40" maxlength="140" rows="5" name="post[title]"><?php if ($author) print "@".$author->nickname." "; ?></textarea>
-<input type="hidden" name="post[local]" value="1">
-<input type="hidden" name="post[parent_id]" value="<?php print $Member->id; ?>">
-<input type="hidden" name="post[profile_id]" value="<?php echo get_profile_id(); ?>">
+<textarea cols="40" maxlength="140" rows="5" name="<?php echo $post; ?>[title]"><?php if ($author) print "@".$author->nickname." "; ?></textarea>
+<input type="hidden" name="<?php echo $post; ?>[local]" value="1">
+<input type="hidden" name="<?php echo $post; ?>[parent_id]" value="<?php print $Member->id; ?>">
+<input type="hidden" name="<?php echo $post; ?>[profile_id]" value="<?php echo get_profile_id(); ?>">
 <input type="submit" value="Submit Reply">
 </form>
 
@@ -208,7 +210,7 @@
 <input type="radio" name="review[rating]" value="<?php print ($i+1); ?>">
 <?php $j = 0; ?>
 <?php while ($j < $i+1) : ?>
-<img src="app/views/reviews/full_star.gif" alt="*">
+<img src="<?php echo $request->layout_path; ?>reviews/full_star.gif" alt="*">
 <?php $j++; ?>
 <?php endwhile; ?>
 <BR>
@@ -242,7 +244,7 @@
 
 <tr><td colspan="2">
 
-<p><b><a href="<?php url_for( 'email_login' ); ?>">Sign In</a> to post comments</b></p>
+<p><b><a href="<?php url_for( 'email_login' ); ?>">Sign In</a> to post a reply</b></p>
 
 
 </td></tr>

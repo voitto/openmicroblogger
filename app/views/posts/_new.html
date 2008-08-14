@@ -8,8 +8,9 @@
 
 <form action="<?php url_for( $request->resource ); ?>" method="post" name="<?php url_for( $request->resource ); ?>" id="<?php url_for( $request->resource ); ?>" enctype="multipart/form-data">
 <div>
-<input name="MAX_FILE_SIZE" type="hidden" value="6000000">
-<input name="method" type="hidden" value="post">
+<input name="MAX_FILE_SIZE" type="hidden" value="6000000" />
+<input name="method" type="hidden" value="post" />
+<input name="<?php print $post; ?>[local]" value="1" type="hidden" />
 <table border="0">
 
     <tr><td colspan="2" valign="top"><p>&nbsp;</p></td></tr>
@@ -19,8 +20,10 @@
     <td valign="top" align="left"><input size="50" maxlength="255" id="<?php print $post; ?>_title" name="<?php print $post; ?>[title]" type="text" value="<?php print $Member->title; ?>"></td>
   </tr>
   
-    <tr><td colspan="2" valign="top"><p>&nbsp;</p></td></tr>
-
+  <tr>
+    <td align="right" valign="top"><b>Body</b></td>
+    <td valign="top" align="left"><textarea rows="4" style="width:350px;" cols="40" wrap="virtual" id="<?php print $post; ?>_body" name="<?php print $post; ?>[body]"><?php print $Member->body; ?></textarea></td>
+  </tr>
   
   <tr>
   <td align="right" valign="top"><b>Choose File</b></td>

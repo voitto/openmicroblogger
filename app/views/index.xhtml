@@ -26,11 +26,11 @@
     href="<?php print $atomfeed; ?>" />
 
 <?php endif; ?>
-  
+  <?php global $request; ?>
   <link rel="openid.server" href="<?php print environment('openid_server'); ?>" />
   <link rel="openid.delegate" href="" />
   
-  <link rel="stylesheet" type="text/css" href="app/views/style.css" />
+  <link rel="stylesheet" type="text/css" href="<?php echo $request->layout_path; ?>style.css" />
   
 </head>
 
