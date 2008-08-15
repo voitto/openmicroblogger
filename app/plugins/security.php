@@ -109,7 +109,9 @@ function begin_openid_authentication( &$request ) {
   
   global $db;
   
-  if (class_exists('MySQL')) {
+  $wp_openid_plugin_broken = true;
+  
+  if (class_exists('MySQL') || $wp_openid_plugin_broken) {
   
     wp_plugin_include(array(
       'wp-openid'
@@ -585,7 +587,9 @@ function openid_continue( &$vars ) {
   
   extract( $vars );
   
-  if (class_exists('MySQL')) {
+  $wp_openid_plugin_broken = true;
+  
+  if (class_exists('MySQL') || $wp_openid_plugin_broken) {
     
     global $openid;
     

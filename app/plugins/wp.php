@@ -218,8 +218,8 @@ class wpdb {
     if ( preg_match("/^\\s*(delete) /i",$query) )
       $query = str_replace("LIMIT 1","",$query);
 
-    if ( preg_match("/^\\s*(replace into) /i",$query) )
-      return;
+    //if ( preg_match("/^\\s*(replace into) /i",$query) )
+    //  return;
     
     $this->result = $db->get_result($query);
     if ( preg_match("/^\\s*(insert|delete|update|replace) /i",$query) ) {
@@ -622,7 +622,7 @@ function wp_list_cats() {
   $blocks = environment('blocks');
   if (!empty($blocks)) {
     foreach ($blocks as $b) {
-      echo '<script type="text/javascript" src="'.$request->url_for(array('resource'=>$b,'action'=>'block.js')).'"></script>';
+      echo '<li><script type="text/javascript" src="'.$request->url_for(array('resource'=>$b,'action'=>'block.js')).'"></script></li>';
     }
   }
 }
