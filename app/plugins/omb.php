@@ -166,26 +166,35 @@ function wp_set_post_fields( &$model, &$rec ) {
     $result = false;
     if (!empty($href)) {
       
-    if (strpos($href, 'http') === false)
-      $href = 'http://'.$href;
+      if (strpos($href, 'http') === false)
+        $href = 'http://'.$href;
       
-      $tinyapi = 'http://tinyurl.com/api-create.php?url=' . $href;
-      //$ch = curl_init($tinyapi);
-      //$result = curl_exec($ch);
-      //curl_close($ch);
+      if (strpos($href, 'tinyurl') === false) {
+
+        $tinyapi = 'http://tinyurl.com/api-create.php?url=' . $href;
+        //$ch = curl_init($tinyapi);
+        //$result = curl_exec($ch);
+        //curl_close($ch);
       
-      $tinyUrl = @file($tinyapi);
-      if (isset($tinyUrl[0]))
-        $result = $tinyUrl[0];
+        $tinyUrl = @file($tinyapi);
+        if (isset($tinyUrl[0]))
+          $result = $tinyUrl[0];
       
-      //$tinyHook = @fopen('http://tinyurl.com/api-create.php?url=$yourUrl,'r');
-      //if ($tinyHook) {
-      //    $tinyurl = fread($tinyHook, 1024);
-      //    fclose($tinyHook);
-      //}
+        if ($result)
+          $tinyurl = ' '.trim($result);
+        
+        //$tinyHook = @fopen('http://tinyurl.com/api-create.php?url=$yourUrl,'r');
+        //if ($tinyHook) {
+        //    $tinyurl = fread($tinyHook, 1024);
+        //    fclose($tinyHook);
+        //}
+        
+      } else {
       
-      if ($result)
-        $tinyurl = ' '.trim($result);
+        $tinyurl = $href;
+      
+      }
+      
     }
   }
   
@@ -406,8 +415,8 @@ function oauth_omb_subscribe( &$vars ) {
   $_SESSION['subscriber_notice_url'] = $endpoints[OMB_VERSION . '/postNotice'];
   $_SESSION['subscriber_update_url'] = $endpoints[OMB_VERSION . '/updateProfile'];
 
-  $_SESSION['listenee_id'] = $request->listenee_id;
-  $_SESSION['listener_uri'] = $request->listener_uri;
+  $_SESSION['listenee_id'] = trim($request->listenee_id);
+  $_SESSION['listener_uri'] = trim($request->listener_uri);
   
   // need the Oauth Request Token URL for the subscriber's host
   
@@ -458,16 +467,16 @@ function oauth_omb_subscribe( &$vars ) {
     if (!(isset($i->nickname)))
       trigger_error('the identity does not have a nickname', E_USER_ERROR);
     $omb_subscribe = array(
-      'omb_listener'          => $_SESSION['listener_uri'],
-      'omb_listenee'          => $i->profile,
       'omb_version'           => OMB_VERSION,
+      'omb_listener'          => trim($request->listener_uri),
+      'omb_listenee'          => $i->profile,
       'omb_listenee_profile'  => $i->profile,
       'omb_listenee_nickname' => $i->nickname,
       'omb_listenee_license'  => $i->license,
-      'omb_listenee_fullname' => $i->fullname,
-      'omb_listenee_homepage' => $i->url,
-      'omb_listenee_bio'      => $i->bio,
-      'omb_listenee_location' => $i->locality,
+      //'omb_listenee_fullname' => $i->fullname,
+      //'omb_listenee_homepage' => $i->url,
+      //'omb_listenee_bio'      => $i->bio,
+      //'omb_listenee_location' => $i->locality,
       'omb_listenee_avatar'   => $i->avatar
     );
   } else {
@@ -480,7 +489,7 @@ function oauth_omb_subscribe( &$vars ) {
   $req->set_parameter('oauth_callback', $callback_url);
 
   $req->sign_request($sha1_method, $con, $tok);
-
+//echo $req->to_url(); exit;
   header('Location: '.$req->to_url(),true,303);
   exit;  
 }
@@ -522,9 +531,8 @@ function oauth_authorize( &$vars ) {
   
 
   $listenee_params = array(
-    //'omb_listenee'  => '',
     'omb_listenee_fullname'  => 'fullname',
-    'omb_listenee_profile'   => 'profile',
+    'omb_listenee'           => 'profile',
     'omb_listenee_nickname'  => 'nickname',
     'omb_listenee_license'   => 'license',
     'omb_listenee_homepage'  => 'url',
@@ -537,15 +545,7 @@ function oauth_authorize( &$vars ) {
   $Person =& $db->get_table( 'people' );
   $Subscription =& $db->model('Subscription');
   
-  $i = $Identity->find_by( 'profile', urldecode($_GET['omb_listenee_profile']) );
-  
-  if (!$i) {
-    $i = $Identity->find_by( 'url', urldecode($_GET['omb_listenee_homepage']) );
-    if ($i) {
-      $i->set_value( 'profile', urldecode( $_GET['omb_listenee_profile'] ));
-      $i->save_changes();
-    }
-  }
+  $i = $Identity->find_by( 'profile', urldecode($_GET['omb_listenee']) );
   
   if (!$i) {
     
@@ -560,9 +560,13 @@ function oauth_authorize( &$vars ) {
         $i->set_value( $v, urldecode($_GET[$k]) );
       }
     }
-
+    
+    if (empty($i->attributes['url']) || !($Identity->is_unique_value( $i->attributes['url'], 'url' )))
+      $i->set_value( 'url', $i->attributes['profile'] );
+      
     $i->save_changes();
     $i->set_etag($p->id);
+    
   }
   
   $_SESSION['listenee_id'] = $i->id;
@@ -701,7 +705,7 @@ function oauth_omb_finish_subscribe( &$vars ) {
   
   $listener_params = array(
     'omb_listener_fullname'  => 'fullname',
-    'omb_listener_profile'   => 'profile',
+    //'omb_listener_profile'   => 'profile',
     'omb_listener_nickname'  => 'nickname',
     'omb_listener_license'   => 'license',
     'omb_listener_homepage'  => 'url',
@@ -713,22 +717,14 @@ function oauth_omb_finish_subscribe( &$vars ) {
   $Identity =& $db->get_table( 'identities' );
   $Person =& $db->get_table( 'people' );
 
-  $i = $Identity->find_by( 'profile', $_GET['omb_listener_profile'] );
+  $i = $Identity->find_by( 'profile', $_SESSION['listener_uri'] );
   
-  if (!$i) {
-    $i = $Identity->find_by( 'url', $_GET['omb_listener_homepage'] );
-    if ($i) {
-      $i->set_value('profile', $_GET['omb_listener_profile']);
-      $i->save_changes();
-    }
-  }
-    
   if (!$i) {
     // need to create the identity (and person?) because it was not found
     $p = $Person->base();
     $p->save();
     $i = $Identity->base();
-    $i->set_value( 'url', $_GET['omb_listener_homepage'] );
+    $i->set_value( 'profile', $_SESSION['listener_uri'] );
     $i->set_value( 'label', 'profile 1' );
     $i->set_value( 'person_id', $p->id );
     foreach($listener_params as $k=>$v ) {
@@ -736,6 +732,10 @@ function oauth_omb_finish_subscribe( &$vars ) {
         $i->set_value( $v, urldecode($_GET[$k]) );
       }
     }
+    
+    if (empty($i->attributes['url']) || !($Identity->is_unique_value( $i->attributes['url'], 'url' )))
+      $i->set_value( 'url', $i->attributes['profile'] );
+    
     $i->save_changes();
     $i->set_etag($p->id);
   }
@@ -894,7 +894,7 @@ function oauth_omb_post( &$vars ) {
   $sender = $Identity->find_by('profile',$listenee);
   
   if (!($sender))
-    $sender = $Identity->find_by('url',$listenee);
+    trigger_error('unable to find notice recipient', E_USER_ERROR);
 
   $content = $req->get_parameter('omb_notice_content');
   
@@ -944,6 +944,13 @@ function local_subscribe( &$vars ) {
     $sub->set_value('subscribed',$request->listenee_id);
     $sub->set_value('subscriber',get_profile_id());
     $sub->save_changes();
+    
+    $pro = get_profile($request->listenee_id);
+    $subber = get_profile();
+    
+    if (is_email($pro->email_value))
+      send_email( $pro->email_value, $subber->nickname . " is now following you on ".$request->domain, "\nhere's a link to the profile: \n\n    ".$subber->profile."\n\n", environment('email_from'), environment('email_name'), false );
+    
   }
   
   redirect_to( array(

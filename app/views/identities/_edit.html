@@ -7,7 +7,7 @@
 <table border="0">
 
 <tr><th colspan="2">
-<?php if (isset($_SESSION['message'])) { echo $_SESSION['message']; unset($_SESSION['message']); }?>
+<h2><?php if (isset($_SESSION['message'])) { echo $_SESSION['message']; unset($_SESSION['message']); }?></h2>
 </th></tr>
 
   <tr>
@@ -33,6 +33,10 @@
   <tr>
     <td align="right"><b>Jpeg Photo</b></td>
     <td valign="top" align="left"><input id="identity_photo" name="identity[photo]" type="file" /></td>
+  </tr>
+  <tr>
+    <td align="right"><b>License URL</b></td>
+    <td valign="top" align="left"><input size="50" maxlength="255" id="identity_license" name="identity[license]" type="text" value="<?php if (!empty($Member->license)) echo $Member->license; else echo 'http://creativecommons.org/licenses/BSD/'; ?>" /></td>
   </tr>
   <tr>
     <td align="right"><b></b></td>

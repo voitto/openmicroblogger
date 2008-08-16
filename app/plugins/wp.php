@@ -823,16 +823,17 @@ function the_title() {
 }
 
 function prologue_get_avatar( $current_user_id, $author_email, $pixels ) {
-  global $the_author,$request;
+  global $the_author,$request,$the_post;
   $avatar = "";
   if (!empty($the_author->avatar)) {
     $avatar = $the_author->avatar;
   } else {
     $p = get_profile();
-    $avatar = $p->avatar;
+    if (!isset($the_post->id) || ($the_author->id == $p->id))
+      $avatar = $p->avatar;
   }
   if (!(empty($avatar)))
-    return '<a href="'.$request->url_for(array('resource'=>$the_author->nickname)).'"><img alt="avatar" src="' . $avatar . '" style="width:'.$pixels.'px;height:'.$pixels.'px;" class="avatar" /></a>';
+    return '<a href="'.$the_author->profile.'"><img alt="avatar" src="' . $avatar . '" style="width:'.$pixels.'px;height:'.$pixels.'px;" class="avatar" /></a>';
 }
 
 function get_the_author_email() {
@@ -916,7 +917,7 @@ function get_author_feed_link( $id ) {
 function the_author_posts_link( ) {
   global $the_author,$request;
   echo '<a href="';
-  echo $request->url_for(array('resource'=>$the_author->nickname));
+  echo $the_author->profile;
   echo '" title="Posts by '.$the_author->nickname.'">'.$the_author->nickname.'</a>';
 }
 
