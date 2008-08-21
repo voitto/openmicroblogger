@@ -82,18 +82,18 @@ function broadcast_omb_notice( &$model, &$rec ) {
       $failed = false;
       
       for ($i=0;$i<5;$i++) {
-        $result = $fetcher->post( $post_to, $post_data );
-        if ( $result->status == 403 ) {
-          $db->delete_record($sub);
-        } else {
-          parse_str( $result->body, $return );
-          if ( is_array($return) && $return['omb_version'] == OMB_VERSION ) {
-            break;
-          }
-        }
-        if (strpos($request->base, 'openmicroblogger') !== false)
-          send_email( 'brian@megapump.com', 'retrying post', $notice_content, environment('email_from'), environment('email_name'), false );
-        sleep(2);
+        //$result = $fetcher->post( $post_to, $post_data );
+        //if ( $result->status == 403 ) {
+        //  $db->delete_record($sub);
+        //} else {
+        //  parse_str( $result->body, $return );
+        //  if ( is_array($return) && $return['omb_version'] == OMB_VERSION ) {
+        //    break;
+        //  }
+        //}
+        //if (strpos($request->base, 'openmicroblogger') !== false)
+        //  send_email( 'brian@megapump.com', 'retrying post', $notice_content, environment('email_from'), environment('email_name'), false );
+        //sleep(2);
       }
       
       
