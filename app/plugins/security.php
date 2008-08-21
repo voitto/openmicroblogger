@@ -95,6 +95,7 @@ function authenticate_with_openid() {
   
 }
 
+
 function begin_openid_authentication( &$request ) {
   
   if ( !isset( $request->openid_url ) || empty( $request->openid_url )) {
@@ -107,80 +108,91 @@ function begin_openid_authentication( &$request ) {
   
   $_SESSION['openid_url'] = $request->openid_url;
   
-  global $db;
+  if (class_exists('MySQL') && environment('openid_version') > 1)
+    start_wp_openid();
+  else
+    start_simple_openid();
+}
+
+
+function start_wp_openid() {
   
-  if (class_exists('MySQL')) {
+  global $request;
   
-    wp_plugin_include(array(
-      'wp-openid'
-    ));
+  wp_plugin_include(array(
+    'wp-openid'
+  ));
+
+  $logic = new WordPressOpenID_Logic(null);
+
+  $logic->activate_plugin();
   
-    $logic = new WordPressOpenID_Logic(null);
+  if( !WordPressOpenID_Logic::late_bind() )
+    return;
+
+  $redirect_to = '';
+
+  if( !empty( $_SESSION['requested_url'] ) )
+    $redirect_to = $_SESSION['requested_url'];
+
+  $claimed_url = $request->openid_url;
+
+  $consumer = WordPressOpenID_Logic::getConsumer();
+
+  $auth_request = $consumer->begin( $claimed_url );
+
+  if ( null === $auth_request )
+    trigger_error('OpenID server not found at '. htmlentities( $claimed_url ), E_USER_ERROR);
+
+  $return_to = $request->url_for( 'openid_continue' );
+
+  $store =& WordPressOpenID_Logic::getStore();
+
+  $sreg_request = Auth_OpenID_SRegRequest::build(array(),array(
+    'nickname',
+    'email',
+    'fullname'
+  ));
   
-    $logic->activate_plugin();
-    
-    if( !WordPressOpenID_Logic::late_bind() )
-      return;
+  $auth_request->addExtension($sreg_request);
   
-    $redirect_to = '';
+  $_SESSION['oid_return_to'] = $return_to;
+
+  WordPressOpenID_Logic::doRedirect($auth_request, $request->protected_url, $return_to);
+  exit(0);
   
-    if( !empty( $_SESSION['requested_url'] ) )
-      $redirect_to = $_SESSION['requested_url'];
+}
+
+
+function start_simple_openid() {
   
-    $claimed_url = $request->openid_url;
+  global $request;
   
-    $consumer = WordPressOpenID_Logic::getConsumer();
+  include_once $GLOBALS['PATH']['library'] . 'openid.php';
   
-    $auth_request = $consumer->begin( $claimed_url );
+  $openid = new SimpleOpenID;
+
+  $openid->SetIdentity( $request->openid_url );
+
+  $openid->SetApprovedURL( $request->url_for( 'openid_continue' )); // y'all come back now
+
+  $openid->SetTrustRoot( $request->protected_url ); // protected site
+  $openid->SetTrustRoot( $request->protected_url ); // protected site
+
+  $openid->SetOptionalFields(array(
+    'nickname',
+    'email',
+    'fullname'
+  )); 
   
-    if ( null === $auth_request )
-      trigger_error('OpenID server not found at '. htmlentities( $claimed_url ), E_USER_ERROR);
-  
-    $return_to = $request->url_for( 'openid_continue' );
-  
-    $store =& WordPressOpenID_Logic::getStore();
-  
-    $sreg_request = Auth_OpenID_SRegRequest::build(array(),array(
-      'nickname',
-      'email',
-      'fullname'
-    ));
-    
-    $auth_request->addExtension($sreg_request);
-    
-    $_SESSION['oid_return_to'] = $return_to;
-  
-    WordPressOpenID_Logic::doRedirect($auth_request, $request->protected_url, $return_to);
-    exit(0);
-  
-  } else {
-    
-    include_once $GLOBALS['PATH']['library'] . 'openid.php';
-  
-    $openid = new SimpleOpenID;
-  
-    $openid->SetIdentity( $request->openid_url );
-  
-    $openid->SetApprovedURL( $request->url_for( 'openid_continue' )); // y'all come back now
-  
-    $openid->SetTrustRoot( $request->protected_url ); // protected site
-    $openid->SetTrustRoot( $request->protected_url ); // protected site
-  
-    $openid->SetOptionalFields(array(
-      'nickname',
-      'email',
-      'fullname'
-    )); 
-    $openid->SetRequiredFields(array());
-    $server_url = $openid->GetOpenIDServer();
-  
-    $_SESSION['openid_server_url'] = $server_url;
-    #echo $server_url; exit;
-    $openid->SetOpenIDServer( $server_url );
-  
-    redirect_to( $openid->GetRedirectURL() );
-    
-  }
+  $openid->SetRequiredFields(array());
+  $server_url = $openid->GetOpenIDServer();
+
+  $_SESSION['openid_server_url'] = $server_url;
+  #echo $server_url; exit;
+  $openid->SetOpenIDServer( $server_url );
+
+  redirect_to( $openid->GetRedirectURL() );
   
 }
 
@@ -585,7 +597,9 @@ function openid_continue( &$vars ) {
   
   extract( $vars );
   
-  if (class_exists('MySQL')) {
+  $valid = false;
+  
+  if ( class_exists('MySQL') && environment('openid_version') > 1) {
     
     global $openid;
     
@@ -603,23 +617,24 @@ function openid_continue( &$vars ) {
     
     switch( $openid->response->status ) {
       case Auth_OpenID_CANCEL:
-        trigger_error('OpenID assertion cancelled', E_USER_ERROR );
+        trigger_error('The OpenID assertion was cancelled.', E_USER_ERROR );
         break;
       
       case Auth_OpenID_FAILURE:
-        trigger_error('OpenID assertion failed: ' . $openid->response->message, E_USER_ERROR);
+        trigger_error('Sorry, I could not validate your identity with the OpenID server. If you administer this site, you can try setting the openid_version to 1.', E_USER_ERROR );
         break;
       
       case Auth_OpenID_SUCCESS:
         $_SESSION['openid_complete'] = true;
+        $valid = true;
         break;
       
-      default:
-        trigger_error( "Sorry, the openid server $server_url did not validate your identity.", E_USER_ERROR );
     }
   
-  } else {
-    
+  }
+  
+  if (!($valid)) {
+  
     include $GLOBALS['PATH']['library'] . 'openid.php';
   
     $openid = new SimpleOpenID;
@@ -636,13 +651,13 @@ function openid_continue( &$vars ) {
   
     $valid = $openid->ValidateWithServer();
     
-    if ($valid)
-      $_SESSION['openid_complete'] = true;
-    else
-      trigger_error( "Sorry, the openid server $server_url did not validate your identity.", E_USER_ERROR );
-    
   }
   
+  if ($valid)
+    $_SESSION['openid_complete'] = true;
+  else
+    trigger_error( "Sorry, the openid server $server_url did not validate your identity.", E_USER_ERROR );
+
 
   complete_openid_authentication( $request );
   

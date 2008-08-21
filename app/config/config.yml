@@ -85,6 +85,7 @@ env:
   email_pass: 
   
   openid_server: https://e-cred.org/server
+  openid_version: 2
   
   xrds_services:
     oauth:
