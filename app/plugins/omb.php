@@ -401,6 +401,10 @@ function oauth_omb_subscribe( &$vars ) {
           foreach($typ as $t) {
             if (in_array($t,$omb_services))
               $end = $t;
+            if ($t == OAUTH_VERSION . '/endpoint/request') {
+              $data = $serv->getElements('xrd:LocalID');
+              $localid = $serv->parser->content($data[0]);
+            }
           }
           $req = $serv->getURIs();
           $endpoints[$end] = $req[0];
@@ -418,34 +422,50 @@ function oauth_omb_subscribe( &$vars ) {
   $_SESSION['listenee_id'] = trim($request->listenee_id);
   $_SESSION['listener_uri'] = trim($request->listener_uri);
   
-  // need the Oauth Request Token URL for the subscriber's host
-  
   $sha1_method = new OAuthSignatureMethod_HMAC_SHA1();
   $consumer = new OAuthConsumer($key, $secret, NULL);
   
-  // GETTING REQUEST TOKEN
+  $url = $_SESSION['subscriber_request_token_url'];
   
-  $rtoken = OAuthRequest::from_consumer_and_token($consumer, NULL, 'POST', $_SESSION['subscriber_request_token_url'], array());
-  $rtoken->sign_request($sha1_method, $consumer, NULL);
+  $parsed = parse_url($url);
+  $params = array();
   
-  $curl = curl_init($_SESSION['subscriber_request_token_url']);
+  parse_str($parsed['query'], $params);
   
-  curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-  curl_setopt($curl, CURLOPT_HEADER, false);
-  curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($curl, CURLOPT_POST, true);
-  curl_setopt($curl, CURLOPT_POSTFIELDS, $rtoken->to_postdata());
-  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-  $rtoken = curl_exec($curl);
-  curl_close($curl);
-
-  preg_match('/oauth_token=([^&]*)&oauth_token_secret=([^&]*)/', $rtoken, $rtoken);
-  $rtoken_secret = $rtoken[2];
-  $rtoken = $rtoken[1];
-  if ( !$rtoken ) { echo "Sorry, an invalid request token was returned: $rtoken"; exit; }
-  $_SESSION['rtoken'] = $rtoken;
+  $req = OAuthRequest::from_consumer_and_token( $consumer, NULL, "POST", $url, $params );
+  $req->set_parameter( 'omb_listener', $localid );
+  $req->set_parameter( 'omb_version', OMB_VERSION );
+  $req->sign_request( $sha1_method, $consumer, NULL );
+  
+  $post_to = $req->get_normalized_http_url();
+  $post_data = $req->to_postdata();
+  
+  //echo $post_to."<BR>".$post_data."<BR>"; exit;
+  
+  $client = Auth_Yadis_Yadis::getHTTPFetcher();
+  
+  for ($i=0; $i<5; $i++ ) {
+    $result = $client->post( $post_to, $post_data );
+    if (strpos($result->body, 'oauth_token') === false) {
+      if (strpos($request->base, 'openmicroblogger') !== false)
+        send_email( 'brian@megapump.com', 'retrying sub', $request->listenee_id." ".$request->listener_uri, environment('email_from'), environment('email_name'), false );
+      sleep(2);
+    } else {
+      break;
+    }
+  }
+  
+  parse_str( $result->body, $return );
+  
+  if (is_array($return) && count($return) > 0) {
+    $rtoken_secret = $return['oauth_token_secret'];
+    $rtoken = $return['oauth_token'];
+  } else {
+    echo "sorry, you will have to go back and submit the form again. the server \"".$post_to."\" said \"".$result->body."\" when I posted this data: <BR><BR> ".$post_data; exit;
+  }
   $_SESSION['rtoken_secret'] = $rtoken_secret;
-
+  $_SESSION['rtoken'] = $rtoken;
+  
   // finish_subscribe saves the profile
   $callback_url = $request->url_for( 'oauth_omb_finish_subscribe' );
   //echo 
@@ -468,7 +488,7 @@ function oauth_omb_subscribe( &$vars ) {
       trigger_error('the identity does not have a nickname', E_USER_ERROR);
     $omb_subscribe = array(
       'omb_version'           => OMB_VERSION,
-      'omb_listener'          => trim($request->listener_uri),
+      'omb_listener'          => $localid,
       'omb_listenee'          => $i->profile,
       'omb_listenee_profile'  => $i->profile,
       'omb_listenee_nickname' => $i->nickname,

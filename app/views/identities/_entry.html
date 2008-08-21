@@ -22,7 +22,7 @@ $subscribers = array();
 <br />
 <h2><?php echo $Member->nickname; ?>'s subscribers</h2>
 
-<?php $Subscription->find(); ?>
+<?php $Subscription->find_by('subscribed',$Member->id); ?>
 
 <?php while ($subscriber = $Subscription->MoveNext()) : ?>
   <?php if ($subscriber->subscribed == $Member->id) : ?>
@@ -32,10 +32,11 @@ $subscribers = array();
   <?php endif; ?>
 <?php endwhile; ?>
 
-<?php $Subscription->rewind(); ?>
 
 <br />
 <h2><?php echo $Member->nickname; ?>'s subscriptions</h2>
+
+<?php $Subscription->find_by('subscriber',$Member->id); ?>
 
 <?php while ($subscriber = $Subscription->MoveNext()) : ?>
 <?php if ($subscriber->subscriber == $Member->id) : ?>

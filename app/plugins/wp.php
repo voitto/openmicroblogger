@@ -218,8 +218,8 @@ class wpdb {
     if ( preg_match("/^\\s*(delete) /i",$query) )
       $query = str_replace("LIMIT 1","",$query);
 
-    //if ( preg_match("/^\\s*(replace into) /i",$query) )
-    //  return;
+    if ( preg_match("/^\\s*(replace into) /i",$query) )
+      return;
     
     $this->result = $db->get_result($query);
     if ( preg_match("/^\\s*(insert|delete|update|replace) /i",$query) ) {
@@ -865,7 +865,7 @@ function the_author_ID() {
 }
 
 function the_content( $linklabel ) {
-  global $the_post,$request;
+  global $the_post,$request,$the_author;
   $e = $the_post->FirstChild('entries');
   
   $title = $the_post->title;
@@ -876,7 +876,13 @@ function the_content( $linklabel ) {
     if (is_array($expl)){
       foreach($expl as $k=>$v) {
         if (substr($v,0,1) == '@') {
-          $expl[$k] = "@<a href=\"".$request->url_for(array('resource'=>''.substr($v,1)))."\">".substr($v,1)."</a>";
+          if ($the_post->local) {
+            $expl[$k] = "@<a href=\"".$request->url_for(array('resource'=>''.substr($v,1)))."\">".substr($v,1)."</a>";
+          } else {
+            $parsed = parse_url($the_author->profile);
+            $expl[$k] = "@<a href=\"".$parsed['scheme']."://".$parsed['host']."/".substr($v,1)."\">".substr($v,1)."</a>";
+          }
+          
         }
         if (substr($v,0,4) == 'http') {
           $expl[$k] = "<a href=\"".$v."\">".$v."</a>";
