@@ -81,22 +81,30 @@ function broadcast_omb_notice( &$model, &$rec ) {
       
       $failed = false;
       
-      for ($i=0;$i<5;$i++) {
-        //$result = $fetcher->post( $post_to, $post_data );
-        //if ( $result->status == 403 ) {
-        //  $db->delete_record($sub);
-        //} else {
-        //  parse_str( $result->body, $return );
-        //  if ( is_array($return) && $return['omb_version'] == OMB_VERSION ) {
-        //    break;
-        //  }
-        //}
+      // new Fetcher version of omb_notice
+      
+      //for ($i=0;$i<5;$i++) {
+        $result = $fetcher->post( $post_to, $post_data );
+        if ( $result->status == 403 ) {
+          if (strpos($request->base, 'openmicroblogger') !== false)
+            send_email( 'brian@megapump.com', 'delete subscription', 'listenee '.$listenee_uri, environment('email_from'), environment('email_name'), false );
+          $db->delete_record($sub);
+        } else {
+          parse_str( $result->body, $return );
+          if ( is_array($return) && $return['omb_version'] == OMB_VERSION ) {
+            //break;
+          } else {
+            if (strpos($request->base, 'openmicroblogger') !== false)
+              send_email( 'brian@megapump.com', 'failed to post', $notice_content, environment('email_from'), environment('email_name'), false );
+          }
+        }
         //if (strpos($request->base, 'openmicroblogger') !== false)
         //  send_email( 'brian@megapump.com', 'retrying post', $notice_content, environment('email_from'), environment('email_name'), false );
         //sleep(2);
-      }
+      //}
       
       
+      // this is the old CURL version of omb_notice
       
       //$curl = curl_init($url);
       //curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);

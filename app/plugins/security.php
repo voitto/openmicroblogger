@@ -267,7 +267,8 @@ function complete_openid_authentication( &$request ) {
           if (!in_array($k,array('openid_sreg_nickname')) && isset($_GET['openid_sreg_'.$k]))
             if (empty($i->$v))
               $i->set_value( $v, urldecode($_GET['openid_sreg_'.$k]) );
-            
+        
+        // split the SREG full name into first, last for VCARD, hCard, etc
         if (isset($_GET['openid_sreg_fullname']) && empty($i->given_name)) {
           $names = explode(' ',$_GET['openid_sreg_fullname']);
           if (strlen($names[0]) > 0 && empty($i->given_name))
@@ -574,6 +575,9 @@ function openid_login( &$vars ) {
     
     if (!strstr($openid,'http'))
       $openid = 'http://' . $openid;
+    
+    if ("/" == substr($openid,-1))
+      $openid = substr( $openid, 0, -1 );
     
     $request->set_param('return_url',$request->url_for( 'openid_continue' ));
     

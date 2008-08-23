@@ -44,6 +44,40 @@
 
 <input value="Save" type="submit" name="button_group" /></td>
   </tr>
+</form>
+
+<tr><td colspan="2">
+<br />
+
+<?php 
+
+global $request,$db;
+$Subscription =& $db->model('Subscription');
+$Identity =& $db->model('Identity');
+
+?>
+
+<h2>Drop subscription:</h2>
+
+<?php $Subscription->find_by('subscriber',$Member->id); ?>
+<?php while ($subscriber = $Subscription->MoveNext()) : ?>
+<?php $subentry = $subscriber->FirstChild('entries'); ?>
+<?php if (empty($subentry->etag)) $subscriber->set_etag(); ?>
+<?php if ($subscriber->subscriber == $Member->id) : ?>
+<?php $si = $Identity->find( $subscriber->subscribed ); ?>
+<a href="<?php echo $request->url_for(array('resource'=>'subscriptions','id'=>$subscriber->id,'action'=>'remove')); ?>"><img style="border:none;width:48px;height:48px;" src="<?php echo $si->avatar; ?>"></a>
+<?php endif; ?>
+<?php endwhile; ?>
+
+
+
+
+
+<br />
+<br />
+
+
+</td></tr>
 </table>
 </div>
-</form>
+

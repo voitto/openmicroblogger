@@ -18,6 +18,12 @@ class Subscription extends Model {
         
     $this->auto_field( 'id' );
     
+    $this->has_one( 'entry' );
+    $this->has_one( 'person' );
+    
+    $this->let_read( 'all:remove' );
+    $this->let_delete( 'all:members' );
+    
     $this->set_hidden();
     
   }

@@ -294,13 +294,20 @@ function set_identity_from_nick(&$request,&$route) {
   
   $Identity =& $db->model('Identity');
   
-  if (substr($nick,0,1) == '_')
-    $Member = $Identity->find(substr($nick,1));
-  else
-    $Member = $Identity->find_by('nickname',$nick);
+  $id = false;
   
-  if ($Member)
-    $request->set_param('id',$Member->id);
+  if (substr($nick,0,1) == '_') {
+    $Member = $Identity->find(substr($nick,1));
+    $id = $Member->id;
+   } else {
+    $sql = "SELECT id FROM identities WHERE nickname LIKE '".$db->escape_string($nick)."' AND (post_notice = '' OR post_notice IS NULL)";
+    $result = $db->get_result( $sql );
+    if ($db->num_rows($result) == 1)
+      $id = $db->result_value($result,0,"id");
+  }
+  
+  if ($id)
+    $request->set_param('id',$id);
   else
     trigger_error("Sorry, the person named ".$nick." could not be found.", E_USER_ERROR);
 }
@@ -374,7 +381,7 @@ function oauth_omb_subscribe( &$vars ) {
   require_once "Auth/Yadis/Yadis.php";
   
   $fetcher = Auth_Yadis_Yadis::getHTTPFetcher();
-  $yadis = Auth_Yadis_Yadis::discover($request->listener_uri, $fetcher);
+  $yadis = Auth_Yadis_Yadis::discover($request->listener_url, $fetcher);
 
   if (!$yadis || $yadis->failed)
     trigger_error("Sorry but the Yadis doc was not found at the profile URL", E_USER_ERROR);
@@ -418,9 +425,17 @@ function oauth_omb_subscribe( &$vars ) {
   $_SESSION['subscriber_authorize_url'] = $endpoints[OAUTH_VERSION . '/endpoint/authorize'];
   $_SESSION['subscriber_notice_url'] = $endpoints[OMB_VERSION . '/postNotice'];
   $_SESSION['subscriber_update_url'] = $endpoints[OMB_VERSION . '/updateProfile'];
+  
+  if (empty($localid))
+    trigger_error('sorry, the localid was not found in the XRDS document', E_USER_ERROR );
 
+  $listener_url = trim($request->listener_url);
+
+  $listener_uri = trim($localid);
+  
   $_SESSION['listenee_id'] = trim($request->listenee_id);
-  $_SESSION['listener_uri'] = trim($request->listener_uri);
+  $_SESSION['listener_url'] = $listener_url;
+  $_SESSION['listener_uri'] = $listener_uri;
   
   $sha1_method = new OAuthSignatureMethod_HMAC_SHA1();
   $consumer = new OAuthConsumer($key, $secret, NULL);
@@ -433,7 +448,7 @@ function oauth_omb_subscribe( &$vars ) {
   parse_str($parsed['query'], $params);
   
   $req = OAuthRequest::from_consumer_and_token( $consumer, NULL, "POST", $url, $params );
-  $req->set_parameter( 'omb_listener', $localid );
+  $req->set_parameter( 'omb_listener', $_SESSION['listener_uri'] );
   $req->set_parameter( 'omb_version', OMB_VERSION );
   $req->sign_request( $sha1_method, $consumer, NULL );
   
@@ -448,9 +463,11 @@ function oauth_omb_subscribe( &$vars ) {
     $result = $client->post( $post_to, $post_data );
     if (strpos($result->body, 'oauth_token') === false) {
       if (strpos($request->base, 'openmicroblogger') !== false)
-        send_email( 'brian@megapump.com', 'retrying sub', $request->listenee_id." ".$request->listener_uri, environment('email_from'), environment('email_name'), false );
+        send_email( 'brian@megapump.com', 'retrying sub', $request->listenee_id." ".$request->listener_url, environment('email_from'), environment('email_name'), false );
       sleep(2);
     } else {
+      if (strpos($request->base, 'openmicroblogger') !== false)
+        send_email( 'brian@megapump.com', 'successful sub', $request->listenee_id." ".$request->listener_url, environment('email_from'), environment('email_name'), false );
       break;
     }
   }
@@ -468,14 +485,16 @@ function oauth_omb_subscribe( &$vars ) {
   
   // finish_subscribe saves the profile
   $callback_url = $request->url_for( 'oauth_omb_finish_subscribe' );
-  //echo 
-  $con = new OAuthConsumer($key, $secret, NULL);
-   $tok = new OAuthToken($rtoken, $rtoken_secret);
+  
+  $consumer = new OAuthConsumer($key, $secret, NULL);
+  $token = new OAuthToken($rtoken, $rtoken_secret);
+  
   $url = $_SESSION['subscriber_authorize_url'];
   $parsed = parse_url($url);
   $params = array();
   parse_str($parsed['query'], $params);
-  $req = OAuthRequest::from_consumer_and_token($con, $tok, 'GET', $url, $params);
+  
+  $req = OAuthRequest::from_consumer_and_token($consumer, $token, 'GET', $url, $params);
 
   $omb_subscribe = array();
   
@@ -484,19 +503,17 @@ function oauth_omb_subscribe( &$vars ) {
   $i = $Identity->find( $_SESSION['listenee_id'] );
   
   if ($i) {
+    
     if (!(isset($i->nickname)))
       trigger_error('the identity does not have a nickname', E_USER_ERROR);
+      
     $omb_subscribe = array(
       'omb_version'           => OMB_VERSION,
-      'omb_listener'          => $localid,
+      'omb_listener'          => $_SESSION['listener_uri'],
       'omb_listenee'          => $i->profile,
       'omb_listenee_profile'  => $i->profile,
       'omb_listenee_nickname' => $i->nickname,
       'omb_listenee_license'  => $i->license,
-      //'omb_listenee_fullname' => $i->fullname,
-      //'omb_listenee_homepage' => $i->url,
-      //'omb_listenee_bio'      => $i->bio,
-      //'omb_listenee_location' => $i->locality,
       'omb_listenee_avatar'   => $i->avatar
     );
   } else {
@@ -508,7 +525,7 @@ function oauth_omb_subscribe( &$vars ) {
 
   $req->set_parameter('oauth_callback', $callback_url);
 
-  $req->sign_request($sha1_method, $con, $tok);
+  $req->sign_request($sha1_method, $consumer, $token);
 //echo $req->to_url(); exit;
   header('Location: '.$req->to_url(),true,303);
   exit;  
@@ -565,22 +582,30 @@ function oauth_authorize( &$vars ) {
   $Person =& $db->get_table( 'people' );
   $Subscription =& $db->model('Subscription');
   
-  $i = $Identity->find_by( 'profile', urldecode($_GET['omb_listenee']) );
+  $prof = urldecode($_GET['omb_listenee']);
+
+  $i = $Identity->find_by( 'profile', $prof );
   
   if (!$i) {
-    
     // need to create the identity (and person?) because it was not found
     $p = $Person->base();
     $p->save();
+    
+    // CREATE USER
+    
     $i = $Identity->base();
     $i->set_value( 'label', 'profile 1' );
     $i->set_value( 'person_id', $p->id );
+    
     foreach($listenee_params as $k=>$v ) {
       if (isset($_GET[$k])) {
         $i->set_value( $v, urldecode($_GET[$k]) );
       }
     }
     
+    if ("/" == substr($i->attributes['url'],-1))
+      $i->attributes['url'] = substr($i->attributes['url'],0,-1);
+
     if (empty($i->attributes['url']) || !($Identity->is_unique_value( $i->attributes['url'], 'url' )))
       $i->set_value( 'url', $i->attributes['profile'] );
       
@@ -725,8 +750,6 @@ function oauth_omb_finish_subscribe( &$vars ) {
   
   $listener_params = array(
     'omb_listener_fullname'  => 'fullname',
-    //'omb_listener_profile'   => 'profile',
-    'omb_listener_nickname'  => 'nickname',
     'omb_listener_license'   => 'license',
     'omb_listener_homepage'  => 'url',
     'omb_listener_bio'       => 'bio',
@@ -743,16 +766,23 @@ function oauth_omb_finish_subscribe( &$vars ) {
     // need to create the identity (and person?) because it was not found
     $p = $Person->base();
     $p->save();
+    
+    // CREATE USER
+    
     $i = $Identity->base();
     $i->set_value( 'profile', $_SESSION['listener_uri'] );
     $i->set_value( 'label', 'profile 1' );
     $i->set_value( 'person_id', $p->id );
+    
     foreach($listener_params as $k=>$v ) {
       if (isset($_GET[$k])) {
         $i->set_value( $v, urldecode($_GET[$k]) );
       }
     }
     
+    if ("/" == substr($i->attributes['url'],-1))
+     $i->attributes['url'] = substr($i->attributes['url'],0,-1);
+        
     if (empty($i->attributes['url']) || !($Identity->is_unique_value( $i->attributes['url'], 'url' )))
       $i->set_value( 'url', $i->attributes['profile'] );
     
@@ -913,18 +943,31 @@ function oauth_omb_post( &$vars ) {
   
   $sender = $Identity->find_by('profile',$listenee);
   
-  if (!($sender))
-    trigger_error('unable to find notice recipient', E_USER_ERROR);
-
-  $content = $req->get_parameter('omb_notice_content');
+  if (!($sender)) {
+    header( 'Status: 403 Forbidden' );
+    exit;
+  }
   
-  $notice_uri = $req->get_parameter('omb_notice');
+  $Subscription =& $db->model('Subscription');
   
-  $notice_url = $req->get_parameter('omb_notice_url');
+  $sub = $Subscription->find_by( array(
+    'subscribed'=>$sender->id
+  ));
   
-  $Post =& $db->model('Post');
+  if (!($sub)) {
+    header( 'Status: 403 Forbidden' );
+    exit;
+  }
   
-  $p = $Post->find_by('uri',$notice_uri);
+  $content = $req->get_parameter( 'omb_notice_content' );
+  
+  $notice_uri = $req->get_parameter( 'omb_notice' );
+  
+  $notice_url = $req->get_parameter( 'omb_notice_url' );
+  
+  $Post =& $db->model( 'Post' );
+  
+  $p = $Post->find_by( 'uri', $notice_uri );
   
   if (!$p) {
     $p = $Post->base();

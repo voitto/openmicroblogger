@@ -103,21 +103,36 @@ function post( &$vars ) {
 
 function put( &$vars ) {
   extract( $vars );
-  $request->params['identity']['nickname'] = strtolower($request->params['identity']['nickname']);
-  $Identity->validates_uniqueness_of( 'nickname' );
+  
+  $nick = strtolower($request->params['identity']['nickname']);
+  
+  $request->set_param( array( 'identity', 'nickname' ), $nick );
+  
+  if ($profile->nickname == $nick) {
+    // nickname did not change
+  } else {
+    // if post_notice is set it's a remote user and can share a nickname with a local user
+    $sql = "SELECT nickname FROM identities WHERE nickname LIKE '".$db->escape_string($nick)."' AND (post_notice = '' OR post_notice IS NULL)";
+    $result = $db->get_result( $sql );
+    if ($db->num_rows($result) > 0)
+      trigger_error( 'Sorry, that nickname is already being used.', E_USER_ERROR );
+  }
   
   if (strpos($request->params['identity']['url'], 'http') === false)
     $request->params['identity']['url'] = 'http://'.$request->params['identity']['url'];
   
   $resource->update_from_post( $request );
+  
   $rec = $Identity->find($request->id);
   
-  $sql = "SELECT photo FROM identities WHERE id = ".$request->id;
+  $sql = "SELECT photo FROM identities WHERE id = ".$db->escape_string($request->id);
   $result = $db->get_result($sql);
+  
   if ($blobval = $db->result_value($result,0,"photo"))
     $rec->set_value( 'avatar',  $request->url_for(array('resource'=>"_".$rec->id)) . ".jpg" );
   else
     $rec->set_value( 'avatar',  '' );
+  
   $rec->set_value( 'profile', $request->url_for(array('resource'=>"_".$rec->id)));
   $rec->save_changes();
   header_status( '200 OK' );

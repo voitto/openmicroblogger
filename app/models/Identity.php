@@ -62,17 +62,24 @@ class Identity extends Model {
     
     // permissions
     
+    // templates
+    
     $this->let_read( 'all:entry' );
     $this->let_read( 'all:entry.jpg' );
     $this->let_read( 'all:entry.xrds' );
     // anyone can call up the edit form for any user -- hrm
     $this->let_read( 'all:edit' );
+    
+    // groups
+    
     // registered 'members' can modify their own records
     $this->let_modify( 'all:members' );
     // the first user is a member of 'administrators'
     $this->let_access( 'all:administrators' );
     
     $this->set_hidden();
+    
+    // not needed if blobcol is named 'attachment'
     
     $this->set_blob('photo');
     

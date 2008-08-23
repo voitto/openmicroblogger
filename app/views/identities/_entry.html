@@ -77,8 +77,8 @@ $subscribers = array();
 <br />
 <br />
 <form>
-<p>Use the following URL to subscribe to remote users (people on other sites).</p>
-<p>Profile URL: <input name="profid" size="40" value="<?php echo $pro->profile; ?>"/></p>
+<p>Copy &amp; paste the following URL to subscribe to people on other Web sites:</p>
+<p>Profile URL: <input name="profid" size="40" value="<?php echo $request->base."?".$pro->nickname; ?>"/></p>
 </form>
 <br />
 <p><a href="<?php echo $request->url_for(array(
@@ -90,7 +90,7 @@ $subscribers = array();
 <h2>Subscribe to <?php echo $Member->nickname; ?>'s notices:</h2>
 <form method="post" action="<?php url_for('oauth_omb_subscribe'); ?>">
   <input type="hidden" name="listenee_id" value="<?php echo $Member->id; ?>">
-  Your Profile URL <input size="40" name="listener_uri">
+  Your Profile URL <input size="40" name="listener_url">
   <input type="submit" value="Subscribe to <?php echo $Member->nickname; ?>'s notices">
 </form>
 

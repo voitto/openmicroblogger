@@ -18,11 +18,11 @@
 
   <tr>
     <td align="right" valign="top"><b>Title</b></td>
-    <td valign="top" align="left"><input size="50" maxlength="255" id="<?php print $post; ?>_title" name="<?php print $post; ?>[title]" type="text" value="<?php print $Member->title; ?>" /></td>
+    <td valign="top" align="left"><textarea rows="3" style="width:350px;" cols="40" wrap="virtual" id="<?php print $post; ?>_title" name="<?php print $post; ?>[title]"><?php print $Member->title; ?></textarea></td>
   </tr>
   <tr>
     <td align="right" valign="top"><b>Body</b></td>
-    <td valign="top" align="left"><textarea rows="4" style="width:350px;" cols="40" wrap="virtual" id="<?php print $post; ?>_body" name="<?php print $post; ?>[body]"><?php print $Member->body; ?></textarea></td>
+    <td valign="top" align="left"><textarea rows="6" style="width:350px;" cols="40" wrap="virtual" id="<?php print $post; ?>_body" name="<?php print $post; ?>[body]"><?php print $Member->body; ?></textarea></td>
   </tr>
   <tr>
     <td align="right" valign="top"><b>Attachment</b></td>
