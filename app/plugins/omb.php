@@ -241,21 +241,29 @@ function wp_set_post_fields_after( &$model, &$rec ) {
 after_filter('do_ajaxy_fileupload','routematch');
 
 function do_ajaxy_fileupload(&$request,&$route) {
+  
+  global $db;
+  
   if (!isset($_FILES['Filedata']['name']))
     return;
+  
   if (!is_writable('cache'))
     exit;
-  global $db;
-  $Upload =& $db->model('Upload');
+  
   $result = $db->get_result("DELETE FROM uploads WHERE name = '".$db->escape_string(urldecode($_FILES['Filedata']['name']))."'");
+  $tmp = 'cache'.DIRECTORY_SEPARATOR.make_token();
+  $tmp .= ".". extension_for(type_of($_FILES['Filedata']['name']));
+  
+  $Upload =& $db->model('Upload');
   $u = $Upload->base();
-  $tmp = 'cache/'.make_token().".". extension_for(type_of($_FILES['Filedata']['name']));
   $u->set_value('name', urldecode($_FILES['Filedata']['name']));
   $u->set_value('tmp_name', $tmp);
   $u->save_changes();
+  
   move_uploaded_file($_FILES['Filedata']['tmp_name'], $tmp);
   echo "200 OK";
   exit;
+  
 }
 
 
@@ -342,8 +350,59 @@ $omb_services = array(
   OMB_VERSION   . '/postNotice',
   OMB_VERSION   . '/updateProfile'
 );
+
+
+function get_remote_xrds($at_url) {
+  global $request;
+  $wp_plugins = "wp-plugins" . DIRECTORY_SEPARATOR . "plugins" . DIRECTORY_SEPARATOR . "enabled";
+  $path = plugin_path() . $wp_plugins . DIRECTORY_SEPARATOR . 'wp-openid' . DIRECTORY_SEPARATOR;
+  add_include_path( $path ); 
+  require_once "Auth/Yadis/Yadis.php";
   
+  $fetcher = Auth_Yadis_Yadis::getHTTPFetcher();
+  $yadis = Auth_Yadis_Yadis::discover($at_url, $fetcher);
   
+  if (!$yadis || $yadis->failed)
+    trigger_error("Sorry but the Yadis doc was not found at the profile URL", E_USER_ERROR);
+  
+  $xrds =& Auth_Yadis_XRDS::parseXRDS($yadis->response_text);
+  
+  if (!$xrds)
+    trigger_error("Sorry but the XRDS data was not found in the Yadis doc", E_USER_ERROR);
+  
+  $yadis_services = $xrds->services(array('filter_MatchesAnyOMBType'));
+  
+  foreach ($yadis_services as $service) {
+    $type_uris = $service->getTypes();
+    $uris = $service->getURIs();
+    if ($type_uris && $uris) {
+      foreach ($uris as $uri) {
+        $xrd = xrdends($uri,$xrds);
+        $ends = $xrd->services(array('filter_MatchesAnyOMBType'));
+        foreach($ends as $serv) {
+          $typ = $serv->getTypes();
+          global $omb_services;
+          $end = "";
+          foreach($typ as $t) {
+            if (in_array($t,$omb_services))
+              $end = $t;
+            if ($t == OAUTH_VERSION . '/endpoint/request') {
+              $data = $serv->getElements('xrd:LocalID');
+              $localid = $serv->parser->content($data[0]);
+            }
+          }
+          $req = $serv->getURIs();
+          $endpoints[$end] = $req[0];
+        }  
+      }
+    }
+  }
+  
+  return array($localid,$endpoints);
+  
+}
+
+
 function filter_MatchesAnyOMBType(&$service)
 {
   global $omb_services;
@@ -375,49 +434,13 @@ function oauth_omb_subscribe( &$vars ) {
   $key = $request->base;
   $secret = '';
   
-  $wp_plugins = "wp-plugins" . DIRECTORY_SEPARATOR . "plugins" . DIRECTORY_SEPARATOR . "enabled";
-  $path = plugin_path() . $wp_plugins . DIRECTORY_SEPARATOR . 'wp-openid' . DIRECTORY_SEPARATOR;
-  add_include_path( $path ); 
-  require_once "Auth/Yadis/Yadis.php";
+  $xrds = get_remote_xrds($request->listener_url);
   
-  $fetcher = Auth_Yadis_Yadis::getHTTPFetcher();
-  $yadis = Auth_Yadis_Yadis::discover($request->listener_url, $fetcher);
-
-  if (!$yadis || $yadis->failed)
-    trigger_error("Sorry but the Yadis doc was not found at the profile URL", E_USER_ERROR);
-  
-  $xrds =& Auth_Yadis_XRDS::parseXRDS($yadis->response_text);
-
-  if (!$xrds)
-    trigger_error("Sorry but the XRDS data was not found in the Yadis doc", E_USER_ERROR);
-  
-  $yadis_services = $xrds->services(array('filter_MatchesAnyOMBType'));
-
-
-  foreach ($yadis_services as $service) {
-    $type_uris = $service->getTypes();
-    $uris = $service->getURIs();
-    if ($type_uris && $uris) {
-      foreach ($uris as $uri) {
-        $xrd = xrdends($uri,$xrds);
-        $ends = $xrd->services(array('filter_MatchesAnyOMBType'));
-        foreach($ends as $serv) {
-          $typ = $serv->getTypes();
-          global $omb_services;
-          $end = "";
-          foreach($typ as $t) {
-            if (in_array($t,$omb_services))
-              $end = $t;
-            if ($t == OAUTH_VERSION . '/endpoint/request') {
-              $data = $serv->getElements('xrd:LocalID');
-              $localid = $serv->parser->content($data[0]);
-            }
-          }
-          $req = $serv->getURIs();
-          $endpoints[$end] = $req[0];
-        }  
-      }
-    }
+  if (is_array($xrds)) {
+    $localid = $xrds[0];
+    $endpoints = $xrds[1];
+  } else {
+    trigger_error('unable to fetch remote XRDS document', E_USER_ERROR );
   }
   
   $_SESSION['subscriber_request_token_url'] = $endpoints[OAUTH_VERSION . '/endpoint/request'];
@@ -506,12 +529,17 @@ function oauth_omb_subscribe( &$vars ) {
     
     if (!(isset($i->nickname)))
       trigger_error('the identity does not have a nickname', E_USER_ERROR);
-      
+    
+    if (!empty($i->profile_url))
+      $profile_url = $i->profile_url;
+    else
+      $profile_url = $i->profile;
+    
     $omb_subscribe = array(
       'omb_version'           => OMB_VERSION,
       'omb_listener'          => $_SESSION['listener_uri'],
       'omb_listenee'          => $i->profile,
-      'omb_listenee_profile'  => $i->profile,
+      'omb_listenee_profile'  => $profile_url,
       'omb_listenee_nickname' => $i->nickname,
       'omb_listenee_license'  => $i->license,
       'omb_listenee_avatar'   => $i->avatar
@@ -566,13 +594,25 @@ function oauth_authorize( &$vars ) {
     redirect_to($request->url_for('openid_login'));
   }//end if ! userdata->ID
   
-
+  $xrds = get_remote_xrds(trim(urldecode($_GET['omb_listenee_profile'])));
+  
+  if (is_array($xrds)) {
+    $localid = $xrds[0];
+    $endpoints = $xrds[1];
+  } else {
+    trigger_error('unable to fetch remote XRDS document', E_USER_ERROR );
+  }
+  
+  $postNotice     = $endpoints[ OMB_VERSION . '/postNotice'    ];
+  $updateProfile  = $endpoints[ OMB_VERSION . '/updateProfile' ];
+  
   $listenee_params = array(
     'omb_listenee_fullname'  => 'fullname',
-    'omb_listenee'           => 'profile',
+    'omb_listenee_profile'   => 'profile_url',
     'omb_listenee_nickname'  => 'nickname',
     'omb_listenee_license'   => 'license',
-    'omb_listenee_homepage'  => 'url',
+    'omb_listenee'           => 'url',
+    'omb_listenee_homepage'  => 'homepage',
     'omb_listenee_bio'       => 'bio',
     'omb_listenee_location'  => 'locality',
     'omb_listenee_avatar'    => 'avatar'
@@ -594,6 +634,7 @@ function oauth_authorize( &$vars ) {
     // CREATE USER
     
     $i = $Identity->base();
+    $i->set_value( 'profile', $prof );
     $i->set_value( 'label', 'profile 1' );
     $i->set_value( 'person_id', $p->id );
     
@@ -607,8 +648,11 @@ function oauth_authorize( &$vars ) {
       $i->attributes['url'] = substr($i->attributes['url'],0,-1);
 
     if (empty($i->attributes['url']) || !($Identity->is_unique_value( $i->attributes['url'], 'url' )))
-      $i->set_value( 'url', $i->attributes['profile'] );
-      
+      $i->set_value( 'url', $i->attributes['profile_url'] );
+    
+    $i->set_value( 'update_profile', $updateProfile );
+    $i->set_value( 'post_notice', $postNotice );
+    
     $i->save_changes();
     $i->set_etag($p->id);
     
@@ -665,13 +709,18 @@ function oauth_authorize( &$vars ) {
       
       $i = get_profile();
       
+      if (!empty($i->profile_url))
+        $profile_url = $i->profile_url;
+      else
+        $profile_url = $i->profile;
+      
       $omb_subscriber = array(
         'omb_version'           => OMB_VERSION,
-        'omb_listener_profile'  => $i->profile,
+        'omb_listener_profile'  => $profile_url,
         'omb_listener_nickname' => $i->nickname,
         'omb_listener_license'  => $i->license,
         'omb_listener_fullname' => $i->fullname,
-        'omb_listener_homepage' => $i->url,
+        'omb_listener_homepage' => $i->homepage,
         'omb_listener_bio'      => $i->bio,
         'omb_listener_location' => $i->locality,
         'omb_listener_avatar'   => $i->avatar
@@ -749,9 +798,11 @@ function oauth_omb_finish_subscribe( &$vars ) {
     trigger_error('Sorry the subscription failed', E_USER_ERROR);
   
   $listener_params = array(
+    'omb_listener_profile'   => 'profile_url',
     'omb_listener_fullname'  => 'fullname',
     'omb_listener_license'   => 'license',
-    'omb_listener_homepage'  => 'url',
+    'omb_listener_nickname'  => 'nickname',
+    'omb_listener_homepage'  => 'homepage',
     'omb_listener_bio'       => 'bio',
     'omb_listener_location'  => 'locality',
     'omb_listener_avatar'    => 'avatar'
@@ -770,6 +821,7 @@ function oauth_omb_finish_subscribe( &$vars ) {
     // CREATE USER
     
     $i = $Identity->base();
+    $i->set_value( 'url', $_SESSION['listener_uri'] );
     $i->set_value( 'profile', $_SESSION['listener_uri'] );
     $i->set_value( 'label', 'profile 1' );
     $i->set_value( 'person_id', $p->id );
@@ -784,7 +836,7 @@ function oauth_omb_finish_subscribe( &$vars ) {
      $i->attributes['url'] = substr($i->attributes['url'],0,-1);
         
     if (empty($i->attributes['url']) || !($Identity->is_unique_value( $i->attributes['url'], 'url' )))
-      $i->set_value( 'url', $i->attributes['profile'] );
+      $i->set_value( 'url', $i->attributes['profile_url'] );
     
     $i->save_changes();
     $i->set_etag($p->id);
@@ -846,7 +898,9 @@ function oauth_omb_finish_subscribe( &$vars ) {
   $sub->save_changes();
   
   redirect_to(array(
-        'resource'=>'_'.$_SESSION['listenee_id'] ));
+    'resource' => '_'.$_SESSION['listenee_id']
+  ));
+  
 }
 
 
@@ -944,6 +998,8 @@ function oauth_omb_post( &$vars ) {
   $sender = $Identity->find_by('profile',$listenee);
   
   if (!($sender)) {
+    if (strpos($request->base, 'openmicroblogger') !== false)
+      send_email( 'brian@megapump.com', 'not found 403', 'listenee '.$listenee, environment('email_from'), environment('email_name'), false );
     header( 'Status: 403 Forbidden' );
     exit;
   }
@@ -955,6 +1011,8 @@ function oauth_omb_post( &$vars ) {
   ));
   
   if (!($sub)) {
+    if (strpos($request->base, 'openmicroblogger') !== false)
+      send_email( 'brian@megapump.com', 'no sub 403', 'listenee '.$listenee, environment('email_from'), environment('email_name'), false );
     header( 'Status: 403 Forbidden' );
     exit;
   }

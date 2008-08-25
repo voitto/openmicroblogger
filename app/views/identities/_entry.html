@@ -28,7 +28,7 @@ $subscribers = array();
   <?php if ($subscriber->subscribed == $Member->id) : ?>
     <?php $subscribers[] = $subscriber->subscriber; ?>
     <?php $si = $Identity->find( $subscriber->subscriber ); ?>
-    <a href="<?php echo $si->profile; ?>"><img style="border:none;width:48px;height:48px;" src="<?php echo $si->avatar; ?>"></a>
+    <a href="<?php if (!empty($si->profile_url)) echo $si->profile_url; else echo $si->profile;  ?>"><img style="border:none;width:48px;height:48px;" src="<?php echo $si->avatar; ?>"></a>
   <?php endif; ?>
 <?php endwhile; ?>
 
@@ -41,7 +41,7 @@ $subscribers = array();
 <?php while ($subscriber = $Subscription->MoveNext()) : ?>
 <?php if ($subscriber->subscriber == $Member->id) : ?>
 <?php $si = $Identity->find( $subscriber->subscribed ); ?>
-<a href="<?php echo $si->profile; ?>"><img style="border:none;width:48px;height:48px;" src="<?php echo $si->avatar; ?>"></a>
+<a href="<?php if (!empty($si->profile_url)) echo $si->profile_url; else echo $si->profile; ?>"><img style="border:none;width:48px;height:48px;" src="<?php echo $si->avatar; ?>"></a>
 <?php endif; ?>
 <?php endwhile; ?>
 

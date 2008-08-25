@@ -134,6 +134,7 @@ function put( &$vars ) {
     $rec->set_value( 'avatar',  '' );
   
   $rec->set_value( 'profile', $request->url_for(array('resource'=>"_".$rec->id)));
+  $rec->set_value( 'profile_url', $request->url_for(array('resource'=>"".$rec->nickname)));
   $rec->save_changes();
   header_status( '200 OK' );
   redirect_to( $request->url_for( array(

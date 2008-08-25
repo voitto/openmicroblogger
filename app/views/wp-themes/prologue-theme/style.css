@@ -64,6 +64,11 @@ blockquote {
   float: left;
   color: #555;
 }
+#sidebar table {
+  margin-left: 25px;
+  margin-bottom: 12px;
+  margin-top: 12px;
+}
 #sidebar ul li p {
   font-size: 0.9em;
   line-height: 1.4em;

@@ -57,6 +57,11 @@ function broadcast_omb_notice( &$model, &$rec ) {
       $parsed = parse_url($url);
       $params = array();
     
+    //omb_version
+    //omb_listenee
+    //omb_notice
+    //omb_notice_content
+    
       parse_str($parsed['query'], $params);
       $req = OAuthRequest::from_consumer_and_token($consumer, $token, "POST", $url, $params);
       $req->set_parameter( 'omb_version', OMB_VERSION );
@@ -88,7 +93,7 @@ function broadcast_omb_notice( &$model, &$rec ) {
         if ( $result->status == 403 ) {
           if (strpos($request->base, 'openmicroblogger') !== false)
             send_email( 'brian@megapump.com', 'delete subscription', 'listenee '.$listenee_uri, environment('email_from'), environment('email_name'), false );
-          $db->delete_record($sub);
+          //$db->delete_record($sub);
         } else {
           parse_str( $result->body, $return );
           if ( is_array($return) && $return['omb_version'] == OMB_VERSION ) {

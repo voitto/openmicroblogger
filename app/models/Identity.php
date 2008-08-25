@@ -19,6 +19,8 @@ class Identity extends Model {
     $this->char_field( 'bio' );
     $this->char_field( 'avatar' );
     $this->char_field( 'profile' );
+    $this->char_field( 'profile_url' );
+    $this->char_field( 'homepage' );
 
     $this->char_field( 'fullname' );
     $this->char_field( 'family_name' );

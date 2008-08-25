@@ -218,8 +218,8 @@ class wpdb {
     if ( preg_match("/^\\s*(delete) /i",$query) )
       $query = str_replace("LIMIT 1","",$query);
 
-    //if ( preg_match("/^\\s*(replace into) /i",$query) )
-    //  return;
+    if ( class_exists('PostgreSQL') && preg_match("/^\\s*(replace into) /i",$query) )
+      return;
     
     $this->result = $db->get_result($query);
     if ( preg_match("/^\\s*(insert|delete|update|replace) /i",$query) ) {
@@ -572,6 +572,9 @@ function wp_head() {
     if (isset($request->resource) && $request->resource == 'identities' && $request->id > 0) {
       echo '<meta http-equiv="X-XRDS-Location" content="'.$request->uri.'.xrds" />'."\n";
       echo '<meta http-equiv="X-Yadis-Location" content="'.$request->uri.'.xrds" />'."\n";
+      
+      
+      
     }
     echo '<link rel="stylesheet" type="text/css" href="'.$request->layout_path.'wp-themes/prologue-theme/menu.css" />'."\n";
     echo '<script src="stuHover.js" type="text/javascript"></script>'."\n";
@@ -766,6 +769,8 @@ function the_post() {
       $the_post = $Post->base();
     }
   }
+  if (!empty($the_author->profile_url)) $the_author->profile = $the_author->profile_url; 
+  
   return "";
 }
 function get_links() {
