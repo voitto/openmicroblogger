@@ -111,5 +111,36 @@ edit the file: app/config/config.yml
 
 
 
+UPDATING
+
+///////////////////////////
+// use the /content folder
+///////////////////////////
+
+If you want to customize OpenMicroBlogger with your own theme and plugins:
+  
+1) copy config.yml into /content/config
+
+2) copy your theme into /content/themes
+
+3) optionally, add plugins to /content/plugins
+
+    note: plugins in this folder override same-name plugins in /app/plugins
+
+
+///////////////////////////
+// get the latest build
+///////////////////////////
+
+you can grab the up-to-date version from http://dbscript.net/omb.zip
+
+
+
+
+
+
+
+
+
 
 
