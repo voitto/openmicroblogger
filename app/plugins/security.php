@@ -108,7 +108,7 @@ function begin_openid_authentication( &$request ) {
   
   $_SESSION['openid_url'] = $request->openid_url;
   
-  if (class_exists('MySQL') && environment('openid_version') > 1)
+  if (class_exists('MySQL') && environment('openid_version') > 1 && !isset($_SESSION['openid_degrade']) )
     start_wp_openid();
   else
     start_simple_openid();
@@ -523,8 +523,7 @@ function email_submit( &$vars ) {
         
       } else {
         
-        // need to create a URL?
-        
+        // meh
         
       }
     }
@@ -603,7 +602,7 @@ function openid_continue( &$vars ) {
   
   $valid = false;
   
-  if ( class_exists('MySQL') && environment('openid_version') > 1) {
+  if ( class_exists('MySQL') && environment('openid_version') > 1 && !isset($_SESSION['openid_degrade']) ) {
     
     global $openid;
     
@@ -625,7 +624,12 @@ function openid_continue( &$vars ) {
         break;
       
       case Auth_OpenID_FAILURE:
-        trigger_error('Sorry, I could not validate your identity with the OpenID server. If you administer this site, you can try setting the openid_version to 1.', E_USER_ERROR );
+        // if we fail OpenID v2 here, we retry once with OpenID v1
+        $_SESSION['openid_degrade'] = true;
+        $request->set_param('return_url',$request->url_for( 'openid_continue' ));
+        $request->set_param('protected_url',$request->base);
+        $request->set_param('openid_url',$_SESSION['openid_url']);
+        authenticate_with_openid();
         break;
       
       case Auth_OpenID_SUCCESS:

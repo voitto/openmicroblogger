@@ -41,8 +41,8 @@ function broadcast_omb_notice( &$model, &$rec ) {
   
   while ($sub = $Subscription->MoveNext()) {
     
-    $sub_token = $sub->token;
-    $sub_secret = $sub->secret;
+    $sub_token = trim($sub->token);
+    $sub_secret = trim($sub->secret);
     
     $sid = $sub->FirstChild('identities');
     $url = $sid->post_notice;
@@ -52,25 +52,7 @@ function broadcast_omb_notice( &$model, &$rec ) {
       $sent_to[] = $url;
       
       $sha1_method = new OAuthSignatureMethod_HMAC_SHA1();
-      $consumer = new OAuthConsumer($request->base, '', NULL);
-      $token = new OAuthToken($sub_token, $sub_secret);
-      $parsed = parse_url($url);
-      $params = array();
-    
-    //omb_version
-    //omb_listenee
-    //omb_notice
-    //omb_notice_content
-    
-      parse_str($parsed['query'], $params);
-      $req = OAuthRequest::from_consumer_and_token($consumer, $token, "POST", $url, $params);
-      $req->set_parameter( 'omb_version', OMB_VERSION );
-      $req->set_parameter( 'omb_listenee', $listenee_uri );
-      $req->set_parameter( 'omb_notice', $notice_uri );
-      $req->set_parameter( 'omb_notice_content', $notice_content );
-      $req->set_parameter( 'omb_notice_url', $notice_url );
-      $req->set_parameter( 'omb_notice_license', $license );
-      $req->sign_request( $sha1_method, $consumer, $token );
+   
       
       $wp_plugins = "wp-plugins" . DIRECTORY_SEPARATOR . "plugins" . DIRECTORY_SEPARATOR . "enabled";
       $path = plugin_path() . $wp_plugins . DIRECTORY_SEPARATOR . 'wp-openid' . DIRECTORY_SEPARATOR;
@@ -80,27 +62,39 @@ function broadcast_omb_notice( &$model, &$rec ) {
       
       $fetcher = Auth_Yadis_Yadis::getHTTPFetcher();
       
-      $post_to = $req->get_normalized_http_url();
-      
-      $post_data = $req->to_postdata();
-      
-      $failed = false;
-      
-      // new Fetcher version of omb_notice
       
       //for ($i=0;$i<5;$i++) {
-        $result = $fetcher->post( $post_to, $post_data );
+        
+      
+        $consumer = new OAuthConsumer($request->base, '');
+        $token = new OAuthToken($sub_token, $sub_secret);
+        $parsed = parse_url($url);
+        $params = array();
+        parse_str($parsed['query'], $params);
+        $req = OAuthRequest::from_consumer_and_token($consumer, $token, "POST", $url, $params );
+        $req->set_parameter('omb_version', OMB_VERSION );
+        $req->set_parameter('omb_listenee', $listenee_uri );
+        $req->set_parameter('omb_notice', $notice_uri );
+        $req->set_parameter('omb_notice_content', $notice_content );
+        $req->set_parameter('omb_notice_url', $notice_url );
+        $req->set_parameter('omb_notice_license', $license );
+
+        $req->sign_request($sha1_method, $consumer, $token);
+
+        $result = $fetcher->post($req->get_normalized_http_url(),
+                     $req->to_postdata());
+
         if ( $result->status == 403 ) {
           if (strpos($request->base, 'openmicroblogger') !== false)
-            send_email( 'brian@megapump.com', 'delete subscription', 'listenee '.$listenee_uri, environment('email_from'), environment('email_name'), false );
-          //$db->delete_record($sub);
+            send_email( 'brian@megapump.com', 'deleteD subscription', 'listenee '.$listenee_uri, environment('email_from'), environment('email_name'), false );
+          $db->delete_record($sub);
         } else {
           parse_str( $result->body, $return );
           if ( is_array($return) && $return['omb_version'] == OMB_VERSION ) {
             //break;
           } else {
             if (strpos($request->base, 'openmicroblogger') !== false)
-              send_email( 'brian@megapump.com', 'failed to post', $notice_content, environment('email_from'), environment('email_name'), false );
+              send_email( 'brian@megapump.com', 'failed to post', $result->body."\n\n".$notice_content, environment('email_from'), environment('email_name'), false );
           }
         }
         //if (strpos($request->base, 'openmicroblogger') !== false)

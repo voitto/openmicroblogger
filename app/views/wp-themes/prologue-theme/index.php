@@ -34,6 +34,9 @@ if( 'POST' == $_SERVER['REQUEST_METHOD'] && !empty( $_POST['action'] ) && $_POST
 
 get_header( ); 
 
+show_prologue_nav();
+
+
 if( current_user_can( 'publish_posts' ) ) {
   require_once dirname( __FILE__ ) . '/post-form.php';
 }

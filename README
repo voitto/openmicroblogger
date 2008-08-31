@@ -1,8 +1,115 @@
-edit the app/config/config.yml with your database settings
 
-the ajaxy uploader with progress bar requires a /cache folder with permissions for the Web server process owner to create files
 
-dbscript will create the database tables as they are needed
+OpenMicroBlogger -- Standards-based Microblog
+Copyright (C) 2008 Brian Hendrickson
 
-and you are done!
+This application is free software; you can redistribute it and/or
+modify it under the terms of the MIT License.
+
+This application is distributed in the hope that it will be useful,
+but without any warranty; without even the implied warranty of
+merchantability or fitness for a particular purpose.
+
+Author
+ Brian Hendrickson - http://brianhendrickson.com
+
+Version 0.1, 1-Sep-2008
+ initial release
+
+
+
+
+REQUIREMENTS
+
+   - PHP > 4.2
+   - MySQL or PostgreSQL
+
+
+
+
+INSTALLATION
+
+
+///////////////////////
+// set up your database
+///////////////////////
+
+edit the file: app/config/config.yml
+
+  look for the database settings
+
+     # database settings
+
+      development:
+        adapter: mysql        // 'mysql' or 'postgresql'
+        database: microblog   // name of database
+        username: jacques     // name of database user
+        password: 
+        host: localhost       // name or IP address of database server
+
+  and find the email settings too
+      
+      email_from: root@localhost
+      email_name: Notifier
+
+
+////////////////////////////
+// choose a file upload mode
+////////////////////////////
+
+1) upload as SQL BLOBs (default)
+      
+      maximum upload size is 5MB or so, not that great for big MP3s, but maximizes privacy
+      
+      you must set the /cache folder permissions so the Flash uploader can put files there
+
+2) upload as SQL BLOBs (WITH CACHING)
+
+      first set up your /cache folder as described in option 1
+      
+      then, edit config.yml
+
+   look for
+
+      collection_cache:
+      - posts:
+        duration : 0        // and change this 0 to the number of seconds to cache
+        location : cache
+
+3) upload FILES to /uploads (do not create BLOBs)
+
+      set permissions on the /cache and /uploads folders
+      
+      next, edit config.yml
+   
+   look for
+   
+      collection_cache:
+      - posts:
+        duration : 0
+        location : cache    // and change 'cache' to 'uploads'
+
+4) upload FILES to Amazon S3 (do not create BLOBs)
+
+      set permissions on the /cache folder
+      
+      then, edit config.yml
+   
+   look for
+   
+      collection_cache:
+      - posts:
+        duration : 0
+        location : cache    // and change 'cache' to 'aws'
+
+   look for
+
+      awsAccessKey:         // and put your AWS login info here
+      awsSecretKey: 
+      awsBucket: 
+
+
+
+
+
 

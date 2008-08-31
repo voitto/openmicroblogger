@@ -40,6 +40,7 @@ env:
   
   site_title: Latest Updates
   site_subtitle: 
+  site_description: 
   
   theme: prologue-theme
   

@@ -21,7 +21,7 @@ $blogdata = array(
   'home'=>$request->base,
   'name'=>environment('site_title'),
   'name'=>environment('site_subtitle'),
-  'description'=>'all the latest info',
+  'description'=>environment('site_description'),
   'wpurl'=>$request->base,
   'url'=>$request->base,
   'atom_url'=>$request->base."?posts.atom",
@@ -29,6 +29,7 @@ $blogdata = array(
   'rss2_url'=>$request->base."?posts.rss",
   'charset'=>'',
   'html_type'=>'',
+  'theme_url'=>theme_path(),
   'stylesheet_url'=>theme_path()."style.css",
   'pingback_url'=>$request->base,
   'template_url'=>theme_path()
@@ -62,9 +63,16 @@ $post = new wppost();
 $limit_max = get_option( 'posts_per_page' );
 $limit_offset = 0;
 $comments = false;
-$user_ID = false;
+$user_ID = get_profile_id();
 $req = false;
 
+function allowed_tags() {
+  return true;
+}
+
+function do_action() {
+  return true;
+}
 
 class wpdb {
   
@@ -441,19 +449,22 @@ function get_currentuserinfo() {
 
 function bloginfo( $attr ) {
   global $blogdata;
-  $data = $blogdata[$attr];
-  if (environment('theme') == 'prologue-theme' && $attr == 'url') {
-    echo $blogdata[$attr]."?posts";
-  } elseif (strstr($data,"http") && "/" == substr($blogdata[$attr],-1)) {
-    echo substr($blogdata[$attr],0,-1);
-  } else {
+  if (isset($blogdata[$attr]))
     echo $blogdata[$attr];
-  }
 }
 
 function get_option( $opt ) {
   global $optiondata;
-  return $optiondata[$opt];
+  
+  if (!isset($optiondata[$opt]))
+    return "";
+    
+  $data = $optiondata[$opt];
+  
+  if (strstr($data,"http") && "/" == substr($data,-1))
+    $data = substr($data,0,-1);
+  
+  return $data;
 }
 
 function get_userdata( $user_id ) {
@@ -570,14 +581,15 @@ function wp_title() {
 function wp_head() {
     global $request;
     if (isset($request->resource) && $request->resource == 'identities' && $request->id > 0) {
+      
+      // headers for a profile page
+      
       echo '<meta http-equiv="X-XRDS-Location" content="'.$request->uri.'.xrds" />'."\n";
       echo '<meta http-equiv="X-Yadis-Location" content="'.$request->uri.'.xrds" />'."\n";
       
-      
+      // need to add OpenID headers here
       
     }
-    echo '<link rel="stylesheet" type="text/css" href="'.$request->layout_path.'wp-themes/prologue-theme/menu.css" />'."\n";
-    echo '<script src="stuHover.js" type="text/javascript"></script>'."\n";
 }
 
 function wp_register_sidebar_widget( $var1, $var2, $var3 ) {
@@ -1118,6 +1130,16 @@ function comments_number() {
 }
 
 function comments_template() {
+  
+  // dbscript
+  global $request, $db;
+  
+  // wordpress
+  global $blogdata, $optiondata, $current_user, $user_login, $userdata;
+  global $user_level, $user_ID, $user_email, $user_url, $user_pass_md5;
+  global $wpdb, $wp_query, $post, $limit_max, $limit_offset, $comments;
+  global $req, $wp_rewrite, $wp_version, $openid, $user_identity, $logic;
+  
   include('comments.php');
 }
 
@@ -1154,9 +1176,6 @@ function apply_filters( $pre, $content ) {
 }
 
 function current_user_can( $action ) {
-  if ($action == 'publish_posts' && environment('theme') == 'prologue-theme') {
-    show_prologue_nav();
-  }
   global $request;
   $id = get_profile_id();
   if (isset($request->params['byid']))
@@ -1180,20 +1199,13 @@ function setup_postdata( $post ) {
 
 function dynamic_sidebar() {
   global $request;
-  
-  $app = environment('app_folder') . DIRECTORY_SEPARATOR;
-  if ( is_dir( $app . environment('view_folder') ) )
-    $app = $app . environment('view_folder').DIRECTORY_SEPARATOR;
-  else
-    $app = environment('view_folder').DIRECTORY_SEPARATOR;
-  
   $blocks = environment('blocks');
   if (!empty($blocks)) {
     foreach ($blocks as $b) {
       echo '<script type="text/javascript" src="'.$request->url_for(array('resource'=>$b,'action'=>'block.js')).'"></script>';
     }
   }
-    echo '<a href="http://openmicroblogger.org"><img src="'.$app.'wp-themes/prologue-theme/omb.gif" style="border:none;" alt="openmicroblogger.org" /></a>'."\n";
+  echo '<a href="http://openmicroblogger.org"><img src="http://openmicroblogger.org/omb.gif" style="border:none;" alt="openmicroblogger.org" /></a>'."\n";
   return true;
 }
 

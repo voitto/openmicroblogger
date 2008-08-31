@@ -1,0 +1,344 @@
+<?php 
+
+  global $request;
+  $post = strtolower(classify($request->resource));
+
+?>
+<table align="center" cellpadding="3" cellspacing="0" border="0"><tr><td colspan="2"><br></td></tr>
+
+   <tr>
+<td align="right"><p></p></td>
+  <td><h1>
+  <?php print $Member->title ?>
+  </h1>
+  </td>
+</tr>
+
+   <tr>
+<td align="right"></td>
+  <td>
+  <?php print $Member->body ?>
+  </td>
+</tr>
+
+<?php if ($Member->attachment) : ?>
+
+<tr>
+  <td align="right"><p></p></td>
+  <td>
+    
+    <?php if (extension_for($Entry->content_type) == 'mp3') : ?>
+    
+    <script src="resource/swfobject.js" type="text/javascript"></script>
+    
+    <script src="resource/ep_player.js" type="text/javascript"></script>
+    
+    <div id="flashcontent">
+    	To use the <a href="http://www.e-phonic.com/mp3player/" target="_blank">E-Phonic MP3 Player</a>
+    	you will need <a href="http://www.adobe.com/products/flashplayer/" target="_blank">Adobe Flash Player 9</a> 
+    	or better and a Javascript enabled browser.
+    </div>
+    
+    <script type="text/javascript">
+    	// <![CDATA[
+    
+    	var so = new SWFObject("resource/ep_player.swf", "ep_player", "269", "226", "9", "#FFFFFF");
+      so.addVariable("skin", "resource/micro_player/skin.xml");
+    	so.addVariable("file", "<location><?php url_for( array( 'action'=>'attachment.mp3', 'resource'=>$request->resource, 'id'=>$Member->id )); ?></location><creator><?php print $Member->body; ?></creator><title><?php print $Member->title; ?></title>");
+    	so.addVariable("autoplay", "true");
+    	so.addVariable("buffertime", "1");
+    	so.write("flashcontent");
+    
+    	// ]]>
+    </script>
+    
+    <?php elseif (extension_for($Entry->content_type) == 'jpg') : ?>
+    
+    <img src="<?php url_for( array( 'action'=>'attachment.jpg', 'resource'=>$request->resource, 'id'=>$Member->id )); ?>">
+    
+    <?php elseif (extension_for($Entry->content_type) == 'mov') : ?>
+    
+    <script src="resource/AC_QuickTime.js" language="JavaScript" type="text/javascript"></script>
+    
+    <script language="JavaScript" type="text/javascript">
+      QT_WriteOBJECT_XHTML('<?php url_for( array( 'action'=>'attachment.mov', 'resource'=>$request->resource, 'id'=>$Member->id )); ?>', '640', '480', '',
+        'autoplay', 'true',
+        'emb#bgcolor', 'black',
+        'align', 'middle'); 
+    </script>
+    
+    <?php elseif (extension_for($Entry->content_type) == 'avi') : ?>
+    
+    <OBJECT ID="MediaPlayer" WIDTH=320 HEIGHT=240
+      CLASSID="CLSID:22D6F312-B0F6-11D0-94AB-0080C74C7E95"
+      STANDBY="Loading Windows Media Player components..."
+      TYPE="application/x-oleobject"> 
+      <PARAM NAME="FileName" VALUE="<?php url_for( array( 'action'=>'attachment.avi', 'resource'=>$request->resource, 'id'=>$Member->id )); ?>">
+      <EMBED TYPE="application/x-mplayer2"
+      SRC="<?php url_for( array( 'action'=>'attachment.avi', 'resource'=>$request->resource, 'id'=>$Member->id )); ?>"
+      NAME="<?php print $Member->title ?>"
+      WIDTH=320
+      HEIGHT=240> 
+    </EMBED>
+    </OBJECT>
+    
+    <?php endif; ?>
+    
+    
+  </td>
+</tr>
+<?php endif; ?>
+
+
+<tr>
+  <td align="right"><p></p></td>
+  <td>
+  <?php $author = get_profile($Member->profile_id); print $author->nickname." ".time_of($Member->created); ?>
+  </td>
+</tr>
+
+
+<tr>
+  <td align="right"><p></p></td>
+  <td>
+  <BR><BR><BR><BR>
+  </td>
+</tr>
+
+
+
+   <tr>
+<td align="right"><p></p></td>
+  <td>
+  <table align="center" cellpadding="3" cellspacing="0" border="0">
+  <?php global $request; ?>
+  <?php $Post =& $db->model(tableize($request->resource)); $Post->has_one('profile_id:identities'); $Post->find_by('parent_id',$Member->id); ?>
+  <?php while ($c = $Post->MoveNext()) : ?>
+  <?php $replyauthor = $c->FirstChild('identities'); ?>
+  <?php echo "<tr><td><p><font size=\"-1\">".'reply by '.$replyauthor->nickname."&nbsp; ".time_of($c->created)."</font></p></td></tr><tr><td><p>".htmlentities($c->title)."</p><br></td></tr>"; ?>
+  <?php endwhile; ?>
+  </table>
+  </td>
+</tr>
+
+<tr><td colspan="2">
+<?php $Review =& $db->model('Review'); $Review->has_one('profile_id:identities'); $Review->find_by('target_id',$Entry->id); ?>
+
+<?php while ( $r = $Review->MoveNext()) : ?>
+<?php $reviewer = $r->FirstChild('identities'); ?>
+<?php $i = 0; ?>
+
+<?php while ($i < $r->rating) : ?>
+<img src="<?php echo $request->layout_path; ?>reviews/full_star.gif" alt="*">
+<?php $i++; ?>
+<?php endwhile; ?>
+
+<?php while ($i < 5) : ?>
+<img src="<?php echo $request->layout_path; ?>reviews/empty_star.gif" alt="">
+<?php $i++; ?>
+<?php endwhile; ?>
+<?php print "<font size=\"-1\">".$reviewer->nickname." ".time_of($r->created)."</font><br>"; ?>
+
+<?php endwhile; ?>
+
+<br />
+</td></tr>
+
+
+
+
+
+<?php if (signed_in()) : ?>
+
+
+
+
+
+   <tr>
+<td align="right"><p></p></td>
+  <td>
+  <BR><BR><BR><BR>
+  </td>
+</tr>
+
+
+<?php
+  
+  $Identity =& $db->get_table('identities');
+  
+  $Person =& $db->get_table('people');
+  
+  $p = $Person->find(get_person_id());
+  
+  if ($p)
+    $ident = $p->FirstChild('identities');
+  else
+    $ident = $Identity->base();
+  
+  
+?>
+
+
+
+<tr><td colspan="2"><p>Reply:</p>
+
+<form name="replypost" method="post" action="<?php url_for(array('resource'=>$request->resource)); ?>">
+<input type="hidden" name="method" value="post">
+<textarea cols="40" maxlength="140" rows="5" name="<?php echo $post; ?>[title]"><?php if ($author) print "@".$author->nickname." "; ?></textarea>
+<input type="hidden" name="<?php echo $post; ?>[local]" value="1">
+<input type="hidden" name="<?php echo $post; ?>[parent_id]" value="<?php print $Member->id; ?>">
+<input type="hidden" name="<?php echo $post; ?>[profile_id]" value="<?php echo get_profile_id(); ?>">
+<input type="submit" value="Submit Reply">
+</form>
+
+
+<br />
+</td></tr>
+
+<tr><td colspan="2"><p>Rating:</p>
+
+
+
+
+<form name="reviewpost" method="post" action="<?php url_for(array('resource'=>'reviews')); ?>">
+<input type="hidden" name="method" value="post">
+
+
+<?php $i = 0; ?>
+
+<?php while ($i < 5) : ?>
+<input type="radio" name="review[rating]" value="<?php print ($i+1); ?>">
+<?php $j = 0; ?>
+<?php while ($j < $i+1) : ?>
+<img src="<?php echo $request->layout_path; ?>reviews/full_star.gif" alt="*">
+<?php $j++; ?>
+<?php endwhile; ?>
+<BR>
+<?php $i++; ?>
+<?php endwhile; ?>
+
+
+
+
+<input type="hidden" name="review[target_id]" value="<?php print $Entry->id; ?>">
+<input type="hidden" name="review[profile_id]" value="<?php echo get_profile_id(); ?>">
+<input type="hidden" name="review[reviewer]" value="<?php if ($ident) print $ident->nickname; ?>">
+<input type="submit" value="Submit Rating">
+</form>
+
+
+
+
+<?php else : ?>
+
+
+
+
+
+<tr>
+  <td align="right"><p></p></td>
+  <td>
+  <BR><BR><BR><BR>
+  </td>
+</tr>
+
+<tr><td colspan="2">
+
+<p><b><a href="<?php url_for( 'email_login' ); ?>">Sign In</a> to post a reply</b></p>
+
+
+</td></tr>
+
+
+
+
+<?php endif; ?>
+
+
+<?php if (!public_resource()) : ?>
+</td></tr>
+   <tr>
+<td align="right"><p></p></td>
+  <td>
+  <BR><BR><BR><BR>
+  </td>
+</tr>
+
+   <tr>
+   <td align="right"><p></p></td>
+  <td>
+  <?php $arr = resource_group_members(); ?>
+  
+  <p>Members of this forum:</p>
+  
+  <?php foreach ( $arr as $member_ident ) : ?>
+
+  <p><font size="-1"><?php print $member_ident->given_name." ".$member_ident->url.""; ?></font></p>
+  
+  <?php endforeach; ?>
+  
+  </td>
+</tr>
+
+<?php endif; ?>
+   <tr>
+<td align="right"><p></p></td>
+  <td>
+  <BR><BR><BR><BR>
+  </td>
+</tr>
+
+
+<tr><td colspan="2">
+
+
+<?php if (public_resource()) : ?>
+
+<br>
+<br>
+<h4>Bookmark this:</h4> 
+<a href="http://www.blinklist.com/index.php?Action=Blink/addblink.php&Description=&Url=<?php print $request->uri; ?>&Title=<?php print $Member->title; ?>" target="_blank"><img src="resource/bookmark/blinklist.gif" border="0" title="Bookmark to Blinklist!" alt="Bookmark to Blinklist!"></a>
+<a href="http://blogmarks.net/my/new.php?mini=1&simple=1&url=<?php print $request->uri; ?>&title=<?php print $Member->title; ?>" target="_blank"><img src="resource/bookmark/blogmarks.gif" border="0" title="Bookmark to Blogmarks!" alt="Bookmark to Blogmarks!"></a>
+<a href="http://del.icio.us/post?url=<?php print $request->uri; ?>&title=<?php print $Member->title; ?>" target="_blank"><img src="resource/bookmark/delicious.gif" border="0" title="Bookmark to Del.icio.us!" alt="Bookmark to Del.icio.us!"></a>
+<a href="http://de.lirio.us/rubric/post?uri=<?php print $request->uri; ?>;title=<?php print $Member->title; ?>" target="_blank"><img src="resource/bookmark/delirious.gif" border="0" title="Bookmark to De.lirio.us!" alt="Bookmark to De.lirio.us!"></a>
+<a href="http://digg.com/submit?phase=2&url=<?php print $request->uri; ?>&title=<?php print $Member->title; ?>" target="_blank"><img src="resource/bookmark/digg.gif" border="0" title="Bookmark to Digg!" alt="Bookmark to Digg!"></a>
+<a href="http://cgi.fark.com/cgi/fark/submit.pl?new_url=<?php print $request->uri; ?>&new_comment=<?php print $Member->title; ?>" target="_blank"><img src="resource/bookmark/fark.gif" border="0" title="Bookmark to Fark!" alt="Bookmark to Fark!"></a>
+<a href="http://furl.net/storeIt.jsp?t=<?php print $Member->title; ?>&u=<?php print $request->uri; ?>" target="_blank"><img src="resource/bookmark/furl.gif" border="0" title="Bookmark to Furl!" alt="Bookmark to Furl!"></a>
+<a href="http://ma.gnolia.com/beta/bookmarklet/add?url=<?php print $request->uri; ?>&title=<?php print $Member->title; ?>" target="_blank"><img src="resource/bookmark/magnolia.gif" border="0" title="Bookmark to Ma.gnolia!" alt="Bookmark to Ma.gnolia!"></a>
+<a href="http://www.newsvine.com/_tools/seed&save?u=<?php print $request->uri; ?>&h=<?php print $Member->title; ?>" target="_blank"><img src="resource/bookmark/newsvine.gif" border="0" title="Bookmark to Newsvine!" alt="Bookmark to Newsvine!"></a>
+<a href="http://reddit.com/submit?url=<?php print $request->uri; ?>&title=<?php print $Member->title; ?>" target="_blank"><img src="resource/bookmark/reddit.gif" border="0" title="Bookmark to Reddit!" alt="Bookmark to Reddit!"></a>
+<a href="http://www.scuttle.org/bookmarks.php/maxpower?action=add&address=<?php print $request->uri; ?>&title=<?php print $Member->title; ?>" target="_blank"><img src="resource/bookmark/scuttle.gif" border="0" title="Bookmark to Scuttle!" alt="Bookmark to Scuttle!"></a>
+<a href="http://www.simpy.com/simpy/LinkAdd.do?href=<?php print $request->uri; ?>&title=<?php print $Member->title; ?>" target="_blank"><img src="resource/bookmark/simpy.gif" border="0" title="Bookmark to Simpy!" alt="Bookmark to Simpy!"></a>
+<a href="http://www.spurl.net/spurl.php?title=<?php print $Member->title; ?>&url=<?php print $request->uri; ?>" target="_blank"><img src="resource/bookmark/spurl.gif" border="0" title="Bookmark to Spurl!" alt="Bookmark to Spurl!"></a>
+<a href="http://www.stumbleupon.com/submit?url=<?php print $request->uri; ?>&title=<?php print $Member->title; ?>" target="_blank"><img src="resource/bookmark/stumbleupon.gif" border="0" title="Bookmark to StumbleUpon!" alt="Bookmark to StumbleUpon!"></a>
+<a href="http://technorati.com/faves?add=<?php print $request->uri; ?>" target="_blank"><img src="resource/bookmark/technorati.gif" border="0" title="Bookmark to Technorati!" alt="Bookmark to Technorati!"></a>
+<a href="http://myweb2.search.yahoo.com/myresults/bookmarklet?t=<?php print $Member->title; ?>&u=<?php print $request->uri; ?>" target="_blank"><img src="resource/bookmark/yahoomyweb.gif" border="0" title="Bookmark to Yahoo! My Web!" alt="Bookmark to Yahoo! My Web!"></a>
+
+<?php endif; ?>
+
+
+
+  </td>
+</tr>
+
+
+
+
+   <tr>
+<td align="right"><p></p></td>
+  <td>
+  <BR><BR><BR><BR>
+  </td>
+</tr>
+
+ <script type="text/javascript">
+    	// <![CDATA[
+  
+  //document.replypost.post[title].focus();
+    
+    	// ]]>
+    </script>
+    
+
+
+</table>
