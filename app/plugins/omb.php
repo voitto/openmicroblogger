@@ -1133,7 +1133,145 @@ function xrdends( $uri, $xrds ) {
 
 function oauth_omb_update( &$vars ) {
   
-  // update profile code goes here! XXX
+  extract($vars);
+  
+  wp_plugin_include(array(
+    'wp-oauth'
+  ));
+  
+  $store = new OAuthWordpressStore();
+  $server = new OAuthServer($store);
+  $sha1_method = new OAuthSignatureMethod_HMAC_SHA1();
+  $plaintext_method = new OAuthSignatureMethod_PLAINTEXT();
+  $server->add_signature_method($sha1_method);
+  $server->add_signature_method($plaintext_method);
+  $req = OAuthRequest::from_request();
+  
+  list($consumer, $token) = $server->verify_request($req);
+  
+  $version = $req->get_parameter('omb_version');
+  
+  if ($version != OMB_VERSION)
+    trigger_error('invalid omb version', E_USER_ERROR);
+  
+  $listenee = $req->get_parameter('omb_listenee');
+  
+  $Identity =& $db->model('Identity');
+  
+  $sender = $Identity->find_by('profile',$listenee);
+  
+  if (!($sender)) {
+    header( 'Status: 403 Forbidden' );
+    exit;
+  }
+  
+  $listenee_params = array(
+    'omb_listenee_profile'   => 'profile_url',
+    'omb_listenee_nickname'  => 'nickname',
+    'omb_listenee_license'   => 'license',
+    'omb_listenee_fullname'  => 'fullname',
+    'omb_listenee_homepage'  => 'homepage',
+    'omb_listenee_bio'       => 'bio',
+    'omb_listenee_location'  => 'locality',
+    'omb_listenee_avatar'    => 'avatar'
+  );
+  
+  foreach($listenee_params as $k=>$v ) {
+    if (isset($_POST[$k])) {
+      $sender->set_value( $v, $_POST[$k] );
+    }
+  }
+  
+  $sender->save_changes();
+  
+  print "omb_version=".OMB_VERSION;
+  exit;
+  
+}
+
+
+function broadcast_omb_profile_update() {
+  
+  global $request, $db;
+  
+  wp_plugin_include(array(
+    'wp-oauth'
+  ));
+  
+  $i = get_profile();
+  
+  $listenee_uri = $i->profile;
+  
+  $license = $i->license;
+  
+  $sent_to = array();
+  
+  $Subscription = $db->model('Subscription');
+  
+  $Subscription->has_one( 'subscriber:identity' );
+  
+  $where = array(
+    'subscriptions.subscribed'=>$i->id,
+  );
+  
+  $Subscription->set_param( 'find_by', $where );
+  
+  $Subscription->find();
+  
+  while ($sub = $Subscription->MoveNext()) {
+    $sub_token = trim($sub->token);
+    $sub_secret = trim($sub->secret);
+    $sid = $sub->FirstChild('identities');
+    $url = $sid->update_profile;
+    if (!in_array($url,$sent_to) && !empty($url) && !(strstr( $url, $request->base ))) {
+      $sent_to[] = $url;
+      $sha1_method = new OAuthSignatureMethod_HMAC_SHA1();
+      $wp_plugins = "wp-plugins" . DIRECTORY_SEPARATOR . "plugins" . DIRECTORY_SEPARATOR . "enabled";
+      $path = plugin_path() . $wp_plugins . DIRECTORY_SEPARATOR . 'wp-openid' . DIRECTORY_SEPARATOR;
+      add_include_path( $path ); 
+      require_once "Auth/Yadis/Yadis.php";
+      $fetcher = Auth_Yadis_Yadis::getHTTPFetcher();
+      $consumer = new OAuthConsumer($request->base, '');
+      $token = new OAuthToken($sub_token, $sub_secret);
+      $parsed = parse_url($url);
+      $params = array();
+      parse_str($parsed['query'], $params);
+      $req = OAuthRequest::from_consumer_and_token($consumer, $token, "POST", $url, $params );
+      
+      $req->set_parameter('omb_version', OMB_VERSION );
+      $req->set_parameter('omb_listenee', $listenee_uri );
+      
+      $listenee_params = array(
+        'omb_listenee_profile'   => $i->profile,
+        'omb_listenee_nickname'  => $i->nickname,
+        'omb_listenee_license'   => $i->license,
+        'omb_listenee_fullname'  => $i->fullname,
+        'omb_listenee_homepage'  => $i->homepage,
+        'omb_listenee_bio'       => $i->bio,
+        'omb_listenee_location'  => $i->locality,
+        'omb_listenee_avatar'    => $i->avatar
+      );
+      
+      foreach($listenee_params as $k=>$v )
+        $req->set_parameter( $k, $v );
+      
+      $req->sign_request($sha1_method, $consumer, $token);
+      $result = $fetcher->post($req->get_normalized_http_url(),$req->to_postdata());
+      
+      if ( $result->status == 403 ) {
+        // not so much
+      } else {
+        parse_str( $result->body, $return );
+        if ( is_array($return) && $return['omb_version'] == OMB_VERSION ) {
+          // nice
+        } else {
+          // could be better
+        }
+      }
+      
+    }
+    
+  }
   
 }
 
