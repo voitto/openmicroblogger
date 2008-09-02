@@ -79,7 +79,23 @@ if( have_posts( ) ) {
     </span>
   </h4>
   <div class="postcontent">
-    <?php the_content( __( '(More ...)' ) ); ?>
+    <?php
+    global $the_post;
+    $e = $the_post->FirstChild('entries');
+    if ($e->content_type != 'text/html') {
+      echo "<div class='snap_preview'><p><a href=\"".$request->url_for(array('resource'=>'__'.$the_post->id))."\">";
+      echo $the_post->title;
+      echo "</a></p></div>";
+    } else {
+      echo "<div class='snap_preview'>";
+      the_content( __( '(More ...)' ) );
+      echo "</div>";
+    }
+    ?>
+    <?php ; ?>
+    
+    
+    
   </div> <!-- // postcontent -->
   <div class="bottom_of_entry">&nbsp;</div>
 </li>

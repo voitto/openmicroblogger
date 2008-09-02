@@ -215,10 +215,15 @@ function wp_set_post_fields( &$model, &$rec ) {
   while ( $c = $Category->MoveNext() )
     $cats[strtolower($c->name)] = $c->id;
   
+  $newcount = count($cats);
+  
   foreach ( $tags as $t ) {
     $t = strtolower( trim( $t ));
     if (array_key_exists( $t, $cats )) {
       $request->set_param( "category".$cats[$t], $t );
+    } else {
+      $request->set_param( "category".$newcount, $t );
+      $newcount++;
     }
   }
   

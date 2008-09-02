@@ -61,14 +61,17 @@ function put( &$vars ) {
 
 
   
-function do_invite_email($addr,$token) {
+function do_invite_email($addr,$token, &$group) {
   
   global $request;
   $link = $request->url_for(array('resource'=>'posts','id'=>86,'ident'=>$token));
   
-  $subject = '';
+  $subject = 'You are invited to join a private group on '.$request->base;
   
-  $email = '';
+  $email = "You are invited to join a private group on ".$request->base.", just follow the link to claim your invite.\n\n";
+  
+  $email .= "Redeem invite by clicking --> $link \n\n";
+
   
   $html = false;
   
@@ -115,7 +118,7 @@ function post( &$vars ) {
       $i->set_value( 'person_id', $p->id );
       $i->save_changes();
       $i->set_etag($p->id);
-      do_invite_email($a,$token);
+      do_invite_email($a,$token,$g);
     }
     if (is_email($a) && $p) {
       $m = $Membership->base();

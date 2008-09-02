@@ -31,6 +31,7 @@ $blogdata = array(
   'html_type'=>'',
   'theme_url'=>theme_path(),
   'stylesheet_url'=>theme_path()."style.css",
+  'stylesheet_directory'=>theme_path(),
   'pingback_url'=>$request->base,
   'template_url'=>theme_path()
 );
@@ -909,11 +910,8 @@ function the_content( $linklabel ) {
     }
   }
   
-  if ($e->content_type != 'text/html') {
-    echo "<div class='snap_preview'><p><a href=\"".$request->url_for(array('resource'=>'__'.$the_post->id))."\">".$the_post->title."</a></p></div>";
-  } else {
-    echo "<div class='snap_preview'><p>".$title."</p></div>";
-  }
+  echo "<p>".$title."</p>";
+  
 }
 
 function have_posts() {
@@ -1093,7 +1091,7 @@ function add_custom_image_header( $var, $name ) {
 
 function edit_post_link( $post ) {
   global $the_post,$request;
-  if ($the_post->profile_id == get_profile_id())
+  if ($the_post->profile_id == get_profile_id() || get_profile_id() == 1)
   echo "<a href=\"".$request->url_for(array(
     'resource'  => 'posts',
     'id'        => $the_post->id,

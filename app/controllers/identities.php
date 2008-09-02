@@ -10,7 +10,7 @@ function validate_identities_photo( $value ) {
       unlink($_FILES['identity']['tmp_name']['photo']);
     trigger_error( "That photo is too big. Please find one that is smaller than 400K.", E_USER_ERROR );
   }
-  if (!in_string("JpG",$_FILES['identity']['name']['photo'],1))
+  if (!is_jpg($_FILES['identity']['tmp_name']['photo']))
     trigger_error( "Sorry for the trouble, but your photo must be a JPG file.", E_USER_ERROR );
   return true;
 }
