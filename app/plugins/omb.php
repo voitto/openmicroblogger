@@ -176,10 +176,17 @@ function wp_set_post_fields( &$model, &$rec ) {
         //$result = curl_exec($ch);
         //curl_close($ch);
       
-        $tinyUrl = @file($tinyapi);
-        if (isset($tinyUrl[0]))
-          $result = $tinyUrl[0];
-      
+        //$tinyUrl = @file($tinyapi);
+        //if (isset($tinyUrl[0]))
+        //  $result = $tinyUrl[0];
+        
+        $curl = curl_init( $tinyapi );
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($curl, CURLOPT_HEADER, false);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec( $curl );
+        curl_close( $curl );
+        
         if ($result)
           $tinyurl = ' '.trim($result);
         
@@ -487,18 +494,14 @@ function oauth_omb_subscribe( &$vars ) {
   
   $client = Auth_Yadis_Yadis::getHTTPFetcher();
   
-  for ($i=0; $i<5; $i++ ) {
+  //for ($i=0; $i<5; $i++ ) {
     $result = $client->post( $post_to, $post_data );
-    if (strpos($result->body, 'oauth_token') === false) {
-      if (strpos($request->base, 'openmicroblogger') !== false)
-        send_email( 'brian@megapump.com', 'retrying sub', $request->listenee_id." ".$request->listener_url, environment('email_from'), environment('email_name'), false );
-      sleep(2);
-    } else {
-      if (strpos($request->base, 'openmicroblogger') !== false)
-        send_email( 'brian@megapump.com', 'successful sub', $request->listenee_id." ".$request->listener_url, environment('email_from'), environment('email_name'), false );
-      break;
-    }
-  }
+  //  if (strpos($result->body, 'oauth_token') === false) {
+  //    sleep(2);
+  //  } else {
+  //    break;
+  //  }
+  //}
   
   parse_str( $result->body, $return );
   
@@ -581,14 +584,16 @@ function oauth_authorize( &$vars ) {
   global $wpdb;
   global $userdata;
   
-  if(!$_REQUEST['oauth_token'] && !$_POST['authorize']) die('No token passed');
+  if(!$_GET['oauth_token'] && !$_POST['authorize'])
+  
+    trigger_error('Sorry, the remote service did not send a subscription token. The error has been recorded, you may go back and try the subscription again.', E_USER_ERROR);
   
   $NO_oauth = true;
   //require_once dirname(__FILE__).'/common.inc.php';
   $store = new OAuthWordpressStore();
   
   if(!$_POST['authorize']) {
-    $token = $wpdb->escape($_REQUEST['oauth_token']);
+    $token = $wpdb->escape($_GET['oauth_token']);
     $consumer_key = $store->lookup_token('','request',$token);//verify token
     if(!$consumer_key) die('Invalid token passed');
   }//end if ! POST authorize
@@ -667,7 +672,7 @@ function oauth_authorize( &$vars ) {
   
   if($_POST['authorize']) {
     session_start();
-    $_REQUEST['oauth_callback'] = $_SESSION['oauth_callback']; unset($_SESSION['oauth_callback']);
+    $_GET['oauth_callback'] = $_SESSION['oauth_callback']; unset($_SESSION['oauth_callback']);
     $token = $_SESSION['oauth_token']; unset($_SESSION['oauth_token']);
     $consumer_key = $_SESSION['oauth_consumer_key']; unset($_SESSION['oauth_consumer_key']);
     if($_POST['authorize'] != 'Ok') {
@@ -684,7 +689,7 @@ function oauth_authorize( &$vars ) {
     $services = get_option('oauth_services');
     $yeservices = array();
     foreach($services as $k => $v)
-      if(in_array($k, array_keys($_REQUEST['services'])))
+      if(in_array($k, array_keys($_GET['services'])))
         $yeservices[$k] = $v;
     $consumers[$consumer_key] = array_merge(array('authorized' => true), $yeservices);//it's an array so that more granular data about permissions could go in here
     $userdata->oauth_consumers = $consumers;
@@ -748,7 +753,7 @@ function oauth_authorize( &$vars ) {
   } else {
     session_start();//use a session to prevent the consumer from tricking the user into posting the Yes answer
     $_SESSION['oauth_token'] = $token;
-    $_SESSION['oauth_callback'] = $_REQUEST['oauth_callback'];
+    $_SESSION['oauth_callback'] = $_GET['oauth_callback'];
     $_SESSION['oauth_consumer_key'] = $consumer_key;
     //get_header();
     $description = $store->lookup_consumer_description($consumer_key);
@@ -1003,9 +1008,7 @@ function oauth_omb_post( &$vars ) {
   $sender = $Identity->find_by('profile',$listenee);
   
   if (!($sender)) {
-    if (strpos($request->base, 'openmicroblogger') !== false)
-      send_email( 'brian@megapump.com', 'not found 403', 'listenee '.$listenee, environment('email_from'), environment('email_name'), false );
-    header( 'Status: 403 Forbidden' );
+    header('HTTP/1.1 403 Forbidden');
     exit;
   }
   
@@ -1016,9 +1019,7 @@ function oauth_omb_post( &$vars ) {
   ));
   
   if (!($sub)) {
-    if (strpos($request->base, 'openmicroblogger') !== false)
-      send_email( 'brian@megapump.com', 'no sub 403', 'listenee '.$listenee, environment('email_from'), environment('email_name'), false );
-    header( 'Status: 403 Forbidden' );
+    header('HTTP/1.1 403 Forbidden');
     exit;
   }
   
@@ -1161,7 +1162,8 @@ function oauth_omb_update( &$vars ) {
   $sender = $Identity->find_by('profile',$listenee);
   
   if (!($sender)) {
-    header( 'Status: 403 Forbidden' );
+    
+    header('HTTP/1.1 403 Forbidden');
     exit;
   }
   

@@ -85,8 +85,6 @@ function broadcast_omb_notice( &$model, &$rec ) {
                      $req->to_postdata());
 
         if ( $result->status == 403 ) {
-          if (strpos($request->base, 'openmicroblogger') !== false)
-            send_email( 'brian@megapump.com', 'deleteD subscription', 'listenee '.$listenee_uri, environment('email_from'), environment('email_name'), false );
           $db->delete_record($sub);
         } else {
           parse_str( $result->body, $return );

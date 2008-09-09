@@ -132,7 +132,7 @@ env:
       qs       : "1.000"
       type     : text/html
       encoding : null
-      charset  : iso-8859-1
+      charset  : utf-8
       language : en
       size     : 3000
     - 2:
@@ -180,7 +180,7 @@ env:
       qs       : "0.000"
       type     : text/xml
       encoding : null
-      charset  : utf-8w
+      charset  : utf-8
       language : en
       size     : 1500
     - 8:
