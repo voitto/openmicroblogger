@@ -19,7 +19,7 @@
   <item rdf:about="<?php url_for( array( 'resource'=>$collection->resource, 'id'=>$Member->id )); ?>">
   <title><?php print $Member->title; ?></title>
     <link><?php url_for( array( 'resource'=>$collection->resource, 'id'=>$Member->id )); ?></link>
-    <description><?php print $profile->fullname; ?>'s status on <?php print time_of($Member->created); ?></description>
+    <description><?php print $profile->nickname; ?>'s status on <?php print time_of($Member->created); ?></description>
     <dc:date><?php print time_3339($Member->created); ?></dc:date>
     <dc:creator><?php print $profile->fullname; ?></dc:creator>
     <cc:licence rdf:resource="<?php print $profile->license; ?>"></cc:licence>

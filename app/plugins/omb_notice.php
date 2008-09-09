@@ -4,10 +4,17 @@ after_filter( 'broadcast_omb_notice', 'insert_from_post' );
 
 function broadcast_omb_notice( &$model, &$rec ) {
   
-  if (!(isset($rec->title)))
+  if (!(isset($rec->title)) || !(isset($rec->uri)))
     return;
   
   global $request, $db;
+  
+  if (empty($rec->uri)) {
+    $rec->set_value( 'uri', $request->url_for( array(
+      'resource'=>'__'.$rec->id,
+    )));
+    $rec->save_changes();
+  }
   
   wp_plugin_include(array(
     'wp-oauth'

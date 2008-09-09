@@ -245,7 +245,7 @@ function wp_set_post_fields_after( &$model, &$rec ) {
     $rec->set_value( 'uri', $request->url_for( array(
       'resource'=>'__'.$rec->id,
     )));
-    $rec->save_changes;
+    $rec->save_changes();
   }
 }
 
