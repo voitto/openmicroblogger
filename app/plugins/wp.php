@@ -18,21 +18,21 @@ require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'wp-plugins'.DIRECTORY_SEPARA
 $db->create_openid_tables();
 
 $blogdata = array(
-  'home'=>$request->base,
+  'home'=>base_url(true),
   'name'=>environment('site_title'),
   'name'=>environment('site_subtitle'),
   'description'=>environment('site_description'),
-  'wpurl'=>$request->base,
-  'url'=>$request->base,
-  'atom_url'=>$request->base."?posts.atom",
-  'rss_url'=>$request->base."?posts.rss",
-  'rss2_url'=>$request->base."?posts.rss",
+  'wpurl'=>base_url(true),
+  'url'=>base_url(true),
+  'atom_url'=>base_url(true)."?posts.atom",
+  'rss_url'=>base_url(true)."?posts.rss",
+  'rss2_url'=>base_url(true)."?posts.rss",
   'charset'=>'',
   'html_type'=>'',
   'theme_url'=>theme_path(),
   'stylesheet_url'=>theme_path()."style.css",
   'stylesheet_directory'=>theme_path(),
-  'pingback_url'=>$request->base,
+  'pingback_url'=>base_url(true),
   'template_url'=>theme_path()
 );
 
@@ -45,9 +45,9 @@ $optiondata = array(
   'upload_path'=>'',
   'oid_enable_approval'=>true,
   'oid_enable_commentform'=>true,
-  'home'=>$request->base,
+  'home'=>base_url(true),
   'comment_registration'=>true,
-  'siteurl'=>$request->base,
+  'siteurl'=>base_url(true),
   'posts_per_page'=>20,
   'prologue_recent_projects'=>''
 );
@@ -763,7 +763,7 @@ function attribute_escape( $value ) {
 }
 
 function the_post() {
-  global $the_post,$response,$the_author,$the_entry;
+  global $the_post,$response,$the_author,$the_entry,$request;
   $the_post =& $response->collection->MoveNext();
   if (isset($the_post->profile_id)){
     $the_author = get_profile($the_post->profile_id);
@@ -784,6 +784,9 @@ function the_post() {
   }
   if (!empty($the_author->profile_url)) $the_author->profile = $the_author->profile_url; 
   
+    // show pretty URLs if not a Remote user
+  if (empty($the_author->post_notice)) $the_author->profile = $request->url_for(array('resource'=>$the_author->nickname));
+
   return "";
 }
 function get_links() {
@@ -955,7 +958,7 @@ function show_prologue_nav() {
   $byid = 0;
   if (isset($request->params['byid']))
     $byid = $request->params['byid'];
-  $links['Public'] = $request->base;
+  $links['Public'] = base_url(true);
   if ($byid > 0 && $byid != $pid) {
     $i = get_profile($byid);
   } elseif ($request->resource == 'identities' && $request->id != $pid) {
@@ -970,7 +973,10 @@ function show_prologue_nav() {
         'resource'=>'posts',
         'byid'=>$i->id,
         'page'=>1 ));
-    $links['Profile'] = $i->profile;
+    if (empty($i->post_notice))
+      $links['Profile'] = $request->url_for(array('resource'=>$i->nickname));
+    else
+      $links['Profile'] = $i->profile;
   }
   if ($pid > 0) {
     $links['Logout'] = $request->url_for('openid_logout');

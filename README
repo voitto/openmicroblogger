@@ -109,6 +109,20 @@ edit the file: app/config/config.yml
       awsBucket: 
 
 
+///////////////////////////
+// use pretty URLs
+///////////////////////////
+
+To enable pretty URLs:
+  
+1) uncomment lines 65 & 66 in /db/boot.php
+
+2) type your own base URL in that file
+
+3) set "RewriteEngine on" in .htaccess
+
+
+
 
 
 UPDATING
@@ -132,7 +146,7 @@ If you want to customize OpenMicroBlogger with your own theme and plugins:
 // get the latest build
 ///////////////////////////
 
-you can grab the up-to-date version from http://dbscript.net/omb.zip
+you can grab the almost-nightly build from http://dbscript.net/omb.zip
 
 
 

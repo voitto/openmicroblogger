@@ -78,7 +78,7 @@ $subscribers = array();
 <br />
 <form>
 <p>Copy &amp; paste the following URL to subscribe to people on other Web sites:</p>
-<p>Profile URL: <input name="profid" size="40" value="<?php echo $request->base."?".$pro->nickname; ?>"/></p>
+<p>Profile URL: <input name="profid" size="40" value="<?php echo $request->url_for(array('resource'=>$pro->nickname)); ?>"/></p>
 </form>
 <br />
 <p><a href="<?php echo $request->url_for(array(
