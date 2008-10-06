@@ -56,7 +56,10 @@ env:
   debug_enabled: true
 
   apps:
-    - omb
+    - rhino
+    - wall
+    - santa
+    - photos
     
   plugins:
     - sessions
@@ -65,6 +68,7 @@ env:
     - ping
     - omb
     - omb_notice
+    - sms_notice
     - email_notice
     - wp
   
@@ -100,6 +104,10 @@ env:
   awsAccessKey: 
   awsSecretKey: 
   awsBucket: 
+  
+  zeepAccessKey: 
+  zeepSecretKey: 
+  zeepUrl: 
   
   ldap_server: 
   ldap_context: 
@@ -251,7 +259,7 @@ env:
   project_name: 
   
   package_name: 
-  package_version:
+  package_version: 
   
   load_paths:
     model              : models

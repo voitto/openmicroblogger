@@ -1,6 +1,7 @@
 <?php
 
 
+
 function validate_identities_photo( $value ) {
   if (!(is_upload('identities','photo')))
     return true;
@@ -207,8 +208,13 @@ function _entry( &$vars ) {
   extract( $vars );
   $Member = $collection->MoveFirst();
   $Entry = $Member->FirstChild( 'entries' );
+  $installed_apps = array();
+  while ($s = $Member->NextChild('settings')) {
+    if ($s->name == 'app')
+      $installed_apps[] = $s->value; 
+  }
   return vars(
-    array( &$collection, &$Member, &$Entry, &$profile, &$Identity, &$Subscription ),
+    array( &$collection, &$Member, &$Entry, &$profile, &$Identity, &$Subscription, &$installed_apps ),
     get_defined_vars()
   );
 }
@@ -248,6 +254,70 @@ function _edit( &$vars ) {
   );
 }
 
+function _admin( &$vars ) {
+  extract($vars);
+  global $submenu,$current_user;
+  trigger_before( 'admin_menu', $current_user, $current_user );
+  $menuitems = array();
+  $apps_list = array();
+  $i = $Identity->find(get_profile_id());
+  while ($s = $i->NextChild('settings')){
+    $s = $Setting->find($s->id);
+    $e = $s->FirstChild('entries');
+    $apps_list[] = $s->value;
+  }
+  $menuitems[$request->url_for(array(
+    'resource'=>'identities',
+    'id'=>get_profile_id(),
+    'action'=>'edit'
+    )).'/partial'] = 'Profile';
+  $menuitems[$request->url_for(array(
+    'resource'=>'identities',
+    'id'=>get_profile_id(),
+    'action'=>'subs'
+    )).'/partial'] = 'Subscriptions';
+  $menuitems[$request->url_for(array(
+    'resource'=>'identities',
+    'id'=>get_profile_id(),
+    'action'=>'apps'
+    )).'/partial'] = 'Applications';
+  foreach ($submenu as $arr) {
+    if (in_array($arr[0][0],$apps_list))
+      $menuitems[$arr[0][4]] = $arr[0][3];
+  }
+  return vars(
+    array(&$menuitems),
+    get_defined_vars()
+  );
+}
+
+
+function _subs( &$vars ) {
+  // entry controller returns
+  // a Collection w/ 1 member entry
+  extract( $vars );
+  $Member = $collection->MoveFirst();
+  $Entry = $Member->FirstChild( 'entries' );
+  return vars(
+    array( &$collection, &$Member, &$Entry, &$profile, &$Identity, &$Subscription, &$installed_apps ),
+    get_defined_vars()
+  );
+}
+
+
+function _apps( &$vars ) {
+  // entry controller returns
+  // a Collection w/ 1 member entry
+  extract( $vars );
+  $Member = $collection->MoveFirst();
+  $Entry = $Member->FirstChild( 'entries' );
+  return vars(
+    array( &$collection, &$Member, &$Entry, &$profile, &$Identity, &$Subscription, &$installed_apps ),
+    get_defined_vars()
+  );
+}
+
+
 
 function _remove( &$vars ) {
   extract( $vars );
@@ -259,14 +329,64 @@ function _remove( &$vars ) {
   );
 }
 
+function app_installer_json( &$vars ) {
+  extract($vars);
+  lib_include( 'json' );
+  $json = new Services_JSON();
+  $apps_list = array();
+  
+  if (isset($GLOBALS['PATH']['apps']))
+    foreach($GLOBALS['PATH']['apps'] as $k=>$v)
+      $apps_list[$k] = $k;
+  
+  $sources = environment('remote_sources');
+  
+  foreach($sources as $name=>$url) {
+    $curl = curl_init("http://".$url);
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($curl, CURLOPT_HEADER, false);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    $result = curl_exec( $curl );
+    if ($result) {
+      $data = unserialize($result);
+      foreach($data as $appname=>$appdata) {
+        $apps_list[$appname] = $appname;
+      }
+    }
+    curl_close( $curl );  
+  }
+  
+  $i = $Identity->find(get_app_id());
+  
+  while ($s = $i->NextChild('settings')) {
+    if ($s->name == 'app' && in_array($s->value, $apps_list))
+      $apps_list = drop_array_element($apps_list,$s->value);
+  }
+  
+  header( "Content-Type: application/javascript" );
+  
+  print $json->encode($apps_list);
+  
+  exit;
+}
 
-function test_get( &$vars ) {
+
+function installed_apps_json( &$vars ) {
+  extract($vars);
+  lib_include( 'json' );
+  $json = new Services_JSON();
+  $apps_list = array();
+  $i = $Identity->find(get_profile_id());
+  while ($s = $i->NextChild('settings')){
+    $s = $Setting->find($s->id);
+    $e = $s->FirstChild('entries');
+    $apps_list[$e->etag] = $s->value;
+  }
   
-  # get( array( 'index', 'id' => $collection->id ));
-  # assert_response( 200 );
-  # assert_template( 'index' );
-  # assert_equal( get(), assigns( $collection ) );
+  header( "Content-Type: application/javascript" );
   
+  print $json->encode($apps_list);
+  exit;
 }
 
 

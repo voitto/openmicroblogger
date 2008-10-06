@@ -18,6 +18,11 @@ class Subscription extends Model {
         
     $this->auto_field( 'id' );
     
+    $this->bool_field( 'sms' );
+    $this->bool_field( 'email' );
+    $this->bool_field( 'omb' );
+    $this->bool_field( 'twitter' );
+    
     $this->has_one( 'entry' );
     $this->has_one( 'person' );
     

@@ -113,6 +113,13 @@ edit the file: app/config/config.yml
 // use pretty URLs
 ///////////////////////////
 
+Prety URL Requirements:
+  - root site only (yes -> me.com/ no -> me.com/subfolder/)
+  - two options to address mod_rewrite urlencode() bug
+    1. replace "urlencode(" with "urlencode(urlencode(" yuck
+    2. enable AllowEncodedSlashes On in VirtualHost (Apache > 2.0.46)
+      todo: add a test for this problem
+
 To enable pretty URLs:
   
 1) uncomment lines 65 & 66 in /db/boot.php

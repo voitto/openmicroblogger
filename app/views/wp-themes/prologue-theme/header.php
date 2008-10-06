@@ -2,6 +2,24 @@
  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" <?php language_attributes(); ?>>
   <head profile="http://gmpg.org/xfn/11">
+    
+    <script type="text/javascript" src="<?php base_url(); ?>resource/jquery-1.2.6.min.js"></script>
+    <script type="text/javascript" src="<?php base_url(); ?>resource/jquery.corner.js"></script>
+    <script type="text/javascript" src="<?php base_url(); ?>resource/jquery.jqUploader.js"></script>
+    <script type="text/javascript" src="<?php base_url(); ?>resource/jquery.flash.js"></script>
+    <script type="text/javascript">
+$(document).ready(function(){
+	$('#postfile').jqUploader({
+	  background:'FFFFFF',
+	  barColor:'336699',
+	  allowedExt:'*.avi; *.jpg; *.jpeg; *.mp3; *.mov',
+	  allowedExtDescr: 'Movies, Photos and Songs',
+	  validFileMessage: 'Click [Upload]',
+	  endMessage: '',
+	  hideSubmit: false
+	});
+});
+</script>
     <meta http-equiv="Content-Type" content="<?php bloginfo('html_type'); ?>; charset=<?php bloginfo('charset'); ?>" />
     <title><?php wp_title(); ?> <?php bloginfo('name'); ?></title>
     <meta name="generator" content="WordPress.com" /> 
@@ -90,25 +108,31 @@ body {
 </style>
 <?php } ?>
 
-<?php if (get_profile_id()) : ?>
 
-<script type="text/javascript" src="resource/jquery-1.2.1.min.js"></script>
-<script type="text/javascript" src="resource/jquery.flash.js"></script>
-<script type="text/javascript" src="resource/jquery.jqUploader.js"></script>
 
 <script type="text/javascript">
-$(document).ready(function(){
-	$('#postfile').jqUploader({
-	  background:'FFFFFF',
-	  barColor:'336699',
-	  allowedExt:'*.avi; *.jpg; *.jpeg; *.mp3; *.mov',
-	  allowedExtDescr: 'Movies, Photos and Songs',
-	  validFileMessage: 'Click [Upload]',
-	  endMessage: '',
-	  hideSubmit: false
-	});
-});
+
+  
+  function show_page(url) {
+    
+    $("#main").html("<img src='resource/jeditable/indicator.gif'>");
+    
+    $.get(url, function(str) {
+      $("#main").hide();
+      $("#main").html(str);
+      $("#main").slideDown("fast");
+    });
+    
+    
+    
+    
+  }
+  
 </script>
+
+<?php if (get_profile_id() ) : ?>
+
+
 
  <script type="text/javascript">
    
@@ -144,8 +168,12 @@ function checkMaxLength() {
 
 
     </script>
+    
   </head>
     <body onLoad="JavaScript:setMaxLength();">
+
+
+
 <?php else : ?>
   </head>
     <body>

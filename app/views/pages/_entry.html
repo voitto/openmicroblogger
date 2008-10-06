@@ -29,9 +29,9 @@
     
     <?php if (extension_for($Entry->content_type) == 'mp3') : ?>
     
-    <script src="resource/swfobject.js" type="text/javascript"></script>
+    <script src="<?php base_url(); ?>resource/swfobject.js" type="text/javascript"></script>
     
-    <script src="resource/ep_player.js" type="text/javascript"></script>
+    <script src="<?php base_url(); ?>resource/ep_player.js" type="text/javascript"></script>
     
     <div id="flashcontent">
     	To use the <a href="http://www.e-phonic.com/mp3player/" target="_blank">E-Phonic MP3 Player</a>
@@ -42,8 +42,8 @@
     <script type="text/javascript">
     	// <![CDATA[
     
-    	var so = new SWFObject("resource/ep_player.swf", "ep_player", "269", "226", "9", "#FFFFFF");
-      so.addVariable("skin", "resource/micro_player/skin.xml");
+    	var so = new SWFObject("<?php base_url(); ?>resource/ep_player.swf", "ep_player", "269", "226", "9", "#FFFFFF");
+      so.addVariable("skin", "<?php base_url(); ?>resource/micro_player/skin.xml");
     	so.addVariable("file", "<location><?php url_for( array( 'action'=>'attachment.mp3', 'resource'=>$request->resource, 'id'=>$Member->id )); ?></location><creator><?php print $Member->body; ?></creator><title><?php print $Member->title; ?></title>");
     	so.addVariable("autoplay", "true");
     	so.addVariable("buffertime", "1");
@@ -58,7 +58,7 @@
     
     <?php elseif (extension_for($Entry->content_type) == 'mov') : ?>
     
-    <script src="resource/AC_QuickTime.js" language="JavaScript" type="text/javascript"></script>
+    <script src="<?php base_url(); ?>resource/AC_QuickTime.js" language="JavaScript" type="text/javascript"></script>
     
     <script language="JavaScript" type="text/javascript">
       QT_WriteOBJECT_XHTML('<?php url_for( array( 'action'=>'attachment.mov', 'resource'=>$request->resource, 'id'=>$Member->id )); ?>', '640', '480', '',
@@ -129,12 +129,12 @@
 <?php $i = 0; ?>
 
 <?php while ($i < $r->rating) : ?>
-<img src="<?php echo $request->layout_path; ?>reviews/full_star.gif" alt="*">
+<img src="<?php echo base_url(true).$request->layout_path; ?>reviews/full_star.gif" alt="*">
 <?php $i++; ?>
 <?php endwhile; ?>
 
 <?php while ($i < 5) : ?>
-<img src="<?php echo $request->layout_path; ?>reviews/empty_star.gif" alt="">
+<img src="<?php echo base_url(true).$request->layout_path; ?>reviews/empty_star.gif" alt="">
 <?php $i++; ?>
 <?php endwhile; ?>
 <?php print "<font size=\"-1\">".$reviewer->nickname." ".time_of($r->created)."</font><br>"; ?>
@@ -210,7 +210,7 @@
 <input type="radio" name="review[rating]" value="<?php print ($i+1); ?>">
 <?php $j = 0; ?>
 <?php while ($j < $i+1) : ?>
-<img src="<?php echo $request->layout_path; ?>reviews/full_star.gif" alt="*">
+<img src="<?php echo base_url(true).$request->layout_path; ?>reviews/full_star.gif" alt="*">
 <?php $j++; ?>
 <?php endwhile; ?>
 <BR>
@@ -297,22 +297,22 @@
 <br>
 <br>
 <h4>Bookmark this:</h4> 
-<a href="http://www.blinklist.com/index.php?Action=Blink/addblink.php&Description=&Url=<?php print $request->uri; ?>&Title=<?php print $Member->title; ?>" target="_blank"><img src="resource/bookmark/blinklist.gif" border="0" title="Bookmark to Blinklist!" alt="Bookmark to Blinklist!"></a>
-<a href="http://blogmarks.net/my/new.php?mini=1&simple=1&url=<?php print $request->uri; ?>&title=<?php print $Member->title; ?>" target="_blank"><img src="resource/bookmark/blogmarks.gif" border="0" title="Bookmark to Blogmarks!" alt="Bookmark to Blogmarks!"></a>
-<a href="http://del.icio.us/post?url=<?php print $request->uri; ?>&title=<?php print $Member->title; ?>" target="_blank"><img src="resource/bookmark/delicious.gif" border="0" title="Bookmark to Del.icio.us!" alt="Bookmark to Del.icio.us!"></a>
-<a href="http://de.lirio.us/rubric/post?uri=<?php print $request->uri; ?>;title=<?php print $Member->title; ?>" target="_blank"><img src="resource/bookmark/delirious.gif" border="0" title="Bookmark to De.lirio.us!" alt="Bookmark to De.lirio.us!"></a>
-<a href="http://digg.com/submit?phase=2&url=<?php print $request->uri; ?>&title=<?php print $Member->title; ?>" target="_blank"><img src="resource/bookmark/digg.gif" border="0" title="Bookmark to Digg!" alt="Bookmark to Digg!"></a>
-<a href="http://cgi.fark.com/cgi/fark/submit.pl?new_url=<?php print $request->uri; ?>&new_comment=<?php print $Member->title; ?>" target="_blank"><img src="resource/bookmark/fark.gif" border="0" title="Bookmark to Fark!" alt="Bookmark to Fark!"></a>
-<a href="http://furl.net/storeIt.jsp?t=<?php print $Member->title; ?>&u=<?php print $request->uri; ?>" target="_blank"><img src="resource/bookmark/furl.gif" border="0" title="Bookmark to Furl!" alt="Bookmark to Furl!"></a>
-<a href="http://ma.gnolia.com/beta/bookmarklet/add?url=<?php print $request->uri; ?>&title=<?php print $Member->title; ?>" target="_blank"><img src="resource/bookmark/magnolia.gif" border="0" title="Bookmark to Ma.gnolia!" alt="Bookmark to Ma.gnolia!"></a>
-<a href="http://www.newsvine.com/_tools/seed&save?u=<?php print $request->uri; ?>&h=<?php print $Member->title; ?>" target="_blank"><img src="resource/bookmark/newsvine.gif" border="0" title="Bookmark to Newsvine!" alt="Bookmark to Newsvine!"></a>
-<a href="http://reddit.com/submit?url=<?php print $request->uri; ?>&title=<?php print $Member->title; ?>" target="_blank"><img src="resource/bookmark/reddit.gif" border="0" title="Bookmark to Reddit!" alt="Bookmark to Reddit!"></a>
-<a href="http://www.scuttle.org/bookmarks.php/maxpower?action=add&address=<?php print $request->uri; ?>&title=<?php print $Member->title; ?>" target="_blank"><img src="resource/bookmark/scuttle.gif" border="0" title="Bookmark to Scuttle!" alt="Bookmark to Scuttle!"></a>
-<a href="http://www.simpy.com/simpy/LinkAdd.do?href=<?php print $request->uri; ?>&title=<?php print $Member->title; ?>" target="_blank"><img src="resource/bookmark/simpy.gif" border="0" title="Bookmark to Simpy!" alt="Bookmark to Simpy!"></a>
-<a href="http://www.spurl.net/spurl.php?title=<?php print $Member->title; ?>&url=<?php print $request->uri; ?>" target="_blank"><img src="resource/bookmark/spurl.gif" border="0" title="Bookmark to Spurl!" alt="Bookmark to Spurl!"></a>
-<a href="http://www.stumbleupon.com/submit?url=<?php print $request->uri; ?>&title=<?php print $Member->title; ?>" target="_blank"><img src="resource/bookmark/stumbleupon.gif" border="0" title="Bookmark to StumbleUpon!" alt="Bookmark to StumbleUpon!"></a>
-<a href="http://technorati.com/faves?add=<?php print $request->uri; ?>" target="_blank"><img src="resource/bookmark/technorati.gif" border="0" title="Bookmark to Technorati!" alt="Bookmark to Technorati!"></a>
-<a href="http://myweb2.search.yahoo.com/myresults/bookmarklet?t=<?php print $Member->title; ?>&u=<?php print $request->uri; ?>" target="_blank"><img src="resource/bookmark/yahoomyweb.gif" border="0" title="Bookmark to Yahoo! My Web!" alt="Bookmark to Yahoo! My Web!"></a>
+<a href="http://www.blinklist.com/index.php?Action=Blink/addblink.php&Description=&Url=<?php print $request->uri; ?>&Title=<?php print $Member->title; ?>" target="_blank"><img src="<?php base_url(); ?>resource/bookmark/blinklist.gif" border="0" title="Bookmark to Blinklist!" alt="Bookmark to Blinklist!"></a>
+<a href="http://blogmarks.net/my/new.php?mini=1&simple=1&url=<?php print $request->uri; ?>&title=<?php print $Member->title; ?>" target="_blank"><img src="<?php base_url(); ?>resource/bookmark/blogmarks.gif" border="0" title="Bookmark to Blogmarks!" alt="Bookmark to Blogmarks!"></a>
+<a href="http://del.icio.us/post?url=<?php print $request->uri; ?>&title=<?php print $Member->title; ?>" target="_blank"><img src="<?php base_url(); ?>resource/bookmark/delicious.gif" border="0" title="Bookmark to Del.icio.us!" alt="Bookmark to Del.icio.us!"></a>
+<a href="http://de.lirio.us/rubric/post?uri=<?php print $request->uri; ?>;title=<?php print $Member->title; ?>" target="_blank"><img src="<?php base_url(); ?>resource/bookmark/delirious.gif" border="0" title="Bookmark to De.lirio.us!" alt="Bookmark to De.lirio.us!"></a>
+<a href="http://digg.com/submit?phase=2&url=<?php print $request->uri; ?>&title=<?php print $Member->title; ?>" target="_blank"><img src="<?php base_url(); ?>resource/bookmark/digg.gif" border="0" title="Bookmark to Digg!" alt="Bookmark to Digg!"></a>
+<a href="http://cgi.fark.com/cgi/fark/submit.pl?new_url=<?php print $request->uri; ?>&new_comment=<?php print $Member->title; ?>" target="_blank"><img src="<?php base_url(); ?>resource/bookmark/fark.gif" border="0" title="Bookmark to Fark!" alt="Bookmark to Fark!"></a>
+<a href="http://furl.net/storeIt.jsp?t=<?php print $Member->title; ?>&u=<?php print $request->uri; ?>" target="_blank"><img src="<?php base_url(); ?>resource/bookmark/furl.gif" border="0" title="Bookmark to Furl!" alt="Bookmark to Furl!"></a>
+<a href="http://ma.gnolia.com/beta/bookmarklet/add?url=<?php print $request->uri; ?>&title=<?php print $Member->title; ?>" target="_blank"><img src="<?php base_url(); ?>resource/bookmark/magnolia.gif" border="0" title="Bookmark to Ma.gnolia!" alt="Bookmark to Ma.gnolia!"></a>
+<a href="http://www.newsvine.com/_tools/seed&save?u=<?php print $request->uri; ?>&h=<?php print $Member->title; ?>" target="_blank"><img src="<?php base_url(); ?>resource/bookmark/newsvine.gif" border="0" title="Bookmark to Newsvine!" alt="Bookmark to Newsvine!"></a>
+<a href="http://reddit.com/submit?url=<?php print $request->uri; ?>&title=<?php print $Member->title; ?>" target="_blank"><img src="<?php base_url(); ?>resource/bookmark/reddit.gif" border="0" title="Bookmark to Reddit!" alt="Bookmark to Reddit!"></a>
+<a href="http://www.scuttle.org/bookmarks.php/maxpower?action=add&address=<?php print $request->uri; ?>&title=<?php print $Member->title; ?>" target="_blank"><img src="<?php base_url(); ?>resource/bookmark/scuttle.gif" border="0" title="Bookmark to Scuttle!" alt="Bookmark to Scuttle!"></a>
+<a href="http://www.simpy.com/simpy/LinkAdd.do?href=<?php print $request->uri; ?>&title=<?php print $Member->title; ?>" target="_blank"><img src="<?php base_url(); ?>resource/bookmark/simpy.gif" border="0" title="Bookmark to Simpy!" alt="Bookmark to Simpy!"></a>
+<a href="http://www.spurl.net/spurl.php?title=<?php print $Member->title; ?>&url=<?php print $request->uri; ?>" target="_blank"><img src="<?php base_url(); ?>resource/bookmark/spurl.gif" border="0" title="Bookmark to Spurl!" alt="Bookmark to Spurl!"></a>
+<a href="http://www.stumbleupon.com/submit?url=<?php print $request->uri; ?>&title=<?php print $Member->title; ?>" target="_blank"><img src="<?php base_url(); ?>resource/bookmark/stumbleupon.gif" border="0" title="Bookmark to StumbleUpon!" alt="Bookmark to StumbleUpon!"></a>
+<a href="http://technorati.com/faves?add=<?php print $request->uri; ?>" target="_blank"><img src="<?php base_url(); ?>resource/bookmark/technorati.gif" border="0" title="Bookmark to Technorati!" alt="Bookmark to Technorati!"></a>
+<a href="http://myweb2.search.yahoo.com/myresults/bookmarklet?t=<?php print $Member->title; ?>&u=<?php print $request->uri; ?>" target="_blank"><img src="<?php base_url(); ?>resource/bookmark/yahoomyweb.gif" border="0" title="Bookmark to Yahoo! My Web!" alt="Bookmark to Yahoo! My Web!"></a>
 
 <?php endif; ?>
 

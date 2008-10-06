@@ -55,6 +55,7 @@ class Identity extends Model {
     
     $this->has_one( 'entry' );
     $this->has_one( 'person' );
+    $this->has_many( 'settings.profile_id' );
     
     // requirements
     
@@ -69,6 +70,10 @@ class Identity extends Model {
     $this->let_read( 'all:entry' );
     $this->let_read( 'all:entry.jpg' );
     $this->let_read( 'all:entry.xrds' );
+    //$this->let_read( 'all:installed_apps_json' );
+    //$this->let_read( 'all:app_installer_json' );
+    $this->let_read( 'all:admin' );
+    
     // anyone can call up the edit form for any user -- hrm
     $this->let_read( 'all:edit' );
     
@@ -76,6 +81,7 @@ class Identity extends Model {
     
     // registered 'members' can modify their own records
     $this->let_modify( 'all:members' );
+    
     // the first user is a member of 'administrators'
     $this->let_access( 'all:administrators' );
     
@@ -84,6 +90,8 @@ class Identity extends Model {
     // not needed if blobcol is named 'attachment'
     
     $this->set_blob('photo');
+    
+    // number of records in the collection
     
     $this->set_limit(500);
     

@@ -8,6 +8,7 @@ global $blogdata, $optiondata, $current_user, $user_login, $userdata;
 global $user_level, $user_ID, $user_email, $user_url, $user_pass_md5;
 global $wpdb, $wp_query, $post, $limit_max, $limit_offset, $comments;
 global $req, $wp_rewrite, $wp_version, $openid, $user_identity, $logic;
+global $submenu;
 
 // added the following line to ParanoidHTTPFetcher line 171
 
@@ -260,8 +261,38 @@ class wpdb {
 
 }
 
+function add_submenu_page( $up,$page,$menu,$access,$file,$func='',$url='' ) {
+	global $submenu;
+	if (!(is_array($submenu)))
+	  $submenu = array();
+  if (!(is_array($submenu[$up])))
+    $submenu[$up] = array();
+	$submenu[$up][] = array( 
+	  $menu,
+	  $access,
+	  $file,
+	  $page,
+	  $url
+	);
+	$hook = preg_replace('!\.php!', '', $page );
+	if (!empty ( $func ) && !empty ( $hook ))
+		add_action( $hook, $func );
+	return $hook;
+}
+
+function add_management_page( $page,$menu,$access,$file,$func='',$url='' ) {
+	return add_submenu_page( $page, $page, $menu, $access, $file, $func, $url );
+}
+
 function get_bloginfo( $var ) {
   global $blogdata;
+  
+  if (in_array($var,array('wpurl')))
+    if (isset($blogdata[$var]))
+      if ("/" == substr($blogdata[$var],-1))
+        return substr($blogdata[$var],0,-1);
+
+  
   if (isset($blogdata[$var]))
     return $blogdata[$var];
   return "";
@@ -581,6 +612,10 @@ function wp_title() {
 
 function wp_head() {
     global $request;
+    global $current_user;
+    
+    trigger_before( 'admin_head', $current_user, $current_user );
+    
     if (isset($request->resource) && $request->resource == 'identities' && $request->id > 0) {
       
       // headers for a profile page
@@ -671,7 +706,7 @@ function get_header() {
         'action'=>'edit'
       ));
 
-    if (($request->uri != $edit_uri) && (!isset($p->nickname) || empty($p->avatar))) {
+    if (($request->resource != 'identities' || $request->action != 'edit') && (!isset($p->nickname) || empty($p->avatar))) {
       $_SESSION['message'] = "Photo and Nickname are required.";
       redirect_to($edit_uri);
     }
@@ -1084,10 +1119,6 @@ function load_javascript() {
 }
 
 function register_sidebar() {
-  return false;
-}
-
-function add_action( $act, $func ) {
   return false;
 }
 

@@ -1,7 +1,11 @@
 
 <div id="sidebar">
 
-<?php global $request; if ($request->action == 'index') : ?>
+<?php global $request; ?>
+
+<?php if (get_profile_id() && $request->resource == 'identities' && in_array($request->action,array('edit','entry'))) {render_partial('admin');}?>
+
+<?php if ($request->action == 'index') : ?>
   <ul>
 
 <?php 

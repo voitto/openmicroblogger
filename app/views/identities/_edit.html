@@ -1,6 +1,9 @@
 
-<form action="<?php url_for( 'identities' ); ?>" method="post" name="identities" id="identities" enctype="multipart/form-data">
+
+
+
 <div>
+<form action="<?php url_for( 'identities' ); ?>" method="post" name="identities" id="identities" enctype="multipart/form-data">
 <input name="MAX_FILE_SIZE" type="hidden" value="409600" />
 <input name="method" type="hidden" value="put" />
 <input name="entry[etag]" type="hidden" value="<?php print $Entry->etag; ?>" />
@@ -9,6 +12,8 @@
 <tr><th colspan="2">
 <h2><?php if (isset($_SESSION['message'])) { echo $_SESSION['message']; unset($_SESSION['message']); }?></h2>
 </th></tr>
+
+
 
   <tr>
     <td align="right"><b>Nickname</b></td>
@@ -48,27 +53,6 @@
 
 <tr><td colspan="2">
 <br />
-
-<?php 
-
-global $request,$db;
-$Subscription =& $db->model('Subscription');
-$Identity =& $db->model('Identity');
-
-?>
-
-<h2>Drop subscription:</h2>
-
-<?php $Subscription->find_by('subscriber',$Member->id); ?>
-<?php while ($subscriber = $Subscription->MoveNext()) : ?>
-<?php $subentry = $subscriber->FirstChild('entries'); ?>
-<?php if (empty($subentry->etag)) $subscriber->set_etag(); ?>
-<?php if ($subscriber->subscriber == $Member->id) : ?>
-<?php $si = $Identity->find( $subscriber->subscribed ); ?>
-<a href="<?php echo $request->url_for(array('resource'=>'subscriptions','id'=>$subscriber->id,'action'=>'remove')); ?>"><img style="border:none;width:48px;height:48px;" src="<?php echo $si->avatar; ?>"></a>
-<?php endif; ?>
-<?php endwhile; ?>
-
 
 
 

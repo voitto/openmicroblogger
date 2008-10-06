@@ -81,10 +81,7 @@ $subscribers = array();
 <p>Profile URL: <input name="profid" size="40" value="<?php echo $request->url_for(array('resource'=>$pro->nickname)); ?>"/></p>
 </form>
 <br />
-<p><a href="<?php echo $request->url_for(array(
-        'resource'=>'identities',
-        'id'=>$pro->id,
-        'action'=>'edit' )); ?>">Edit my Profile</a></p>
+
 <?php elseif (!isset($pro->id)) : ?>
 
 <h2>Subscribe to <?php echo $Member->nickname; ?>'s notices:</h2>
@@ -97,4 +94,9 @@ $subscribers = array();
 <?php endif; ?>
 
 
+<?php
+  
+      trigger_before( 'the_content', $current_user, $current_user );
+
+?>
 

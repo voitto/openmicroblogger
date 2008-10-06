@@ -9,12 +9,12 @@
 <?php $i = 0; ?>
 
 <?php while ($i < $Member->rating) : ?>
-<img src="<?php echo $request->layout_path; ?>reviews/full_star.gif" alt="*">
+<img src="<?php echo base_url(true).$request->layout_path; ?>reviews/full_star.gif" alt="*">
 <?php $i++; ?>
 <?php endwhile; ?>
 
 <?php while ($i < 5) : ?>
-<img src="<?php echo $request->layout_path; ?>reviews/empty_star.gif" alt="">
+<img src="<?php echo base_url(true).$request->layout_path; ?>reviews/empty_star.gif" alt="">
 <?php $i++; ?>
 <?php endwhile; ?>
 

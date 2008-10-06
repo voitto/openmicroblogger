@@ -14,7 +14,9 @@ $omb_routes = array(
   'oauth_omb_finish_subscribe',
   'access_token',
   'request_token',
-  'oauth_authorize'
+  'oauth_authorize',
+  'mobile_settings',
+  'mobile_event'
 );
 
 foreach ($omb_routes as $func)
@@ -284,6 +286,9 @@ after_filter('set_identity_from_nick','routematch');
 function set_identity_from_nick(&$request,&$route) {
   
   if (!(isset($request->params['nickname'])))
+    return;
+  
+  if ($request->route_exists($request->params['nickname']))
     return;
   
   global $db;

@@ -30,7 +30,7 @@
   <link rel="openid.server" href="<?php print environment('openid_server'); ?>" />
   <link rel="openid.delegate" href="" />
   
-  <link rel="stylesheet" type="text/css" href="<?php echo $request->layout_path; ?>style.css" />
+  <link rel="stylesheet" type="text/css" href="<?php echo base_url(true).$request->layout_path; ?>style.css" />
   
 </head>
 
@@ -84,7 +84,7 @@
         <a href="/" class="link-white-small">Home</a>
         |  <a href="" class="link-white-small">Contact</a>
         |  <a href="terms.html" class="link-white-small">Terms of Use</a>
-        |  <a href="<?php print $atomfeed; ?>"><img alt="feed" src="resource/feed.png" style="border:none;"/></a>
+        |  <a href="<?php print $atomfeed; ?>"><img alt="feed" src="<?php base_url(); ?>resource/feed.png" style="border:none;"/></a>
         </td>
       </tr>
     </table>
