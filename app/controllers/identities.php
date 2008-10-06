@@ -337,7 +337,8 @@ function app_installer_json( &$vars ) {
   
   if (isset($GLOBALS['PATH']['apps']))
     foreach($GLOBALS['PATH']['apps'] as $k=>$v)
-      $apps_list[$k] = $k;
+      if ($k != 'omb')
+        $apps_list[$k] = $k;
   
   $sources = environment('remote_sources');
   
@@ -346,14 +347,15 @@ function app_installer_json( &$vars ) {
     curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
     curl_setopt($curl, CURLOPT_HEADER, false);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    $result = curl_exec( $curl );
+    $result = false;
+    //$result = curl_exec( $curl );
     if ($result) {
       $data = unserialize($result);
       foreach($data as $appname=>$appdata) {
-        $apps_list[$appname] = $appname;
+        $remote_list[$appname] = $appname;
       }
     }
-    curl_close( $curl );  
+    //curl_close( $curl );  
   }
   
   $i = $Identity->find(get_app_id());

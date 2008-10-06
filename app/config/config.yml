@@ -56,10 +56,7 @@ env:
   debug_enabled: true
 
   apps:
-    - rhino
-    - wall
-    - santa
-    - photos
+    - omb
     
   plugins:
     - sessions

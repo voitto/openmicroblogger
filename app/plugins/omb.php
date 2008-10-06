@@ -16,7 +16,8 @@ $omb_routes = array(
   'request_token',
   'oauth_authorize',
   'mobile_settings',
-  'mobile_event'
+  'mobile_event',
+  'migrate'
 );
 
 foreach ($omb_routes as $func)
