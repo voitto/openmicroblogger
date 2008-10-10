@@ -26,4 +26,12 @@ if( !function_exists('dynamic_sidebar') || !dynamic_sidebar() ) {
   </ul>
 
 <?php endif; ?>
+
+<?php 
+
+//include('resource/dingshow_plainphp/index.php');
+
+?>
+
 </div> <!-- // sidebar -->
+

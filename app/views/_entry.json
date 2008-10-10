@@ -1,6 +1,7 @@
 <?php
 
-lib_include( 'json' );
+if (!(class_exists('Services_JSON')))
+  lib_include( 'json' );
 
 $json = new Services_JSON();
 

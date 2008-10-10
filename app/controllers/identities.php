@@ -331,7 +331,8 @@ function _remove( &$vars ) {
 
 function app_installer_json( &$vars ) {
   extract($vars);
-  lib_include( 'json' );
+  if (!(class_exists('Services_JSON')))
+    lib_include( 'json' );
   $json = new Services_JSON();
   $apps_list = array();
   
@@ -375,14 +376,17 @@ function app_installer_json( &$vars ) {
 
 function installed_apps_json( &$vars ) {
   extract($vars);
-  lib_include( 'json' );
+  if (!(class_exists('Services_JSON')))
+    lib_include( 'json' );
   $json = new Services_JSON();
   $apps_list = array();
   $i = $Identity->find(get_profile_id());
   while ($s = $i->NextChild('settings')){
-    $s = $Setting->find($s->id);
-    $e = $s->FirstChild('entries');
-    $apps_list[$e->etag] = $s->value;
+    if ($s->name == 'app') {
+      $s = $Setting->find($s->id);
+      $e = $s->FirstChild('entries');
+      $apps_list[$e->etag] = $s->value;
+    }
   }
   
   header( "Content-Type: application/javascript" );

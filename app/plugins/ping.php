@@ -38,4 +38,3 @@ function send_ping( &$model, &$rec ) {
   
 }
 
-?>

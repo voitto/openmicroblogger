@@ -18,7 +18,9 @@ class Setting extends Model {
     
     $this->has_one( 'entry' );
     
-    $this->let_access( 'all:everyone' );
+    $this->let_create( 'all:members' );
+    $this->let_modify( 'all:members' );
+    $this->let_delete( 'all:members' );
     
     $this->set_hidden();
     

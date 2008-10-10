@@ -67,8 +67,7 @@ function oauth_accept() {
   $services = get_option('oauth_services');
   $services['Post Comments'] = array('wp-comments-post.php');
   $services['Edit and Create Entries and Categories'] = array('wp-app.php');
-  update_option('oauth_services', $services);
-
+  
   $store = new OAuthWordpressStore();
   
   global $request,$omb_routes;

@@ -24,8 +24,8 @@ $(document).ready(function(){
     <title><?php wp_title(); ?> <?php bloginfo('name'); ?></title>
     <meta name="generator" content="WordPress.com" /> 
     <link rel="stylesheet" href="<?php bloginfo('stylesheet_url'); ?>" type="text/css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="<?php bloginfo('theme_url'); ?>/menu.css" />
-    <script src="<?php bloginfo('theme_url'); ?>/stuHover.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="<?php bloginfo('theme_url'); ?>menu.css" />
+    <script src="<?php bloginfo('theme_url'); ?>stuHover.js" type="text/javascript"></script>
     <link rel="alternate" type="application/rss+xml" title="<?php bloginfo('name'); ?> RSS Feed" href="<?php bloginfo('rss2_url'); ?>" />
     <link rel="pingback" href="<?php bloginfo('pingback_url'); ?>" />
     <?php wp_head(); ?>
@@ -184,7 +184,7 @@ function checkMaxLength() {
 
 <div id="wrapper">
 
-<h1><a href="<?php bloginfo( 'url' ); ?>"><?php bloginfo( 'name' ); ?></a></h1>
+<h1><a href="<?php bloginfo( 'url' ); ?>"><?php //bloginfo( 'name' ); ?></a></h1>
 
 <?php
 $image = get_header_image( );

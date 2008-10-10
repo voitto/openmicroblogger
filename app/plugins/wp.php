@@ -1,72 +1,5 @@
 <?php
 
-// dbscript
-global $request, $db;
-
-// wordpress
-global $blogdata, $optiondata, $current_user, $user_login, $userdata;
-global $user_level, $user_ID, $user_email, $user_url, $user_pass_md5;
-global $wpdb, $wp_query, $post, $limit_max, $limit_offset, $comments;
-global $req, $wp_rewrite, $wp_version, $openid, $user_identity, $logic;
-global $submenu;
-
-// added the following line to ParanoidHTTPFetcher line 171
-
-// curl_setopt($c, CURLOPT_SSL_VERIFYPEER, false);
-
-require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'wp-plugins'.DIRECTORY_SEPARATOR.'wp-config.php';
-
-$db->create_openid_tables();
-
-$blogdata = array(
-  'home'=>base_url(true),
-  'name'=>environment('site_title'),
-  'name'=>environment('site_subtitle'),
-  'description'=>environment('site_description'),
-  'wpurl'=>base_url(true),
-  'url'=>base_url(true),
-  'atom_url'=>base_url(true)."?posts.atom",
-  'rss_url'=>base_url(true)."?posts.rss",
-  'rss2_url'=>base_url(true)."?posts.rss",
-  'charset'=>'',
-  'html_type'=>'',
-  'theme_url'=>theme_path(),
-  'stylesheet_url'=>theme_path()."style.css",
-  'stylesheet_directory'=>theme_path(),
-  'pingback_url'=>base_url(true),
-  'template_url'=>theme_path()
-);
-
-$optiondata = array(
-  'date_format'=>'F j, Y',
-  'gmt_offset'=>(date('Z') / 3600),
-  'xrds_simple'=>array(),
-  'oauth_services'=>array(),
-  'oauth_version'=>0.12,
-  'upload_path'=>'',
-  'oid_enable_approval'=>true,
-  'oid_enable_commentform'=>true,
-  'home'=>base_url(true),
-  'comment_registration'=>true,
-  'siteurl'=>base_url(true),
-  'posts_per_page'=>20,
-  'prologue_recent_projects'=>''
-);
-
-define('OBJECT', 'OBJECT', true);
-define('ARRAY_A', 'ARRAY_A', false);
-define('ARRAY_N', 'ARRAY_N', false);
-
-
-$wp_version = 2.6;
-$wpdb = new wpdb();
-$wp_query = new WP_Query();
-$post = new wppost();
-$limit_max = get_option( 'posts_per_page' );
-$limit_offset = 0;
-$comments = false;
-$user_ID = get_profile_id();
-$req = false;
 
 function allowed_tags() {
   return true;
@@ -179,6 +112,9 @@ class wpdb {
   }
 
 
+
+
+
 /**
    * Return an entire result set from the database
    * @param string $query (can also be null to pull from the cache)
@@ -227,7 +163,7 @@ class wpdb {
     
     if ( preg_match("/^\\s*(delete) /i",$query) )
       $query = str_replace("LIMIT 1","",$query);
-
+    
     if ( class_exists('PostgreSQL') && preg_match("/^\\s*(replace into) /i",$query) )
       return;
     
@@ -257,8 +193,12 @@ class wpdb {
     }
     return $return_val;
   }
+}
 
-
+function get_users_of_blog($id="") {
+  global $wpdb;
+  $users = array();
+  return $users;
 }
 
 function add_submenu_page( $up,$page,$menu,$access,$file,$func='',$url='' ) {
@@ -286,31 +226,29 @@ function add_management_page( $page,$menu,$access,$file,$func='',$url='' ) {
 
 function get_bloginfo( $var ) {
   global $blogdata;
-  
   if (in_array($var,array('wpurl')))
     if (isset($blogdata[$var]))
       if ("/" == substr($blogdata[$var],-1))
         return substr($blogdata[$var],0,-1);
-
-  
   if (isset($blogdata[$var]))
     return $blogdata[$var];
   return "";
 } 
 
 function add_option( $opt, $newval ) {
-  global $optiondata;
-  $optiondata[$opt] = $newval;
+  update_option($opt,$newval);
 }
 
-
-class wppost {
+if (!(class_exists('WpPost'))) {
+class WpPost {
   var $post_password = "";
   var $comment_status = "open";
-  function wppost() {
+  function WpPost() {
   }
 }
+}
 
+if (!(class_exists('wpcomment'))) {
 class wpcomment {
   var $user_id = 0;
   var $comment_author_email = "";
@@ -318,9 +256,27 @@ class wpcomment {
   function wpcomment() {
   }
 }
+}
 
 function update_option( $opt, $newval ) {
   global $optiondata;
+  if (isset($optiondata[$opt])) {
+    if ($optiondata[$opt] == $newval)
+      return;
+  }
+  global $db;
+  $Setting =& $db->model('Setting');
+  $s = $Setting->find_by(array('name'=>$opt,'profile_id'=>get_profile_id()));
+  if (!$s) {
+    $s = $Setting->base();
+    $s->set_value('profile_id',get_profile_id());
+    $s->set_value('name',$opt);
+  }
+  if (is_array($newval))
+    $s->set_value('value',serialize($newval));
+  else
+    $s->set_value('value',$newval);
+  $s->save_changes();
   $optiondata[$opt] = $newval;
 }
 
@@ -426,12 +382,14 @@ class wp_rewrite {
   }
 }
 
+if (!(class_exists('wptag'))) {
 class wptag {
   var $term_id = 0;
   var $count = 0;
   var $name = "";
   function wptag() {
   }
+}
 }
 
 function auth_redirect() {
@@ -452,6 +410,14 @@ function register_deactivation_hook() {
 
 function add_filter() {
   
+}
+
+function is_admin() {
+  return false;
+}
+
+
+function load_plugin_textdomain($dom,$path=false) {
 }
 
 function get_currentuserinfo() {
@@ -488,8 +454,14 @@ function bloginfo( $attr ) {
 function get_option( $opt ) {
   global $optiondata;
   
-  if (!isset($optiondata[$opt]))
+  if (!isset($optiondata[$opt])){
+    global $db;
+    $Setting =& $db->model('Setting');
+    $s = $Setting->find_by(array('name'=>$opt,'profile_id'=>get_profile_id()));
+    if ($s)
+      return $s->value;
     return "";
+  }
     
   $data = $optiondata[$opt];
   
@@ -602,8 +574,18 @@ function wp_nonce_url( $var, $var2 ) {
   return $var;
 }
 
-function wp_enqueue_script( $file ) {
-  require_once $file;
+function wp_print_scripts( $scripts = false ) {
+  if (is_array($scripts)) {
+    //
+  }
+}
+
+function wp_enqueue_script( $file1,$file2=NULL ) {
+  if (file_exists($file1))
+    require_once $file1;
+  if (!(NULL == $file2))
+    if (file_exists($file2))
+      require_once $file2;
 }
 
 function wp_title() {
@@ -614,7 +596,7 @@ function wp_head() {
     global $request;
     global $current_user;
     
-    trigger_before( 'admin_head', $current_user, $current_user );
+    //trigger_before( 'admin_head', $current_user, $current_user );
     
     if (isset($request->resource) && $request->resource == 'identities' && $request->id > 0) {
       
@@ -1114,6 +1096,7 @@ function _e($t) {
   echo $t;
 }
 
+
 function load_javascript() {
   return "";
 }
@@ -1248,12 +1231,14 @@ function single_tag_title( ) {
   echo "";
 }
 
+function get_categories() {
+  echo "";
+}
 
 function register_xrd($id, $type=array(), $expires=false) {
   $xrd = get_option('xrds_simple');
   if(!is_array($xrd)) $xrd = array();
   $xrd[$id] = array('type' => $type, 'expires' => $expires, 'services' => array());
-  update_option('xrds_simple', $xrd);
 }//end function register_xrd
 
 /*
@@ -1266,8 +1251,108 @@ function register_xrd_service($xrd_id, $name, $content, $priority=10) {
   $xrd = get_option('xrds_simple');
   if(!is_array($xrd[$xrd_id])) register_xrd($xrd_id);
   $xrd[$xrd_id]['services'][$name] = array('priority' => $priority, 'content' => $content);
-  update_option('xrds_simple', $xrd);
 }//end register_xrd_service
+
+
+
+function wp_add_options($prefix,$options) {
+  
+  foreach( $options as $optname=>$optvalue )
+    add_option( $prefix.'_'.$optname, $optvalue );
+  
+}
+
+
+
+
+
+
+
+
+
+
+// dbscript
+global $request, $db;
+
+// wordpress
+global $blogdata, $optiondata, $current_user, $user_login, $userdata;
+global $user_level, $user_ID, $user_email, $user_url, $user_pass_md5;
+global $wpdb, $wp_query, $post, $limit_max, $limit_offset, $comments;
+global $req, $wp_rewrite, $wp_version, $openid, $user_identity, $logic;
+global $submenu;
+
+// added the following line to ParanoidHTTPFetcher line 171
+
+// curl_setopt($c, CURLOPT_SSL_VERIFYPEER, false);
+
+require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'wp-plugins'.DIRECTORY_SEPARATOR.'wp-config.php';
+
+$db->create_openid_tables();
+
+$blogdata = array(
+  'home'=>base_url(true),
+  'name'=>environment('site_title'),
+  'subtitle'=>environment('site_subtitle'),
+  'description'=>environment('site_description'),
+  'wpurl'=>base_url(true),
+  'url'=>base_url(true),
+  'atom_url'=>base_url(true)."?posts.atom",
+  'rss_url'=>base_url(true)."?posts.rss",
+  'rss2_url'=>base_url(true)."?posts.rss",
+  'charset'=>'',
+  'html_type'=>'',
+  'theme_url'=>theme_path(),
+  'stylesheet_url'=>theme_path()."style.css",
+  'stylesheet_directory'=>theme_path(),
+  'pingback_url'=>base_url(true),
+  'template_url'=>theme_path()
+);
+
+$optiondata = array(
+  'date_format'=>'F j, Y',
+  'gmt_offset'=>(date('Z') / 3600),
+  'xrds_simple'=>array(),
+  'oauth_services'=>array(),
+  'oauth_version'=>0.12,
+  'upload_path'=>'',
+  'oid_enable_approval'=>true,
+  'oid_enable_commentform'=>true,
+  'home'=>base_url(true),
+  'comment_registration'=>true,
+  'siteurl'=>base_url(true),
+  'posts_per_page'=>20,
+  'prologue_recent_projects'=>''
+);
+
+define('OBJECT', 'OBJECT', true);
+define('ARRAY_A', 'ARRAY_A', false);
+define('ARRAY_N', 'ARRAY_N', false);
+
+
+$wp_version = 2.6;
+$wpdb = new wpdb();
+$wp_query = new WP_Query();
+$post = new WpPost();
+$limit_max = get_option( 'posts_per_page' );
+$limit_offset = 0;
+$comments = false;
+$user_ID = get_profile_id();
+$req = false;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
