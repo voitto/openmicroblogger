@@ -70,12 +70,19 @@ class Identity extends Model {
     $this->let_read( 'all:entry' );
     $this->let_read( 'all:entry.jpg' );
     $this->let_read( 'all:entry.xrds' );
-    //$this->let_read( 'all:installed_apps_json' );
-    //$this->let_read( 'all:app_installer_json' );
+    
+    $this->let_read( 'all:installed_apps_json' );
+    $this->let_read( 'all:app_installer_json' );
+    
+    
+    
     $this->let_read( 'all:admin' );
     
     // anyone can call up the edit form for any user -- hrm
     $this->let_read( 'all:edit' );
+    $this->let_read( 'all:apps' );
+    $this->let_read( 'all:subs' );
+    
     
     // groups
     
