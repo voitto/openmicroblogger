@@ -57,6 +57,7 @@ env:
 
   apps:
     - twitter
+    - identica
     
   plugins:
     - sessions
