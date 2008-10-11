@@ -3,10 +3,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml" <?php language_attributes(); ?>>
   <head profile="http://gmpg.org/xfn/11">
     
-    <script type="text/javascript" src="<?php base_url(); ?>resource/jquery-1.2.6.min.js"></script>
-    <script type="text/javascript" src="<?php base_url(); ?>resource/jquery.corner.js"></script>
-    <script type="text/javascript" src="<?php base_url(); ?>resource/jquery.jqUploader.js"></script>
-    <script type="text/javascript" src="<?php base_url(); ?>resource/jquery.flash.js"></script>
+    <?php global $request; ?>
+    <?php if ($request->resource == 'identities') : ?>
+      <script type="text/javascript" src="<?php base_url(); ?>resource/jquery-1.2.6.min.js"></script>
+      <script type="text/javascript" src="<?php base_url(); ?>resource/jquery.corner.js"></script>
+    <?php else : ?>
+      <script type="text/javascript" src="<?php base_url(); ?>resource/jquery-1.2.1.min.js"></script>
+      <script type="text/javascript" src="<?php base_url(); ?>resource/jquery.flash.js"></script>
+      <script type="text/javascript" src="<?php base_url(); ?>resource/jquery.jqUploader.js"></script>
+    <?php endif; ?>
     <script type="text/javascript">
 $(document).ready(function(){
 	$('#postfile').jqUploader({
@@ -70,13 +75,14 @@ h2 {
   padding: 2px;
   font: 1.4em/1.2em "Lucida Grande",Verdana,"Bitstream Vera Sans",Arial,sans-serif;
 }
-#postbox input#tags,  #postbox input#links,  #commentform #comment {
+#postbox input#tags,  #commentform #comment {
   font-size: 1.2em;
   padding: 2px;
   border: 1px solid #c6d9e9;
   width: 300px;
   margin-left: 0;
 }
+
 #postbox label {
   color: #333;
   display: block;
