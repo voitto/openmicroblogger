@@ -275,12 +275,12 @@ function _admin( &$vars ) {
     'resource'=>'identities',
     'id'=>get_profile_id(),
     'action'=>'subs'
-    )).'/partial'] = 'Subscriptions';
+    )).'/partial'] = 'Friends';
   $menuitems[$request->url_for(array(
     'resource'=>'identities',
     'id'=>get_profile_id(),
     'action'=>'apps'
-    )).'/partial'] = 'Applications';
+    )).'/partial'] = 'Apps';
   foreach ($submenu as $arr) {
     if (in_array($arr[0][0],$apps_list))
       $menuitems[$arr[0][4]] = $arr[0][3];

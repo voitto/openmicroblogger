@@ -70,14 +70,13 @@ h2 {
   padding: 2px;
   font: 1.4em/1.2em "Lucida Grande",Verdana,"Bitstream Vera Sans",Arial,sans-serif;
 }
-#postbox input#tags,  #commentform #comment {
+#postbox input#tags,  #postbox input#links,  #commentform #comment {
   font-size: 1.2em;
   padding: 2px;
   border: 1px solid #c6d9e9;
   width: 300px;
   margin-left: 0;
 }
-
 #postbox label {
   color: #333;
   display: block;
