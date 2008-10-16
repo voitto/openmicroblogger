@@ -226,7 +226,7 @@ function add_management_page( $page,$menu,$access,$file,$func='',$url='' ) {
 
 function get_bloginfo( $var ) {
   global $blogdata;
-  if (in_array($var,array('wpurl')))
+  if (in_array($var,array('wpurl','url')))
     if (isset($blogdata[$var]))
       if ("/" == substr($blogdata[$var],-1))
         return substr($blogdata[$var],0,-1);
@@ -338,7 +338,7 @@ class WP_User {
       $profile = get_profile($uid);
       $this->first_name = $profile->nickname;
     }
-  
+    
   }
   
   function user_login() {
@@ -446,9 +446,7 @@ function get_currentuserinfo() {
 
 
 function bloginfo( $attr ) {
-  global $blogdata;
-  if (isset($blogdata[$attr]))
-    echo $blogdata[$attr];
+  echo get_bloginfo($attr);
 }
 
 function get_option( $opt ) {
@@ -589,7 +587,7 @@ function wp_enqueue_script( $file1,$file2=NULL ) {
 }
 
 function wp_title() {
-  echo environment('site_title');
+  echo "";
 }
 
 function wp_head() {
@@ -648,6 +646,10 @@ function wp_safe_redirect( $url ) {
 
 function wp_insert_post( $arr ) {
   return false;
+}
+
+function wp_list_bookmarks() {
+  echo "";
 }
 
 function wp_list_cats() {
@@ -799,7 +801,18 @@ function the_post() {
       $the_post = $Post->base();
     }
   }
+  
+
+
   if (!empty($the_author->profile_url)) $the_author->profile = $the_author->profile_url; 
+
+  global $comment_author; 
+  global $comment_author_email;
+  global $comment_author_url;
+  
+  $comment_author = $the_author->nickname;
+  $comment_author_email = $the_author->email_value;
+  $comment_author_url = $the_author->url;
   
     // show pretty URLs if not a Remote user
   if (empty($the_author->post_notice)) $the_author->profile = $request->url_for(array('resource'=>$the_author->nickname));
@@ -1157,8 +1170,15 @@ function comments_template() {
   global $user_level, $user_ID, $user_email, $user_url, $user_pass_md5;
   global $wpdb, $wp_query, $post, $limit_max, $limit_offset, $comments;
   global $req, $wp_rewrite, $wp_version, $openid, $user_identity, $logic;
-  
+  global $comment_author; 
+  global $comment_author_email;
+  global $comment_author_url;
+  $user_ID = 0;
   include('comments.php');
+}
+
+function get_template_directory() {
+  return theme_path();
 }
 
 function comment_ID() {
@@ -1281,6 +1301,11 @@ global $wpdb, $wp_query, $post, $limit_max, $limit_offset, $comments;
 global $req, $wp_rewrite, $wp_version, $openid, $user_identity, $logic;
 global $submenu;
 
+global $comment_author; 
+global $comment_author_email;
+global $comment_author_url;
+
+
 // added the following line to ParanoidHTTPFetcher line 171
 
 // curl_setopt($c, CURLOPT_SSL_VERIFYPEER, false);
@@ -1288,6 +1313,18 @@ global $submenu;
 require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'wp-plugins'.DIRECTORY_SEPARATOR.'wp-config.php';
 
 $db->create_openid_tables();
+
+
+$wp_version = 2.6;
+$wpdb = new wpdb();
+$wp_query = new WP_Query();
+$post = new WpPost();
+$comments = false;
+$user_ID = get_profile_id();
+$req = false;
+
+if ($user_ID)
+  $comments = true;
 
 $blogdata = array(
   'home'=>base_url(true),
@@ -1318,7 +1355,7 @@ $optiondata = array(
   'oid_enable_approval'=>true,
   'oid_enable_commentform'=>true,
   'home'=>base_url(true),
-  'comment_registration'=>true,
+  'comment_registration'=>!$comments,
   'siteurl'=>base_url(true),
   'posts_per_page'=>20,
   'prologue_recent_projects'=>''
@@ -1329,18 +1366,11 @@ define('ARRAY_A', 'ARRAY_A', false);
 define('ARRAY_N', 'ARRAY_N', false);
 
 
-$wp_version = 2.6;
-$wpdb = new wpdb();
-$wp_query = new WP_Query();
-$post = new WpPost();
+define('TEMPLATEPATH', theme_path() );
+
+
 $limit_max = get_option( 'posts_per_page' );
 $limit_offset = 0;
-$comments = false;
-$user_ID = get_profile_id();
-$req = false;
-
-
-
 
 
 

@@ -311,8 +311,19 @@ function _apps( &$vars ) {
   extract( $vars );
   $Member = $collection->MoveFirst();
   $Entry = $Member->FirstChild( 'entries' );
+  $curl = curl_init("http://openappstore.com/?apps/show/partial");
+  curl_setopt($curl, CURLOPT_FOLLOWLOCATION, false);
+  curl_setopt($curl, CURLOPT_HEADER, false);
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+  $result = curl_exec( $curl );
+  $store = "";
+  if ($result) {
+    $store = $result;
+  }
+  //curl_close( $curl ); 
+  
   return vars(
-    array( &$collection, &$Member, &$Entry, &$profile, &$Identity, &$Subscription, &$installed_apps ),
+    array( &$store,&$collection, &$Member, &$Entry, &$profile, &$Identity, &$Subscription, &$installed_apps ),
     get_defined_vars()
   );
 }
@@ -341,22 +352,28 @@ function app_installer_json( &$vars ) {
       if ($k != 'omb')
         $apps_list[$k] = $k;
   
+  // apps_list = physical apps on this host
+  
   $sources = environment('remote_sources');
+  $remote_list = array();
+  
+  // remote_list = all not-installed apps on remote sources
   
   foreach($sources as $name=>$url) {
-    $curl = curl_init("http://".$url);
+    $url = "http://".$url."&p=".urlencode($request->uri);
+    $curl = curl_init($url);
     curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
     curl_setopt($curl, CURLOPT_HEADER, false);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     $result = false;
-    //$result = curl_exec( $curl );
+    $result = curl_exec( $curl );
     if ($result) {
       $data = unserialize($result);
       foreach($data as $appname=>$appdata) {
         $remote_list[$appname] = $appname;
       }
     }
-    //curl_close( $curl );  
+    curl_close( $curl );  
   }
   
   $i = $Identity->find(get_app_id());
@@ -366,9 +383,18 @@ function app_installer_json( &$vars ) {
       $apps_list = drop_array_element($apps_list,$s->value);
   }
   
+  $i = $Identity->find(get_app_id());
+  
+  while ($s = $i->NextChild('settings')) {
+    if ($s->name == 'app' && in_array($s->value, $remote_list))
+      $remote_list = drop_array_element($remote_list,$s->value);
+  }
+  
+  $all_apps = array_merge($apps_list,$remote_list);
+  
   header( "Content-Type: application/javascript" );
   
-  print $json->encode($apps_list);
+  print $json->encode($all_apps);
   
   exit;
 }

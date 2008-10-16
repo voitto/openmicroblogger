@@ -16,7 +16,7 @@ Author
 Version 0.1, 1-Sep-2008
  initial release
 
-Version 0.2, 10-Oct-2008
+Version 0.2, 22-Oct-2008
  sms, app store
 
 
@@ -137,16 +137,16 @@ To enable pretty URLs:
 UPDATING
 
 ///////////////////////////
-// use the /content folder
+// use the /wp-content folder
 ///////////////////////////
 
 If you want to customize OpenMicroBlogger with your own theme and plugins:
   
-1) copy config.yml into /content/config
+1) copy /app/config/config.yml to /wp-content/config
 
-2) copy your theme into /content/themes
+2) duplicate a theme in /wp-content/themes
 
-3) optionally, add plugins to /content/plugins
+3) optionally, add plugins to /wp-content/plugins
 
     note: plugins in this folder override same-name plugins in /app/plugins
 

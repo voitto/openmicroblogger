@@ -56,7 +56,7 @@ function broadcast_omb_notice( &$model, &$rec ) {
     
     if (!in_array($url,$sent_to) && !empty($url) && !(strstr( $url, $request->base ))) {
       
-      $sent_to[] = $url;
+      
       
       $sha1_method = new OAuthSignatureMethod_HMAC_SHA1();
    
@@ -97,9 +97,10 @@ function broadcast_omb_notice( &$model, &$rec ) {
           parse_str( $result->body, $return );
           if ( is_array($return) && $return['omb_version'] == OMB_VERSION ) {
             //break;
+            $sent_to[] = $url;
           } else {
             if (strpos($request->base, 'openmicroblogger') !== false)
-              send_email( 'brian@megapump.com', 'failed to post', $result->body."\n\n".$notice_content, environment('email_from'), environment('email_name'), false );
+              send_email( 'brian@megapump.com', 'failed to post', "\n\n".$url."\n\n".$result->body."\n\n".$notice_content, environment('email_from'), environment('email_name'), false );
           }
         }
         //if (strpos($request->base, 'openmicroblogger') !== false)
