@@ -1,0 +1,139 @@
+
+
+<script src="resource/jquery.ajaxfileupload.js" type="text/javascript"></script>
+<script src="resource/jeditable/jquery.jeditable.js" type="text/javascript"></script>
+<script src="resource/jeditable/jquery.highlightFade.js" type="text/javascript"></script>
+<script src="resource/jeditable/jquery.jeditable.ajaxupload.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+// <![CDATA[
+
+
+
+$(document).ready(function() {
+  
+  var submit_to = "<?php echo $userurl; ?>";
+  
+  $(".editable_identica_username").mouseover(function() { 
+      $(this).highlightFade({end:'#def'});
+  });
+  $(".editable_identica_username").mouseout(function() { 
+      $(this).highlightFade({end:'#fff', speed:200});
+  });
+  $(".editable_identica_username").editable(submit_to, { 
+      indicator   : "<img src='resource/jeditable/indicator.gif'>",
+      submitdata  : function() {
+        return {
+          "entry[etag]"     : "<?php echo $uEntry->etag; ?>",
+        };
+      },
+      name        : "setting[value]",
+      type      : "textarea",
+      submit    : "OK",
+      noappend  : true,
+      cancel    : "Cancel",
+      tooltip   : "Click to edit...",
+      callback  : function(value, settings) {
+        return(value);
+      }
+  });
+
+  var submit_to = "<?php echo $passurl; ?>";
+  
+  $(".editable_identica_password").mouseover(function() { 
+      $(this).highlightFade({end:'#def'});
+  });
+  $(".editable_identica_password").mouseout(function() { 
+      $(this).highlightFade({end:'#fff', speed:200});
+  });
+  $(".editable_identica_password").editable(submit_to, { 
+      indicator   : "<img src='resource/jeditable/indicator.gif'>",
+      submitdata  : function() {
+        return {
+          "entry[etag]"     : "<?php echo $pEntry->etag; ?>",
+        };
+      },
+      name        : "setting[value]",
+      type      : "textarea",
+      submit    : "OK",
+      noappend  : true,
+      cancel    : "Cancel",
+      tooltip   : "Click to edit...",
+      callback  : function(value, settings) {
+        return(value);
+      }
+  });
+  
+  var submit_to = "<?php echo $staturl; ?>";
+  
+  $(".editable_select_tw_text").mouseover(function() { 
+      $(this).highlightFade({end:'#def'});
+  });
+  $(".editable_select_tw_text").mouseout(function() { 
+      $(this).highlightFade({end:'#fff', speed:200});
+  });
+  $(".editable_select_tw_text").editable(submit_to, { 
+      indicator   : "<img src='resource/jeditable/indicator.gif'>",
+         data     : '<?php $json = new Services_JSON(); echo $json->encode( $akidentica_tw_text_options ); ?>',
+      submitdata  : function() {
+        return {"entry[etag]" : "<?php echo $sEntry->etag; ?>"};
+      },
+      name        : "setting[value]",
+      type        : "select",
+      <?php if (!empty($status)) : ?>
+      placeholder : "<?php echo $status; ?>",
+      <?php endif; ?>
+      noappend    : "true",
+      submit      : "OK",
+      tooltip     : "Click to edit...",
+      cancel      : "Cancel",
+      callback    : function(value, settings) {
+        $(this).html(settings['jsonarr'][value-0]);
+        return(value);
+      }
+  });
+  
+  $("#clicktest").click(function() { 
+     var submit_to = "<?php url_for(array('resource'=>'dents','action'=>'identica_login_test')); ?>";
+     $("#clicktest").html("<img src='resource/jeditable/indicator.gif'>");
+     $.get(submit_to, function(str) {
+      var result = (str - 0);
+      if (result > 0) {
+        $("#clicktest").html('yess. things be good');
+      } else {
+        $("#clicktest").html('NO DENT 4 U. say hello to my dented fender');
+      }
+     });
+  });
+  
+});
+
+// ]]>
+</script>
+
+
+
+<div id="identicabox" style="background-color: #f3f3f3; margin:10px; padding:10px;">
+<br>
+<p>Post my notices to Identica</p>
+<br>
+<br>
+<h4>Identica Username:</h4>
+<p class="editable_identica_username" id="editable_identica_username"><?php echo $username->value; ?></p>
+<br>
+<h4>Identica Password:</h4>
+<p class="editable_identica_password" id="editable_identica_password"><?php echo $pword; ?></p>
+<br>
+<h4>Test:</h4>
+<p class="clicktest" id="clicktest">click to test username/password</p>
+<br>
+<h4>Status:</h4>
+<p class="editable_select_tw_text" id="editable_select_tw_text"><?php echo $status; ?></p>
+<br>
+
+</div>
+
+<br /><br />
+
+
+
