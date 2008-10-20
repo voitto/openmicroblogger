@@ -46,13 +46,13 @@ edit the file: app/config/config.yml
         adapter: mysql        // 'mysql' or 'postgresql'
         database: microblog   // name of database
         username: jacques     // name of database user
-        password: 
+        password: shhh        // password of database user
         host: localhost       // name or IP address of database server
 
   and find the email settings too
       
-      email_from: root@localhost
-      email_name: Notifier
+      email_from: root@localhost     // "From address" for email msgs from this service
+      email_name: Notifier           // Name of email sender
 
 
 ////////////////////////////

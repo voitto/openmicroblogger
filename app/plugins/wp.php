@@ -1174,6 +1174,9 @@ function comments_template() {
   global $comment_author_email;
   global $comment_author_url;
   $user_ID = 0;
+  global $the_post;
+  $id = $the_post->id;
+  $comments = array(1);
   include('comments.php');
 }
 
@@ -1182,7 +1185,8 @@ function get_template_directory() {
 }
 
 function comment_ID() {
-  return 0;
+  global $request;
+  return $request->id;
 }
 
 function comment_author_link( ) {
@@ -1201,8 +1205,25 @@ function comment_date() {
   return "";
 }
 
+function comment_type() {
+  echo "Comment";
+}
+
 function comment_text() {
-  return "";
+  
+  global $the_post;
+global $db;
+$sql = "SELECT title from posts where parent_id = ".$the_post->id;
+
+$result = $db->get_result($sql);
+
+    while ( $row = $db->fetch_array( $result ) ) {
+  //  $id = owner_of($p);
+    //echo "<h3>".$id->nickname." said:</h3>\n";
+    echo "<p>".$row['title']."</p>\n";
+  }
+  
+  
 }
 
 function check_admin_referer( $var ) {

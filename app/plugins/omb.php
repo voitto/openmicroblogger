@@ -75,6 +75,15 @@ function omb_filter_posts( &$model, &$db ) {
     //  'subscriptions.subscriber'=>$request->params['byid']
     //);
     //$model->set_param( 'find_by', $where );
+
+// THREADED MODE
+
+//  } elseif (in_array($request->action, array('index','get')) && $model->table == 'posts' && $request->resource == 'posts' && $request->id == 0) {
+//    $where = array(
+//      'parent_id'=>0
+//    );
+
+
   } elseif ($request->action == 'index' && $model->table == 'posts' && $request->resource == 'posts' && $request->id == 0) {
     $where = array(
       'local'=>1
@@ -213,6 +222,8 @@ function wp_set_post_fields( &$model, &$rec ) {
   
   if ( isset( $_POST['profile_id'] ))
     $request->set_param( array( 'post', 'profile_id' ), $_POST['profile_id'] );
+  
+  $request->set_param( array( 'post', 'parent_id' ), 0 );
   
   $Category =& $db->model('Category');
   
@@ -1042,6 +1053,7 @@ function oauth_omb_post( &$vars ) {
   if (!$p) {
     $p = $Post->base();
     $p->set_value( 'profile_id', $sender->id );
+    $p->set_value( 'parent_id', 0 );
     $p->set_value( 'uri', $notice_uri );
     $p->set_value( 'url', $notice_url );
     $p->set_value( 'title', $content );

@@ -272,11 +272,14 @@ function complete_openid_authentication( &$request ) {
           $names = explode(' ',$_GET['openid_sreg_fullname']);
           if (strlen($names[0]) > 0 && empty($i->given_name))
             $i->set_value( 'given_name', $names[0] );
+            
           if (isset($names[2]) && empty($i->family_name)) {
             $i->set_value( 'family_name', $names[2] );
           } elseif (isset($names[1]) && empty($i->family_name)) {
             $i->set_value( 'family_name', $names[1] );
           }
+          
+          $i->set_value( 'fullname', $_GET['openid_sreg_fullname']);
         
         }
         
