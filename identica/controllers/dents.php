@@ -144,42 +144,4 @@ function dent_login_test($username, $password) {
 }
 
 
-function do_dent($tweet = '') {
-  
-  global $aktt;
-  
-  
-	if (empty($aktt->twitter_username) 
-		|| empty($aktt->twitter_password) 
-		|| empty($tweet)
-		|| empty($tweet->tw_text)
-	) {
-		return;
-	}
-	require_once(ABSPATH.WPINC.'/class-snoopy.php');
-	$snoop = new Snoopy;
-	$snoop->agent = 'Twitter Tools http://alexking.org/projects/wordpress';
-	$snoop->rawheaders = array(
-		'X-Twitter-Client' => 'Twitter Tools'
-		, 'X-Twitter-Client-Version' => $aktt->version
-		, 'X-Twitter-Client-URL' => 'http://alexking.org/projects/wordpress/twitter-tools.xml'
-	);
-	$snoop->user = $aktt->twitter_username;
-	$snoop->pass = $aktt->twitter_password;
-	$snoop->submit(
-		'http://identi.ca/api/statuses/update.json'
-		, array(
-			'status' => $tweet->tw_text
-			, 'source' => 'twittertools'
-		)
-	);
-	if (strpos($snoop->response_code, '200')) {
-		update_option('aktt_last_dent_download', strtotime('-28 minutes'));
-		return true;
-	}
-	return false;
-}
-
-
-
 

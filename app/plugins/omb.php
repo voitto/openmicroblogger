@@ -107,21 +107,23 @@ function catch_invite_token(&$request,&$route) {
 }
 
 
+// fix this so it happens AFTER all filters XXX
+
 // this is a filter to redirect to the post that was replied to
 
-after_filter( 'forward_after_reply', 'insert_from_post' );
+//after_filter( 'forward_after_reply', 'insert_from_post' );
 
-function forward_after_reply( &$model, &$rec ) {
+//function forward_after_reply( &$model, &$rec ) {
   
-  global $request,$db;
+//  global $request,$db;
   
-  if (!($model->table == 'posts'))
-    return;
+//  if (!($model->table == 'posts'))
+//    return;
   
-  if (isset($request->params['post']['parent_id']))
-    redirect_to(array('resource'=>'posts','id'=>$request->params['post']['parent_id']));
+//  if (isset($request->params['post']['parent_id']))
+//    redirect_to(array('resource'=>'posts','id'=>$request->params['post']['parent_id']));
   
-}
+//}
 
 
 // this is a filter to redirect to the reviewed resource

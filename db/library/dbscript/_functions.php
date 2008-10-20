@@ -2354,7 +2354,7 @@ function load_apps() {
   
   while ($s = $i->NextChild('settings')){
     $s = $Setting->find($s->id);
-    if ($s->name = 'app')
+    if ($s->name == 'app')
       app_init( $s->value );
   }
   
@@ -2377,8 +2377,6 @@ function app_init($appname) {
       require_once $startfile;
   }
     
-  load_plugin( 'twitter_notice' );
-  
   $events = array(
     'admin_head'   => 'head',
     'admin_menu'   => 'menu',
