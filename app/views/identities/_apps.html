@@ -1,0 +1,147 @@
+
+
+<script src="resource/jquery.ajaxfileupload.js" type="text/javascript"></script>
+<script src="resource/jeditable/jquery.jeditable.js" type="text/javascript"></script>
+<script src="resource/jeditable/jquery.highlightFade.js" type="text/javascript"></script>
+<script src="resource/jeditable/jquery.jeditable.ajaxupload.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+// <![CDATA[
+
+function do_install(appnam) {
+  
+  $("#install"+appnam).html("<img src='resource/jeditable/indicator.gif'>");
+  
+  var someurl = "<?php url_for(array(
+    'resource'=>'settings'
+  )); ?>";
+  
+  var submitdata = {};
+  
+  submitdata['setting[name]'] = 'app';
+  submitdata['method'] = 'post';
+  submitdata['setting[value]'] = appnam;
+  
+  
+  $(".box").html("<img src='resource/jeditable/indicator.gif'>");
+  
+  $.post(someurl, submitdata, function(str) {
+    
+    var url = "<?php url_for(array('resource'=>'identities','action'=>'admin')); ?>"+"/partial";
+    $.get(url, function(str) {
+      $(".box").hide();
+      $(".box").html(str);
+      $(".box").slideDown("slow");
+      $("ul.sf-menu").corner("round 10px");
+      $("#install"+appnam).html("Installed");
+    });
+    
+  });
+  
+  
+  
+}
+
+
+$(document).ready(function() {
+  
+  var submit_to = "<?php url_for(array(
+    'resource'=>'settings'
+  )); ?>";
+  
+  $(".editable_select_installer").mouseover(function() { 
+      $(this).highlightFade({end:'#def'});
+  });
+  $(".editable_select_installer").mouseout(function() { 
+      $(this).highlightFade({end:'#fff', speed:200});
+  });
+  $(".editable_select_installer").editable(submit_to, { 
+      indicator   : "<img src='resource/jeditable/indicator.gif'>",
+      loadurl     : '<?php url_for(array(
+        "resource"=>"identities",
+        "id"=>$Member->id,
+        "action"=>"app_installer_json")); ?>',
+      submitdata  : function() {
+        return {
+          "setting[name]"   : "app",
+          "method"          : "post"
+        };
+      },
+      name        : "setting[value]",
+      type        : "select",
+      placeholder : "Install an Application..",
+      noappend    : "true",
+      submit      : "Install",
+      tooltip     : "Click to edit...",
+      cancel      : "Cancel",
+      callback    : function(value, settings) {
+        var t = "Install another Application...";
+        $(this).html(t);
+        var url = "<?php url_for(array('resource'=>'identities','action'=>'admin')); ?>"+"/partial";
+        $(".box").html(settings.indicator);
+        $.get(url, function(str) {
+          $(".box").hide();
+          $(".box").html(str);
+          $(".box").slideDown("slow");
+          $("ul.sf-menu").corner("round 10px");
+      });
+      
+
+      
+        return(value);
+      }
+  });
+  
+  
+  $(".editable_select_installed").mouseover(function() { 
+      $(this).highlightFade({end:'#def'});
+  });
+  $(".editable_select_installed").mouseout(function() { 
+      $(this).highlightFade({end:'#fff', speed:200});
+  });
+  $(".editable_select_installed").editable(submit_to, { 
+      indicator   : "<img src='resource/jeditable/indicator.gif'>",
+      loadurl     : '<?php url_for(array("resource"=>"identities","id"=>$Member->id,"action"=>"installed_apps_json")); ?>',
+      submitdata  : function() {
+        return {
+          "method"          : "delete"
+        };
+      },
+      name        : "entry[etag]",
+      type        : "select",
+      placeholder : "Uninstall...",
+      noappend    : "true",
+      submit      : "Remove",
+      tooltip     : "Click to edit...",
+      cancel      : "Cancel",
+      callback    : function(value, settings) {
+        var t = "Uninstall another...";
+        $(this).html(t);
+        var url = "<?php url_for(array('resource'=>'identities','action'=>'admin')); ?>"+"/partial";
+        $(".box").html(settings.indicator);
+        $.get(url, function(str) {
+          $(".box").hide();
+          $(".box").html(str);
+          $(".box").slideDown("slow");
+          $("ul.sf-menu").corner("round 10px");
+        });
+        
+     
+
+        return(value);
+      }
+  });
+  
+});
+// ]]>
+</script>
+<p class="editable_select_installer" id="editable_select_installer"></p>
+<p class="editable_select_installed" id="editable_select_installed"></p>
+
+
+
+<br /><br />
+
+<?php echo $store; ?>
+
+
