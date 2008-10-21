@@ -1280,6 +1280,7 @@ function register_xrd($id, $type=array(), $expires=false) {
   $xrd = get_option('xrds_simple');
   if(!is_array($xrd)) $xrd = array();
   $xrd[$id] = array('type' => $type, 'expires' => $expires, 'services' => array());
+  update_option('xrds_simple', $xrd);
 }//end function register_xrd
 
 /*
@@ -1292,6 +1293,7 @@ function register_xrd_service($xrd_id, $name, $content, $priority=10) {
   $xrd = get_option('xrds_simple');
   if(!is_array($xrd[$xrd_id])) register_xrd($xrd_id);
   $xrd[$xrd_id]['services'][$name] = array('priority' => $priority, 'content' => $content);
+    update_option('xrds_simple', $xrd);
 }//end register_xrd_service
 
 
