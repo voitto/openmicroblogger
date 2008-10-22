@@ -106,7 +106,7 @@ env:
   
   zeepAccessKey: 
   zeepSecretKey: 
-  zeepUrl: 
+  zeepUrl: https://api.zeepmobile.com/messaging/2008-07-14/send_message
   
   ldap_server: 
   ldap_context: 

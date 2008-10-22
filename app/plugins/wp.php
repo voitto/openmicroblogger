@@ -226,7 +226,7 @@ function add_management_page( $page,$menu,$access,$file,$func='',$url='' ) {
 
 function get_bloginfo( $var ) {
   global $blogdata;
-  if (in_array($var,array('wpurl','url')))
+  if (in_array($var,array('wpurl')))
     if (isset($blogdata[$var]))
       if ("/" == substr($blogdata[$var],-1))
         return substr($blogdata[$var],0,-1);

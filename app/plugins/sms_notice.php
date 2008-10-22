@@ -4,7 +4,32 @@ global $request;
 
 function mobile_event( &$vars ) {
   
-  $response = "Welcome to ".environment('site_title');  
+  if (!($_SERVER['REMOTE_ADDR'] == '204.244.102.2'))
+    trigger_error('Sorry but your IP address is unlike the Zeep server',E_USER_ERROR);
+  
+  extract($vars);
+  
+  $Post =& $db->model('Post');
+  $Identity =& $db->model('Identity');
+  
+  if ($_POST['event'] == 'MO') {
+    
+    // Array ( [sms_prefix] => omb__ [short_code] => 88147 [uid] => 243132 
+    // [body] => test from deep [min] => +15035554444 [event] => MO )
+
+    $p = $Post->base();
+    $p->set_value( 'profile_id', $_POST['uid'] );
+    $p->set_value( 'parent_id', 0 );
+    $p->set_value( 'title', $_POST['body'] );
+    $p->save_changes();
+    $i = $Identity->find($_POST['uid']);
+    if ($i)
+      $p->set_etag($i->person_id);
+    $response = "";
+    
+  } else {
+    $response = "Welcome to ".environment('site_title');  
+  }
   
   $header = array(
       "Status: 200 OK",
@@ -111,6 +136,7 @@ function broadcast_sms_notice( &$model, &$rec ) {
       curl_setopt($ch, CURLOPT_POST, true);
       curl_setopt($ch, CURLOPT_POSTFIELDS, $parameters );
       $response = curl_exec($ch);
+      echo $response; exit;
       curl_close($ch);
       
     }

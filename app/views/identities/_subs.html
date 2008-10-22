@@ -8,12 +8,8 @@ $Identity =& $db->model('Identity');
 ?>
 
 
+<h2>Friends</h2>
 
-
-
-
-<h2>Subscriptions:</h2>
-<h4>(click on a subscription to remove it)</h4>
 <br />
 
 <?php $Subscription->find_by('subscriber',$Member->id); ?>
@@ -22,8 +18,59 @@ $Identity =& $db->model('Identity');
 <?php if (empty($subentry->etag)) $subscriber->set_etag(); ?>
 <?php if ($subscriber->subscriber == $Member->id) : ?>
 <?php $si = $Identity->find( $subscriber->subscribed ); ?>
-<a href="<?php echo $request->url_for(array('resource'=>'subscriptions','id'=>$subscriber->id,'action'=>'remove')); ?>"><img style="border:none;width:48px;height:48px;" src="<?php echo $si->avatar; ?>"></a>
+
+<h3><?php echo $si->nickname; ?>
+<?php if (!empty($si->fullname)) : ?>
+  &nbsp;(<?php echo $si->fullname; ?>)
+<?php endif; ?></h3>
+
+<p><a style="hover:none;" href="<?php echo $request->url_for(array('resource'=>$si->nickname)); ?>"><img style="border:none;width:48px;height:48px;" src="<?php echo $si->avatar; ?>"></a>&nbsp;&nbsp;&nbsp;&nbsp;SMS&nbsp;<input name="do_sms<?php echo $subscriber->id; ?>" id="do_sms<?php echo $subscriber->id; ?>" type="checkbox" <?php if ($subscriber->sms) echo "checked"; ?>>&nbsp;&nbsp;&nbsp;&nbsp;E-mail&nbsp;<input name="do_email<?php echo $subscriber->id; ?>" id="do_email<?php echo $subscriber->id; ?>" type="checkbox" <?php if ($subscriber->email) echo "checked"; ?>>&nbsp;&nbsp;&nbsp;&nbsp;<a style="hover:none;" href="<?php echo $request->url_for(array('resource'=>'subscriptions','id'=>$subscriber->id,'action'=>'remove')); ?>"><img style="border:none;width:16px;height:16px;" src="resource/block.gif"></a></p>
+
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    
+    $("#do_sms<?php echo $subscriber->id; ?>").click(function(e){
+      var submitdata = {};
+      if (!$("#do_sms<?php echo $subscriber->id; ?>").attr('checked')) {
+        submitdata['subscription[sms]'] = 'false';
+      } else {
+        submitdata['subscription[sms]'] = 'true';
+      }
+      submitdata['entry[etag]'] = '<?php echo $subentry->etag; ?>';
+      submitdata['method'] = 'put';
+      var someurl = "<?php url_for(array(
+        'resource'=>'subscriptions'
+      )); ?>";
+      $.post(someurl, submitdata, function(str) {
+        //alert(str);
+      });
+    });
+
+    $("#do_email<?php echo $subscriber->id; ?>").click(function(e){
+      var submitdata = {};
+      if (!$("#do_email<?php echo $subscriber->id; ?>").attr('checked')) {
+        submitdata['subscription[email]'] = 'false';
+      } else {
+        submitdata['subscription[email]'] = 'true';
+      }
+      submitdata['entry[etag]'] = '<?php echo $subentry->etag; ?>';
+      submitdata['method'] = 'put';
+      var someurl = "<?php url_for(array(
+        'resource'=>'subscriptions'
+      )); ?>";
+      $.post(someurl, submitdata, function(str) {
+        //alert(str);
+      });
+    });
+    
+  });
+</script>
+
+<br />
+
 <?php endif; ?>
+
 <?php endwhile; ?>
 
 

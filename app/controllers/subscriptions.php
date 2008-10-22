@@ -21,6 +21,12 @@ function index( &$vars ) {
   );
 }
 
+function put( &$vars ) {
+  extract( $vars );
+  $resource->update_from_post( $request );
+  header_status( '200 OK' );
+  redirect_to( $request->resource );
+}
 
 function delete( &$vars ) {
   extract( $vars );
