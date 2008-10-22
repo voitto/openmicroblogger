@@ -1061,6 +1061,22 @@ function oauth_omb_post( &$vars ) {
     $p->set_value( 'title', $content );
     $p->save_changes();
     $p->set_etag($sender->person_id);
+    
+    
+    if (!function_exists('broadcast_email_notice'))
+      load_plugin('email_notice');
+    
+    if (function_exists('broadcast_email_notice'))
+      broadcast_email_notice( &$p, &$p );
+      
+    if (!function_exists('broadcast_sms_notice'))
+      load_plugin('sms_notice');
+    
+    if (function_exists('broadcast_sms_notice'))
+      broadcast_sms_notice( &$p, &$p );
+    
+    
+    
   }
   
   print "omb_version=".OMB_VERSION;

@@ -218,6 +218,16 @@ $("ul.sf-menu").corner("round 10px");
 
 	<?php endforeach; ?>
 
+  <?php $smskey = environment('awsAccessKey'); ?>
+  
+  <?php if (!empty(trim($smskey))) : ?>
+
+	<li>
+		<a href="<?php url_for(array('resource'=>'mobile_settings')); ?>">Mobile</a>
+	</li>	
+	
+	<?php endif; ?>
+
 </ul>
 
 

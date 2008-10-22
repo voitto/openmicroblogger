@@ -9,7 +9,7 @@ function broadcast_email_notice( &$model, &$rec ) {
   
   global $request, $db;
   
-  $i = get_profile();
+  $i = owner_of($rec);
   
   $sent_to = array();
   

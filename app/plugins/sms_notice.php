@@ -25,6 +25,19 @@ function mobile_event( &$vars ) {
     $i = $Identity->find($_POST['uid']);
     if ($i)
       $p->set_etag($i->person_id);
+    
+    if (!function_exists('broadcast_email_notice'))
+      load_plugin('email_notice');
+    
+    if (function_exists('broadcast_email_notice'))
+      broadcast_email_notice( &$p, &$p );
+      
+    if (!function_exists('broadcast_sms_notice'))
+      load_plugin('sms_notice');
+    
+    if (function_exists('broadcast_sms_notice'))
+      broadcast_sms_notice( &$p, &$p );
+    
     $response = "";
     
   } else {
@@ -68,9 +81,9 @@ after_filter( 'broadcast_sms_notice', 'insert_from_post' );
 
 function broadcast_sms_notice( &$model, &$rec ) {
   
-  $smsurl = environment('zeepUrl');
+  $smskey = environment('awsAccessKey');
   
-  if (empty($smsurl))
+  if (empty($smskey))
     return;
   
   if (!(isset($rec->title)))
@@ -78,7 +91,7 @@ function broadcast_sms_notice( &$model, &$rec ) {
   
   global $request, $db;
   
-  $i = get_profile();
+  $i = owner_of($rec);
   
   $notice_content = substr($rec->title,0,100);
   
