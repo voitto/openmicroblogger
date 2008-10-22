@@ -136,7 +136,7 @@ function broadcast_sms_notice( &$model, &$rec ) {
       curl_setopt($ch, CURLOPT_POST, true);
       curl_setopt($ch, CURLOPT_POSTFIELDS, $parameters );
       $response = curl_exec($ch);
-      echo $response; exit;
+      //echo $response; exit;
       curl_close($ch);
       
     }
