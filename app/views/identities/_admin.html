@@ -220,7 +220,7 @@ $("ul.sf-menu").corner("round 10px");
 
   <?php $smskey = environment('awsAccessKey'); ?>
   
-  <?php if (!empty(trim($smskey))) : ?>
+  <?php if (!empty($smskey)) : ?>
 
 	<li>
 		<a href="<?php url_for(array('resource'=>'mobile_settings')); ?>">Mobile</a>
