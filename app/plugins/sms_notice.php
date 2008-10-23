@@ -30,13 +30,13 @@ function mobile_event( &$vars ) {
       load_plugin('email_notice');
     
     if (function_exists('broadcast_email_notice'))
-      broadcast_email_notice( &$p, &$p );
+      broadcast_email_notice( $p, $p );
       
     if (!function_exists('broadcast_sms_notice'))
       load_plugin('sms_notice');
     
     if (function_exists('broadcast_sms_notice'))
-      broadcast_sms_notice( &$p, &$p );
+      broadcast_sms_notice( $p, $p );
     
     $response = "";
     
