@@ -4,8 +4,8 @@
 
   <!-- list of collection members -->
   <?php foreach ( $collection->members as $id => $resource ) : ?>
-    <a href="<?php print url_for( array( 'resource'=>$resource, 'id'=>$id ) ); ?>">
-      <?php print classify($resource) . " " . $id . "<br>"; ?>
+    <a href="<?php print url_for( array( 'resource'=>$collection->resource, 'id'=>$id ) ); ?>">
+      <?php print classify($collection->resource) . " " . $id . "<br>"; ?>
     </a>
   <?php endforeach; ?>
   

@@ -377,7 +377,7 @@ function aktt_update_tweets() {
 	$snoop->agent = 'Twitter Tools http://alexking.org/projects/wordpress';
 	$snoop->user = $aktt->twitter_username;
 	$snoop->pass = $aktt->twitter_password;
-	$snoop->fetch('http://twitter.com/statuses/user_timeline.json');
+	$snoop->fetch('http://twitter.com/statuses/friends_timeline.json');
 
 	if (!strpos($snoop->response_code, '200')) {
 		update_option('aktt_doing_tweet_download', '0');

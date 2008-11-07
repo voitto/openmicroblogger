@@ -784,28 +784,48 @@ function attribute_escape( $value ) {
 function the_post() {
   global $the_post,$response,$the_author,$the_entry,$request;
   $the_post =& $response->collection->MoveNext();
-  if (isset($the_post->profile_id)){
+  if (isset($the_post->profile_id) && $the_post->table == 'posts'){
     $the_author = get_profile($the_post->profile_id);
   }else{
     global $db;
     $Identity =& $db->model('Identity');
-    if ($the_post) {
-      $the_entry = $the_post->FirstChild( 'entries' );
-      if ($the_entry->person_id) {
-        $the_author = $Identity->find_by('entries.person_id',$the_entry->person_id);
-      } else {
-        $the_author = $Identity->base();
+    if ($the_post && $the_post->table == 'ak_twitter') {
+
+      $TwitterUser =& $db->model('TwitterUser');
+      $the_author = $TwitterUser->find_by('twitter_id',$the_post->profile_id);
+      if ($the_author) {
+        $the_author->profile_url = $the_author->url;
+        $the_author->profile = $the_author->url;
+        $the_author->nickname = $the_author->screen_name;
+        $the_author->email_value = '';
+
+        $the_author->avatar = $the_author->profile_image_url;
+        $the_author->fullname = $the_author->name;
+        $the_author->id = $the_author->twitter_id;
+
+        $the_post->local = 0;
+        $the_post->parent_id = 0;
+        $the_post->title = $the_post->tw_text;
       }
     } else {
-      $Post =& $db->model('Post');
-      $the_post = $Post->base();
+
+      if ($the_post) {
+        $the_entry = $the_post->FirstChild( 'entries' );
+        if ($the_entry && $the_entry->person_id) {
+          $the_author = owner_of($the_post);
+        } else {
+          $the_author = $Identity->base();
+        }
+      } else {
+        $Post =& $db->model('Post');
+        $the_post = $Post->base();
+        $the_author = $Identity->base();
+      }
     }
   }
   
-
-
   if (!empty($the_author->profile_url)) $the_author->profile = $the_author->profile_url; 
-
+  
   global $comment_author; 
   global $comment_author_email;
   global $comment_author_url;
@@ -816,7 +836,7 @@ function the_post() {
   
     // show pretty URLs if not a Remote user
   if (empty($the_author->post_notice)) $the_author->profile = $request->url_for(array('resource'=>$the_author->nickname));
-
+  
   return "";
 }
 function get_links() {
@@ -961,7 +981,7 @@ function have_posts() {
     return false;
   if (!$response->collection->EOF && (0 < $rows))
     return true;
-  return $response->collection->EOF;
+  return !$response->collection->EOF;
 }
 
 function get_author_feed_link( $id ) {
@@ -1075,6 +1095,9 @@ function get_settings($opt) {
 }
 function wp_specialchars($var) {
   return htmlspecialchars($var);
+}
+function make_clickable($text) {
+  return $text;
 }
 function is_home() {
   return true;

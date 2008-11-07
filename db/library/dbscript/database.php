@@ -367,11 +367,19 @@ class Database {
     trigger_before( 'get_objects', $this, $this );
     $objects = array();
     $skip = array( '.', '..' );
-    if ( $handle = opendir( model_path() )) {
-      while ( false !== ( $file = readdir( $handle ))) {
-        if (!(in_array($file, $skip)) && substr( $file, -4 ) == '.php' ) {
-          $o = substr( $file, 0, -4 );
-          $objects[$o] =& $this->get_table( tableize($o) );
+    $paths = array(model_path());
+    if (isset($GLOBALS['PATH']['apps'])) {
+      foreach($GLOBALS['PATH']['apps'] as $k=>$v) {
+        $paths[] = $v['model_path'];
+      }
+    }
+    foreach ($paths as $path) {
+      if ( $handle = opendir( $path )) {
+        while ( false !== ( $file = readdir( $handle ))) {
+          if (!(in_array($file, $skip)) && substr( $file, -4 ) == '.php' ) {
+            $o = substr( $file, 0, -4 );
+            $objects[$o] =& $this->get_table( tableize($o) );
+          }
         }
       }
       foreach( $objects as $name=>$model )

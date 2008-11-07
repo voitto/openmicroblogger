@@ -13,8 +13,16 @@ class AkTwitter extends Model {
     $this->auto_field( 'id' );
     $this->char_field( 'tw_id' );
     $this->char_field( 'tw_text' );
+    $this->char_field( 'tw_reply_username' );
+    $this->char_field( 'tw_reply_tweet' );
     $this->time_field( 'tw_created_at' );
     $this->time_field( 'modified' );
+    $this->int_field( 'profile_id' );
+    $this->int_field( 'entry_id' );
+    
+    $this->has_one('entry');
+    
+    $this->has_and_belongs_to_many('identities');
     
     // primary key
     $this->set_primary_key( 'id' );

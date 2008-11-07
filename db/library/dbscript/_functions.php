@@ -1020,8 +1020,8 @@ function render_theme( $theme ) {
   global $req, $wp_rewrite, $wp_version, $openid, $user_identity, $logic;
   global $submenu;
   global $comment_author; 
-global $comment_author_email;
-global $comment_author_url;
+  global $comment_author_email;
+  global $comment_author_url;
 
   $folder = $GLOBALS['PATH']['themes'] . $theme . DIRECTORY_SEPARATOR;
   
@@ -2394,6 +2394,19 @@ function app_init($appname) {
 
   
 }
+
+
+function array_sort($array,$key){ 
+   for ($i = 0; $i < sizeof($array); $i++) { 
+        $sort_values[$i] = $array[$i][$key]; 
+   } 
+   arsort ($sort_values); 
+   reset ($sort_values); 
+   while (list ($arr_key, $arr_val) = each ($sort_values)) { 
+          $sorted_arr[] = $array[$arr_key]; 
+   } 
+   return $sorted_arr; 
+} 
 
 
 ?>

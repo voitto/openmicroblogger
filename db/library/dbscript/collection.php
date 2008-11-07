@@ -104,7 +104,9 @@ class Collection extends GenericIterator {
     if (isset($request->params['page']) && !is_array($request->params['page']))
       $table->set_offset( ($this->per_page * $request->params['page']) - $this->per_page );
 
-    if ( !$request->id )
+    if ( !( $find_by == NULL ))
+      $table->find_by( $find_by );
+    elseif ( !$request->id )
       $table->find();
     else
       $table->find( $request->id );
@@ -124,7 +126,7 @@ class Collection extends GenericIterator {
             $Member->etag = $Entry->etag;
           }
         }
-        $this->members[$Member->$uri_key] = $resource;
+        $this->members[$Member->$uri_key] = $Entry->last_modified;
         $this->updated = timestamp();
         if (isset($Member->modified) && !empty($Member->modified))
           $this->updated = $Member->modified;

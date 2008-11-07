@@ -660,19 +660,19 @@ class PostgreSQL extends Database {
         $spl = split("\.",$val["fkey"]);
         if (!($this->models[$spl[0]]->exists))
           $$spl[0] =& $this->get_table($spl[0]);
-        if (($val["type"] != 'child-many'))
-          $leftsql .= "(";
+        $leftsql .= "(";
       }
-      $skippedrel = false;
+
       foreach ($relfields as $key=>$val) {
         $spl = split("\.",$val["fkey"]);
         if (($val["type"] == 'child-many')) {
-          if ($first)
-            $skippedrel = true;
-          continue;
-        }
-        foreach ($this->models[$spl[0]]->field_array as $fieldname=>$datatypename) {
-          $fieldstring .= $spl[0].".".$fieldname." as \"".$spl[0].".".$fieldname."\", " . "\n";
+          $join =& $this->get_table($model->join_table_for($table, $val['tab']));
+          $spl[0] = $join->table;
+          $val["fkey"] = $join->table.'.'.strtolower(classify($table))."_".$model->foreign_key_for( $table);
+        }else{
+          foreach ($this->models[$spl[0]]->field_array as $fieldname=>$datatypename) {
+            $fieldstring .= $spl[0].".".$fieldname." as \"".$spl[0].".".$fieldname."\", " . "\n";
+          }
         }
         if ($first)
           $leftsql .= $table;

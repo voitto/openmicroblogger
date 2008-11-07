@@ -3,8 +3,8 @@
 <?php if (isset($collection)) : ?>
 <?php foreach ( $collection->members as $resource ) : ?>
     <collection
-        href="<?php url_for( $resource ); ?>">
-      <atom:title><?php print ucwords($resource); ?></atom:title>
+        href="<?php url_for( $collection->resource ); ?>">
+      <atom:title><?php print ucwords($collection->resource); ?></atom:title>
       <accept>entry</accept>
       <categories fixed="yes">
         <atom:category
