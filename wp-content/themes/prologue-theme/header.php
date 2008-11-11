@@ -133,20 +133,14 @@ body {
       $("#main").slideDown("fast");
     });
     
-    
-    
-    
   }
   
 </script>
 
 <?php if (get_profile_id() ) : ?>
 
-
-
  <script type="text/javascript">
    
-    
 function setMaxLength() {
 	var x = document.getElementsByTagName('textarea');
 	var counter = document.createElement('div');

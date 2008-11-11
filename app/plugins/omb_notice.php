@@ -96,16 +96,12 @@ function broadcast_omb_notice( &$model, &$rec ) {
         } else {
           parse_str( $result->body, $return );
           if ( is_array($return) && $return['omb_version'] == OMB_VERSION ) {
-            //break;
             $sent_to[] = $url;
           } else {
-            if (strpos($request->base, 'openmicroblogger') !== false)
-              send_email( 'brian@megapump.com', 'failed to post', "\n\n".$url."\n\n".$result->body."\n\n".$notice_content, environment('email_from'), environment('email_name'), false );
+            admin_alert('failed to post'."\n\n".$url."\n\n".$result->body."\n\n".$notice_content);
           }
         }
-        //if (strpos($request->base, 'openmicroblogger') !== false)
-        //  send_email( 'brian@megapump.com', 'retrying post', $notice_content, environment('email_from'), environment('email_name'), false );
-        //sleep(2);
+
       //}
       
       

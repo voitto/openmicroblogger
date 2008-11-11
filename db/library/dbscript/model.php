@@ -235,35 +235,35 @@ class Model {
           $req->id = $rec->id;
           $Category =& $db->model('Category');
           $Entry =& $db->model('Entry');
-          for ($i = 0; $i < count($req->params); $i++ ) {
-            $cname = "category".$i;
-            $added = array();
-            if (isset($req->$cname) && !(in_array($req->$cname, $added))) {
-              $join =& $db->get_table($Entry->join_table_for('categories', 'entries'));
-              $j = $join->base();
-              $j->set_value('entry_id',$atomentry->id);
-              $c = $Category->find_by('name',$req->$cname);
-              if ($c) {
-                $j->set_value('category_id',$c->id);
-                $j->save_changes();
-                $added[] = $req->$cname;
-              } elseif (!empty($req->$cname)) {
-                if (isset_admin_email()) {
-                  $c = $Category->base();
-                  $c->set_value( 'name', ucwords($req->$cname));
-                  $c->set_value( 'term', strtolower($req->$cname));
-                  $c->save();
+          foreach($req->params as $cname=>$catval) {
+            if (substr($cname,0,8) == 'category') {
+              $added = array();
+              if (!in_array($req->$cname, $added)) {
+                $join =& $db->get_table($Entry->join_table_for('categories', 'entries'));
+                $j = $join->base();
+                $j->set_value('entry_id',$atomentry->id);
+                $c = $Category->find_by('term',$req->$cname);
+                if ($c) {
                   $j->set_value('category_id',$c->id);
                   $j->save_changes();
                   $added[] = $req->$cname;
-                  admin_alert( "created a new category: ".$req->$cname." at ".$req->base );
+                } elseif (!empty($req->$cname)) {
+                  if (isset_admin_email()) {
+                    $c = $Category->base();
+                    $c->set_value( 'name', $req->$cname);
+                    $c->set_value( 'term', strtolower($req->$cname));
+                    $c->save();
+                    $j->set_value('category_id',$c->id);
+                    $j->save_changes();
+                    $added[] = $req->$cname;
+                    admin_alert( "created a new category: ".$req->$cname." at ".$req->base );
+                  }
                 }
               }
             }
           }
         }
       }
-      
     }
     
     trigger_after( 'insert_from_post', $this, $rec );
@@ -401,6 +401,20 @@ class Model {
       $p = $Person->find( get_person_id() );
       if (!($p->id == $atomentry->attributes['person_id']) && !$this->can_superuser($req->resource))
         trigger_error( "Sorry, your id does not match the owner of the database entry", E_USER_ERROR );
+    }
+    
+    $coll = environment('collection_cache');
+    
+    if ($this->has_metadata && isset($coll[$req->resource]) && $coll[$req->resource]['location'] == 'aws') {
+      $ext = extension_for($atomentry->content_type);
+      $pkname = $rec->primary_key;
+      $aws_file = $rec->table . $rec->$pkname . "." . $ext;
+      lib_include( 'S3' );
+      $s3 = new S3( environment('awsAccessKey'), environment('awsSecretKey') );
+      if (!$s3)
+        trigger_error( 'Sorry, there was a problem connecting to Amazon Web Services', E_USER_ERROR );
+      if (!($s3->deleteObject(environment('awsBucket'), urlencode($aws_file))))
+        trigger_error( 'Sorry, there was a problem deleting the file from Amazon Web Services', E_USER_ERROR );
     }
     
     $result = $db->delete_record($rec);

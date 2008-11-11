@@ -59,6 +59,7 @@ env:
     - twitter
     - identica
     - photos
+    - auction
     
   plugins:
     - sessions

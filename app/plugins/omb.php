@@ -228,10 +228,13 @@ function wp_set_post_fields( &$model, &$rec ) {
   $request->set_param( array( 'post', 'parent_id' ), 0 );
   
   $Category =& $db->model('Category');
-  
+  $Category->set_limit(100);
   $Category->find();
   
-  $tags = split( ' ', $_POST['tags'] );
+  if (strstr( $_POST['tags'], "," ))
+    $tags = split( ',', $_POST['tags'] );
+  else
+    $tags = split( ' ', $_POST['tags'] );
   
   $cats = array();
   
@@ -241,9 +244,10 @@ function wp_set_post_fields( &$model, &$rec ) {
   $newcount = count($cats);
   
   foreach ( $tags as $t ) {
-    $t = strtolower( trim( $t ));
-    if (array_key_exists( $t, $cats )) {
-      $request->set_param( "category".$cats[$t], $t );
+    $t = trim($t);
+    $tl = strtolower( $t );
+    if (array_key_exists( $tl, $cats )) {
+      $request->set_param( "category".$cats[$tl], $tl );
     } else {
       $request->set_param( "category".$newcount, $t );
       $newcount++;

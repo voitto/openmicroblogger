@@ -683,11 +683,10 @@ function redirect_to( $param, $altparam = NULL ) {
   
   global $request;
   
-  // check for qooxdoo "POST" and bail before redirect
-  if (strstr($request->uri,"&method="))
+  if (is_ajax())
     echo "OK";
-  
-  $request->redirect_to( $param, $altparam );
+  else
+    $request->redirect_to( $param, $altparam );
   
 }
 
@@ -1514,6 +1513,24 @@ function can_edit( $post ) {
   $e = $post->FirstChild('entries');
   $m =& $db->get_table($post->table);
   return (($pid == $e->person_id) || $m->can_superuser($post->table));
+}
+
+function entry_for( &$obj ) {
+  
+  global $db;
+  
+  if (isset($obj->entry_id)) {
+    
+    // it's a Record with metadata
+    
+    $Entry =& $db->model('Entry');
+    
+    return $Entry->find($obj->entry_id);
+    
+  }
+  
+  return false;
+  
 }
 
 function owner_of( &$obj ) {
