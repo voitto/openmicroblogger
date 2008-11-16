@@ -10,7 +10,7 @@ function download_tweets(&$request,&$route) {
     
   global $response;
   
-  include $GLOBALS['PATH']['dbscript'] . 'feed' . '.php';
+  require_once $GLOBALS['PATH']['dbscript'] . 'aggregatefeed' . '.php';
   
   update_my_tweets();
   
@@ -25,7 +25,7 @@ function download_tweets(&$request,&$route) {
     'posts'=>$response->collection
   );
 
-  $collection = new Feed($colls);
+  $collection = new AggregateFeed($colls);
   
   $response->collection = $collection;
   

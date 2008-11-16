@@ -424,6 +424,14 @@ function test_log_in() {
 }
 
 
+//get_seo_plugin();
+
+function get_seo_plugin() {
+  add_action( 'wp_head', 'get_posts_init' );
+  wp_plugin_include( 'all-in-one-seo-pack' );
+  load_plugin_textdomain( 'all_in_one_seo_pack', 'wp-content/plugins/all-in-one-seo-pack' );
+}
+
 
 /**
  * negotiate the best content-type for the client

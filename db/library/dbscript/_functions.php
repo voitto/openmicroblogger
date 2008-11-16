@@ -966,6 +966,13 @@ function render_partial( $template ) {
   $response->render_partial( $request, $template );
   
 }
+function add_filter($tag, $function_to_add, $priority = 10, $accepted_args = 1) {
+	global $wp_filter, $merged_filters;
+	$idx = _wp_filter_build_unique_id($tag, $function_to_add, $priority);
+  $wp_filter[$tag][$priority][$idx] = array('function' => $function_to_add, 'accepted_args' => $accepted_args);
+	unset( $merged_filters[ $tag ] );
+	return true;
+}
 
 function add_action( $act, $func ) {
   //admin_head, photos_head
@@ -973,6 +980,7 @@ function add_action( $act, $func ) {
     return;
   if (!is_array($func) && function_exists($func))
     before_filter( $func, $act );
+	add_filter($act, $func);
   return false;
 }
 

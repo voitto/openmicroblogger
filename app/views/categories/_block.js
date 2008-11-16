@@ -1,7 +1,8 @@
 <?php ob_start(); ?>
 
-<table cellpadding="1" cellspacing="0" border="0">
-  
+  <li class="categories">
+    <h2>Categories</h2>
+      <ul>
   <?php while( $Category = $collection->MoveNext() ) : ?>
     
     <?php
@@ -18,15 +19,16 @@
     
     <?php endwhile; ?>
     
-    <tr>
-      <td>
+     <li class="cat-item">
         <a href="<?php url_for( array( 'resource'=>'categories', 'id'=>$Category->id )); ?>"><?php print $Category->name; ?></a><?php if ($count > 0) print " (".$count.")"; ?>
-      </td>
-    </tr>
+
+    </li>
+    
     
     <?php endwhile; ?>
     
-</table>
+  </ul>
+</li>
 
 <?php $content = ereg_replace("'","\'",ereg_replace("\n","",ob_get_contents())); ob_end_clean(); ?>
 

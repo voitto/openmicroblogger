@@ -1,13 +1,5 @@
 <?php
-function rhino_show() {
-  // profile action
-  app_profile_show( 'posts', 'entry.html' );
-}
-function rhino_init() {
-  // admin action
-  // this should create the menu item
-  app_register_init( 'posts', 'new.html', 'Rhino', 'rhino', 2 );
-}
+
 class Post extends Model {
   
   function Post() {
