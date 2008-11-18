@@ -6,6 +6,8 @@ class Category extends Model {
     
     // fields
     
+    $this->set_limit(100);
+    
     $this->char_field( 'name' );
     $this->char_field( 'term' );
     $this->char_field( 'scheme' );

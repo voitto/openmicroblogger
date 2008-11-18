@@ -97,6 +97,25 @@ function post( &$vars ) {
   $resource->insert_from_post( $request );
   $i = $Identity->find( $request->id );
   $i->set_etag();
+  
+  $installed = environment('installed');
+  
+  if (is_array($installed)) {
+    
+    foreach($installed as $appname) {
+      
+      $app = $Setting->base();
+      $app->set_value('profile_id',$i->id);
+      $app->set_value('person_id',$p->id);
+      $app->set_value('name','app');
+      $app->set_value('value',$appname);
+      $app->save_changes();
+      $app->set_etag();
+      
+    }
+    
+  }
+  
   header_status( '201 Created' );
   redirect_to( $request->resource );
 }

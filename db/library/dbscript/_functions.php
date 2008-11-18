@@ -2268,7 +2268,7 @@ function migrate() {
   foreach($db->models as $model)
     $model->migrate();
   
-  echo "<BR>The database schema is now synced to the data models.<BR><BR>";
+  echo "<BR>The database schema is now synched to the data models.<BR><BR>";
   exit;
   
 }
@@ -2335,6 +2335,48 @@ function app_register_init($resource,$action,$button,$appname,$group) {
   
 }
 
+function get_nav_links() {
+  
+  global $request;
+  
+  $pid = get_app_id();
+  
+  $links = array();
+  
+  $i = get_profile($pid);
+  
+  
+  $links["Public"] = base_url(true);
+  
+  
+  if ($i && $i->id > 0) {
+    
+    $links["Personal"] = $request->url_for(array(
+        "resource"=>"posts",
+        "byid"=>$i->id,
+        "page"=>1 ));
+    
+    if (empty($i->post_notice))
+      $links["Profile"] = $request->url_for(array("resource"=>$i->nickname));
+    else
+      $links["Profile"] = $i->profile;
+      
+  }
+  
+  if ($pid > 0) {
+  
+    $links["Logout"] = $request->url_for("openid_logout");
+  
+  } else {
+  
+    $links["Register"] = $request->url_for("register");
+    $links["Login"] = $request->url_for("email_login");
+  
+  }
+  
+  return $links;
+  
+}
 
 function get_app_id() {
   

@@ -60,6 +60,8 @@ env:
     - identica
     - photo
     - auction
+  
+  installed:
     
   plugins:
     - sessions
@@ -117,6 +119,7 @@ env:
   ping_server: http://dejafeed.com/?submit
   
   blocks:
+    -pages
     -categories
   
   collection_cache:

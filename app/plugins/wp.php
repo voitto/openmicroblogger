@@ -284,7 +284,7 @@ function add_management_page( $page,$menu,$access,$file,$func='',$url='' ) {
 }
 
 function the_excerpt_reloaded() {
-  the_post();
+  // dur
 }
 
 function query_posts() {
@@ -1511,14 +1511,28 @@ function setup_postdata( $post ) {
 
 function dynamic_sidebar() {
   global $request;
+  global $sidebar_done;
   $blocks = environment('blocks');
-  if (!empty($blocks)) {
+  if (!empty($blocks) && !$sidebar_done) {
     foreach ($blocks as $b) {
-      echo '<script type="text/javascript" src="'.$request->url_for(array('resource'=>$b,'action'=>'block.js')).'"></script>';
+      // if it's the prologue theme, don't show PAGES in sidebar
+      if (!($b == 'pages' && environment('theme') == 'prologue-theme')){
+        //$renderpartial = true;
+        if (isset($renderpartial)) {
+          // this would be better/faster, but not working yet
+          echo '<script type="text/javascript">';
+          render_partial(array('resource'=>$b,'action'=>'block.js'));
+          echo '</script>';
+        } else {
+          // doing a call back to the server for each block. not cool XXX
+          echo '<script type="text/javascript" src="'.$request->url_for(array('resource'=>$b,'action'=>'block.js')).'"></script>';
+        }
+      }
     }
+    $sidebar_done = true;
   }
-  echo '<a href="http://openmicroblogger.org"><img src="http://openmicroblogger.org/omb.gif" style="border:none;" alt="openmicroblogger.org" /></a>'."\n";
   return true;
+  //echo '<a href="http://openmicroblogger.org"><img src="http://openmicroblogger.org/omb.gif" style="border:none;" alt="openmicroblogger.org" /></a>'."\n";
 }
 
 function single_tag_title( ) {
