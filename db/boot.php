@@ -158,10 +158,10 @@ $request->connect(
 );
 
   // load static-file-cache and debug aspects
-include $GLOBALS['PATH']['plugins'] . 'renderer.php';
+//include $GLOBALS['PATH']['plugins'] . 'renderer.php';
 
 // this doesn't do anything because the aspect-filter was deleted XXX
-$request->routematch();
+//$request->routematch();
 
 
   /**
