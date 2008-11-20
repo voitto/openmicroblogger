@@ -42,7 +42,7 @@ env:
   site_subtitle: 
   site_description: 
   
-  theme: kubrick
+  theme: prologue-theme
   
   remote_sources:
     dbscript: dbscript.net/?apps
@@ -54,15 +54,17 @@ env:
   authentication: email
   
   debug_enabled: true
-
+  
   apps:
     - twitter
     - identica
     - photo
     - auction
   
-  installed:
-    
+  installed: 
+  
+  threaded: false
+  
   plugins:
     - sessions
     - validation

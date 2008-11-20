@@ -1034,13 +1034,15 @@ function render_theme( $theme ) {
   
   add_include_path($folder);
   
-  if (isset($request->action) && !($request->action == 'index')) {
+  if ($request->resource != 'posts' || (isset($request->action) && !($request->action == 'index'))) {
     get_header();
     if ($theme == 'prologue-theme')
       show_prologue_nav();
     echo '<div id="main">'."\n";
     content_for_layout();
     echo '</div>'."\n";
+    if ($theme != 'prologue-theme')
+      get_sidebar();
     get_footer();
     exit;
   }

@@ -620,9 +620,14 @@ function wp_new_user_notification( $userlogin ) {
   
 }
 function is_user_logged_in() {
-
-
-  return true;
+  
+  $id = get_profile_id();
+  
+  if ($id)
+    return true;
+    
+  return false;
+  
 }
 function wp_clearcookie() {
   
@@ -719,6 +724,98 @@ function wp_head() {
     global $current_user;
     
     //trigger_before( 'admin_head', $current_user, $current_user );
+    
+    
+    if ($request->resource == "identities")
+      echo '<script type="text/javascript" src="'.$request->base_url.'resource/jquery-1.2.6.min.js"></script>';
+    else
+      echo '<script type="text/javascript" src="'.$request->base_url.'resource/jquery-1.2.1.min.js"></script>';
+
+    echo '
+    <script type="text/javascript" src=" '.$request->base_url.'resource/jquery.corner.js"></script>
+    <script type="text/javascript" src=" '.$request->base_url.'resource/jquery.flash.js"></script>
+    <script type="text/javascript" src=" '.$request->base_url.'resource/jquery.jqUploader.js"></script>
+
+    <script type="text/javascript">
+    $(document).ready(function(){
+    	$("#postfile").jqUploader({
+    	  background:"FFFFFF",
+    	  barColor:"336699",
+    	  allowedExt:"*.avi; *.jpg; *.jpeg; *.mp3; *.mov",
+    	  allowedExtDescr: "Movies, Photos and Songs",
+    	  validFileMessage: "Click [Upload]",
+    	  endMessage: "",
+    	  hideSubmit: false
+    	});
+    });
+    
+    </script>
+    
+    
+    
+    
+    
+    
+    
+    <script type="text/javascript">
+
+  
+  function show_page(url) {
+    
+    $("#main").html("<img src=\"resource/jeditable/indicator.gif\">");
+    
+    $.get(url, function(str) {
+      $("#main").hide();
+      $("#main").html(str);
+      $("#main").slideDown("fast");
+    });
+    
+  }
+  
+</script>
+
+<?php if (get_profile_id() ) : ?>
+
+ <script type="text/javascript">
+   
+function setMaxLength() {
+	var x = document.getElementsByTagName("textarea");
+	var counter = document.createElement("div");
+	counter.className = "counter";
+	for (var i=0;i<x.length;i++) {
+		if (x[i].getAttribute("maxlength")) {
+			var counterClone = counter.cloneNode(true);
+			counterClone.relatedElement = x[i];
+			counterClone.innerHTML = "<span>0</span>/"+x[i].getAttribute("maxlength");
+			x[i].parentNode.insertBefore(counterClone,x[i].nextSibling);
+			x[i].relatedElement = counterClone.getElementsByTagName("span")[0];
+
+			x[i].onkeyup = x[i].onchange = checkMaxLength;
+			x[i].onkeyup();
+		}
+	}
+}
+
+function checkMaxLength() {
+	var maxLength = this.getAttribute("maxlength");
+	var currentLength = this.value.length;
+	if (currentLength > maxLength)
+		this.relatedElement.className = "toomuch";
+	else
+		this.relatedElement.className = "";
+	this.relatedElement.firstChild.nodeValue = currentLength;
+	// not innerHTML
+}
+
+
+    </script>
+    
+    
+    
+    
+    
+    
+    ';
     
     do_action('wp_head');
     
@@ -1139,16 +1236,19 @@ function the_author_ID() {
 function the_content( $linklabel ) {
   global $the_post,$request,$the_author;
   
-  if (!(environment('theme') == 'prologue-theme')) {
-    
-    echo $the_post->body;
-    return;
-    
-  }
+
   
   $e = $the_post->FirstChild('entries');
   
   $title = $the_post->title;
+  
+  if (environment('theme') != 'prologue-theme') {
+    
+    $current_user_id = get_the_author_ID( );
+    echo prologue_get_avatar( $current_user_id, get_the_author_email( ), 48 );
+    
+  }
+  
   
   if (strpos($title, 'http') !== false || strpos($title, '@') !== false) {
     $title = str_replace("\n"," ",$title);
@@ -1489,6 +1589,8 @@ function apply_filters($tag, $string) {
 
 function current_user_can( $action ) {
   global $request;
+  if ($action == 'publish_posts' && ($request->resource != 'posts' || $request->action != 'index'))
+    return false;
   $id = get_profile_id();
   if (isset($request->params['byid']))
     $byid = $request->params['byid'];
@@ -1512,6 +1614,15 @@ function setup_postdata( $post ) {
 function dynamic_sidebar() {
   global $request;
   global $sidebar_done;
+
+  if (!$sidebar_done && get_profile_id() && $request->resource == 'identities' && in_array($request->action,array('edit','entry'))) {
+    if ($request->id == get_profile_id())
+      render_partial('admin');
+    $sidebar_done = true;
+    return true;
+  }
+    
+    
   $blocks = environment('blocks');
   if (!empty($blocks) && !$sidebar_done) {
     foreach ($blocks as $b) {
@@ -1531,8 +1642,9 @@ function dynamic_sidebar() {
     }
     $sidebar_done = true;
   }
+  if (environment('theme') == 'prologue-theme')
+    echo '<a href="http://openmicroblogger.org"><img src="http://openmicroblogger.org/omb.gif" style="border:none;" alt="openmicroblogger.org" /></a>'."\n";
   return true;
-  //echo '<a href="http://openmicroblogger.org"><img src="http://openmicroblogger.org/omb.gif" style="border:none;" alt="openmicroblogger.org" /></a>'."\n";
 }
 
 function single_tag_title( ) {

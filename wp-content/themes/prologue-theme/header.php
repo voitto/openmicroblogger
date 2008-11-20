@@ -3,30 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" <?php language_attributes(); ?>>
   <head profile="http://gmpg.org/xfn/11">
     
-    <?php if ($request->resource == 'identities') : ?>
-      <script type="text/javascript" src="<?php base_url(); ?>resource/jquery-1.2.6.min.js"></script>
-    <?php else : ?>
-      <script type="text/javascript" src="<?php base_url(); ?>resource/jquery-1.2.1.min.js"></script>
-    <?php endif; ?>
 
-    <script type="text/javascript" src="<?php base_url(); ?>resource/jquery.corner.js"></script>
-    <script type="text/javascript" src="<?php base_url(); ?>resource/jquery.flash.js"></script>
-    <script type="text/javascript" src="<?php base_url(); ?>resource/jquery.jqUploader.js"></script>
-
-    <script type="text/javascript">
-    $(document).ready(function(){
-    	$('#postfile').jqUploader({
-    	  background:'FFFFFF',
-    	  barColor:'336699',
-    	  allowedExt:'*.avi; *.jpg; *.jpeg; *.mp3; *.mov',
-    	  allowedExtDescr: 'Movies, Photos and Songs',
-    	  validFileMessage: 'Click [Upload]',
-    	  endMessage: '',
-    	  hideSubmit: false
-    	});
-    });
-    
-    </script>
 
 
 
@@ -120,58 +97,7 @@ body {
 
 
 
-<script type="text/javascript">
 
-  
-  function show_page(url) {
-    
-    $("#main").html("<img src='resource/jeditable/indicator.gif'>");
-    
-    $.get(url, function(str) {
-      $("#main").hide();
-      $("#main").html(str);
-      $("#main").slideDown("fast");
-    });
-    
-  }
-  
-</script>
-
-<?php if (get_profile_id() ) : ?>
-
- <script type="text/javascript">
-   
-function setMaxLength() {
-	var x = document.getElementsByTagName('textarea');
-	var counter = document.createElement('div');
-	counter.className = 'counter';
-	for (var i=0;i<x.length;i++) {
-		if (x[i].getAttribute('maxlength')) {
-			var counterClone = counter.cloneNode(true);
-			counterClone.relatedElement = x[i];
-			counterClone.innerHTML = '<span>0</span>/'+x[i].getAttribute('maxlength');
-			x[i].parentNode.insertBefore(counterClone,x[i].nextSibling);
-			x[i].relatedElement = counterClone.getElementsByTagName('span')[0];
-
-			x[i].onkeyup = x[i].onchange = checkMaxLength;
-			x[i].onkeyup();
-		}
-	}
-}
-
-function checkMaxLength() {
-	var maxLength = this.getAttribute('maxlength');
-	var currentLength = this.value.length;
-	if (currentLength > maxLength)
-		this.relatedElement.className = 'toomuch';
-	else
-		this.relatedElement.className = '';
-	this.relatedElement.firstChild.nodeValue = currentLength;
-	// not innerHTML
-}
-
-
-    </script>
     
   </head>
     <body onLoad="JavaScript:setMaxLength();">

@@ -115,7 +115,13 @@
   <?php $Post =& $db->model(tableize($request->resource)); $Post->has_one('profile_id:identities'); $Post->find_by('parent_id',$Member->id); ?>
   <?php while ($c = $Post->MoveNext()) : ?>
   <?php $replyauthor = $c->FirstChild('identities'); ?>
-  <?php echo "<tr><td><p><font size=\"-1\">".'reply by '.$replyauthor->nickname."&nbsp; ".time_of($c->created)."</font></p></td></tr><tr><td><p>".htmlentities($c->title)."</p><br></td></tr>"; ?>
+  <tr><td>
+  <?php
+    $current_user_id = get_the_author_ID( );
+    echo prologue_get_avatar( $current_user_id, get_the_author_email( ), 48 );
+  ?>
+  <?php echo "<p><font size=\"-1\">".'reply by '.$replyauthor->nickname."&nbsp; ".time_of($c->created)."</font></p></td></tr><tr><td><p>".htmlentities($c->title)."</p><br>"; ?>
+  </td></tr>
   <?php endwhile; ?>
   </table>
   </td>

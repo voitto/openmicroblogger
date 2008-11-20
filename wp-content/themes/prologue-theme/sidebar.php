@@ -1,18 +1,7 @@
 
 <div id="sidebar">
 
-<?php global $request; ?>
 
-<?php 
-
-if (get_profile_id() && $request->resource == 'identities' && in_array($request->action,array('edit','entry'))) {
-  if ($request->id == get_profile_id())
-    render_partial('admin');
-}
-
-?>
-
-<?php if ($request->action == 'index') : ?>
   <ul>
 
 <?php 
@@ -32,7 +21,6 @@ if( !function_exists('dynamic_sidebar') || !dynamic_sidebar() ) {
     </li>
   </ul>
 
-<?php endif; ?>
 
 <?php 
 

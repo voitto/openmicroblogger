@@ -78,12 +78,11 @@ function omb_filter_posts( &$model, &$db ) {
 
 // THREADED MODE
 
-//  } elseif (in_array($request->action, array('index','get')) && $model->table == 'posts' && $request->resource == 'posts' && $request->id == 0) {
-//    $where = array(
-//      'parent_id'=>0
-//    );
-
-
+  } elseif (environment('threaded') && in_array($request->action, array('index','get')) && $model->table == 'posts' && $request->resource == 'posts' && $request->id == 0) {
+    $where = array(
+      'parent_id'=>0
+    );
+    $model->set_param( 'find_by', $where );
   } elseif ($request->action == 'index' && $model->table == 'posts' && $request->resource == 'posts' && $request->id == 0) {
     $where = array(
       'local'=>1
