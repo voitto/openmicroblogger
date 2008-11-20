@@ -98,12 +98,9 @@ body {
 
 
 
-    
+<?php if ($request->action == 'index' && $request->resource == 'posts') : ?>    
   </head>
     <body onLoad="JavaScript:setMaxLength();">
-
-
-
 <?php else : ?>
   </head>
     <body>
