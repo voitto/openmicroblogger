@@ -1053,7 +1053,7 @@ function render_theme( $theme ) {
     require_once( $folder . "index.html" );
 }
 
-function theme_path() {
+function theme_path($noslash = false) {
   
   global $pretty_url_base;
   
@@ -1062,7 +1062,12 @@ function theme_path() {
   else
     $base = "";
   
-  return $base . $GLOBALS['PATH']['themes'] . environment('theme') . DIRECTORY_SEPARATOR;
+  $path = $base . $GLOBALS['PATH']['themes'] . environment('theme') . DIRECTORY_SEPARATOR;
+  
+  if ($noslash && "/" == substr($path,-1))
+    $path = substr($path,0,-1);
+
+  return $path;
   
 }
 
@@ -2465,14 +2470,20 @@ function app_init($appname) {
 }
 
 
-function array_sort($array,$key){ 
+function array_sort($array, $key, $max=false) 
+{ 
    for ($i = 0; $i < sizeof($array); $i++) { 
-        $sort_values[$i] = $array[$i][$key]; 
+       $sort_values[$i] = $array[$i][$key]; 
    } 
-   arsort ($sort_values); 
+   asort ($sort_values); 
    reset ($sort_values); 
    while (list ($arr_key, $arr_val) = each ($sort_values)) { 
-          $sorted_arr[] = $array[$arr_key]; 
+     if ($max) {
+       if (count($sorted_arr) < $max)
+         $sorted_arr[] = $array[$arr_key]; 
+       } else {
+         $sorted_arr[] = $array[$arr_key]; 
+       }
    } 
    return $sorted_arr; 
 } 

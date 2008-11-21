@@ -1744,7 +1744,7 @@ $blogdata = array(
   'stylesheet_url'=>theme_path()."style.css",
   'stylesheet_directory'=>theme_path(),
   'pingback_url'=>base_url(true),
-  'template_url'=>theme_path()
+  'template_url'=>theme_path(true)
 );
 
 $optiondata = array(
@@ -1767,8 +1767,7 @@ define('OBJECT', 'OBJECT', true);
 define('ARRAY_A', 'ARRAY_A', false);
 define('ARRAY_N', 'ARRAY_N', false);
 
-
-define('TEMPLATEPATH', theme_path() );
+define('TEMPLATEPATH', theme_path(true) );
 
 
 $limit_max = get_option( 'posts_per_page' );

@@ -623,11 +623,14 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
 
       $findfirst = true;
       $op = "AND";
+      $eq = '=';
       foreach( $model->find_by as $col=>$val ) {
         if (is_array($val))
             list($col,$val) = each($val);
         if ($col == 'op') {
           $op = $val;
+        } elseif ($col =='eq') {
+          $eq = $val;
         } else {
           
           if (strpos($col,".") === false)
@@ -636,9 +639,9 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
             $field = $col;
           
           if ($findfirst) {
-            $sql .= " WHERE $field = '$val' ";
+            $sql .= " WHERE $field $eq '$val' ";
           } else {
-            $sql .= " $op $field = '$val' ";
+            $sql .= " $op $field $eq '$val' ";
           }
           $findfirst = false;
           

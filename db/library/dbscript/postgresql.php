@@ -694,11 +694,14 @@ class PostgreSQL extends Database {
 
       $findfirst = true;
       $op = "AND";
+      $eq = '=';
       foreach( $model->find_by as $col=>$val ) {
         if (is_array($val))
             list($col,$val) = each($val);
-                if ($col == 'op') {
+        if ($col == 'op') {
           $op = $val;
+        } elseif ($col =='eq') {
+          $eq = $val;
         } else {
           
           if (strpos($col,".") === false)
@@ -707,9 +710,9 @@ class PostgreSQL extends Database {
             $field = $col;
           
           if ($findfirst) {
-            $sql .= " WHERE $field = '$val' ";
+            $sql .= " WHERE $field $eq '$val' ";
           } else {
-            $sql .= " $op $field = '$val' ";
+            $sql .= " $op $field $eq '$val' ";
           }
           $findfirst = false;
           
