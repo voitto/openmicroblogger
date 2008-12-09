@@ -1030,7 +1030,7 @@ function render_theme( $theme ) {
   global $comment_author_email;
   global $comment_author_url;
 
-  $folder = theme_path();
+  $folder = $GLOBALS['PATH']['themes'] . environment('theme') . DIRECTORY_SEPARATOR;
   
   add_include_path($folder);
   
