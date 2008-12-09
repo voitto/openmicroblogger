@@ -1030,30 +1030,29 @@ function render_theme( $theme ) {
   global $comment_author_email;
   global $comment_author_url;
 
-  $folder = $GLOBALS['PATH']['themes'] . $theme . DIRECTORY_SEPARATOR;
+  $folder = theme_path();
   
   add_include_path($folder);
   
-  if ($request->resource != 'posts' || (isset($request->action) && !($request->action == 'index'))) {
-    get_header();
-    if ($theme == 'prologue-theme')
-      show_prologue_nav();
-    echo '<div id="main">'."\n";
-    content_for_layout();
-    echo '</div>'."\n";
-    if ($theme != 'prologue-theme')
-      get_sidebar();
-    get_footer();
-    exit;
-  }
+  global $wpmode;
   
-  if ( file_exists( $folder . "index.php" ))
-    require_once( $folder . "index.php" );
-  else
-    require_once( $folder . "index.html" );
+  $wpmode = "posts";
+  
+  if ($request->resource != 'posts' || !($request->action == 'index')) {
+    $wpmode = "other";
+    require_once( $folder . "page.php" );
+  } else {
+    if ( file_exists( $folder . "index.php" ))
+      require_once( $folder . "index.php" );
+    else
+      require_once( $folder . "index.html" );
+  }
 }
 
 function theme_path($noslash = false) {
+  
+  global $request,$db;
+  trigger_before('theme_path', $request, $db);
   
   global $pretty_url_base;
   
@@ -2371,7 +2370,12 @@ function get_nav_links() {
   }
   
   if ($pid > 0) {
-  
+    
+    if (member_of('administrators'))
+      $links["Site Admin"] = $request->url_for(array('resource'=>'introspection','action'=>'admin'));
+    
+    $links["Write Post"] = $request->url_for(array('resource'=>'posts','action'=>'new'));
+    
     $links["Logout"] = $request->url_for("openid_logout");
   
   } else {
@@ -2410,6 +2414,14 @@ function get_app_id() {
 }
 
 
+function app_path() {
+  
+  return $GLOBALS['PATH']['app'];
+  
+}
+
+
+
 function load_apps() {
   
   // enable wp-style callback functions
@@ -2439,11 +2451,11 @@ function load_apps() {
 
 function app_init($appname) {
   
-  $startfile = $appname . DIRECTORY_SEPARATOR . $appname . ".php";
+  $startfile = app_path() . $appname . DIRECTORY_SEPARATOR . $appname . ".php";
   if (is_file($startfile))
     require_once $startfile;
   
-  $pluginsdir = $appname . DIRECTORY_SEPARATOR . 'plugins';
+  $pluginsdir = app_path() . $appname . DIRECTORY_SEPARATOR . 'plugins';
   if (is_dir($pluginsdir)) {
     $GLOBALS['PATH']['app_plugins'][] = $pluginsdir;
     $startfile = $pluginsdir.DIRECTORY_SEPARATOR.$appname.".php";

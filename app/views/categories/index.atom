@@ -1,7 +1,0 @@
-<?php print "<?xml version=\"1.0\"?>\n"; ?>
-<app:categories
-  xmlns:app="http://purl.org/atom/app#"
-  xmlns="http://www.w3.org/2005/Atom"
-  fixed="yes" scheme="http://example.com/cats/big3">
-<?php content_for_layout(); ?> 
-</app:categories>

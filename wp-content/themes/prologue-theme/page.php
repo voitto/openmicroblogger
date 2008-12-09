@@ -1,5 +1,5 @@
 <?php get_header( ); ?>
-
+<?php show_prologue_nav(); ?>
 <div id="main">
 
 <?php 

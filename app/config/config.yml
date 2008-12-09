@@ -56,12 +56,16 @@ env:
   debug_enabled: true
   
   apps:
+    - omb
     - twitter
     - identica
     - photo
     - auction
+    - themepack1
   
-  installed: 
+  installed:
+  
+  boot: omb
   
   threaded: false
   

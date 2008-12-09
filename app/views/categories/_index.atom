@@ -1,3 +1,0 @@
-<?php while( $Category = $collection->MoveNext() ) : ?>
-  <category term="<?php print $Category->term; ?>" />
-<?php endwhile; ?>

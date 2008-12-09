@@ -184,16 +184,24 @@ if ( file_exists( $app . 'config.yml' ) ) {
 
 if (is_dir( $env['app_folder'] )) {
   $app = $env['app_folder'] . DIRECTORY_SEPARATOR;
-  $GLOBALS['PATH']['app'] = $app;
-  $GLOBALS['PATH']['controllers'] = $app . 'controllers' . DIRECTORY_SEPARATOR;
-  $GLOBALS['PATH']['models'] = $app . 'models' . DIRECTORY_SEPARATOR;
+  $appdir = $app;
   if ( file_exists( $app . 'config' . DIRECTORY_SEPARATOR . 'config.yml' ) ) {
     extract($loader->load(file_get_contents($app . 'config' . DIRECTORY_SEPARATOR .'config.yml')));
     extract( $$env['enable_db'] );
+    if (isset($env['boot']))
+      $appdir = $app.$env['boot'].DIRECTORY_SEPARATOR;
+    else
+      $appdir = $app.'omb'.DIRECTORY_SEPARATOR;
+    $GLOBALS['PATH']['app'] = $app;
+    $app = $appdir;
+    $GLOBALS['PATH']['controllers'] = $appdir . 'controllers' . DIRECTORY_SEPARATOR;
+    $GLOBALS['PATH']['models'] = $appdir . 'models' . DIRECTORY_SEPARATOR;
   }
-  if (is_dir( $app . 'plugins' . DIRECTORY_SEPARATOR ))
-    $GLOBALS['PATH']['plugins'] = $app . 'plugins' . DIRECTORY_SEPARATOR;
+  if (is_dir( $appdir . 'plugins' . DIRECTORY_SEPARATOR ))
+    $GLOBALS['PATH']['plugins'] = $appdir . 'plugins' . DIRECTORY_SEPARATOR;
 }
+
+
 
 
 // debug mode

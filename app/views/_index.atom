@@ -1,9 +1,0 @@
-<?php while( $Post = $collection->MoveNext() ) : ?>
-  <entry>
-    <updated><?php print time_3339($Post->created); ?></updated>
-    <id><?php url_for( array( 'resource'=>$collection->resource, 'id'=>$Post->id )); ?></id>
-    <link href="<?php url_for( array( 'resource'=>$collection->resource, 'id'=>$Post->id )); ?>" />
-    <title><?php print $Post->title; ?></title>
-    <content type="html"> <?php print htmlspecialchars(" ".$Post->body.""); ?></content>
-  </entry>
-<?php endwhile; ?>

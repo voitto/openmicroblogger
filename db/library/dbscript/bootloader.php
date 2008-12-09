@@ -211,7 +211,7 @@ class LoadClasses extends BootLoader {
             if ($file != '.' && $file != '..' && substr($file,-3) == 'php') {
               require_once $loadpath.$file;
               $cl = substr($file,0,-4);
-              if (!(isset($db->models[tableize($cl)])))
+              if (!(isset($db->models[tableize($cl)])) && class_exists($cl))
                 $db->models[tableize($cl)] = new $cl();
             }
           }
@@ -349,11 +349,11 @@ class RackUpApplication extends BootLoader {
     $GLOBALS['PATH']['app_plugins'] = array();
     $GLOBALS['PATH']['apps'] = array();
     foreach($apps as $app) {
-      $GLOBALS['PATH']['app_plugins'][] = $app.DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR;
+      $GLOBALS['PATH']['app_plugins'][] = app_path().$app.DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR;
       $GLOBALS['PATH']['apps'][$app] = array(
-        'layout_path' => $app.DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR,
-        'model_path' => $app.DIRECTORY_SEPARATOR.'models'.DIRECTORY_SEPARATOR,
-        'controller_path' => $app.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR
+        'layout_path' => app_path().$app.DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR,
+        'model_path' => app_path().$app.DIRECTORY_SEPARATOR.'models'.DIRECTORY_SEPARATOR,
+        'controller_path' => app_path().$app.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR
       );
     }
     
