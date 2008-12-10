@@ -1195,7 +1195,7 @@ function db_include( $file ) {
 }
 
 
-function wp_plugin_include( $file, $basedir ) {
+function wp_plugin_include( $file, $basedir=NULL ) {
   $wp_plugins = "wp-content" . DIRECTORY_SEPARATOR . "plugins" . DIRECTORY_SEPARATOR . $file;
   if (is_dir($wp_plugins)) {
     $startfile = $wp_plugins.DIRECTORY_SEPARATOR.$file.".php";
@@ -1506,6 +1506,20 @@ function public_resource() {
   return false;
   
 }
+
+function virtual_resource() {
+  
+  global $request;
+  
+  $model = model_path() . classify($request->resource) . ".php";
+  
+  if (!file_exists($model))
+    return true;
+  
+  return false;
+  
+}
+
 
 function can_read( $resource ) {
   if (!(isset($this->access_list['read'][$resource]))) return false;
@@ -2372,7 +2386,7 @@ function get_nav_links() {
   if ($pid > 0) {
     
     if (member_of('administrators'))
-      $links["Site Admin"] = $request->url_for(array('resource'=>'introspection','action'=>'admin'));
+      $links["Site Admin"] = $request->url_for(array('resource'=>'admin'));
     
     $links["Write Post"] = $request->url_for(array('resource'=>'posts','action'=>'new'));
     

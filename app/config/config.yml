@@ -44,6 +44,8 @@ env:
   
   theme: prologue-theme
   
+  threaded: false
+  
   remote_sources:
     dbscript: dbscript.net/?apps
   
@@ -62,12 +64,11 @@ env:
     - photo
     - auction
     - themepack1
+    - all_in_one_seo_pack
   
   installed:
   
   boot: omb
-  
-  threaded: false
   
   plugins:
     - sessions

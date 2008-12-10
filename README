@@ -126,10 +126,11 @@ To enable pretty URLs:
   
 1) uncomment lines 65 & 66 in /db/boot.php
 
-2) type your own base URL in that file
+2) type your own base URL in /db/boot.php
 
 3) set "RewriteEngine on" in .htaccess
 
+4) type your own base URL in .htaccess
 
 
 

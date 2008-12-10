@@ -156,12 +156,20 @@ $request->connect(
   )
 
 );
-
-  // load static-file-cache and debug aspects
+// load static-file-cache and debug aspects
 //include $GLOBALS['PATH']['plugins'] . 'renderer.php';
 
 // this doesn't do anything because the aspect-filter was deleted XXX
 //$request->routematch();
+
+
+$request->connect(
+  'admin',
+  array(
+    'action'=>'index',
+    'resource'=>'admin'
+  )
+);
 
 
   /**
@@ -428,15 +436,6 @@ function test_log_in() {
   $person_id = 1;
   set_cookie($person_id);
   $_SESSION['openid_complete'] = true;
-}
-
-
-//get_seo_plugin();
-
-function get_seo_plugin() {
-  add_action( 'wp_head', 'get_posts_init' );
-  wp_plugin_include( 'all-in-one-seo-pack' );
-  load_plugin_textdomain( 'all_in_one_seo_pack', 'wp-content/plugins/all-in-one-seo-pack' );
 }
 
 
