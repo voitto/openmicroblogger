@@ -1,0 +1,89 @@
+<?php render_partial( 'doctype' ); ?>
+
+<html>
+
+  <head>
+    <meta http-equiv="content-type" content="text/html;charset=iso-8859-1" />
+    <meta name="generator" content="RapidWeaver" />
+    <meta name="description" content="Tara's Ad Builder, " />
+    <link href="styles.css" type="text/css" rel="stylesheet" />
+    <script language="JavaScript" src="javascript.js"></script>
+  
+    <title>Tara's Ad Builder : <?php if (isset( $pagename )) print $pagename; ?></title>
+    <?php if ($atomfeed) : ?>
+<link rel="alternate" type="application/atom+xml" 
+      title="<?php if (isset( $pagename )) print $pagename; ?>"
+      href="<?php print $atomfeed; ?>" />
+  <?php endif; ?>
+  <link rel="openid.server" href="http://e-cred.org/server" />
+    <link rel="openid.delegate" href="http://guest.codestylist.com/hdbde/site" />
+</head>
+
+
+  <body background="" bgcolor="ffffff">
+    <div align="center">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td height="50" background="images/toolbar_bg.png">
+            <div align="center">
+              <table width="280" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td><a href="<?php url_for( array( 'resource'=>'introspection', 'action'=>'index' )); ?>"><img src="images/button0.png" ALT="Button 0" Name ="b0" border="0" OnMouseOver="bOver('b0');" OnMouseOut="bOut('b0');"></a><a href="<?php url_for( array( 'resource'=>'auctions', 'action'=>'new' )); ?>"><img src="images/button1.png" ALT="Button 1" Name ="b1" border="0" OnMouseOver="bOver('b1');" OnMouseOut="bOut('b1');"></a><img src="images/toolbar_cap.png" alt="" height="50" width="1" border="0"></td>
+                </tr>
+              </table>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <br>
+      <table width="580" border="0" cellspacing="10" cellpadding="0">
+        <tr>
+          <td>
+          <div id="header" align="left"></div>
+            <span class="TitleStyle">Tara's Ad Builder<br>
+            </span><span class="SloganStyle"></span></td>
+        </tr>
+        <tr>
+          <td><img src="images/grey_spacer.png" alt="" width="100%" height="1" border="0"></td>
+        </tr>
+        <tr>
+          <td>
+          <div id="content"  align="left">
+          <?php content_for_layout(); ?></div></td>
+        </tr>
+        <tr>
+          <td><img src="images/grey_spacer.png" alt="" width="100%" height="1" border="0"></td>
+        </tr>
+        <tr>
+          <td>
+            <div align="center">
+              <span align="center" class="FooterStyle">&copy; 2008 <?php if (isset( $pagename )) print $pagename; ?>
+
+  <?php if ($atomfeed) : ?>
+    <a align="center" href="<?php print $atomfeed; ?>" />
+    <img src="http://www.feedburner.com/fb/images/pub/feed-icon16x16.png" border="0" />
+    </a>
+  <?php endif; ?>
+
+&nbsp;&nbsp;  <?php if ($profile) : ?>
+  &nbsp;Signed in as&nbsp;<b><?php print $profile->url; ?></b>&nbsp;
+  <a href="<?php url_for( 'openid_logout' ); ?>">Sign Out</a>&nbsp;
+  <a href="https://e-cred.org/server/?action=account">My Profile</a>
+  <?php elseif ( !in_array( $request->action, array('email','login'), true ) ) : ?>
+  <a href="<?php url_for( 'email_login' ); ?>">Sign In</a>
+  <?php endif; ?>
+</span></div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </body>
+
+</html>
+
+
+
+
+                
+                        
+            

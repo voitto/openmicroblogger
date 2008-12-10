@@ -1,0 +1,175 @@
+<?php if (!empty($theme)) return render_theme($theme); else render_partial( 'doctype' ); ?>
+
+<html>
+
+<head>
+  
+  <title>Untitled HTML Document</title>
+  
+  <meta name="DESCRIPTION" content="" />
+  <meta name="KEYWORDS" content="" />
+  <meta name="OWNER" content="" />
+  <meta name="AUTHOR" content="" />
+  <meta name="COPYRIGHT" content="" />
+  <meta name="GENERATOR" content="" />
+  <meta name="ROBOTS" content="index,follow" />
+  <meta http-equiv="CHARSET" content="utf-8" />
+  <meta http-equiv="CONTENT-LANGUAGE" content="en" />
+  <meta http-equiv="CONTENT-TYPE" content="text/html" />
+  <meta name="RATING" content="General" />
+  <meta name="EXPIRES" content="0" />
+  
+<?php if ($atomfeed) : ?>
+
+  <link rel="alternate" type="application/atom+xml" 
+    title="Untitled HTML Document" 
+    href="<?php print $atomfeed; ?>" />
+
+<?php endif; ?>
+  
+  <link rel="openid.server" href="<?php print environment('openid_server'); ?>" />
+  <link rel="openid.delegate" href="" />
+  
+  <link rel="stylesheet" type="text/css" href="views/style.css" />
+  
+</head>
+
+<body>
+  
+<div style="float:center;">
+  
+<table border="0" cellpadding="0" cellspacing="0">
+  
+  <tr><td>
+  
+  <table class="frame" cellpadding="0" cellspacing="0" style="width:786px; border:none;">
+    
+    <tr>
+    <td class="bg-white" style="width:6px;"></td>
+    
+    <td style="width:100%;">
+    
+    <br />
+    
+    <table border="0" cellpadding="0" cellspacing="0" style="width:100%;">
+      
+      <tr>
+        <td class="bg-title"></td>
+        <td class="bg-title" style="float:right;"></td>
+      </tr>
+      
+    </table>
+    
+    <!--bar below title-->
+    <div class="shadow-03"></div>
+    
+    <br />
+    
+    <table border="0" cellpadding="0" cellspacing="0" style="width:100%;">
+      
+      <tr><td style="height:380px;">      <!--vertical spacer-->
+      
+      <?php content_for_layout(); ?>    
+      
+      </td></tr>
+      
+    </table>
+    
+    <table border="0" cellpadding="0" cellspacing="0" style="width:100%;">
+      <tr>
+        <td class="bg-white" style="height:6px;"></td>
+      </tr>
+      <tr>
+        <td class="padd-footer" style="height:20px;">
+        <a href="/" class="link-white-small">Home</a>
+        |  <a href="" class="link-white-small">Contact</a>
+        |  <a href="terms.html" class="link-white-small">Terms of Use</a>
+        |  <a href="<?php print $atomfeed; ?>"><img alt="feed" src="<?php base_url(); ?>resource/feed.png" style="border:none;"/></a>
+        </td>
+      </tr>
+    </table>
+    
+    </td>
+    
+    <td style="width:114px;">
+    
+    <div class="content">
+      
+      <br />
+      
+      <span class="text-inv-small">
+      <br />
+      <br />
+      
+      <?php if ($profile) : ?>
+      
+       Signed in as <b><?php print $profile->url; ?></b> 
+      
+      <a href="<?php url_for( 'openid_logout' ); ?>">Sign Out</a> 
+      
+      <?php if (strstr( $profile->url, "e-cred" )) : ?>
+        <a href="<?php print environment('openid_server'); ?>/?action=account">My Profile</a>
+      <?php endif; ?>
+      
+      <?php elseif ( !in_array( $request->action, array('email','login'), true ) ) : ?>
+        <a href="<?php url_for( 'email_login' ); ?>">Sign In</a>
+              <br /><br /><br />
+        
+      <span class="content-text-small">
+      Click <a href="<?php url_for( 'email_login' ); ?>">here</a> to become a member. It's free and convenient.
+      <br />
+      </span>
+        
+      <?php endif; ?>
+      
+      </span>
+      <br />
+      
+      <?php if (member_of('administrators')) : ?>
+      
+      <table style="float:center;">
+      <tr><td><p><b>Manage:</b></p></td></tr>
+      <?php $tabs = introspect_tables(); ?>
+      <?php foreach ( $tabs as $resource ) : ?>
+        <tr>
+          <td>
+            <a href="<?php url_for( $resource ); ?>">
+             <p><?php print ucwords($resource) . ""; ?></p>
+            </a>
+          </td>
+        </tr>
+      <?php endforeach; ?>
+      </table>
+      
+      <?php endif; ?>
+      
+      <br />
+      
+      <?php if (isset($blocks)) : ?>
+        
+        <?php foreach ($blocks as $b) : ?>
+          
+          <script type="text/javascript" src="<?php url_for(array('resource'=>$b,'action'=>'block.js')); ?>"></script>
+          
+        <?php endforeach; ?>
+        
+      <?php endif; ?>
+      
+    </div> 
+    </td>
+    
+    </tr>
+    
+  </table>
+  
+  </td></tr>
+  
+</table>
+
+<br />
+
+</div>
+
+</body>
+
+</html>

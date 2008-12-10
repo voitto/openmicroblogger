@@ -1,0 +1,18 @@
+<?php $i = 1; ?>
+<?php while( $Post = $collection->MoveNext() ) : ?>
+  <card id="page<?php print $i; ?>" title="Post <?php print $i; ?>">
+    <p>
+    <?php print $Post->title; ?>
+    </p>
+    <p>
+    <?php print $Post->body; ?>
+    </p>
+    <p>
+    <?php print $Post->contributor; ?>
+    </p>
+    <p>
+    <?php print $Post->created; ?>
+    </p>
+  </card>
+<?php $i++; ?>
+<?php endwhile; ?>

@@ -1,0 +1,23 @@
+<div style="background-color:#ddd; padding:15px; margin:15px;">
+
+<p><?php print $Member->headline ?></p>
+
+<p><?php print $Member->body ?></p>
+
+<ul style="list-style: square; margin-left: 20px; margin-top: 0px;">
+
+<?php while ($bullet = $Member->NextChild( 'auction_bullets' )) : ?>
+  <li><?php print $bullet->bullet ?></li>
+<?php endwhile; ?>
+
+</ul>
+
+<p>
+  <?php print $Member->close ?>
+</p>
+
+<?php while ($photo = $Member->NextChild('auction_photos')) : ?>
+  <img src="<?php url_for(array('resource'=>'auction_photos','id'=>$photo->id,'action'=>'photo.jpg')); ?>" border="0" />
+<?php endwhile; ?>
+  
+</div>

@@ -1,0 +1,31 @@
+
+<table align="center" cellpadding="3" cellspacing="0" border="0">
+
+  <th colspan="2">
+    <b><?php breadcrumbs(); ?></b>
+  </th>
+
+  <tr>
+    <td><b>Name</b></td>
+    <td><p></p></td>
+  </tr>
+
+  <?php while( $Member = $collection->MoveNext() ) : ?>
+
+  <?php $Entry = $Member->FirstChild('entries'); ?>
+
+    <tr>
+      <td>
+        <a href="<?php url_for( array( 'resource'=>'groups', 'id'=>$Member->id )); ?>">
+          <?php print $Member->name; ?>
+        </a>
+      </td>
+      <td></td>
+    </tr>
+
+  <?php endwhile; ?>
+
+</table>
+
+
+

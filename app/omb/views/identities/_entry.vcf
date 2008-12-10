@@ -1,0 +1,72 @@
+<?php
+
+// make a vcard with the class written by Troy Wolf [troy@troywolf.com]
+
+lib_include( 'vcard' );
+
+$vc = new vcard();
+
+#$vc->revision_date = "";
+$vc->class = "PUBLIC";
+
+$vc->data['display_name'] = $Member->family_name . ", " . $Member->given_name;
+$vc->data['first_name'] = $Member->given_name;
+$vc->data['last_name'] = $Member->family_name;
+
+$vc->data['additional_name'] = $Member->additional_name;
+$vc->data['name_prefix'] = $Member->honorific_prefix;
+$vc->data['name_suffix'] = $Member->honorific_suffix;
+$vc->data['nickname'] = $Member->nickname;
+
+$vc->data['company'] = $Member->organization_name;
+$vc->data['department'] = $Member->organization_unit;
+$vc->data['title'] = $Member->title;
+$vc->data['role'] = $Member->role;
+
+#$vc->data['work_po_box'] = $Member->;
+#$vc->data['work_extended_address'] = $Member->;
+#$vc->data['work_address'] = $Member->;
+#$vc->data['work_city'] = $Member->;
+#$vc->data['work_state'] = $Member->;
+#$vc->data['work_postal_code'] = $Member->;
+#$vc->data['work_country'] = $Member->;
+
+$vc->data['home_po_box'] = $Member->post_office_box;
+$vc->data['home_extended_address'] = $Member->extended_address;
+$vc->data['home_address'] = $Member->street_address;
+$vc->data['home_city'] = $Member->locality;
+$vc->data['home_state'] = $Member->region;
+$vc->data['home_postal_code'] = $Member->postal_code;
+$vc->data['home_country'] = $Member->country_name;
+
+#$vc->data['office_tel'] = $Member->;
+$vc->data['home_tel'] = $Member->tel_value;
+#$vc->data['cell_tel'] = $Member->;
+#$vc->data['fax_tel'] = $Member->;
+#$vc->data['pager_tel'] = $Member->;
+
+$vc->data['email1'] = $Member->email_value;
+
+$vc->data['url'] = $Member->url;
+
+global $request;
+
+$vc->data['photo'] = $request->url_for( array( 'resource'=>'identities', 'id'=>$Member->id, 'action'=>'photo.jpg' ));
+#$vc->data['birthday'] = $Member->;
+$vc->data['timezone'] = $Member->tz;
+
+$vc->data['sort_string'] = $Member->sort_string;
+
+#$vc->data['note'] = "";
+
+
+
+#$vc->filename = "vcard" . $Member->id . ".vcf";
+
+
+
+
+$vc->download();
+
+
+?>

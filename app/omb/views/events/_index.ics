@@ -1,0 +1,27 @@
+<?php
+
+lib_include( 'ical_creator' );
+
+// initiate new CALENDAR
+$v = new vcalendar();
+
+while ( $Member = $collection->MoveNext() ) {
+  
+  $e = new vevent();
+  
+  $e->setProperty( 'dtstart', date('Y',$Member->dtstart), date('m',$Member->dtstart), date('d',$Member->dtstart), date('H',$Member->dtstart), date('i',$Member->dtstart), date('s',$Member->dtstart) );
+  
+  $e->setProperty( 'duration', 0, 0, $Member->duration );
+  
+  $e->setProperty( 'description', $Member->description );
+  
+  $e->setProperty( 'location', $Member->location );
+  
+  $v->addComponent( $e );
+  
+}
+
+// generate and redirect output
+$v->returnCalendar();
+
+?>

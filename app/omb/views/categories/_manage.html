@@ -1,0 +1,45 @@
+
+<table align="center" cellpadding="3" cellspacing="0" border="0">
+
+  <th colspan="4">
+    <b><?php breadcrumbs(); ?></b>
+  </th>
+
+  <tr>
+    <td><b>Name</b></td>
+    <td><b>Term</b></td>
+    <td><b>Scheme</b></td>
+    <td><p></p></td>
+    <td><p></p></td>
+    <td><p></p></td>
+  </tr>
+
+  <?php while( $Member = $collection->MoveNext() ) : ?>
+
+  <?php $Entry = $Member->FirstChild('entries'); ?>
+
+    <tr>
+      <td>
+          <?php print $Member->name; ?>
+      </td>
+      <td><p><?php print $Member->term; ?></p></td>
+      <td><p><?php print $Member->scheme; ?></p></td>
+      <td>
+        <a href="<?php url_for( array( 'resource'=>'categories', 'id'=>$Member->id, 'action'=>'remove' )); ?>">
+          remove
+        </a>
+      </td>
+      <td>
+        <a href="<?php url_for( array( 'resource'=>'categories', 'id'=>$Member->id, 'action'=>'edit' )); ?>">
+          edit
+        </a>
+      </td>
+      <td></td>
+    </tr>
+
+  <?php endwhile; ?>
+
+</table>
+
+
+

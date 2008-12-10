@@ -1,0 +1,254 @@
+
+
+
+<?php render_partial('nav'); ?>
+
+
+<h1>Preview:</h1>
+<div style="background-color:#ddd; padding:15px; margin:15px;">
+
+<p><?php print $Member->headline ?></p>
+
+<p><?php print $Member->body ?></p>
+
+<ul style="list-style: square; margin-left: 20px; margin-top: 0px;">
+
+<?php while ($bullet = $Member->NextChild( 'auction_bullets' )) : ?>
+  <li><?php print $bullet->bullet ?></li>
+<?php endwhile; ?>
+
+</ul>
+
+<p>
+  <?php print $Member->close ?>
+</p>
+
+<?php while ($photo = $Member->NextChild('auction_photos')) : ?>
+  <img src="<?php url_for(array('resource'=>'auction_photos','id'=>$photo->id,'action'=>'photo.jpg')); ?>" border="0" />
+<?php endwhile; ?>
+  
+</div>
+
+<br /><br /><br />
+
+
+
+
+
+<form action="<?php url_for( 'auction_photos' ); ?>" method="post" name="photos" id="photos" enctype="multipart/form-data">
+<div>
+<input name="MAX_FILE_SIZE" type="hidden" value="1048576" />
+<input name="method" type="hidden" value="post" />
+<input name="auctionphoto[auction_id]" type="hidden" value="<?php echo $Member->id; ?>" />
+<input name="submit_form" type="hidden" value="photos" />
+
+<h1>Add a photo:</h1>
+<table border="0">
+
+<tr><th colspan="2">
+
+</th></tr>
+
+	<tr>
+		<td align="right" valign="top"><b></b></td>
+		<td valign="top" align="left"><input id="photo_photo" name="auctionphoto[photo]" type="file" /></td>
+	</tr>
+	<tr>
+		<td align="right" valign="top"><b></b></td>
+		<td valign="top" align="left">
+
+<input value="Add Photo" type="submit" name="button_group" /></td>
+	</tr>
+</table>
+</div>
+</form>
+
+
+<br /><br /><br />
+<h1>Add a bullet point:</h1>
+<form action="<?php url_for( 'auction_bullets' ); ?>" method="post" name="auction_bullets" id="auction_bullets">
+<div>
+<input name="method" type="hidden" value="post" />
+<input name="auctionbullet[auction_id]" type="hidden" value="<?php echo $Member->id; ?>" />
+<input name="submit_form" type="hidden" value="auction_bullets" />
+<table border="0">
+
+<tr><th colspan="2">
+
+</th></tr>
+
+	<tr><br /><br />
+		<td align="right" valign="top"><b></b></td>
+		<td valign="top" align="left"><textarea rows="3" cols="30" wrap="virtual" id="bullet_bullet" name="auctionbullet[bullet]"></textarea><br /></td>
+	</tr>
+	<tr>
+		<td align="right" valign="top"><b></b></td>
+		<td valign="top" align="left">
+
+<input value="Add Bullet Point" type="submit" name="button_group" /></td>
+	</tr>
+</table>
+</div>
+</form>
+
+<br /><br /><br />
+
+
+
+
+<?php
+  // need Member->rewindchildren();
+  global $db;
+  $Auction =& $db->model( 'Auction' );
+  $Member = $Auction->find( $Member->id );
+?>
+
+
+
+
+<form>
+<br /><br /><br /><h1>Source code:</h1>
+<h3>copy and paste from this box to eBay and Craigslist</h3>
+<br />
+    <textarea rows="10" cols="50">
+
+
+
+<div style="background-color:#ddd; padding:15px; margin:15px;">
+
+<p><?php print $Member->headline ?></p>
+
+<p><?php print $Member->body ?></p>
+
+<ul style="list-style: square; margin-left: 20px; margin-top: 0px;">
+
+<?php while ($bullet = $Member->NextChild( 'auction_bullets' )) : ?>
+  <li><?php print $bullet->bullet ?></li>
+<?php endwhile; ?>
+
+</ul>
+
+<p>
+  <?php print $Member->close ?>
+</p>
+
+<?php while ($photo = $Member->NextChild('auction_photos')) : ?>
+  <img src="<?php url_for(array('resource'=>'auction_photos','id'=>$photo->id,'action'=>'photo.jpg')); ?>" border="0" />
+<?php endwhile; ?>
+  
+</div>
+
+
+
+
+
+        
+    </textarea>
+    
+</form>
+
+
+
+
+<br /><br /><br />
+
+<h1>Edit your Ad:</h1>
+
+<table align="center" cellpadding="3" cellspacing="0" border="0"><th colspan="2"></th>
+
+   <tr>
+<td align="right"><p></p></td>
+  <td><p>
+  <?php print $Member->headline ?>&nbsp;&nbsp;&nbsp;
+[<a href="<?php url_for(array('resource'=>'auctions','id'=>$Member->id,'action'=>'edit')); ?>">Change Headline</a>]</p>
+  </td>
+</tr>
+
+   <tr>
+<td align="right"><p></p></td>
+  <td><p>
+  <?php print $Member->body ?>&nbsp;&nbsp;&nbsp;
+[<a href="<?php url_for(array('resource'=>'auctions','id'=>$Member->id,'action'=>'edit')); ?>">Change Description</a>]</p>
+  </td>
+</tr>
+
+<?php
+  // need Member->rewindchildren();
+  global $db;
+  $Auction =& $db->model( 'Auction' );
+  $Member = $Auction->find( $Member->id );
+?>
+
+   <tr>
+<td align="right"><p></p></td>
+  <td>
+      <ul>
+<?php while ($bullet = $Member->NextChild('auction_bullets')) : ?>
+          
+  <li><?php print $bullet->bullet ?>
+  
+  <?php $e = entry_for( $bullet );  ?>
+  
+  <form method="post" action="<?php url_for('auction_bullets'); ?>">
+    <input type="hidden" name="entry[etag]" value="<?php echo $e->etag; ?>" />
+    <input name="auctionbullet[auction_id]" type="hidden" value="<?php echo $Member->id; ?>" />
+    <input name="method" type="hidden" value="delete" />
+    <input type="submit" value="Delete Bullet" />
+  </form>
+  
+  </li>
+  <?php endwhile; ?>
+</ul>
+  </td>
+</tr>
+
+
+<tr>
+<td align="right"><p></p></td>
+  <td><p>
+  <?php print $Member->close ?>&nbsp;&nbsp;&nbsp;
+[<a href="<?php url_for(array('resource'=>'auctions','id'=>$Member->id,'action'=>'edit')); ?>">Change Closing Statement</a>]</p>
+  </td>
+</tr>
+
+
+   <tr>
+<td align="right"><p></p></td>
+  <td>
+
+  <?php while ($photo = $Member->NextChild('auction_photos')) : ?>
+            
+  <img src="<?php url_for(array('resource'=>'auction_photos','id'=>$photo->id,'action'=>'photo.jpg')); ?>" border="0" />
+  
+    <?php $e = entry_for($photo); ?>
+  
+  <form method="post" action="<?php url_for('auction_photos'); ?>">
+    <input type="hidden" name="entry[etag]" value="<?php echo $e->etag; ?>" />
+    <input name="auctionphoto[auction_id]" type="hidden" value="<?php echo $Member->id; ?>" />
+    <input name="method" type="hidden" value="delete" />
+    <input type="submit" value="Delete Photo" />
+  </form>
+
+  
+  <?php endwhile; ?>
+
+  </td>
+</tr>
+
+</table>
+
+
+<br /><br /><br />
+
+
+
+
+
+
+  <form method="post" action="<?php url_for(array('resource'=>'auctions','id'=>$Member->id)); ?>">
+    <input name="method" type="hidden" value="post_as_notice" />
+    <input type="submit" value="Publish This Ad" />
+  </form>
+<br /><br /><br />
+<br /><br /><br />
+<br /><br /><br />

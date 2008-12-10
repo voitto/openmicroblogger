@@ -1,0 +1,29 @@
+
+<form action="<?php url_for( 'identities' ); ?>" method="post" name="identities" id="identities" enctype="multipart/form-data">
+<div>
+<input name="method" type="hidden" value="delete" />
+<input name="entry[etag]" type="hidden" value="<?php print $Entry->etag; ?>" />
+<table border="0">
+
+<tr><th colspan="2">
+
+</th></tr>
+
+  <tr>
+    <td align="right"><b>Last Name</b></td>
+    <td valign="top" align="left"><?php print $Member->family_name; ?></td>
+  </tr>
+  <tr>
+    <td align="right"><b>First Name</b></td>
+    <td valign="top" align="left"><?php print $Member->given_name; ?></td>
+  </tr>
+
+  <tr>
+    <td align="right"><b></b></td>
+    <td valign="top" align="left"><br><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="Cancel" type="button" />
+
+<input value="Delete This Identity" type="submit" name="button_group" /></td>
+  </tr>
+</table>
+</div>
+</form>

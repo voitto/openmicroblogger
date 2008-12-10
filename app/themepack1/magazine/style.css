@@ -1,0 +1,449 @@
+/*   
+Theme Name: Wordpress Magazine Theme
+Theme URI: http://www.gabfire.com/wordpress-magazine-theme-released/
+Description: A Magazine style wordpress theme
+Author: Mehmet Ozekinci
+Author URI: http://www.gabfire.com
+Version: 1.0
+.
+You are free to use theme for personal and commercial purposes as long as you keep the footer intact in place.
+.
+*/
+
+/* *********************************************************** Reset Everything */
+* {margin:0;padding:0;} 
+a:link, a:visited, a:hover {text-decoration:none;} 
+fieldset,img {border:0;} 
+ul {list-style:none;} 
+q:before,q:after {content:'';} 
+abbr,acronym { border:0; }
+
+body {
+	background:#666;
+	font: 1em/1.5em Verdana, Geneva, Arial, Helvetica, sans-serif;
+	}
+
+h1 {
+	font:3em Georgia,Times New Roman,Trebuchet;
+	margin-bottom:10px;
+	padding-left:45px;
+	background:url(images/flordeju.gif) no-repeat left center;
+	} 
+
+	h1 a:link,h1 a:visited,h1 a:hover {color:#444;}	
+h2 {
+	font:bold 1.2em Georgia,Times New Roman,Trebuchet;
+	color:#222;
+	padding-bottom:3px;
+	border-bottom:1px solid #efefef;
+}
+#rightcolumn h2 {padding-top:20px;}
+#rightcolumn h2#titlespons {padding:0;}
+h3 {
+	padding-bottom:5px;
+	}
+
+h3 {
+	font:bold 1.2em Georgia,Times New Roman,Trebuchet;
+	}	
+
+h3 a:hover{
+	text-decoration:underline;
+	}
+	
+h3#respond{
+	margin-top:20px;
+	}
+
+.right {
+	float:right;
+	}
+
+.left {
+	float:left;
+	}
+
+/* ***********************************************************
+*	Links									*
+***********************************************************/
+
+a:link,  a:visited {
+	color:#29568f;
+	}
+
+a:hover {
+	color:#d92100;
+	}
+
+#postdetails a:link, #postdetails a:visited {
+	color:#77ace0;
+	}
+
+#postdetails a:hover {
+	color:#ffae00;
+	text-decoration:none;
+	}
+
+#footer a:link, #footer a:visited {
+	color:#fff;
+	}
+
+#footer a:hover {
+	text-decoration:underline;
+	}
+
+/* ***********************************************************
+*	Main DIVISIONS						*
+***********************************************************/
+
+#wrapper {
+	width: 970px;
+	padding:20px 0 10px;
+	margin: 20px auto 0;
+	background: #fff;
+	border:double #ccc;
+    }
+
+#header {
+	width: 950px;
+	color: #000;
+	margin:0 auto;
+	font-size: .8em;
+	overflow: hidden;
+	}
+
+#content-wrap {
+	width:950px;
+	margin: 10px auto 0;
+	font:.75em/1.5em Arial,Tahoma,Verdana,sans-serif;
+	clear:both;
+	}
+
+#footer {
+	width: 970px;
+	margin: 0 auto;
+	color: #ccc;
+	font-size:.6em;
+	text-align:right;
+    }
+
+/************************************************************
+*	Header  								*
+************************************************************/
+#headerleft {
+	width: 650px;
+	float: left;
+	border:1px
+	}
+
+#headerright {
+	width: 300px;
+	float: right;
+	margin: 0px;
+	text-align: right;
+	}
+
+#navigation {
+	width:950px;
+	background: #555;
+	clear:both;
+	}	
+
+#searchform{
+	float: right;
+	}
+
+#s {
+	width: 190px;
+	border: 1px solid gray;
+	padding:1px;
+	}
+
+#searchbutton{
+	font: bold 11px Verdana;
+	height: 20px;
+	background-color: #fdffef;
+	}
+
+/* header dropdown menu
+---------------------------------------------------------------------------------------------- */
+#navigation ul li a,
+#navigation ul li a:visited {
+	display: block;
+	font: 1em Arial, Tahoma, Verdana;
+	border-right:1px solid #666;
+	color: #fff;
+	padding: 6px 10px;
+}
+#navigation ul li:hover a, 
+#navigation ul li a:focus,
+#navigation ul li a:active, 
+#navigation ul li.p7hvr a {
+	color: #fff;
+	background:#d92100;
+}
+#p7menubar li {
+	float: left;
+	width: 9em;
+}
+#p7menubar li ul, #p7menubar ul li  {
+	width: 12em;
+}
+#navigation ul ul li a,
+#navigation ul ul li a:visited  {
+	color: #333;
+	border-right:0;
+	border-top:1px solid #999;
+	font-size:.9em;
+	padding: 3px 10px;
+	text-decoration:none;
+}
+#navigation li ul {
+	position: absolute;
+	display: none;
+	border:1px solid #999;
+	border-top:0;
+	background-color: #ddd;
+	z-index:999;
+}
+#p7menubar li:hover ul, #p7menubar li.p7hvr ul {
+	display: block;
+}
+#p7menubar li:hover ul a, #p7menubar li.p7hvr ul a {
+	color: #333;
+	background-color: transparent;
+}
+#p7menubar ul a:hover {
+	background-color: #606060!important;
+	color: #fff!important;
+}
+#p7menubar li {width: auto;}
+
+ul#feeds { 
+	float:right;
+}	
+ul#feeds li { 
+	float: left;
+}
+ul#feeds li a,
+ul#feeds li a:visited {
+	display: block;
+	font: 1em Arial, Tahoma, Verdana;
+	border-right:1px solid #666;
+	color: #fff;
+	padding: 6px 10px;
+}
+
+ul#feeds li a:hover, 
+ul#feeds li a:focus,
+ul#feeds li a:active {
+	color: #fff;
+	background:#333;
+}
+.rss {
+	font-size:90%;
+}
+	
+	
+/************************************************************
+*	Single post  [Single post page cotains two column, Sidebar and Content]	*
+***********************************************************/	
+
+#singlepost {
+	float:left;
+	display: inline;
+	padding: 8px 10px 10px 10px;
+	margin-right:15px;
+	width: 635px !important;
+	width: 655px;
+	width/**/:/**/635px;
+}
+
+.post { 
+}
+
+#singlepostinfo {
+	background: #f7f7f7;
+	border-top: 1px dotted #ccc;
+	border-bottom: 1px dotted #ccc;
+	padding: 10px;
+	clear:both;
+	float:none;
+	display:block;
+	font:.8em/1.4em verdana;
+} 	
+
+.postinfo { /* post info shown under the summary of posts on search results */
+	text-align:right;
+	padding-top:3px;
+	font:.8em verdana, arial, tahoma;
+	color:#9f9f9f;
+	border-top:1px dotted #f1f1f1;
+	margin-bottom:20px;
+}
+
+.single-entry-nav {
+	display: block;
+	margin:20px 0 ;
+	font: 1em verdana;
+	}	
+
+.post img {display:block;float:left;}
+	
+.post img.alignleft {
+	float:left;
+	margin: 5px 10px 5px 0;
+	display:block;
+}
+
+.post img.alignright {
+	float:left;
+	margin: 5px 0px 5px 10px;
+	display:block;
+}
+
+.post p {	
+	font:1em/1.6em verdana;
+	padding-bottom: 15px;
+}
+
+.post ul,.post ol{
+	font:.95em/1.5em verdana;
+	padding-left:30px;
+	margin-bottom:15px;
+}
+
+blockquote{
+	font:.9em/1.5em "trebuchet ms", garamond, "lucida grande", serif;
+	margin-bottom:15px;
+}
+
+#pagenavi {
+	height:20px;
+}
+/************************************************************
+*	Content-wrapper  	[Left column]				*
+***********************************************************/	
+#leftcolumn {
+	float:left;	display:inline;
+	background:#f2f2f2;
+	margin-right:15px;	padding:8px 10px 10px 10px;
+	width: 300px !important;
+	width: 320px;
+	width/**/:/**/300px;
+}
+#featured { 
+	padding-bottom:5px; 
+	border-bottom:1px solid #f2f2f2;
+	margin-bottom:15px;
+	}
+#postdetails {
+	text-align:right;
+	background:#333;
+	color:#fff;
+	font:.8em verdana;
+	padding:3px 5px;
+	margin-top:5px;
+}
+#featured img {
+	margin-bottom: 10px;
+	display:block;
+}
+#featurednewslist ul	{
+	margin:0 0 15px 15px;
+	list-style:square;
+}
+#featurednewslist li a:link, #featurednewslist li a:visited {
+	color:#29568f;
+}	
+#featurednewslist li a:hover {
+	color:#d92100;
+	text-decoration:underline;
+}
+/************************************************************
+*	Content-wrapper  	[Middle column]				*
+************************************************************ */
+#midcolumn {
+	float:left;
+	width: 320px;
+	display:inline;
+}
+.midcolumnpost {
+	margin-bottom:10px;
+	padding:10px;
+}
+.gray {	background-color:#f2f2f2;}
+.details {
+	margin-top:10px;
+	text-align:right;
+	font:.8em verdana;
+}
+#midcolumn img {
+	margin:5px 0 10px;
+	display:block;
+}
+/************************************************************
+*	Content-wrapper  	[Right column]				*
+********************************************************** */
+#rightcolumn {
+	float:right;
+	width:280px;
+}
+#sponsors {
+	padding:0 8px 0 8px;
+}
+#sponsors img {
+	margin-top:6px;
+}
+#categories {
+	float:left;
+	width:135px;
+	margin-right:10px;
+}
+#archive {
+	float:left;
+	width:135px;
+}
+#rightcolumn ul {
+	margin:0 0 0 3px;
+	list-style-type: square;
+}
+#rightcolumn ul li {
+	margin-left:18px;
+	line-height:1.6em;
+}
+#rightcolumn ul li a, #rightcolumn ul li a:visited  {
+	color:#777;
+	display:inline;
+	font:1em Tahoma,Arial,"Trebuchet MS",Verdana;
+}
+#rightcolumn ul li a:hover {
+	color:#29568f;
+	text-decoration:underline;
+}
+#archiveform {
+	margin-top:5px;
+}
+#rightcolumn  ul ul {
+	margin-bottom:0;
+}
+
+/* commentform 
+---------------------------------------------------------------------------------------------- */
+#comment-wrapper ol {list-style:decimal;font:90% verdana, arial, helvetica, verdana, serif;}
+#commentform p {margin-bottom:10px;}
+#commentform label {color:#666;font-size: 100%;padding-left: 5px;}
+#commentform small {color: #999999;font-size: 90%;}
+#commentform input {font: 100% Arial, Helvetica, sans-serif;width: 220px;padding: 2px;	border: 1px solid #e6e6e6;}
+#commentform textarea {font: 100% Arial, Helvetica, sans-serif;width: 480px;height: 140px;border: 1px solid #e6e6e6;padding: 2px 3px 3px 7px;}
+#commentform #submit {font: 12px/100% Arial, Helvetica, sans-serif;border: 1px solid #555;color:#2a2a2a;	background:#7ac4ea;	width: 100px;height: 25px;padding: 2px 8px !important;padding: 2px 5px; margin-left: 390px;}
+#commentform #submit:hover {background:#d92100; color:#fff;}
+#commentform textarea:focus, #commentform input[type="text"]:focus {border: solid 1px #c00;}
+/* comment list
+---------------------------------------------------------------------------------------------- */
+.commentlist {margin: 10px 0px;padding-left: 25px;line-height: 130%;}
+.commentlist li{padding: 5px 10px 0px;color:#888;}
+.commentlist .alt {background: #f2f2f2;border-top:1px solid #ccc;border-bottom:1px solid #ccc;}
+.commentlist cite {font:bold 100% verdana, arial, helvetica, sans-serif;color: #888;}
+.commenttext {margin-top:15px;}
+.commenttext p {padding-bottom:10px;font-size:11px;color: #333;}

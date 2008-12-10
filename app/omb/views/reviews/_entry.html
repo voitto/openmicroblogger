@@ -1,0 +1,24 @@
+<div class="hreview">
+<?php global $request; ?>
+<p class="item"><a class="url fn" href="<?php url_for( array( 'resource'=>'reviews', 'id'=>$Member->id, 'action'=>'entry.hreview' )); ?>" title=""></a>
+  <span class="rating"><span class="value"><?php print $Member->rating; ?></span>/<span class="best">5</span></span>
+</p>
+<acronym class="dtreviewed" title="<?php print $Entry->last_modified; ?>"><?php print $Entry->last_modified; ?></acronym>
+<div class="rating_stars">
+
+<?php $i = 0; ?>
+
+<?php while ($i < $Member->rating) : ?>
+<img src="<?php echo base_url(true).$request->layout_path; ?>reviews/full_star.gif" alt="*">
+<?php $i++; ?>
+<?php endwhile; ?>
+
+<?php while ($i < 5) : ?>
+<img src="<?php echo base_url(true).$request->layout_path; ?>reviews/empty_star.gif" alt="">
+<?php $i++; ?>
+<?php endwhile; ?>
+
+</div>
+<p class="description" id="review<?php print $Member->id; ?>"><?php print $Member->description; ?></p>
+<span class="version">0.3</span>
+</div>

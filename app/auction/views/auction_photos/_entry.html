@@ -1,0 +1,43 @@
+<table align="center" cellpadding="3" cellspacing="0" border="0"><th colspan="2"><?php breadcrumbs(); ?></th>
+
+   <tr>
+<td align="right"><p>Photo:</p></td>
+  <td>
+    <?php if (extension_for($Entry->content_type) == 'mp3') : ?>
+
+  <script src="<?php base_url(); ?>script/swfobject.js" type="text/javascript"></script>
+
+  <script src="<?php base_url(); ?>script/ep_player.js" type="text/javascript"></script>
+
+  <script type="text/javascript">
+
+  // <![CDATA[
+
+  var so = new SWFObject("<?php base_url(); ?>resource/ep_player.swf", "ep_player", "269", "226", "9", "#FFFFFF");
+
+  so.addVariable("skin", "<?php base_url(); ?>resource/micro_player/skin.xml");
+
+  so.addVariable("file", "<location><?php url_for( array( 'action'=>'attachment.mp3', 'resource'=>$request->resource, 'id'=>$Member->id )); ?></location><creator><?php print $Member->body; ?></creator><title><?php print $Member->title; ?></title>");
+
+  so.addVariable("autoplay", "true");
+
+  so.addVariable("buffertime", "1");
+
+  so.write("flashcontent");
+
+  // ]]>
+
+  </script>
+
+  <?php elseif (in_array(extension_for($Entry->content_type), array('jpg','png','gif'))) : ?>
+
+  <img src="<?php url_for( array( 'action'=>'photo.'.extension_for($Entry->content_type), 'resource'=>'auction_photos', 'id'=>$Member->id )); ?>" />
+  <?php endif; ?>
+
+
+  </td>
+</tr>
+
+</table>
+
+

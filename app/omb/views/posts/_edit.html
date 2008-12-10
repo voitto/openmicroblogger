@@ -1,0 +1,42 @@
+<?php 
+
+  global $request;
+  $post = strtolower(classify($request->resource));
+
+?>
+
+<form action="<?php url_for( $request->resource ); ?>" method="post" name="<?php print $request->resource; ?>" id="<?php print $request->resource; ?>" enctype="multipart/form-data">
+<div>
+<input name="MAX_FILE_SIZE" type="hidden" value="11048576" />
+<input name="method" type="hidden" value="put" />
+<input name="entry[etag]" type="hidden" value="<?php print $Entry->etag; ?>" />
+<table border="0">
+
+<tr><td colspan="2">
+<?php breadcrumbs(); ?>
+</td></tr>
+
+  <tr>
+    <td align="right" valign="top"><b>Title</b></td>
+    <td valign="top" align="left"><textarea rows="3" style="width:350px;" cols="40" wrap="virtual" id="<?php print $post; ?>_title" name="<?php print $post; ?>[title]"><?php print $Member->title; ?></textarea></td>
+  </tr>
+  <?php if (!(environment('theme') == 'prologue-theme')) : ?>
+  <tr>
+    <td align="right" valign="top"><b>Body</b></td>
+    <td valign="top" align="left"><textarea rows="6" style="width:350px;" cols="40" wrap="virtual" id="<?php print $post; ?>_body" name="<?php print $post; ?>[body]"><?php print $Member->body; ?></textarea></td>
+  </tr>
+  <?php endif; ?>
+  <tr>
+    <td align="right" valign="top"><b>Attachment</b></td>
+    <td valign="top" align="left"><input id="<?php print $post; ?>_attachment" name="<?php print $post; ?>[attachment]" type="file" /></td>
+  </tr>
+  <tr>
+    <td align="right" valign="top"><b></b></td>
+    <td valign="top" align="left"><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="Cancel" type="button" />
+
+<input value="Save" type="submit" name="button_group" /></td>
+  </tr>
+</table>
+</div>
+</form>
+

@@ -1,0 +1,36 @@
+
+<table align="center" cellpadding="3" cellspacing="0" border="0">
+
+  <th colspan="3">
+    <b><?php breadcrumbs(); ?></b>
+  </th>
+
+  <tr>
+    <td><b>Link</b></td>
+    <td><b>Type</b></td>
+    <td><p></p></td>
+  </tr>
+
+  <?php while( $Member = $collection->MoveNext() ) : ?>
+
+  <?php $Entry = $Member->FirstChild('entries'); ?>
+
+    <tr>
+      <td>
+        <a href="<?php print $Member->href; ?>">
+          <?php print $Member->title; ?>
+        </a>
+      </td>
+      <td><p><?php print $Member->type; ?></p></td>
+      <td>
+      <a href="<?php url_for( array( 'resource'=>'links', 'id'=>$Member->id, 'action'=>'edit' )); ?>">
+          Edit
+        </a></td>
+    </tr>
+
+  <?php endwhile; ?>
+
+</table>
+
+
+

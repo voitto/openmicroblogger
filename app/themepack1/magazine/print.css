@@ -1,0 +1,29 @@
+body {
+	direction: ltr;
+	text-align: left;
+}
+
+#header,
+.single-entry-nav,
+#footer, 
+#pagenavi, 
+#comment-wrapper,
+#singlepostinfo, 
+#rightcolumn,
+.postinfo {
+	display:none
+}
+
+.post { 
+	width: auto;
+	border: 0;
+	margin: 0 5%;
+	padding: 0;
+	float: none !important;
+}
+
+img { 
+	float:left;
+	border: 0;
+	margin: 5px 10px 5px 0;
+}

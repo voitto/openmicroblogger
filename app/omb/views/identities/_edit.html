@@ -1,0 +1,67 @@
+
+
+
+
+<div>
+<form action="<?php url_for( 'identities' ); ?>" method="post" name="identities" id="identities" enctype="multipart/form-data">
+<input name="MAX_FILE_SIZE" type="hidden" value="409600" />
+<input name="method" type="hidden" value="put" />
+<input name="entry[etag]" type="hidden" value="<?php print $Entry->etag; ?>" />
+<table border="0">
+
+<tr><th colspan="2">
+<h2><?php if (isset($_SESSION['message'])) { echo $_SESSION['message']; unset($_SESSION['message']); }?></h2>
+</th></tr>
+
+
+
+  <tr>
+    <td align="right"><b>Nickname</b></td>
+    <td valign="top" align="left"><input size="30" maxlength="255" id="identity_nickname" name="identity[nickname]" type="text" value="<?php print $Member->nickname; ?>" /></td>
+  </tr>
+  <tr>
+    <td align="right"><b>Full name</b></td>
+    <td valign="top" align="left"><input size="30" maxlength="255" id="identity_fullname" name="identity[fullname]" type="text" value="<?php print $Member->fullname; ?>" /></td>
+  </tr>
+  <tr>
+    <td align="right"><b>OpenID URL</b></td>
+    <td valign="top" align="left"><input size="50" maxlength="255" id="identity_url" name="identity[url]" type="text" value="<?php print $Member->url; ?>" /></td>
+  </tr>
+  <tr>
+    <td align="right"><b>Bio</b></td>
+    <td valign="top" align="left"><textarea style="width:352px;" rows="3" cols="30" id="identity_bio" name="identity[bio]"><?php print $Member->bio; ?></textarea></td>
+  </tr>
+  <tr>
+    <td align="right"><b>E-mail</b></td>
+    <td valign="top" align="left"><input size="50" maxlength="255" id="identity_email_value" name="identity[email_value]" type="text" value="<?php print $Member->email_value; ?>" /></td>
+  </tr>
+  <tr>
+    <td align="right"><b>Jpeg Photo</b></td>
+    <td valign="top" align="left"><input id="identity_photo" name="identity[photo]" type="file" /></td>
+  </tr>
+  <tr>
+    <td align="right"><b>License URL</b></td>
+    <td valign="top" align="left"><input size="50" maxlength="255" id="identity_license" name="identity[license]" type="text" value="<?php if (!empty($Member->license)) echo $Member->license; else echo 'http://creativecommons.org/licenses/BSD/'; ?>" /></td>
+  </tr>
+  <tr>
+    <td align="right"><b></b></td>
+    <td valign="top" align="left"><br><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="Cancel" type="button" />
+
+<input value="Save" type="submit" name="button_group" /></td>
+  </tr>
+</form>
+
+<tr><td colspan="2">
+<br />
+
+
+
+
+<br />
+<br />
+
+
+</td></tr>
+</table>
+</div>
+
