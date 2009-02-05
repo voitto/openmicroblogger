@@ -18,7 +18,8 @@ function twitter_login_test() {
   	@stripslashes(get_option('aktt_twitter_username')),
   	@stripslashes(get_option('aktt_twitter_password'))
   );
-  if ($test)
+  
+  if (strpos($test, 'succeeded'))
   	echo 1;
   else
     echo 0;

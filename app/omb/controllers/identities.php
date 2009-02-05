@@ -35,6 +35,9 @@ function resize_uploaded_jpg( &$rec, &$db ) {
 
 function validate_identities_url( $value ) {
   
+  if (!(environment('openid_version') > 1))
+    return true;
+  
   global $db;
   
   wp_plugin_include(array(

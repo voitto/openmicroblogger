@@ -126,7 +126,7 @@ class MySQL extends Database {
     KEY user_id (user_id)
     ) CHARACTER SET latin1");
 $result = $this->get_result("CREATE TABLE openid_nonces (\n".
-            "  server_url VARCHAR(2047),\n".
+            "  server_url VARCHAR(255),\n".
             "  timestamp INTEGER,\n".
             "  salt CHAR(40),\n".
             "  UNIQUE (server_url(255), timestamp, salt)\n".

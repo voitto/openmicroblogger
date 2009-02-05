@@ -5,6 +5,50 @@ function allowed_tags() {
   return true;
 }
 
+function sanitize_post($post, $context = 'display') {
+	if ( 'raw' == $context )
+		return $post;
+	if ( is_object($post) ) {
+		if ( !isset($post->ID) )
+			$post->ID = 0;
+		foreach ( array_keys(get_object_vars($post)) as $field )
+			$post->$field = sanitize_post_field($field, $post->$field, $post->ID, $context);
+	} else {
+		if ( !isset($post['ID']) )
+			$post['ID'] = 0;
+		foreach ( array_keys($post) as $field )
+			$post[$field] = sanitize_post_field($field, $post[$field], $post['ID'], $context);
+	}
+	return $post;
+}
+
+
+function sanitize_post_field($field, $value, $post_id, $context) {
+	return $value;
+}
+
+
+
+function &get_post(&$post, $output = OBJECT, $filter = 'raw') {
+	global $post_cache, $wpdb, $blog_id;
+  
+  $_post = false;
+	
+	if ( empty($post) ) {
+	  
+	} elseif ( is_object($post) ) {
+	  $_post = $post;
+	  $_post->post_title = $post->title;
+	  $_post->post_content = $post->body;
+	  global $request;
+	  $_post->guid = $request->url_for(array('resource'=>$post->table,'id'=>$post->id));
+	} else {
+		$post = (int) $post;
+	}
+
+	return $_post;
+}
+
 function do_action($tag, $arg = '') {
 	global $wp_filter, $wp_actions;
 
@@ -725,7 +769,7 @@ function wp_head() {
     
     //trigger_before( 'admin_head', $current_user, $current_user );
     
-    
+    echo '<link rel="shortcut icon" href="resource/favicon.ico" >';
     if ($request->resource == "identities" || ($request->resource == "posts" && $request->action == 'new'))
       echo '<script type="text/javascript" src="'.$request->base_url.'resource/jquery-1.2.6.min.js"></script>';
     else
@@ -1514,32 +1558,64 @@ function comments_rss_link() {
   echo "#";
 }
 
+function pageGetPageNo() {
+  
+}
+
+function sandbox_body_class() {
+  
+}
+
+function get_posts() {
+
+}
+
+function dp_list_pages() {
+  
+}
+
+function get_the_time() {
+  
+}
+
+function sandbox_post_class() {
+  
+}
+
+function get_post_custom_values() {
+  
+}
+
+function dp_attachment_image() {
+  
+}
+
+function get_day_link() {
+  
+}
+
+function get_stylesheet_directory_uri() {
+  
+}
+
 function comments_popup_link( $var1, $var2, $var3 ) {
   
   // jeditable
   
-  
   global $the_post;
   global $request;
-  
   
   $theme = environment('theme');
   
   if ($theme == 'prologue-theme') {
-    
     echo "<a href=\"";
     echo $request->url_for(array(
       'resource'  => 'posts',
       'id'        => $the_post->id
     ));
-    //url_for(array(
-    //  'resource' => 'comments',
-    //  'action'   => 'new',
-    //  'id'       => $the_post->id
-    //));
     echo "\">reply</a>";
-    return;
-    
+    if (!(environment('threaded')))
+      return;
   }
   
   echo "|&nbsp;<a href=\"JavaScript:add_comment('addcomment-$the_post->id')";
@@ -1818,7 +1894,8 @@ global $comment_author_url;
 
 require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'wp-plugins'.DIRECTORY_SEPARATOR.'wp-config.php';
 
-$db->create_openid_tables();
+if (environment('openid_version') > 1)
+  $db->create_openid_tables();
 
 
 $wp_version = 2.6;

@@ -1,40 +1,60 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
- "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-   <title>Site Admin</title>
-   <link rel="stylesheet" href="<?php echo $request->base; ?>app/omb/views/admin/style.css" type="text/css">
+	<title>Open Microblogger Admin</title>
+	<link rel="stylesheet" href="<?php echo $request->base; ?>app/omb/views/admin/style.css" type="text/css">
+	<link type="text/css" href="resource/jquery.ui/themes/default/ui.all.css" rel="stylesheet" />	
+	<script type="text/javascript" src="resource/jquery-1.2.6.min.js"></script>
+	<script type="text/javascript" src="resource/jquery.ui/ui/ui.core.js"></script>
+	<script type="text/javascript" src="resource/jquery.ui/ui/ui.tabs.js"></script>
+
+	<script type="text/javascript">
+	$(function() {
+		$("#tabs").tabs();
+	});
+	</script>
+	
 </head>
 <body>
-<div id="doc2" class="yui-t7">
-   <div id="hd"><h1><p>&lt;&lt;&nbsp;<a href="<?php base_url(); ?>">Return To Site</a>&nbsp;&nbsp;&nbsp;Site Admin</p></h1></div>
-   <div id="bd">
-	<div class="yui-g">
-	  <br>
-	<p><a href="<?php url_for(array('resource'=>'categories','action'=>'manage')); ?>">Category Editor</a></p>
-	<br>
-	</div>
-<div class="yui-g">
-    <div class="yui-g first">
-        <div class="yui-u first">
-	<p></p>
-	        </div>
-        <div class="yui-u">
-	<p></p>
-	        </div>
-    </div>
-    <div class="yui-g">
-        <div class="yui-u first">
-	<p></p>
-	        </div>
-        <div class="yui-u">
-	<p></p>
-	        </div>
-    </div>
-</div>
 
-	</div>
-   <div id="ft"><p>OpenMicroBlogger</p></div>
-</div>
+
+
+  <div id="tabs">
+    
+  	<ul>
+  	  
+  		<li><a href="#tabs-1">Admin</a></li>
+  		
+  		<li><a href="<?php url_for(array(
+  		    'resource'=>'categories',
+  		    'action'=>'manage/partial'
+  		  )); ?>">Categories</a></li>
+  		
+  		<li><a href="<?php url_for(array(
+  		    'resource'=>'groups',
+  		    'action'=>'manage/partial'
+  		  )); ?>">Groups</a></li>
+  		
+  		<li><a href="JavaScript:top.location.href('<?php base_url(); ?>');">Return To Site</a></li>
+  	</ul>
+  	
+  	<div id="tabs-1">
+  		<p>
+  		  This is the Admin area for Open Microblogger
+  		</p>
+  		
+  	</div>
+  	
+  </div>
+
+
+
 </body>
 </html>
+
+
+
+
+  
+
+

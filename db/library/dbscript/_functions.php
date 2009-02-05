@@ -683,10 +683,12 @@ function redirect_to( $param, $altparam = NULL ) {
   
   global $request;
   
-  if (is_ajax())
+  if (is_ajax()){
     echo "OK";
-  else
+    exit;
+  }else{
     $request->redirect_to( $param, $altparam );
+  }
   
 }
 

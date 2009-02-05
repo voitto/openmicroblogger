@@ -114,7 +114,7 @@ function update_my_tweets() {
   $snoop->user = $aktt->twitter_username;
   $snoop->pass = $aktt->twitter_password;
   
-  $snoop->fetch('http://twitter.com/statuses/friends_timeline.json');
+  $snoop->fetch('http://tweetpass.com/statuses/friends_timeline.json');
   
   if (!strpos($snoop->response_code, '200')) {
     update_option('aktt_doing_tweet_download', '0');
@@ -178,7 +178,7 @@ function update_my_tweets() {
         $user->agent = 'Twitter Tools http://alexking.org/projects/wordpress';
         $user->user = $aktt->twitter_username;
         $user->pass = $aktt->twitter_password;
-        $user->fetch( 'http://twitter.com/statuses/show/'.$tweet->tw_id.'.json' );
+        $user->fetch( 'http://tweetpass.com/statuses/show/'.$tweet->tw_id.'.json' );
         $data = $user->results;
         $json = new Services_JSON();
         $notice = $json->decode($data);

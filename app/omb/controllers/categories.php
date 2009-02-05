@@ -17,11 +17,12 @@ function put( &$vars ) {
   $rec = $Category->find( $request->id );
   $rec->set_value('name',$request->params['category']['name']);
   $rec->set_value('term',$request->params['category']['term']);
-  $rec->set_value('scheme',$request->params['category']['scheme']);
+  if (isset($request->params['category']['scheme']))
+    $rec->set_value('scheme',$request->params['category']['scheme']);
   $rec->save_changes();
   //$Category->update_from_post( $request );
   header( 'Status: 200 OK' );
-  redirect_to( 'categories' );
+  redirect_to( array('resource'=>'categories','action'=>'manage') );
 }
 
 function post( &$vars ) {

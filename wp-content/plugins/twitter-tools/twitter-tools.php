@@ -69,12 +69,12 @@ if (!function_exists('wp_prototype_before_jquery')) {
 	add_filter( 'print_scripts_array', 'wp_prototype_before_jquery' );
 }
 
-define('AKTT_API_POST_STATUS', 'http://twitter.com/statuses/update.json');
-define('AKTT_API_USER_TIMELINE', 'http://twitter.com/statuses/user_timeline.json');
-define('AKTT_API_STATUS_SHOW', 'http://twitter.com/statuses/show/###ID###.json');
-define('AKTT_PROFILE_URL', 'http://twitter.com/###USERNAME###');
-define('AKTT_STATUS_URL', 'http://twitter.com/###USERNAME###/statuses/###STATUS###');
-define('AKTT_HASHTAG_URL', 'http://search.twitter.com/search?q=###HASHTAG###');
+define('AKTT_API_POST_STATUS', 'http://tweetpass.com/statuses/update.json');
+define('AKTT_API_USER_TIMELINE', 'http://tweetpass.com/statuses/user_timeline.json');
+define('AKTT_API_STATUS_SHOW', 'http://tweetpass.com/statuses/show/###ID###.json');
+define('AKTT_PROFILE_URL', 'http://tweetpass.com/###USERNAME###');
+define('AKTT_STATUS_URL', 'http://tweetpass.com/###USERNAME###/statuses/###STATUS###');
+define('AKTT_HASHTAG_URL', 'http://search.tweetpass.com/search?q=###HASHTAG###');
 
 class twitter_tools {
 	function twitter_tools() {
@@ -821,7 +821,7 @@ function aktt_tweet_display($tweet, $time = 'relative') {
 }
 
 function aktt_make_clickable($tweet) {
-//	$tweet = preg_replace('/\@([a-zA-Z0-9_]{1,15}) /','@<a href="http://twitter.com/\\1">\\1</a> ', $tweet);
+//	$tweet = preg_replace('/\@([a-zA-Z0-9_]{1,15}) /','@<a href="http://tweetpass.com/\\1">\\1</a> ', $tweet);
 	$tweet .= ' ';
 	$tweet = preg_replace_callback(
 		'/\@([a-zA-Z0-9_]{1,15}) /'

@@ -44,7 +44,16 @@ env:
   
   theme: prologue-theme
   
+  email_from: root@localhost
+  email_name: Notifier
+  email_server: localhost
+  email_port: 25
+  email_user: 
+  email_pass: 
+  
   threaded: false
+  
+  pretty_urls: false
   
   remote_sources:
     dbscript: dbscript.net/?apps
@@ -65,6 +74,7 @@ env:
     - auction
     - themepack1
     - all_in_one_seo_pack
+    - notifixious
   
   installed:
   
@@ -91,15 +101,8 @@ env:
     - dob
     - email
   
-  email_from: root@localhost
-  email_name: Notifier
-  email_server: localhost
-  email_port: 25
-  email_user: 
-  email_pass: 
-  
   openid_server: https://e-cred.org/server
-  openid_version: 2
+  openid_version: 1
   
   xrds_services:
     oauth:

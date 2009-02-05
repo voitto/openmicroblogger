@@ -573,11 +573,11 @@ class PostgreSQL extends Database {
     $result = $this->get_result("INSERT INTO oauth_consumers (consumer_key, secret, description) VALUES ('DUMMYKEY', '', 'Unidentified Consumer')");
 //;
 
-    $result = $this->get_result("CREATE TABLE openid_nonces (server_url VARCHAR(2047), timestamp INTEGER, ".
+    $result = $this->get_result("CREATE TABLE openid_nonces (server_url VARCHAR(255), timestamp INTEGER, ".
             "salt CHAR(40), UNIQUE (server_url, timestamp, salt))");
 
         
-    $result = $this->get_result("CREATE TABLE openid_associations (server_url VARCHAR(2047), handle VARCHAR(255), ".
+    $result = $this->get_result("CREATE TABLE openid_associations (server_url VARCHAR(255), handle VARCHAR(255), ".
             "secret BYTEA, issued INTEGER, lifetime INTEGER, ".
             "assoc_type VARCHAR(64), PRIMARY KEY (server_url, handle), ".
             "CONSTRAINT secret_length_constraint CHECK ".
