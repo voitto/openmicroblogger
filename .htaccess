@@ -1,6 +1,0 @@
-RewriteEngine off
-RewriteCond %{HTTP_HOST} ^www.openmicroblogger.com$ [NC]
-RewriteRule ^(.*)$ http://openmicroblogger.com/$1 [R=301,L]
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(.+)$ ?$1 [PT,L,QSA]
