@@ -481,7 +481,7 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
   function get_tables() {
     trigger_before( 'get_tables', $this, $this );
     $tables = array();
-    $sql =  "SHOW tables FROM ".$this->dbname;
+    $sql =  "SHOW tables";
     $result = $this->get_result($sql);
     while ($arr = $this->fetch_array($result)) {
       foreach($arr as $key=>$value) {
