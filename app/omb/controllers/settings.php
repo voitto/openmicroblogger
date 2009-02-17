@@ -16,16 +16,29 @@ function put( &$vars ) {
 
 function post( &$vars ) {
   extract( $vars );
+  
   if (!(get_profile_id()))
     trigger_error( 'Sorry, the setting could not be saved', E_USER_ERROR );
+  
   $request->set_param( array( 'setting', 'profile_id' ), get_profile_id() );
   
+  $settingname = $request->params['setting']['name'];
+
+  $set = split('\.',$settingname);
   
-  if ($request->params['setting']['name'] == 'app') {
+  if (is_array($set) && $set[0] == 'config') {
+    if (!member_of('administrators'))
+      trigger_error( 'Sorry, you must be an administrator to do that', E_USER_ERROR );
+    $s = $Setting->find_by( 'name', $settingname );
+    if ($s)
+      $db->delete_record($s);
+  }
+  
+  if ($settingname == 'app') {
     
     $do_install = false;
     
-    $app = trim($request->params['setting']['value']);
+    $app = $settingname;
     
     $sources = environment('remote_sources');
     $remote_list = array();

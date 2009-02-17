@@ -18,7 +18,9 @@ Version 0.1, 1-Sep-2008
 
 Version 0.2, 22-Oct-2008
  sms, app store
-
+ 
+Version 0.3, 15-Feb-2009
+ admin, themes
 
 
 REQUIREMENTS
@@ -123,14 +125,16 @@ Prety URL Requirements:
       todo: add a test for this problem
 
 To enable pretty URLs:
-  
+
 1) uncomment lines 65 & 66 in /db/boot.php
 
 2) type your own base URL in /db/boot.php
 
-3) set "RewriteEngine on" in .htaccess
+3) copy the file /resource/prettyurls/.htaccess to the top level folder
 
-4) type your own base URL in .htaccess
+4) set "RewriteEngine on" in .htaccess
+
+5) type your own base URL in .htaccess
 
 
 

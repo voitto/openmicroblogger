@@ -11,6 +11,12 @@
 	<script type="text/javascript">
 	$(function() {
 		$("#tabs").tabs();
+		$("#tabs").click(function() { 
+                     
+                   var b = $("#tabs").tabs('option', 'selected');
+                   if (b == 4) location.href='<?php base_url(); ?>';
+                
+                });
 	});
 	</script>
 	
@@ -29,6 +35,11 @@
   		    'resource'=>'categories',
   		    'action'=>'manage/partial'
   		  )); ?>">Categories</a></li>
+
+  		<li><a href="<?php url_for(array(
+  		    'resource'=>'admin',
+  		    'action'=>'theme/partial'
+  		  )); ?>">Themes</a></li>
   		
   		<li><a href="<?php url_for(array(
   		    'resource'=>'groups',

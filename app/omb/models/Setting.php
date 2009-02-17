@@ -22,6 +22,8 @@ class Setting extends Model {
     $this->let_modify( 'all:members' );
     $this->let_delete( 'all:members' );
     
+    $this->let_access( 'all:administrators' );
+    
     $this->set_hidden();
     
   }

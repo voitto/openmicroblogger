@@ -312,6 +312,33 @@ if ( $db->just_get_objects() )
 //$request->connect( 'migrate' );
 
 
+/**
+ * load saved config
+ */
+
+$Setting =& $db->model('Setting');
+$Setting->find_by(array(
+  'eq'    => 'like',
+  'name'  => 'config%'
+));
+while ($s = $Setting->MoveNext()) {
+$set = split('\.',$s->name);
+  if (is_array($set) && $set[0] == 'config') {
+    if ($set[1] == 'env')
+      $env[$set[2]] = $s->value;
+  }
+}
+
+$wp_theme = "wp-content".DIRECTORY_SEPARATOR."themes".DIRECTORY_SEPARATOR.$env['theme'];
+
+if ((file_exists($wp_theme))) {
+  $GLOBALS['PATH']['content_plugins'] = 'wp-content'.DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR;
+  $GLOBALS['PATH']['themes'] = "wp-content".DIRECTORY_SEPARATOR."themes".DIRECTORY_SEPARATOR;
+} else {
+  $GLOBALS['PATH']['themes'] = $env['themepath'.$env['theme']].DIRECTORY_SEPARATOR;
+}
+
+
   /**
    * load plugins
    */

@@ -454,14 +454,63 @@ function normalize_url() {
   //
 }
 
+function password_register( &$vars ) {
+  
+  extract( $vars );
+
+  $Identity =& $db->get_table( 'identities' );
+  $Person =& $db->get_table( 'people' );
+  
+  if (!($request->password == $request->password2))
+    trigger_error( "sorry the passwords do not match", E_USER_ERROR );
+  
+  $i = $Identity->find_by(array(
+    'nickname'=>$request->nickname
+  ),1);
+  
+  $p = $Person->find( $i->person_id );
+  
+  if ( isset( $p->id ) && $p->id != 0) {
+    
+    trigger_error( "sorry that username is already taken", E_USER_ERROR );
+    
+  } else {
+    
+    // create new user and log them in
+    $p = $Person->base();
+    $p->save();
+    $i = $Identity->base();
+    
+    $i->set_value( 'person_id', $p->id );
+    $i->set_value( 'label', 'profile 1' );
+    $i->set_value( 'nickname', $request->nickname );
+    $i->set_value( 'url', $request->base."".$request->nickname );
+    $i->set_value( 'password', md5($request->password) );
+    $i->save_changes();
+    $i->set_etag( $p->id );
+    
+    $_SESSION['openid_complete'] = true;
+    set_cookie( $p->id );
+    
+    if (!(empty($_SESSION['requested_url'])))
+      redirect_to( $_SESSION['requested_url'] );
+    else
+      redirect_to( $request->base );
+    
+  }
+}
+
 function password_submit( &$vars ) {
   extract($vars);
   global $request;
   $Identity =& $db->get_table( 'identities' );
+  $Person =& $db->get_table( 'people' );
   $i = $Identity->find_by(array(
     'nickname'=>$request->nickname,
     'password'=>md5($request->password)
   ),1);
+  if (!$i)
+    trigger_error( "username or password incorrect, sorry", E_USER_ERROR );
   $p = $Person->find( $i->person_id );
   if ( isset( $p->id ) && $p->id != 0) {
     $_SESSION['openid_complete'] = true;
@@ -553,7 +602,10 @@ function openid_logout( &$vars ) {
   unset($_SESSION['requested_url']);
   unset($_SESSION['openid_complete']);
   unset($_SESSION['oid_return_to']);
-  redirect_to( environment('openid_server')."/?action=logout&return=".urlencode($request->base) );
+  if (environment('authentication') == 'password') 
+    redirect_to( $request->base );
+  else
+    redirect_to( environment('openid_server')."/?action=logout&return=".urlencode($request->base) );
 }
 
 function email_login( &$vars ) {
@@ -696,6 +748,8 @@ function security_init() {
   $request->connect( 'openid_submit' );
   
   $request->connect( 'password_submit' );
+
+  $request->connect( 'password_register' );
   
   $request->connect( 'openid_logout' );
   
