@@ -8,7 +8,7 @@ class Setting extends Model {
     $this->time_field( 'modified' );
     
     $this->char_field( 'name' );
-    $this->char_field( 'value' );
+    $this->text_field( 'value' );
     
     $this->int_field( 'entry_id' );
     $this->int_field( 'person_id' );
