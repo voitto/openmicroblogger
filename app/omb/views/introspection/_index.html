@@ -75,24 +75,10 @@
 </td></tr>
 <tr><td>
 
-<?php if (member_of('administrators')) : ?>
-      
-      <table align="center" >
-      <tr><tr><p><b>Admin:</b></p></td></tr>
-      <?php $tabs = introspect_tables(); ?>
-      <?php foreach ( $tabs as $resource ) : ?>
-          <?php if (in_array($resource,array('groups','categories','identities','links','posts','pages'))) : ?>
-        <tr>
-          <td>
-            <a href="<?php url_for( $resource ); ?>">
-             <p><?php print ucwords($resource) . ""; ?></p>
-            </a>
-          </td>
-        </tr>
-            <?php endif; ?>
-      <?php endforeach; ?>
-      </table>
-      
+<?php if (member_of('administrators') && '' == environment('theme')) : ?>
+    
+<script type="text/javascript" src="<?php url_for(array('resource'=>'pages','action'=>'block.js')); ?>"></script>
+
 <?php endif; ?>
 
 

@@ -1180,6 +1180,10 @@ function get_post_meta($pid=0,$field,$bool) {
   
 }
 
+function link_pages() {
+  echo "";
+}
+
 function wp_link_pages() {
   echo "";
 }
@@ -1725,6 +1729,7 @@ function comment_text() {
   
   global $the_post;
 global $db;
+if ($the_post->id) {
 $sql = "SELECT title from posts where parent_id = ".$the_post->id;
 
 $result = $db->get_result($sql);
@@ -1734,7 +1739,9 @@ $result = $db->get_result($sql);
     //echo "<h3>".$id->nickname." said:</h3>\n";
     echo "<p>".$row['title']."</p>\n";
   }
+}   else {
   
+}
   
 }
 

@@ -188,7 +188,8 @@ class Mapper {
     if (!(substr($this->path, -1) == "/"))
       $this->path .= "/";
     
-    $this->domain = $this->values[2];
+    if (!($this->values[2] == 'localhost'))
+      $this->domain = $this->values[2];
 
     if ($qp > $lenbase)
       $this->params = explode( '/', substr($this->uri,$qp+1));
