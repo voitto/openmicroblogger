@@ -1042,8 +1042,12 @@ function render_theme( $theme ) {
   
   if ($request->resource != 'posts' || !($request->action == 'index')) {
     $wpmode = "other";
+    if (is_file($folder . "functions.php" ))
+      require_once( $folder . "functions.php" );
     require_once( $folder . "page.php" );
   } else {
+    if (is_file($folder . "functions.php" ))
+      require_once( $folder . "functions.php" );
     if ( file_exists( $folder . "index.php" ))
       require_once( $folder . "index.php" );
     else

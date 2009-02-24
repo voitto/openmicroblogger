@@ -1,6 +1,7 @@
 <?php
 
 
+
 function allowed_tags() {
   return true;
 }
@@ -27,7 +28,39 @@ function sanitize_post_field($field, $value, $post_id, $context) {
 	return $value;
 }
 
+function get_the_author() {
+	global $the_author;
+  return $the_author->nickname;
+}
 
+
+
+function get_the_author_login() {
+	global $the_author;
+  return $the_author->nickname;
+}
+
+function get_author_link() {
+	global $the_author;
+  return $the_author->profile;
+}
+
+function get_the_category($id = false) {
+  return "";
+}
+
+function get_the_title() {
+  the_title();
+}
+
+function mysql2date() {
+  return "";
+}
+
+function rewind_posts() {
+	global $wp_query;
+	return $wp_query->rewind_posts();
+}
 
 function &get_post(&$post, $output = OBJECT, $filter = 'raw') {
 	global $post_cache, $wpdb, $blog_id;
@@ -483,6 +516,14 @@ class WP_Query {
     $response->collection->rewind();
     return $p;
   }
+  
+  function rewind_posts() {
+		$this->current_post = -1;
+		if ($this->post_count > 0) {
+			$this->post = $this->posts[0];
+		}
+	}
+
   function WP_Query() {
   }
   function get() {
@@ -1008,9 +1049,7 @@ function get_sidebar() {
   include('sidebar.php');
 }
 
-function get_avatar( $wpcom_user_id, $email, $size, $rating = '', $default = 'http://s.wordpress.com/i/mu.gif' ) {
-  echo "";
-}
+
 
 function get_permalink( ) {
   global $the_post,$request;
@@ -1029,9 +1068,7 @@ function get_tag_feed_link( $category_id ) {
   return "#";
 }
 
-function get_recent_post_ids( $return_as_string = true ) {
-  return "";
-}
+
 
 function get_objects_in_term( $category_id, $post_tag ) {
   return array();
@@ -1242,7 +1279,7 @@ function the_title() {
   }
 }
 
-function prologue_get_avatar( $current_user_id, $author_email, $pixels ) {
+function get_avatar( $current_user_id, $pixels ) {
   global $the_author,$request,$the_post;
   $avatar = "";
   if (!empty($the_author->avatar)) {
@@ -1509,30 +1546,18 @@ function language_attributes() {
   echo "";
 }
 
-function prologue_recent_projects_widget( $args ) {
-  return "";
-}
 
-function prologue_recent_projects( $num_to_show = 35, $before = '', $after = '' ) {
-  return $before.$after;
-}
 
-function prologue_recent_projects_control() {
-  return "";
-}
 
-function prologue_admin_header_style( ) {
-  return "";
-}
+
+
+
 
 function _e($t) {
   echo $t;
 }
 
 
-function load_javascript() {
-  return "";
-}
 
 function register_sidebar() {
   return false;
@@ -1960,8 +1985,6 @@ define('TEMPLATEPATH', theme_path(true) );
 
 $limit_max = get_option( 'posts_per_page' );
 $limit_offset = 0;
-
-
 
 
 
