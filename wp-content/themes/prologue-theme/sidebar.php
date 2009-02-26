@@ -16,7 +16,7 @@ if( !function_exists('dynamic_sidebar') || !dynamic_sidebar() ) {
 ?>
   
     <li class="credits">
-      <p>Powered by <a href="http://structal.net/">Structal</a></p>
+      <p>Powered by <a href="http://dbscript.net/">dbscript</a></p>
       <p>Theme by <a href="http://automattic.com/">Automattic</a></p>
     </li>
   </ul>
