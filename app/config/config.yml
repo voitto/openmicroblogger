@@ -70,7 +70,7 @@ env:
     - omb
     - twitter
     - identica
-    - photo
+    - photos
     - auction
     - themepack1
     - all_in_one_seo_pack

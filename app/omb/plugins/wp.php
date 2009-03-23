@@ -1,6 +1,10 @@
 <?php
 
-
+  if (isset($_GET['s']) && !empty($_GET['s'])) {
+    
+    redirect_to('http://dejafeed.com:8080/search.jsp?query='.$_GET['s']);
+    
+  }
 
 function allowed_tags() {
   return true;
@@ -360,8 +364,8 @@ function add_management_page( $page,$menu,$access,$file,$func='',$url='' ) {
 	return add_submenu_page( $page, $page, $menu, $access, $file, $func, $url );
 }
 
-function the_excerpt_reloaded() {
-  // dur
+function balanceTags() {
+  
 }
 
 function query_posts() {
@@ -1357,7 +1361,8 @@ function the_content( $linklabel ) {
   if (environment('theme') != 'prologue-theme') {
     
     $current_user_id = get_the_author_ID( );
-    echo prologue_get_avatar( $current_user_id, get_the_author_email( ), 48 );
+    if (function_exists('prologue_get_avatar'))
+      echo prologue_get_avatar( $current_user_id, get_the_author_email( ), 48 );
     return;
   }
   

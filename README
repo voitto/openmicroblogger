@@ -19,8 +19,8 @@ Version 0.1, 1-Sep-2008
 Version 0.2, 22-Oct-2008
  sms, app store
  
-Version 0.3, 25-Feb-2009
- admin, themes, intranet, tweetpass
+Version 0.3, 31-Mar-2009
+ admin, themes, intranet, tweetpass, search
 
 
 REQUIREMENTS
@@ -113,9 +113,9 @@ edit the file: app/config/config.yml
       awsBucket: 
 
 
-///////////////////////////
+//////////////////
 // use pretty URLs
-///////////////////////////
+//////////////////
 
 Prety URL Requirements:
   - root site only (yes -> me.com/ no -> me.com/subfolder/)
@@ -141,9 +141,9 @@ To enable pretty URLs:
 
 UPDATING
 
-///////////////////////////
+/////////////////////////////
 // use the /wp-content folder
-///////////////////////////
+/////////////////////////////
 
 If you want to customize OpenMicroBlogger with your own theme and plugins:
   
