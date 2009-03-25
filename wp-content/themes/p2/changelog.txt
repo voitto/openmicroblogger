@@ -1,0 +1,4 @@
+P2 Theme - Change Log
+---------------------------
+1.0.1 - 11 Mar 2009
+- Prevent scheduled posts from appearing

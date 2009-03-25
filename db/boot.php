@@ -457,7 +457,7 @@ after_filter( 'ajax_put_field', 'update_from_post' );
 
 // authenticate yourself without OpenID
 
-//test_log_in();
+test_log_in();
 
 function test_log_in() {
   $person_id = 1;

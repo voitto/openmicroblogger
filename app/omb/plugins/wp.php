@@ -6,6 +6,40 @@
     
   }
 
+function wp_create_nonce($action = -1) {
+	return wp_get_current_user();
+}
+
+function post_password_required() {
+  return false;
+}
+
+function wp_list_comments() {
+  echo "";
+}
+
+function cancel_comment_reply_link() {
+  echo "";
+}
+
+function comment_id_fields() {
+  echo "";
+}
+
+function get_the_tags( $id = 0 ) {
+	return null;
+}
+
+
+function get_the_id() {
+	global $id;
+	return $id;
+}
+
+function is_front_page() {
+  return true;
+}
+
 function allowed_tags() {
   return true;
 }
@@ -282,6 +316,18 @@ class wpdb {
     if (!($pos === false))
       return true;
     global $db;
+
+    $pos = strpos($query,"post_status");
+    if (!($pos === false)) {
+      global $posts,$request;
+      if ($request->action == 'index')
+        get_posts_init();
+      $set = array();
+      foreach($posts as $p=>$o) {
+        $set[] = $p->id;
+      }
+      return $set;
+    }
     
     if ( preg_match("/^\\s*(delete) /i",$query) )
       $query = str_replace("LIMIT 1","",$query);
@@ -365,11 +411,15 @@ function add_management_page( $page,$menu,$access,$file,$func='',$url='' ) {
 }
 
 function balanceTags() {
-  
+  echo "";
 }
 
 function query_posts() {
   // meh
+}
+
+function post_class() {
+  echo "";
 }
 
 function get_bloginfo( $var ) {
@@ -390,7 +440,7 @@ function add_option( $opt, $newval ) {
 if (!(class_exists('WpPost'))) {
 class WpPost {
   var $post_password = "";
-  var $comment_status = "open";
+  var $comment_status = "closed";
   function WpPost() {
   }
 }
@@ -1293,6 +1343,12 @@ function get_avatar( $current_user_id, $pixels ) {
     if (!isset($the_post->id) || ($the_author->id == $p->id))
       $avatar = $p->avatar;
   }
+  if (!(environment('theme') == 'P2'))
+    return '
+   
+    <img alt=\'\' src=\''.$avatar.'\' 
+    class=\'avatar avatar-48\' height=\'48\' width=\'48\' />
+    ';
   if (!(empty($avatar)))
     return '<a href="'.$the_author->profile.'"><img alt="avatar" src="' . $avatar . '" style="width:'.$pixels.'px;height:'.$pixels.'px;" class="avatar" /></a>';
 }
@@ -1358,12 +1414,12 @@ function the_content( $linklabel ) {
   
   $title = $the_post->title;
   
-  if (environment('theme') != 'prologue-theme') {
+  if (!in_array(environment('theme'),array('p2','prologue-theme'))) {
     
     $current_user_id = get_the_author_ID( );
     if (function_exists('prologue_get_avatar'))
       echo prologue_get_avatar( $current_user_id, get_the_author_email( ), 48 );
-    return;
+
   }
   
   
@@ -1572,12 +1628,23 @@ function add_custom_image_header( $var, $name ) {
   return false;
 }
 
-function edit_post_link( $post ) {
+function get_edit_post_link( &$post ) {
+  global $the_post,$request;
+  if (!isset($the_post->id))
+    return "";
+  return $request->url_for(array(
+    'resource'  => 'posts',
+    'id'        => $the_post->id,
+    'action'    => 'edit'
+  ));
+}
+
+function edit_post_link( &$post ) {
   global $the_post,$request;
   if (!isset($the_post->id))
     return;
   if ($the_post->profile_id == get_profile_id() || get_profile_id() == 1)
-  echo "<a href=\"".$request->url_for(array(
+  return "<a href=\"".$request->url_for(array(
     'resource'  => 'posts',
     'id'        => $the_post->id,
     'action'    => 'edit'
@@ -1651,6 +1718,9 @@ function comments_popup_link( $var1, $var2, $var3 ) {
     if (!(environment('threaded')))
       return;
   }
+  
+  if ($theme == 'p2')
+    return "";
   
   echo "|&nbsp;<a href=\"JavaScript:add_comment('addcomment-$the_post->id')";
   echo "\">comment</a><div id=\"addcomment-$the_post->id\"></div>";

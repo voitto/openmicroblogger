@@ -1,6 +1,8 @@
 <?php
 
-global $request,$omb_routes,$db;
+global $request,$omb_routes,$db,$ombversion;
+
+$ombversion = "0.3.0";
 
 define( OMB_VERSION, 'http://openmicroblogging.org/protocol/0.1' );
 define( OAUTH_VERSION, 'http://oauth.net/core/1.0' );
