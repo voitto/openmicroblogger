@@ -1639,16 +1639,16 @@ function get_edit_post_link( &$post ) {
   ));
 }
 
-function edit_post_link( &$post ) {
+function edit_post_link( $post ) {
   global $the_post,$request;
   if (!isset($the_post->id))
     return;
   if ($the_post->profile_id == get_profile_id() || get_profile_id() == 1)
-  return "<a href=\"".$request->url_for(array(
-    'resource'  => 'posts',
-    'id'        => $the_post->id,
-    'action'    => 'edit'
-  ))."\">edit</a>&nbsp;|&nbsp;<a href=\"".$request->url_for(array(
+    echo "<a href=\"".$request->url_for(array(
+      'resource'  => 'posts',
+      'id'        => $the_post->id,
+      'action'    => 'edit'
+    ))."\">edit</a>&nbsp;|&nbsp;<a href=\"".$request->url_for(array(
     'resource'  => 'posts',
     'id'        => $the_post->id,
     'action'    => 'remove'
