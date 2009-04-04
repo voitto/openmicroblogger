@@ -1,0 +1,42 @@
+
+
+<form action="<?php url_for( array('resource'=>'methods','id'=>$Member->id,'action'=>'put') ); ?>" method="post" name="methods" id="methods">
+<div>
+<input name="entry[etag]" type="hidden" value="<?php print $Entry->etag; ?>" />
+<input name="submit_form" type="hidden" value="methods" />
+<table border="0">
+
+<tr><th colspan="2">
+&nbsp;
+</th></tr>
+
+	<tr>
+		<td align="right" valign="top"><b>Code</b></td>
+		<td valign="top" align="left"><textarea rows="25" cols="80" wrap="virtual" id="method_code" name="method[code]"><?php print $Member->code; ?></textarea></td>
+	</tr>
+	<tr>
+		<td align="right" valign="top"><b></b></td>
+		<td valign="top" align="left"><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="Cancel" type="button" />
+
+<input value="Save Method" type="submit" name="button_group" /></td>
+	</tr>
+	<tr>
+	  <td colspan="2">
+	    <br /><br />
+    </td>
+  </tr>
+	
+	<tr>
+	  <td colspan="2">
+	    <ul style="list-style: none;">
+	    <li>URL Route: <b><?php print $Member->route; ?></b></li>
+	    <li>Function Name: <b><?php print $Member->function; ?></b></li>
+      </ul>
+	    
+    </td>
+  </tr>
+	
+</table>
+</div>
+</form>
+

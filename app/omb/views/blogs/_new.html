@@ -1,0 +1,26 @@
+
+
+<form action="<?php url_for( 'blogs' ); ?>" method="post" name="blogs" id="blogs">
+<div>
+<input name="method" type="hidden" value="post" />
+<input name="submit_form" type="hidden" value="blogs" />
+<table border="0">
+
+<tr><th colspan="2">
+
+</th></tr>
+
+	<tr>
+		<td align="right" valign="top"><p>Title</p></td>
+		<td valign="top" align="left"><input size="50" maxlength="255" id="blog_title" name="blog[title]" type="text" value="" /></td>
+	</tr>
+	<tr>
+		<td align="right" valign="top"><b></b></td>
+		<td valign="top" align="left"><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="Cancel" type="button" />
+
+<input value="Save Blog" type="submit" name="button_group" /></td>
+	</tr>
+</table>
+</div>
+</form>
+

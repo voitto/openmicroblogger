@@ -1,0 +1,34 @@
+
+<table align="center" cellpadding="3" cellspacing="0" border="0">
+
+  <th colspan="2">
+    <b>&nbsp;</b>
+  </th>
+
+  <tr>
+    <td><h2>API Methods</h2></td>
+    <td><p>&nbsp;</p></td>
+  </tr>
+  <tr>
+    <td><b>&nbsp;</b></td>
+    <td><p>&nbsp;</p></td>
+  </tr>
+
+  <?php while( $Member = $collection->MoveNext() ) : ?>
+
+  <?php $Entry = $Member->FirstChild('entries'); ?>
+
+    <tr>
+      <td><p>
+        <a style="text-decoration: underline;" href="<?php url_for( array( 'resource'=>'methods', 'action'=>'edit', 'id'=>$Member->id )); ?>">
+          <?php if (!empty($Member->route))print $Member->route; else print 'Method '.$Member->id; ?></a> &nbsp;&nbsp;requires <b><?php echo $Member->attributes['resource']."/".$Member->permission; ?></b>, accessible via <?php if ($Member->oauth) echo "[OAuth]"; ?><?php if ($Member->http) echo " [HTTP Auth]"; ?></p>
+      </td>
+      <td></td>
+    </tr>
+
+  <?php endwhile; ?>
+
+</table>
+
+
+

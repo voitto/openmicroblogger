@@ -1,0 +1,37 @@
+
+<table align="center" cellpadding="0" cellspacing="20" border="0">
+
+  <th colspan="4">
+ 
+  </th>
+
+  <tr>
+    <td><b>µBlog</b></td>
+    <td><b>URL</b></td>
+  </tr>
+
+  <?php while( $Member = $collection->MoveNext() ) : ?>
+
+  <?php $Entry = $Member->FirstChild('entries'); ?>
+
+    <tr>
+      <td>
+        <b>
+          <?php print $Member->title; ?>
+        </b>
+      </td>
+      <td><b><a href="<?php url_for( array( 'resource'=>'twitter/'.$Member->nickname.'/' )); ?>">
+        <?php url_for( array( 'resource'=>'twitter/'.$Member->nickname.'/' )); ?></a></b></td>
+    </tr>
+
+  <?php endwhile; ?>
+  
+  <tr>
+    <td colspan="2"><a href="<?php url_for( array( 'resource'=>'blogs','action'=>'new' )); ?>">Create a new µBlog...</a></td>
+
+  </tr>
+
+</table>
+
+
+
