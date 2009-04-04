@@ -48,7 +48,7 @@ if( 'POST' == $_SERVER['REQUEST_METHOD'] && !empty( $_POST['action'] ) && $_POST
 			require_once dirname( __FILE__ ) . '/post-form.php'; ?>
 <div id="main">
 		<?php global $paged;?>
-	<h2>Recent Updates <?php if ($paged>1) echo('(Page '.$paged.') '); ?><a class="rss" href="<?php bloginfo( 'rss2_url' ); ?>">RSS</a> <span class="controls"><a href="#" id="togglecomments">Hide threads</a> | <a href="#directions" id="directions-keyboard">Keyboard Shortcuts</a></span></h2>
+	<h2>Recent Updates <?php if ($paged>1) echo('(Page '.$paged.') '); ?><a class="rss" href="<?php bloginfo( 'rss2_url' ); ?>">RSS</a> <span class="controls"></span></h2>
 <?php
 if( have_posts( ) ) {
 ?>

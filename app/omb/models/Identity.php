@@ -82,7 +82,7 @@ class Identity extends Model {
     $this->let_read( 'all:edit' );
     $this->let_read( 'all:apps' );
     $this->let_read( 'all:subs' );
-    
+    $this->let_read( 'all:pass' );
     
     // groups
     

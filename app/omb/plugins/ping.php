@@ -8,21 +8,22 @@ function send_ping( &$model, &$rec ) {
   $Entry =& $db->get_table('entries');
   
   $notify_table = $model->table;
+  $recid = $rec->id;
   
   if (array_key_exists( 'target_id', $model->field_array )) {
     $e = $Entry->find($rec->attributes['target_id']);
-    if ($e)
+    if ($e) {
       $notify_table = $e->resource;
+      $recid = $e->record_id;
+    }
   }
   
-  $datamodel =& $db->get_table($notify_table);
-  // http://dejafeed.com/?submit
   $url = environment('ping_server');
   
   if (empty($url))
     return;
-    
-  $url .= "=".$request->url_for(array('resource'=>$rec->table,'action'=>'entry.html','id'=>$rec->id));
+  
+  $url .= "=".$request->url_for(array('resource'=>$notify_table,'action'=>'entry.html','id'=>$recid));
   
   $curl = curl_init($url);
   $method = "GET";

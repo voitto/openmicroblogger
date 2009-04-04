@@ -37,7 +37,9 @@
    *
    *   // function to test whether current user is an administrator
    * function admin() {
-   *   return true;
+   *   if ( member_of( 'administrators' ))
+   *     return true;
+   *   return false;
    * }
    * </code>
    * 
@@ -571,11 +573,11 @@ class Model {
       if (!(count($pair)==2)) trigger_error( "invalid data model access rule", E_USER_ERROR );
       if ($pair[0] == 'all') {
         foreach ( $this->field_array as $field => $data_type ) {
-          if (!(isset($this->access_list['read'][$field][$pair[1]])))
+          if (!(in_array($pair[1],$this->access_list['read'][$field])))
             $this->access_list['read'][$field][] = $pair[1];
         }
       } else {
-        if (!(isset($this->access_list['read'][$pair[0]][$pair[1]])))
+        if (!(in_array($pair[1],$this->access_list['read'][$pair[0]])))
           $this->access_list['read'][$pair[0]][] = $pair[1];
       }
     }
@@ -590,11 +592,11 @@ class Model {
       if (!(count($pair)==2)) trigger_error( "invalid data model access rule", E_USER_ERROR );
       if ($pair[0] == 'all') {
         foreach ( $this->field_array as $field => $data_type ) {
-          if (!(isset($this->access_list['write'][$field][$pair[1]])))
+          if (!(in_array($pair[1],$this->access_list['write'][$field])))
             $this->access_list['write'][$field][] = $pair[1];
         }
       } else {
-        if (!(isset($this->access_list['write'][$pair[0]][$pair[1]])))
+        if (!(in_array($pair[1],$this->access_list['write'][$pair[0]])))
           $this->access_list['write'][$pair[0]][] = $pair[1];
       }
     }
@@ -652,6 +654,58 @@ class Model {
     }
   }
 
+  function can($action) {
+    if (in_array($action,array('read','write'))) {
+      $func = "can_".$action."_fields";
+      if (!($this->$func($this->field_array)))
+        return false;
+      return true;
+    }
+    if (in_array($action,array('create','delete'))) {
+      $func = "can_".$action;
+      if (!($this->$func($this->table)))
+        return false;
+      return true;
+    }
+  }
+
+  // config.perms
+  
+  function permission_mask( $perm,$value,$group ) {
+    
+    if (in_array($perm,array('read','write'))) {
+      foreach($this->access_list[$perm] as $field=>$vals) {
+        $found = false;
+        foreach($vals as $idx=>$g) {
+          if ($group == $g) {
+            if (!$value)
+              unset($this->access_list[$perm][$field][$idx]);
+            $found = true;
+          }
+        }
+        if (!$found && $value) {
+          foreach ( $this->field_array as $field => $data_type ) {
+            $this->access_list[$perm][$field][] = $group;
+          }
+        }
+      }
+    } else {
+      
+      foreach($this->access_list[$perm][$this->table] as $idx=>$g) {
+        $found = false;
+        if ($group == $g) {
+          $found = true;
+          if (!$value)
+            unset($this->access_list[$perm][$this->table][$idx]);
+        }
+        if (!$found && $value)
+          $this->access_list[$perm][$this->table][] = $group;
+      }      
+      
+    }
+    
+  }
+  
   function set_action( $method ) {
     trigger_before('set_action',$this,$this);
     $this->allowed_methods[] = $method;
@@ -698,7 +752,7 @@ class Model {
   function is_unique_value( $value, $field ) {
     global $db;
     $value = $db->escape_string($value);
-    $result = $db->get_result("select $field from ".$this->table." where ".$field." = '$value'");
+    $result = $db->get_result("select $field from ".$db->prefix.$this->table." where ".$field." = '$value'");
     return (!($result && $db->num_rows($result) > 0));
   }
   
@@ -771,7 +825,10 @@ class Model {
       $fk = $table.".".$this->foreign_key_for( $table );
     }
     if ($type == 'child-many') {
-      if (!$db->table_exists($this->join_table_for($table, $this->table))) {
+      $jtab = $this->join_table_for($table, $this->table);
+      if (!(isset($db->tables)))
+        $db->tables = $db->get_tables();
+      if ( !( in_array( $db->prefix.$jtab, $db->tables ) ) ) {
         $join =& $db->get_table($this->join_table_for($table, $this->table));
         if (!($join->exists)) {
           $join->int_field( strtolower(classify($this->table))."_".$k );
@@ -927,7 +984,7 @@ class Model {
     if (!(isset($db->tables)))
       $db->tables = $db->get_tables();
 
-    if ( !( in_array( $this->table, $db->tables ) ) ) {
+    if ( !( in_array( $db->prefix.$this->table, $db->tables ) ) ) {
       if (count($this->field_array)>0) {
         if (!(isset($this->primary_key)))
           $this->auto_field( 'id' );
@@ -937,8 +994,7 @@ class Model {
         return NULL;
       }
     }
-    
-    if ( !( isset( $this->primary_key )) && $this->table != 'db_sessions')
+    if ( !( isset( $this->primary_key )) && (!strstr($this->table,'db_sessions')))
       trigger_error("The ".$this->table." table must have a primary key. Example: ".$this->table."->set_primary_key('field')".@mysql_error($this->conn), E_USER_ERROR );
     $this->exists = true;
     $this->set_routes( $this->table );
@@ -1069,11 +1125,13 @@ class Model {
   }
   
   function set_groupby( $col ) {
-    if ( strlen( $col ) > 0 ) $this->groupby = $this->table . "." . $col;
+    global $db;
+    if ( strlen( $col ) > 0 ) $this->groupby = $db->prefix.$this->table . "." . $col;
   }
   
   function set_orderby( $col ) {
-    if ( strlen( $col ) > 0 ) $this->orderby = $this->table . "." . $col;
+    global $db;
+    if ( strlen( $col ) > 0 ) $this->orderby = $db->prefix.$this->table . "." . $col;
   }
   
   function set_order( $order ) {

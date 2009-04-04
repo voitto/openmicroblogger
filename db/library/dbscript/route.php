@@ -58,7 +58,7 @@ class Route {
     
   }
   
-  function build_url( $params, $base ) {
+  function build_url( $params, $base, $prefix = '' ) {
     $url = array();
     
     foreach ( $this->patterns as $pos => $str ) {
@@ -68,15 +68,17 @@ class Route {
         $url[] = $str;
       }
     }
-    global $pretty_url_base;
+    global $pretty_url_base,$request;
     if (isset($pretty_url_base) && !empty($pretty_url_base))
-      $base = $pretty_url_base;
+      $base = $pretty_url_base."/".$request->prefix;
     if ( !( substr( $base, -1 ) == '/' ))
       $base = $base . "/";
+    if (!empty($prefix)) $q = "";
+      else $q = "?";
     if (isset($pretty_url_base) && !empty($pretty_url_base))
-      return $base . "". implode ( '/', $url );
+      return $base . implode ( '/', $url );
     else
-      return $base . "?". implode ( '/', $url );
+      return $base .$q.  implode ( '/', $url );
   }
 
 }

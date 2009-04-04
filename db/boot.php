@@ -265,10 +265,6 @@ else
   $request->set_layout_path( $env['layout_folder'].DIRECTORY_SEPARATOR );
 
 
-
-
-
-
   /**
    * connect to the database with settings from config.yml
    */
@@ -304,12 +300,54 @@ if ( $db->just_get_objects() )
   return;
 
 
-  /**
-   * connect pre-plugin routes
-   */
+/**
+ * connect pre-plugin routes
+ */
 
 // doesn't work XXX
 //$request->connect( 'migrate' );
+
+
+/**
+ * set up wp theme and plugin paths
+ */
+
+$wp_theme = "wp-content".DIRECTORY_SEPARATOR."themes".DIRECTORY_SEPARATOR.$env['theme'];
+
+if ((file_exists($wp_theme))) {
+  $GLOBALS['PATH']['content_plugins'] = 'wp-content'.DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR;
+  $GLOBALS['PATH']['themes'] = "wp-content".DIRECTORY_SEPARATOR."themes".DIRECTORY_SEPARATOR;
+} else {
+  $GLOBALS['PATH']['themes'] = $env['themepath'.$env['theme']].DIRECTORY_SEPARATOR;
+}
+
+
+/**
+ * OMB MU setup
+ */
+
+if (strpos($request->uri, 'twitter/')) {
+  global $prefix;
+  $pattern='/(\?)?twitter\/([a-z]+)(\/?)/';
+  if ( 1 <= preg_match_all( $pattern, $request->uri, $found )) {
+    $uri = $request->uri;
+    $tags[] = $found;
+    $sql = "SELECT prefix FROM blogs WHERE nickname LIKE '".$db->escape_string($tags[0][2][0])."'";
+    $result = $db->get_result( $sql );
+    if ( $db->num_rows($result) == 1 ) {
+      $prefix = $db->result_value( $result, 0, "prefix" )."_";
+      $db->prefix = $prefix;
+      $repl = 'twitter/'.$tags[0][2][0].$tags[0][3][0];
+      $request->uri = str_replace($repl,'',$uri);
+      $request->prefix = $repl;
+      $request->setup();
+      $trail = '';
+      if (empty($tags[0][3][0]))
+        $trail = "/";
+      $request->base = substr($uri,0,strpos($uri,$tags[0][0][0])+(strlen($repl)+1)).$trail;
+    }
+  }
+}
 
 
 /**
@@ -322,26 +360,50 @@ $Setting->find_by(array(
   'name'  => 'config%'
 ));
 while ($s = $Setting->MoveNext()) {
-$set = split('\.',$s->name);
+  $set = split('\.',$s->name);
   if (is_array($set) && $set[0] == 'config') {
-    if ($set[1] == 'env')
+    if ($set[1] == 'env') {
       $env[$set[2]] = $s->value;
+    } elseif ($set[1] == 'perms') {
+      $tab =& $db->models[$set[2]];
+      if ($tab)
+        $tab->permission_mask( $set[3],$s->value,$set[4] );
+    }
   }
 }
 
-$wp_theme = "wp-content".DIRECTORY_SEPARATOR."themes".DIRECTORY_SEPARATOR.$env['theme'];
 
-if ((file_exists($wp_theme))) {
-  $GLOBALS['PATH']['content_plugins'] = 'wp-content'.DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR;
-  $GLOBALS['PATH']['themes'] = "wp-content".DIRECTORY_SEPARATOR."themes".DIRECTORY_SEPARATOR;
-} else {
-  $GLOBALS['PATH']['themes'] = $env['themepath'.$env['theme']].DIRECTORY_SEPARATOR;
+/**
+ * load virtual API methods
+ */
+
+global $api_methods,$api_method_perms;
+$api_methods = array();
+$api_method_perms = array();
+$Method =& $db->model('Method');
+$Method->find_by(array(
+  'eq'        => 'like',
+  'function'  => 'api_%'
+));
+while ($m = $Method->MoveNext()) {
+  $api_method_perms[$m->function] = array('table'=>$m->resource,'perm'=>$m->permission);
+  $api_methods[$m->function] = $m->code;
+  $request->connect(
+    $m->route,
+    array(
+      'action'=>$m->function
+    )
+  );
+  if ($m->http)
+    before_filter( 'authenticate_with_http', $m->function );
+  if ($m->oauth)
+    before_filter( 'authenticate_with_oauth', $m->function );
 }
 
 
-  /**
-   * load plugins
-   */
+/**
+ * load plugins
+ */
 
 if ( isset( $env ))
   while ( list( $key, $plugin ) = each( $env['plugins'] ) )

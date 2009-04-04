@@ -37,7 +37,11 @@ class PostgreSQL extends Database {
   var $user;
   var $pass;
   var $dbname;
+  var $prefix;
   function PostgreSQL() {
+    global $prefix; 
+    $prefix = ''; 
+    $this->prefix = $prefix; 
     $this->db_open = false;
     $this->models = array();
     $this->recordsets = array();
@@ -129,8 +133,9 @@ class PostgreSQL extends Database {
   }
   function next_primary_key( $table, $pkfield, $sequence_name=NULL ) {
     trigger_before( 'next_primary_key', $this, $this );
+    global $prefix;
     if ($sequence_name == NULL) {
-      $sql = "SELECT relname FROM pg_class WHERE relkind='S' and substr(relname,1,".strlen($table).")='$table'";
+      $sql = "SELECT relname FROM pg_class WHERE relkind='S' and substr(relname,1,".strlen($prefix.$table).")='".$prefix."$table'";
       $result = $this->get_result($sql);
       if ($this->num_rows($result) > 0) {
         $seq = $this->result_value($result,0,"relname");
@@ -149,10 +154,11 @@ class PostgreSQL extends Database {
   }
   function last_insert_id(&$result,$pkfield,$table) { // returns the id of the most recently modified record
     trigger_before( 'last_insert_id', $this, $this );
+    global $prefix;
     $oid = @pg_last_oid($result);
     if (!$oid)
       trigger_error(@pg_last_error($this->conn), E_USER_ERROR );
-    $sql = "SELECT ". $pkfield . " FROM " . $table . " WHERE oid = " . $oid;
+    $sql = "SELECT ". $pkfield . " FROM " . $prefix.$table . " WHERE oid = " . $oid;
     $res = $this->get_result($sql);
     if (!$res)
       trigger_error("error in last_insert_id in postgresql.php".@pg_last_error($this->conn), E_USER_ERROR );
@@ -223,7 +229,7 @@ class PostgreSQL extends Database {
   }
   function sql_insert_for( &$rec ) {
     trigger_before( 'sql_insert_for', $this, $this );
-    $sql = "INSERT INTO " . $rec->table . " (";
+    $sql = "INSERT INTO " . $this->prefix.$rec->table . " (";
     $comma = '';
     $fields = '';
     $values = '';
@@ -243,7 +249,7 @@ class PostgreSQL extends Database {
   function sql_update_for( &$rec ) {
     trigger_before( 'sql_update_for', $this, $this );
     $sql = "UPDATE ";
-    $sql .= $rec->table . ' SET ';
+    $sql .= $this->prefix.$rec->table . ' SET ';
     $comma = '';
     foreach (array_unique($rec->modified_fields) as $modified_field) {
       $datatype = $this->get_mapped_datatype($this->models[$rec->table]->field_array[$modified_field]);
@@ -258,7 +264,7 @@ class PostgreSQL extends Database {
   }
   function sql_select_for( &$rec, $id ) {
     trigger_before( 'sql_select_for', $this, $this );
-    return "SELECT ".$rec->selecttext." FROM ".$rec->table." WHERE ".$rec->primary_key." = '".$id."'";
+    return "SELECT ".$rec->selecttext." FROM ".$this->prefix.$rec->table." WHERE ".$rec->primary_key." = '".$id."'";
   }
   function sql_delete_for( &$rec ) {
     trigger_before( 'sql_delete_for', $this, $this );
@@ -266,18 +272,18 @@ class PostgreSQL extends Database {
     foreach ($rec->attributes as $key=>$value) {
       $datatype = $this->get_mapped_datatype($this->models[$rec->table]->field_array[$key]);
       if ($datatype == 'blob' && strlen($rec->attributes[$rec->primary_key]) > 0) {
-        $oid_result = $this->get_result("select ".$key." from ".$rec->table." where ".$rec->primary_key." = '".$rec->attributes[$rec->primary_key]."'");
+        $oid_result = $this->get_result("select ".$key." from ".$this->prefix.$rec->table." where ".$rec->primary_key." = '".$rec->attributes[$rec->primary_key]."'");
         $prev_oid = $this->fetch_array($oid_result,0,$key);
         if (isset($prev_oid[0]) && $prev_oid[0] > 0)
           $result = $this->large_object_delete($prev_oid[0]);
       }
     }
-    $sql = 'DELETE FROM ' . $rec->table . ' WHERE ' . $pkfield . ' = ' . $rec->$pkfield;
+    $sql = 'DELETE FROM ' . $this->prefix.$rec->table . ' WHERE ' . $pkfield . ' = ' . $rec->$pkfield;
     return $sql;
   }
   function select_distinct( $field, $table, $orderby ) {
     trigger_before( 'select_distinct', $this, $this );
-    return "SELECT DISTINCT $field, " . $this->models[$table]->primary_key . " FROM $table ORDER BY $orderby DESC";
+    return "SELECT DISTINCT $field, " . $this->models[$table]->primary_key . " FROM $this->prefix.$table ORDER BY $orderby DESC";
   }
   function quoted_update_value( &$rec, $modified_field ) {
     trigger_before( 'quoted_update_value', $this, $this );
@@ -294,7 +300,7 @@ class PostgreSQL extends Database {
         trigger_error( "$modified_field is a required field", E_USER_ERROR );
     }
     if (isset($this->models[$rec->table]->field_attrs[$modified_field]['unique'])) {
-      $result = $this->get_result("select ".$modified_field." from ".$rec->table." where ".$modified_field." = '".$rec->attributes[$modified_field]."'");
+      $result = $this->get_result("select ".$modified_field." from ".$this->prefix.$rec->table." where ".$modified_field." = '".$rec->attributes[$modified_field]."'");
       if ($result && $this->num_rows($result) > 0)
         trigger_error( "Sorry, that $modified_field has already been taken.", E_USER_ERROR );
     }
@@ -309,7 +315,7 @@ class PostgreSQL extends Database {
         $this->file_upload = $rec->attributes[$modified_field];
         $rec->set_value($modified_field,'');
       } else {
-        $oid = $this->large_object_create($rec->table,$rec->attributes[$modified_field]);
+        $oid = $this->large_object_create($this->prefix.$rec->table,$rec->attributes[$modified_field]);
         if ($oid > 0)
           $rec->attributes[$modified_field] = $oid;
       }      
@@ -322,7 +328,7 @@ class PostgreSQL extends Database {
     }
     if ($modified_field == $rec->primary_key) {
       if ( in_array( $rec->attributes[$rec->primary_key], array( '', 0, '0' ), true ))
-        $rec->attributes[$modified_field] = $this->next_primary_key( $rec->table, $modified_field);      
+        $rec->attributes[$modified_field] = $this->next_primary_key( $this->prefix.$rec->table, $modified_field);      
     }
   }
   function pre_update( &$rec, $modified_field, $datatype ) {
@@ -332,7 +338,7 @@ class PostgreSQL extends Database {
         trigger_error( "Sorry, you must provide a value for $modified_field", E_USER_ERROR );
     }
     if (isset($this->models[$rec->table]->field_attrs[$modified_field]['unique'])) {
-      $result = $this->get_result("select ".$modified_field." from ".$rec->table." where ".$modified_field." = '".$rec->attributes[$modified_field]."' and ".$rec->primary_key." != '".$rec->attributes[$rec->primary_key]."'");
+      $result = $this->get_result("select ".$modified_field." from ".$this->prefix.$rec->table." where ".$modified_field." = '".$rec->attributes[$modified_field]."' and ".$rec->primary_key." != '".$rec->attributes[$rec->primary_key]."'");
       if ($this->num_rows($result) > 0)
         trigger_error( "Sorry, that $modified_field has already been taken.", E_USER_ERROR );
     }
@@ -345,17 +351,17 @@ class PostgreSQL extends Database {
         $this->aws_putfile($rec,$rec->id);
         $rec->set_value($modified_field,'');
       } elseif (isset($coll[$request->resource]) && $coll[$request->resource]['location'] == 'uploads') {
-        update_uploadsfile($rec->table,$rec->id,$rec->attributes[$modified_field]);
+        update_uploadsfile($this->prefix.$rec->table,$rec->id,$rec->attributes[$modified_field]);
         $rec->set_value($modified_field,'');
       } else {
-        unlink_cachefile($rec->table,$rec->id,$coll);
-        $oid_result = $this->get_result("select ".$modified_field." from ".$rec->table." where ".$rec->primary_key." = '".$rec->attributes[$rec->primary_key]."'");
+        unlink_cachefile($this->prefix.$rec->table,$rec->id,$coll);
+        $oid_result = $this->get_result("select ".$modified_field." from ".$this->prefix.$rec->table." where ".$rec->primary_key." = '".$rec->attributes[$rec->primary_key]."'");
         if ($this->num_rows($oid_result) > 0) {
           $prev_oid = $this->fetch_array($oid_result);
           if (isset($prev_oid[0]) && $prev_oid[0] > 0)
             $result = $this->large_object_delete($prev_oid);
         }
-        $oid = $this->large_object_create($rec->table,$rec->attributes[$modified_field]);
+        $oid = $this->large_object_create($this->prefix.$rec->table,$rec->attributes[$modified_field]);
         if ($oid > 0)
           $rec->attributes[$modified_field] = $oid;
       }
@@ -367,7 +373,7 @@ class PostgreSQL extends Database {
     if (is_array($this->file_upload))
       $this->aws_putfile($rec,$rec->id);
     elseif (!empty($this->file_upload))
-      update_uploadsfile($rec->table,$rec->id,$this->file_upload);
+      update_uploadsfile($this->prefix.$rec->table,$rec->id,$this->file_upload);
     if (!$result) { trigger_error("Sorry, the record could not be saved due to a database error.", E_USER_ERROR ); }
   }
   function affected_rows(&$result) {
@@ -473,7 +479,7 @@ class PostgreSQL extends Database {
   function add_table( $table, $field_array ) {
     trigger_before( 'add_table', $this, $this );
     if (!(count($field_array)>0)) trigger_error( "Error creating table. No fields are defined. Use \$model->auto_field and \$model->text_field etc.", E_USER_ERROR );
-    $sql = "CREATE TABLE $table (";
+    $sql = "CREATE TABLE $this->prefix.$table (";
     $comma = "";
     foreach ( $field_array as $field => $data_type ) {
       $sql .= "$comma $field $data_type";
@@ -486,13 +492,13 @@ class PostgreSQL extends Database {
   }
   function add_field( $table, $field, $data_type ) {
     trigger_before( 'add_field', $this, $this );
-    $sql = "ALTER TABLE $table ADD COLUMN $field $data_type";
+    $sql = "ALTER TABLE $this->prefix.$table ADD COLUMN $field $data_type";
     echo $sql."<BR>";
     $result = $this->get_result($sql);
   }
   function has_table($t) {
     trigger_before( 'has_table', $this, $this );
-    return in_array( $t, $this->get_tables(), true );
+    return in_array( $this->prefix.$t, $this->get_tables(), true );
   }
   function get_tables() {
     trigger_before( 'get_tables', $this, $this );
@@ -525,7 +531,7 @@ class PostgreSQL extends Database {
     $sql .= " pg_catalog.pg_attrdef adef ON a.attrelid=adef.adrelid AND";
     $sql .= " a.attnum=adef.adnum LEFT JOIN pg_catalog.pg_type t ON";
     $sql .= " a.atttypid=t.oid WHERE a.attrelid = (SELECT oid FROM";
-    $sql .= " pg_catalog.pg_class WHERE relname='$table')";
+    $sql .= " pg_catalog.pg_class WHERE relname='".$this->prefix."$table')";
     $sql .= " and a.attname != 'tableoid' and a.attname != 'oid'";
     $sql .= " and a.attname != 'xmax' and a.attname != 'xmin'";
     $sql .= " and a.attname != 'cmax' and a.attname != 'cmin'";
@@ -544,12 +550,13 @@ class PostgreSQL extends Database {
       }
       $datatypes[$field] = $type;
     }
+    global $prefix;
     $sql = "SELECT idx.indkey, idx.indisunique, idx.indisprimary";
     $sql .= " FROM pg_catalog.pg_class c, pg_catalog.pg_class c2,";
     $sql .= " pg_catalog.pg_index idx";
     $sql .= " WHERE c.oid = idx.indrelid";
     $sql .= " AND idx.indexrelid = c2.oid";
-    $sql .= " AND c.relname = '$table'";
+    $sql .= " AND c.relname = '".$prefix."$table'";
     #$sql .= " AND idx.isprimary = true";
     $result = $this->get_result($sql);
     while ($row = pg_fetch_row($result)) {
@@ -641,7 +648,7 @@ class PostgreSQL extends Database {
       $model->set_param('find_by', $model->primary_key);
     $relfields = array();
     $relfields = $model->relations;
-    $table = $model->table;
+    $table = $this->prefix.$model->table;
     $fieldstring = '';
     $sql = "SELECT " . "\n";
     if (!array_key_exists($pkfield,$model->field_array))
@@ -667,16 +674,16 @@ class PostgreSQL extends Database {
         $spl = split("\.",$val["fkey"]);
         if (($val["type"] == 'child-many')) {
           $join =& $this->get_table($model->join_table_for($table, $val['tab']));
-          $spl[0] = $join->table;
-          $val["fkey"] = $join->table.'.'.strtolower(classify($table))."_".$model->foreign_key_for( $table);
+          $spl[0] = $this->prefix.$join->table;
+          $val["fkey"] = $this->prefix.$join->table.'.'.strtolower(classify($table))."_".$model->foreign_key_for( $table);
         }else{
           foreach ($this->models[$spl[0]]->field_array as $fieldname=>$datatypename) {
-            $fieldstring .= $spl[0].".".$fieldname." as \"".$spl[0].".".$fieldname."\", " . "\n";
+            $fieldstring .= $this->prefix.$spl[0].".".$fieldname." as \"".$this->prefix.$spl[0].".".$fieldname."\", " . "\n";
           }
         }
         if ($first)
           $leftsql .= $table;
-        $leftsql .= " left join " . $spl[0] . " on ".$table.".".$val["col"]." = " . $val["fkey"];
+        $leftsql .= " left join " . $this->prefix.$spl[0] . " on ".$table.".".$val["col"]." = " . $val["fkey"];
         $leftsql .= ")";
         $first = false;
       }
@@ -707,7 +714,7 @@ class PostgreSQL extends Database {
           if (strpos($col,".") === false)
             $field = "$table.$col";
           else
-            $field = $col;
+            $field = $this->prefix.$col;
           
           if ($findfirst) {
             $sql .= " WHERE $field $eq '$val' ";

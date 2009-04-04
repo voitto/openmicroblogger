@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 	<title>Open Microblogger Admin</title>
+  <link type="text/css" href="app/omb/views/tabs.css" rel="stylesheet" />	
 	<link rel="stylesheet" href="<?php echo $request->base; ?>app/omb/views/admin/style.css" type="text/css">
-	<link type="text/css" href="resource/jquery.ui/themes/default/ui.all.css" rel="stylesheet" />	
 	<script type="text/javascript" src="resource/jquery-1.2.6.min.js"></script>
 	<script type="text/javascript" src="resource/jquery.ui/ui/ui.core.js"></script>
 	<script type="text/javascript" src="resource/jquery.ui/ui/ui.tabs.js"></script>
@@ -42,18 +42,23 @@
   		  )); ?>">Themes</a></li>
   		
   		<li><a href="<?php url_for(array(
-  		    'resource'=>'groups',
-  		    'action'=>'manage/partial'
-  		  )); ?>">Groups</a></li>
+  		    'resource'=>'blogs',
+  		    'action'=>'index/partial'
+  		  )); ?>">Microblogs</a></li>
   		
   		<li><a href="JavaScript:top.location.href('<?php base_url(); ?>');">Return To Site</a></li>
   	</ul>
   	
   	<div id="tabs-1">
   		<p>
-  		  This is the Admin area for Open Microblogger
+  		  OpenMicroBlogger Administration Tools
   		</p>
-  		
+  		<ul>
+  		  <li><a href="<?php url_for(array('resource'=>'migrate')); ?>">Update Database</a></li>
+		  </ul>
+  		<ul>
+  		  <li><a href="<?php url_for(array('resource'=>'groups')); ?>">Rest API Permissions</a></li>
+		  </ul>
   	</div>
   	
   </div>

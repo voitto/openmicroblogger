@@ -2,8 +2,10 @@
 
 global $request,$omb_routes,$db,$ombversion;
 
+// OpenMicroBlogger 0.3.0
 $ombversion = "0.3.0";
 
+// Openmicroblogging 0.1
 define( OMB_VERSION, 'http://openmicroblogging.org/protocol/0.1' );
 define( OAUTH_VERSION, 'http://oauth.net/core/1.0' );
 
@@ -25,6 +27,16 @@ $omb_routes = array(
 foreach ($omb_routes as $func)
   $request->connect( $func );
 
+$request->connect(
+  'email/:ident',
+  array(
+    'requirements' => array ( '[A-Za-z0-9]+' )
+  )
+);
+
+$request->connect( 'groups', array(
+    'resource'=>'groups'
+));
 
 $request->connect(
   ':nickname',
@@ -34,7 +46,6 @@ $request->connect(
     'requirements' => array ( '[A-Za-z0-9_.]+' )
   )
 );
-
 
 $request->connect(
   ':resource/by/:byid/:page',
@@ -232,6 +243,9 @@ function wp_set_post_fields( &$model, &$rec ) {
   $Category->set_limit(100);
   $Category->find();
   
+  if ($_POST['tags'] == 'Tag it')
+    return;
+  
   if (strstr( $_POST['tags'], "," ))
     $tags = split( ',', $_POST['tags'] );
   else
@@ -283,7 +297,7 @@ function do_ajaxy_fileupload(&$request,&$route) {
   if (!is_writable('cache'))
     exit;
   
-  $result = $db->get_result("DELETE FROM uploads WHERE name = '".$db->escape_string(urldecode($_FILES['Filedata']['name']))."'");
+  $result = $db->get_result("DELETE FROM ".$db->prefix."uploads WHERE name = '".$db->escape_string(urldecode($_FILES['Filedata']['name']))."'");
   $tmp = 'cache'.DIRECTORY_SEPARATOR.make_token();
   $tmp .= ".". extension_for(type_of($_FILES['Filedata']['name']));
   
@@ -344,7 +358,7 @@ function set_identity_from_nick(&$request,&$route) {
     $Member = $Identity->find(substr($nick,1));
     $id = $Member->id;
    } else {
-    $sql = "SELECT id FROM identities WHERE nickname LIKE '".$db->escape_string($nick)."' AND (post_notice = '' OR post_notice IS NULL)";
+    $sql = "SELECT id FROM ".$db->prefix."identities WHERE nickname LIKE '".$db->escape_string($nick)."' AND (post_notice = '' OR post_notice IS NULL)";
     $result = $db->get_result( $sql );
     if ($db->num_rows($result) == 1)
       $id = $db->result_value($result,0,"id");

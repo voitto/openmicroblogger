@@ -23,7 +23,7 @@ function put( &$vars ) {
   $g = $Group->find($request->id);
   
   if ($g && count($subscribers) > 0)
-    $result = $db->get_result( "DELETE FROM memberships WHERE group_id = ".$g->id );
+    $result = $db->get_result( "DELETE FROM ".$db->prefix."memberships WHERE group_id = ".$g->id );
   
   foreach ( $subscribers as $addr ) {
     $p = false;
@@ -57,6 +57,7 @@ function put( &$vars ) {
   
   header( 'Status: 200 OK' );
   redirect_to( 'groups' );
+  
 }
 
 
@@ -64,13 +65,14 @@ function put( &$vars ) {
 function do_invite_email($addr,$token, &$group) {
   
   global $request;
-  $link = $request->url_for(array('resource'=>'posts','id'=>86,'ident'=>$token));
   
-  $subject = 'You are invited to join a private group on '.$request->base;
+  $link = $request->url_for(array('ident'=>$token));
   
-  $email = "You are invited to join a private group on ".$request->base.", just follow the link to claim your invite.\n\n";
+  $subject = 'You were added to a group on '.$request->base;
   
-  $email .= "Redeem invite by clicking --> $link \n\n";
+  $email = "Hi, you have been invited to join the ".$group->name." group on ".$request->base.".\n\n";
+  
+  $email .= "Click here to check it out --> $link \n\n";
 
   
   $html = false;
@@ -140,7 +142,7 @@ function delete( &$vars ) {
   if ($e) {
     $g = $Group->find($e->record_id);
     if ($g)
-      $result = $db->get_result( "DELETE FROM memberships WHERE group_id = ".$g->id );
+      $result = $db->get_result( "DELETE FROM ".$db->prefix."memberships WHERE group_id = ".$g->id );
   }
   $Group->delete_from_post( $request );
   header( 'Status: 200 OK' );
@@ -149,18 +151,21 @@ function delete( &$vars ) {
 
 function index( &$vars ) {
   extract( $vars );
-  $theme = '';
+  $theme = environment('theme');
+  $blocks = environment('blocks');
   $atomfeed = $request->feed_url();
   return vars(
     array(
+      &$blocks,
       &$profile,
-      &$atomfeed,
       &$collection,
+      &$atomfeed,
       &$theme
     ),
     get_defined_vars()
   );
 }
+
 
 
 
@@ -194,10 +199,13 @@ function _entry( &$vars ) {
   $Membership = $Member->FirstChild( "memberships" );
   
   $Entry = $Member->FirstChild( "entries" );
-
+  
+  
+  
+  
   return vars(
     array(
-
+      
       // return vars to the _entry partial
       &$Member,
       &$Membership,
@@ -253,19 +261,48 @@ function _edit( &$vars ) {
     $Member = $Group->find( $request->id );
 
   $Entry = $Member->FirstChild( "entries" );
-
+  
+  if (empty($Entry->etag)) {
+    $Member->set_etag();
+    $Member = $Group->find( $request->id );
+    $Entry = $Member->FirstChild( "entries" );
+  }
+  
   $subscribers = "";
   $arr = resource_group_members($Member->id);
+  $avatars = array();
   foreach ( $arr as $member_ident ) {
     $subscribers .= htmlentities($member_ident->email_value)."\n";
+    $avatars[$member_ident->id] = $member_ident->avatar;
   }
-
+  
+  // custom controller adds $group_perms named variable
+  
+  $group_perms = array();
+  
+  foreach ( $db->models as $model ) {
+    foreach( $model->access_list as $permission=>$values ) {
+      foreach($values as $fieldname=>$listofgroups) {
+        if (in_array($Member->name,$listofgroups)) {
+          if (!(is_array($group_perms[$model->table])))
+            $group_perms[$model->table] = array();
+          if (empty($model->table))
+            admin_alert( "table name not set for object ".get_class($model) );
+          $group_perms[$model->table][$permission] = $values;
+          break;
+        }
+      }
+    }
+  }
+  
   return vars(
     array(
-
+      
       // return vars to the _edit partial
+      &$avatars,
       &$Member,
       &$Entry,
+      &$group_perms,   // << I added this one to the standard list
       &$subscribers
 
     ),

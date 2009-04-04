@@ -127,38 +127,49 @@ function post( &$vars ) {
 function put( &$vars ) {
   extract( $vars );
   
-  $nick = strtolower($request->params['identity']['nickname']);
+  if (isset($request->params['identity']['nickname'])) {
+    $nick = strtolower($request->params['identity']['nickname']);
   
-  $request->set_param( array( 'identity', 'nickname' ), $nick );
-  
-  if ($profile->nickname == $nick) {
-    // nickname did not change
+    $request->set_param( array( 'identity', 'nickname' ), $nick );
+
+    if ($profile->nickname == $nick) {
+      // nickname did not change
+    } else {
+      global $prefix;
+      // if post_notice is set it's a remote user and can share a nickname with a local user
+      $sql = "SELECT nickname FROM ".$prefix."identities WHERE nickname LIKE '".$db->escape_string($nick)."' AND (post_notice = '' OR post_notice IS NULL)";
+      $result = $db->get_result( $sql );
+      if ($db->num_rows($result) > 0)
+        trigger_error( 'Sorry, that nickname is already being used.', E_USER_ERROR );
+    }
+
   } else {
-    // if post_notice is set it's a remote user and can share a nickname with a local user
-    $sql = "SELECT nickname FROM identities WHERE nickname LIKE '".$db->escape_string($nick)."' AND (post_notice = '' OR post_notice IS NULL)";
-    $result = $db->get_result( $sql );
-    if ($db->num_rows($result) > 0)
-      trigger_error( 'Sorry, that nickname is already being used.', E_USER_ERROR );
+    
   }
   
-  if (strpos($request->params['identity']['url'], 'http') === false)
-    $request->params['identity']['url'] = 'http://'.$request->params['identity']['url'];
+  if (isset($request->params['identity']['url'])) {
+    if (strpos($request->params['identity']['url'], 'http') === false)
+      $request->params['identity']['url'] = 'http://'.$request->params['identity']['url'];
+  }
+  
+  if (isset($request->params['identity']['password']))
+    $request->params['identity']['password'] = md5($request->params['identity']['password']);
   
   $resource->update_from_post( $request );
   
   $rec = $Identity->find($request->id);
   
-  $sql = "SELECT photo FROM identities WHERE id = ".$db->escape_string($request->id);
-  $result = $db->get_result($sql);
-  
-  if ($blobval = $db->result_value($result,0,"photo"))
-    $rec->set_value( 'avatar',  $request->url_for(array('resource'=>"_".$rec->id)) . ".jpg" );
-  else
-    $rec->set_value( 'avatar',  '' );
-  
-  $rec->set_value( 'profile', $request->url_for(array('resource'=>"_".$rec->id)));
-  $rec->set_value( 'profile_url', $request->url_for(array('resource'=>"".$rec->nickname)));
-  $rec->save_changes();
+  if (is_upload('identities','photo')) {
+    $sql = "SELECT photo FROM ".$prefix."identities WHERE id = ".$db->escape_string($request->id);
+    $result = $db->get_result($sql);
+    if ($blobval = $db->result_value($result,0,"photo"))
+      $rec->set_value( 'avatar',  $request->url_for(array('resource'=>"_".$rec->id)) . ".jpg" );
+    else
+      $rec->set_value( 'avatar',  '' );
+    $rec->set_value( 'profile', $request->url_for(array('resource'=>"_".$rec->id)));
+    $rec->set_value( 'profile_url', $request->url_for(array('resource'=>"".$rec->nickname)));
+    $rec->save_changes();
+  }
   
   broadcast_omb_profile_update();
   
@@ -259,6 +270,22 @@ function _new( &$vars ) {
   );
 }
 
+function _pass( &$vars ) {
+  extract( $vars );
+  $Member = $collection->MoveFirst();
+  $Entry = $Member->FirstChild( 'entries' );
+  $identity_tz_options = array(
+    'PST',
+    'MST',
+    'CST',
+    'EST'
+  );
+  return vars(
+    array( &$Member, &$Entry, &$profile, &$identity_tz_options ),
+    get_defined_vars()
+  );
+}
+
 
 function _edit( &$vars ) {
   extract( $vars );
@@ -282,6 +309,9 @@ function _admin( &$vars ) {
   trigger_before( 'admin_menu', $current_user, $current_user );
   $menuitems = array();
   $apps_list = array();
+  global $env;
+  if (is_array($env['apps']))
+    $apps_list = $env['apps'];
   $i = $Identity->find(get_profile_id());
   while ($s = $i->NextChild('settings')){
     $s = $Setting->find($s->id);
@@ -292,17 +322,17 @@ function _admin( &$vars ) {
     'resource'=>'identities',
     'id'=>get_profile_id(),
     'action'=>'edit'
-    )).'/partial'] = 'Profile';
+    )).'/partial'] = 'Settings';
   $menuitems[$request->url_for(array(
     'resource'=>'identities',
     'id'=>get_profile_id(),
     'action'=>'subs'
     )).'/partial'] = 'Friends';
-  $menuitems[$request->url_for(array(
-    'resource'=>'identities',
-    'id'=>get_profile_id(),
-    'action'=>'apps'
-    )).'/partial'] = 'Apps';
+  //$menuitems[$request->url_for(array(
+  //  'resource'=>'identities',
+  //  'id'=>get_profile_id(),
+  //  'action'=>'apps'
+  //  )).'/partial'] = 'Apps';
   foreach ($submenu as $arr) {
     if (in_array($arr[0][0],$apps_list))
       $menuitems[$arr[0][4]] = $arr[0][3];

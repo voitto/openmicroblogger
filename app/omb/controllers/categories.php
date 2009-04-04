@@ -29,7 +29,7 @@ function post( &$vars ) {
   extract( $vars );
   $Category->insert_from_post( $request );
   header( 'Status: 201 Created' );
-  redirect_to( 'categories' );
+  redirect_to( $request->url_for('admin').'#ui-tabs-9' );
 }
 
 function delete( &$vars ) {
@@ -42,7 +42,7 @@ function delete( &$vars ) {
   $result = $db->delete_record($rec);
   
   header( 'Status: 200 OK' );
-  redirect_to( 'categories' );
+  redirect_to( $request->url_for('admin').'#ui-tabs-9' );
 }
 
 function index( &$vars ) {
@@ -114,19 +114,17 @@ function _remove( &$vars ) {
 
 
 function _new( &$vars ) {
-
+  
   // bring controller vars into scope
   extract( $vars );
-
+  
   if ( $request->error )
     $Category = session_restore( $db->models['categories'] );
   else
     $Category = $Category->find( $request->id );
-
-
+  
   return vars(
     array(
-
       // return vars to the _new partial
       &$Category,
     ),

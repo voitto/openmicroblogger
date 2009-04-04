@@ -6,6 +6,8 @@ class Dent extends Model {
 
   function Dent() {
     
+    $this->set_param('table','dents');
+    
     // data dictionary
     $this->auto_field( 'id' );
     $this->char_field( 'tw_id' );
@@ -17,7 +19,7 @@ class Dent extends Model {
     $this->set_primary_key( 'id' );
     
     // permissions for this resource
-    $this->let_read( 'all:always' );
+    $this->let_read( 'all:everyone' );
     
   }
 

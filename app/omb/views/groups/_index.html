@@ -1,31 +1,128 @@
+<?php
+$tabs = "tabs";
+$tabs1 = "tabs1";
+?>
+<?php if (!(is_ajax())) : ?>
 
-<table align="center" cellpadding="3" cellspacing="0" border="0">
 
-  <th colspan="2">
-    <b><?php breadcrumbs(); ?></b>
-  </th>
+  <link type="text/css" href="app/omb/views/tabs.css" rel="stylesheet" />	
+	<script type="text/javascript" src="resource/jquery-1.2.6.min.js"></script>
+	<script type="text/javascript" src="resource/jquery.ui/ui/ui.core.js"></script>
+	<script type="text/javascript" src="resource/jquery.ui/ui/ui.tabs.js"></script>
 
-  <tr>
-    <td><b>Name</b></td>
-    <td><p></p></td>
-  </tr>
+<script type="text/javascript">
+//<![CDATA[
 
+//$("#<?php echo $tabs; ?>").tabs({
+    //load: function(event, ui) {
+        //$('a', ui.panel).click(function() {
+            //$(ui.panel).load(this.href);
+            //return false;
+        //});
+    //}
+//});
+
+$(function() {
+  $("#tabs").tabs();
+//	$("#tabs").click(function() { 
+//    var b = $("#tabs").tabs('option', 'selected');
+//    if (b == 0) b.tabs('url','<?php url_for(array('resource'=>'groups','action'=>'index/partial')); ?>');
+//  });
+		$("#tabstest").click(function() { 
+       var b = $("#tabs").tabs('option', 'selected');
+       if (b == 0) {
+         var urrl = '<?php url_for(array('resource'=>'groups','action'=>'index/partial')); ?>';
+         alert(urrl);
+         show_tabs_page(urrl);
+       }
+    });
+  
+	});
+function show_tabs_page(url) {
+  $( "#<?php echo $tabs; ?>" ).tabs( "select", 0 );
+  $( "#<?php echo $tabs1; ?>" ).html( "<img src=\"resource/jeditable/indicator.gif\">" );
+  $.get(url, function(str) {
+    $("#<?php echo $tabs1; ?>").hide();
+    $("#<?php echo $tabs1; ?>").html(str);
+    $("#<?php echo $tabs1; ?>").slideDown("fast");
+  });
+}
+
+function show_in_tab(url,label) {
+  show_tabs_page(url);
+  //$( "#<?php echo $tabs; ?>" ).tabs( 'add' , url , label );
+}
+
+
+$('.selector').bind('tabsadd', function(event, ui) {
+  //
+});
+//]]>
+</script>
+
+  <div id="<?php echo $tabs; ?>">
+  <ul>    <li>
+      <a href="#<?php echo $tabs1; ?>" onClick="JavaScript:show_in_tab('<?php url_for( array( 'resource'=>'groups', 'action'=>'index/partial' )); ?>');">
+        Groups
+      </a>
+    </li>
+    
+     <li>
+      <a href="<?php url_for(array(
+      'resource'=>$collection->resource,
+      'action'=>'new/partial'
+      )); ?>">
+        New Group
+      </a>
+    </li>
+
+     <li>
+      <a href="<?php url_for(array(
+      'resource'=>'methods',
+      'action'=>'index/partial'
+      )); ?>">
+        Methods
+      </a>
+    </li>
+
+     <li>
+      <a href="<?php url_for(array(
+      'resource'=>'methods',
+      'action'=>'new/partial'
+      )); ?>">
+        New Method
+      </a>
+    </li>
+    
+  </ul>
+  
+  <?php endif; ?>
+  
+  <div id="<?php echo $tabs1; ?>">
+
+<ul style="list-style: none;">
+    
   <?php while( $Member = $collection->MoveNext() ) : ?>
 
   <?php $Entry = $Member->FirstChild('entries'); ?>
 
-    <tr>
-      <td>
-        <a href="<?php url_for( array( 'resource'=>'groups', 'id'=>$Member->id )); ?>">
-          <?php print $Member->name; ?>
-        </a>
-      </td>
-      <td></td>
-    </tr>
+    <li>
+      <form method="get" action="">
+        <input value="<?php print $Member->name; ?>" type="submit" onClick="JavaScript:show_in_tab('<?php url_for( array( 'resource'=>'groups', 'action'=>'edit/partial', 'id'=>$Member->id ));?>'); return false;">
+        
+          
+        </form>
+      
+      </li>
+ <?php endwhile; ?>
 
-  <?php endwhile; ?>
+    
+  </ul>
+  
+  </div>
 
-</table>
-
-
+<?php if (!(is_ajax())) : ?>
+  </div>
+<?php endif; ?>
+      
 

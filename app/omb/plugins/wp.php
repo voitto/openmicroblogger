@@ -179,11 +179,12 @@ class wpdb {
   var $posts;
   
   function wpdb() {
+    global $prefix;
     $this->posts = 'posts';
     $this->col_info = array();
     $this->last_result = array();
     $this->base_prefix = "";
-    $this->prefix = "";
+    $this->prefix = $prefix;
     $this->show_errors = false;
     global $db;
     $this->dbh =& $db->conn;
@@ -865,11 +866,7 @@ function wp_head() {
     //trigger_before( 'admin_head', $current_user, $current_user );
     
     echo '<link rel="shortcut icon" href="resource/favicon.ico" >';
-    if ($request->resource == "identities" || ($request->resource == "posts" && $request->action == 'new'))
-      echo '<script type="text/javascript" src="'.$request->base_url.'resource/jquery-1.2.6.min.js"></script>';
-    else
-      echo '<script type="text/javascript" src="'.$request->base_url.'resource/jquery-1.2.1.min.js"></script>';
-    
+    echo '<script type="text/javascript" src="'.$request->base_url.'resource/jquery-1.2.6.min.js"></script>';
     
     if ($request->resource == "posts" && $request->action == 'new')
       echo '
@@ -920,12 +917,6 @@ function wp_head() {
     });
     
   }
-  
-</script>
-
-<?php if (get_profile_id() ) : ?>
-
- <script type="text/javascript">
    
 function setMaxLength() {
 	var x = document.getElementsByTagName("textarea");
@@ -938,7 +929,6 @@ function setMaxLength() {
 			counterClone.innerHTML = "<span>0</span>/"+x[i].getAttribute("maxlength");
 			x[i].parentNode.insertBefore(counterClone,x[i].nextSibling);
 			x[i].relatedElement = counterClone.getElementsByTagName("span")[0];
-
 			x[i].onkeyup = x[i].onchange = checkMaxLength;
 			x[i].onkeyup();
 		}
@@ -1231,6 +1221,8 @@ function get_posts_init() {
   global $posts;
   $posts = array();
   global $the_post,$response,$the_author,$the_entry,$request;
+  if ($request->resource != 'posts')
+    return false;
   while (have_posts()) {
     $p = $response->collection->MoveNext();
     $p->ID = $p->id;
@@ -1455,7 +1447,7 @@ function have_posts() {
 
   global $response;
   global $db;
-  
+  global $request;
   global $wpmode;
   global $wphaved;
   if ($wpmode == 'other') {
@@ -1464,6 +1456,8 @@ function have_posts() {
     return false;
   }
   
+  if ($request->resource != 'posts')
+    return false;
   
   //$Post =& $db->model('Post');
   //echo $Post->get_query();
@@ -1894,7 +1888,7 @@ function sanitize_user($user) {
   return $user; 
 }
 
-function setup_postdata( $post ) {
+function setup_postdata( &$post ) {
   return "";
 }
 

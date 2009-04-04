@@ -37,7 +37,11 @@ class MySQL extends Database {
   var $opt1;
   var $opt2;
   var $dbname;
+  var $prefix;
   function MySQL() {
+    global $prefix;
+    $prefix = '';
+    $this->prefix = $prefix;
     $this->db_open = false;
     $this->models = array();
     $this->recordsets = array();
@@ -258,7 +262,7 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
   }
   function sql_insert_for( &$rec ) {
     trigger_before( 'sql_insert_for', $this, $this );
-    $sql = "INSERT INTO " . $rec->table . " (";
+    $sql = "INSERT INTO " . $this->prefix.$rec->table . " (";
     $comma = '';
     $fields = '';
     $values = '';
@@ -277,7 +281,7 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
   function sql_update_for( &$rec ) {
     trigger_before( 'sql_update_for', $this, $this );
     $sql = "UPDATE ";
-    $sql .= $rec->table . ' SET ';
+    $sql .= $this->prefix.$rec->table . ' SET ';
     $comma = '';
     foreach (array_unique($rec->modified_fields) AS $modified_field) {
       $datatype = $this->get_mapped_datatype($this->models[$rec->table]->field_array[$modified_field]);
@@ -292,17 +296,17 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
   }
   function sql_select_for( &$rec, $id ) {
     trigger_before( 'sql_select_for', $this, $this );
-    return "SELECT ".$rec->selecttext." FROM ".$rec->table." WHERE ".$rec->primary_key." = '".$id."'";
+    return "SELECT ".$rec->selecttext." FROM ".$this->prefix.$rec->table." WHERE ".$rec->primary_key." = '".$id."'";
   }
   function sql_delete_for( &$rec ) {
     trigger_before( 'sql_delete_for', $this, $this );
     $pkfield = $rec->primary_key;
-    $sql = 'DELETE FROM ' . $rec->table . ' WHERE ' . $rec->primary_key . ' = ' . $rec->$pkfield;
+    $sql = 'DELETE FROM ' . $this->prefix.$rec->table . ' WHERE ' . $rec->primary_key . ' = ' . $rec->$pkfield;
     return $sql;
   }
   function select_distinct( $field, $table, $orderby ) {
     trigger_before( 'select_distinct', $this, $this );
-    return "SELECT DISTINCT $field, " . $this->models[$table]->primary_key . " FROM $table ORDER BY $orderby DESC";
+    return "SELECT DISTINCT $field, " . $this->models[$table]->primary_key . " FROM ".$this->prefix."$table ORDER BY $orderby DESC";
   }
   function quoted_update_value( &$rec, $modified_field ) {
     trigger_before( 'quoted_update_value', $this, $this );
@@ -321,7 +325,7 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
         trigger_error( "$modified_field is a required field", E_USER_ERROR );
     }
     if (isset($this->models[$rec->table]->field_attrs[$modified_field]['unique'])) {
-      $result = $this->get_result("select ".$modified_field." from ".$rec->table." where ".$modified_field." = '".$rec->attributes[$modified_field]."'");
+      $result = $this->get_result("select ".$modified_field." from ".$this->prefix.$rec->table." where ".$modified_field." = '".$rec->attributes[$modified_field]."'");
       if ($result && $this->num_rows($result) > 0)
         trigger_error( "Sorry but that $modified_field has already been taken.", E_USER_ERROR );
     }
@@ -336,7 +340,7 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
         $this->file_upload = $rec->attributes[$modified_field];
         $rec->set_value($modified_field,'');
       } else {
-        $rec->attributes[$modified_field] =& $this->large_object_create( $rec->table, $rec->attributes[$modified_field] );
+        $rec->attributes[$modified_field] =& $this->large_object_create( $this->prefix.$rec->table, $rec->attributes[$modified_field] );
       }
     }
     if ($datatype == 'bool') {
@@ -356,7 +360,7 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
         trigger_error( "$modified_field is a required field", E_USER_ERROR );
     }
     if (isset($this->models[$rec->table]->field_attrs[$modified_field]['unique'])) {
-      $result = $this->get_result("select ".$modified_field." from ".$rec->table." where ".$modified_field." = '".$rec->attributes[$modified_field]."' and ".$rec->primary_key." != '".$rec->attributes[$rec->primary_key]."'");
+      $result = $this->get_result("select ".$modified_field." from ".$this->prefix.$rec->table." where ".$modified_field." = '".$rec->attributes[$modified_field]."' and ".$rec->primary_key." != '".$rec->attributes[$rec->primary_key]."'");
       if ($this->num_rows($result) > 0)
         trigger_error( "Sorry but that $modified_field has already been taken.", E_USER_ERROR );
     }
@@ -376,11 +380,11 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
           $this->aws_putfile($rec,$rec->id);
           $rec->set_value($modified_field,'');
         } elseif (isset($coll[$request->resource]) && $coll[$request->resource]['location'] == 'uploads') {
-          update_uploadsfile($rec->table,$rec->id,$rec->attributes[$modified_field]);
+          update_uploadsfile($this->prefix.$rec->table,$rec->id,$rec->attributes[$modified_field]);
           $rec->set_value($modified_field,'');
         } else {
-          unlink_cachefile($rec->table,$rec->id,$coll);
-          $data =& $this->large_object_create($rec->table,$rec->attributes[$modified_field]);
+          unlink_cachefile($this->prefix.$rec->table,$rec->id,$coll);
+          $data =& $this->large_object_create($this->prefix.$rec->table,$rec->attributes[$modified_field]);
           $rec->attributes[$modified_field] =& $data;
         }
       }
@@ -393,7 +397,7 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
     if (is_array($this->file_upload))
       $this->aws_putfile($rec,$pkvalue);
     elseif (!empty($this->file_upload))
-      update_uploadsfile($rec->table,$pkvalue,$this->file_upload);      
+      update_uploadsfile($this->prefix.$rec->table,$pkvalue,$this->file_upload);      
     $pkfield = $rec->primary_key;
     $rec->attributes[$pkfield] = $pkvalue;
     $rec->$pkfield =& $rec->attributes[$pkfield];
@@ -442,7 +446,7 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
   function large_object_fetch($table,$blobcol,$pkfield,$pkvalue, $return=false) {
     trigger_before( 'large_object_fetch', $this, $this );
     // t f k i
-    $sql = "SELECT $blobcol FROM $table WHERE $pkfield = '$pkvalue'";
+    $sql = "SELECT $blobcol FROM $this->prefix"."$table WHERE $pkfield = '$pkvalue'";
     $result = $this->get_result($sql);
     if ($result && $return)
       return $this->result_value($result,0,$blobcol);
@@ -457,7 +461,7 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
   function add_table( $table, $field_array ) {
     trigger_before( 'add_table', $this, $this );
     if (!(count($field_array)>0)) trigger_error( "Error creating table, no fields are defined. Use \$model->auto_field and \$model->text_field etc.", E_USER_ERROR );
-    $sql = "CREATE TABLE $table (";
+    $sql = "CREATE TABLE ".$this->prefix."$table (";
     $comma = "";
     foreach ( $field_array as $field => $data_type ) {
       $sql .= "$comma $field $data_type";
@@ -469,12 +473,13 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
       $this->tables[] = $table;
   }
   function add_field( $table, $field, $data_type ) {
+    $table = $this->prefix.$table;
     trigger_before( 'add_field', $this, $this );
     $sql = "ALTER TABLE $table ADD COLUMN $field $data_type";
-    echo $sql."<BR>";
     $result = $this->get_result($sql);
   }
   function has_table($t) {
+    $t = $this->prefix.$t;
     trigger_before( 'has_table', $this, $this );
     return in_array( $t, $this->get_tables(), true );
   }
@@ -485,8 +490,9 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
     $result = $this->get_result($sql);
     while ($arr = $this->fetch_array($result)) {
       foreach($arr as $key=>$value) {
-        if (!(in_array($value, array('db_sessions'))))
-          $tables[] = $value;
+        foreach(array('db_sessions') as $skip) 
+          if (!(strstr($value,$skip)))
+            $tables[] = $value;
       }
     }
     return $tables;
@@ -494,7 +500,7 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
   function get_fields($table) {
     trigger_before( 'get_fields', $this, $this );
     $datatypes = array();
-    $sql = "SHOW columns FROM $table";
+    $sql = "SHOW columns FROM ".$this->prefix.$table;
     $result = $this->get_result($sql, true);
     if (!$result) return $datatypes;
     while ($arr = $this->fetch_array($result)) {
@@ -563,15 +569,20 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
       unset($model->query);
       return $q;
     }
-    $model->set_param('id',$id);
-    $model->set_param('find_by',$find_by);
+       if (!($id==NULL))
+      $model->set_param('id',$id);
+      
+    if ($find_by == NULL && !isset($model->find_by))
+      $model->set_param('find_by',$model->primary_key);
+    elseif (!($find_by == NULL))
+      $model->set_param('find_by',$find_by);
+      
     trigger_before( 'get_query', $model, $this );
     $pkfield = $model->primary_key;
-    if ($model->find_by == NULL)
-      $model->set_param('find_by', $model->primary_key);
+
     $relfields = array();
     $relfields = $model->relations;
-    $table = $model->table;
+    $table = $this->prefix.$model->table;
     $fieldstring = '';
     $sql = "SELECT " . "\n";
     if (!array_key_exists($pkfield,$model->field_array))
@@ -580,6 +591,8 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
       // loop to add each field to the sql query
       if (strpos($fieldname,".") === false)
         $fieldname = $table . "." . $fieldname;
+      else
+        $fieldname = $this->prefix.$fieldname;
       $fieldstring .= "$fieldname as \"$fieldname\", " . "\n";
     }
     $leftsql = "";
@@ -595,17 +608,17 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
       foreach ($relfields as $key=>$val) {
         $spl = split("\.",$val["fkey"]);
         if (($val["type"] == 'child-many')) {
-          $join =& $this->get_table($model->join_table_for($table, $val['tab']));
+          $join =& $this->get_table($model->join_table_for($model->table, $val['tab']));
           $spl[0] = $join->table;
-          $val["fkey"] = $join->table.'.'.strtolower(classify($table))."_".$model->foreign_key_for( $table);
+          $val["fkey"] = $join->table.'.'.strtolower(classify($model->table))."_".$model->foreign_key_for( $model->table);
         }else{
           foreach ($this->models[$spl[0]]->field_array as $fieldname=>$datatypename) {
-            $fieldstring .= $spl[0].".".$fieldname." as \"".$spl[0].".".$fieldname."\", " . "\n";
+            $fieldstring .= $this->prefix.$spl[0].".".$fieldname." as \"".$this->prefix.$spl[0].".".$fieldname."\", " . "\n";
           }
         }
         if ($first)
           $leftsql .= $table;
-        $leftsql .= " left join " . $spl[0] . " on ".$table.".".$val["col"]." = " . $val["fkey"];
+        $leftsql .= " left join " . $this->prefix.$spl[0] . " on ".$table.".".$val["col"]." = " .$this->prefix.$val["fkey"];
         $leftsql .= ")";
         $first = false;
       }

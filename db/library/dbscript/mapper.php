@@ -127,6 +127,12 @@ class Mapper {
   var $error;
 
   /**
+   * url prefix for sub-sites
+   * @var string
+   */
+  var $prefix;
+
+  /**
    * openid status
    * @var boolean
    */
@@ -148,9 +154,26 @@ class Mapper {
     
     $this->params = array('');
     
+    $this->prefix = '';
+    
     $this->cookiedays = 30;
 
     $this->uri = $this->composite_uri();
+    
+    $this->setup();
+    
+    $this->routes = array();
+    $this->persisted_vars = array();
+    $this->allowed_methods = array();
+    $this->groups = array();
+    $this->template_path = '';
+    $this->layout_path = '';
+    $this->error = false;
+    $this->openid_complete = false;
+    
+  }
+  
+  function setup() {
     
     preg_match( "/^(https?:\/\/)([^\/]+)\/?[^\?]+?[\??]([-%\w\/\.]+)?/i", $this->uri, $this->values );
     
@@ -182,11 +205,11 @@ class Mapper {
       $actionsplit = split("\.", $this->params[(count($this->params)-1)]);
       $this->client_wants = $actionsplit[1];
     }
-      
+    
     session_set_cookie_params( 60*60*24*$this->cookiedays, $this->path );
     
-    if (!(substr($this->path, -1) == "/"))
-      $this->path .= "/";
+    if (strpos($this->base,"twitter\/"))
+      $this->path = $this->path.$this->prefix;
     
     if (!($this->values[2] == 'localhost'))
       $this->domain = $this->values[2];
@@ -195,15 +218,6 @@ class Mapper {
       $this->params = explode( '/', substr($this->uri,$qp+1));
     else
       $this->params = array('');
-
-    $this->routes = array();
-    $this->persisted_vars = array();
-    $this->allowed_methods = array();
-    $this->groups = array();
-    $this->template_path = '';
-    $this->layout_path = '';
-    $this->error = false;
-    $this->openid_complete = false;
     
   }
   
@@ -250,13 +264,13 @@ class Mapper {
           // a named route was found
           if ($altparams == NULL)
             $params = $r->defaults;
-          return $r->build_url( $params, $this->base );
+          return $r->build_url( $params, $this->base, $this->prefix );
         }
 //      } elseif ( is_array($params) && count( array_intersect( array_keys($vars), array_keys($params) ) ) == count( $vars ) && count($vars) == count($params) && count($r->patterns) == count($params) ) {
       } elseif ( is_array($params) && count( array_intersect( array_keys($vars), array_keys($params) ) ) == count( $vars ) && count($vars) == count($params)  ) {
         // every pattern in the route exists in the requested params
 
-        return $r->build_url( $params, $this->base );
+        return $r->build_url( $params, $this->base, $this->prefix );
       } else {
         // eh
       }
@@ -282,7 +296,7 @@ class Mapper {
         
         if ( count( array_intersect( array_keys($vars), array_keys($params) ) ) == count( $vars ) && count($vars) == count($params) ) {
 
-          return $r->build_url( $params, $this->base );
+          return $r->build_url( $params, $this->base, $this->prefix );
         }
       
       } // end foreach routes
@@ -544,7 +558,8 @@ class Mapper {
       }
     }
     
-    if ( isset( $this->params['method'] ) ) $this->action = $this->method;
+    if ( isset( $this->params['method'] )
+    && !is_array($this->params['method']) ) $this->action = $this->method;
     
     if ( isset( $this->params['forward_to'] ) ) $this->controller = $this->forward_to;
     

@@ -57,15 +57,19 @@ class RecordSet {
     $this->tablelist = array();
 
     // get table and field names from result column headers
-$num_fields = $db->num_fields( $this->result );
+    $num_fields = $db->num_fields( $this->result );
     for ( $i = 0; $i < $num_fields; $i++ ) {
       $col = split( "\.", $db->field_name( $this->result, $i ) );
       if ( count( $col ) == 2 && $col[0] && $col[1] ) {
-        $this->fieldlist[$col[0]][$col[1]] = $i;
-        if ($col[1] == $db->models[$col[0]]->primary_key) {
-          $this->tablelist[$col[0]] = $i; // pk offset
+        $tab = $col[0];
+        $fld = $col[1];
+        if (substr($tab,2,1) == '_')
+          $tab = substr($tab,3);
+        $this->fieldlist[$tab][$fld] = $i;
+        if ($fld == $db->models[$tab]->primary_key) {
+          $this->tablelist[$tab] = $i; // pk offset
         }
-        if ($i == 0) $this->table = $col[0];
+        if ($i == 0) $this->table = $tab;
       } else {
         trigger_error( 'Malformed SQORP query "'.$db->field_name( $this->result, $i ).'". Example: select people.id as "people.id".', E_USER_ERROR );
       }
@@ -148,7 +152,7 @@ $num_fields = $db->num_fields( $this->result );
     if ( array_key_exists( $table, $this->fieldlist )) {
       $this->activerow[$table] = $db->fetch_array( $this->result, $row );
       foreach ( $this->fieldlist[$table] as $field => $idx ) {
-        $this->fieldlist[$table][$field] =& $this->activerow[$table][$table.".".$field];
+        $this->fieldlist[$table][$field] =& $this->activerow[$table][$db->prefix.$table.".".$field];
       }
       trigger_after( 'Load', $db, $this ); 
       return $db->iterator_load_record( $table, $this->fieldlist[$table], $this );
@@ -178,4 +182,3 @@ $num_fields = $db->num_fields( $this->result );
 
 }
 
-?>

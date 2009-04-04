@@ -28,7 +28,7 @@ class AkTwitter extends Model {
     $this->set_primary_key( 'id' );
     
     // permissions for this resource
-    $this->let_read( 'all:always' );
+    $this->let_read( 'all:everyone' );
     
   }
 

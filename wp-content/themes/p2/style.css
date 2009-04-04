@@ -195,7 +195,7 @@ h4, h5, h6 {
 #postbox .postrow {
 	height: 28px;
 }
-#wrapper button, #wrapper input[type="submit"] {
+#wrapper button, #wrapper input[type="submit"], #wrapper input[type="button"] {
 	margin-left: 10px;
 	border: 1px solid #ccc;
 	border-radius: 12px;
@@ -214,7 +214,7 @@ h4, h5, h6 {
 #wrapper button {
 margin: 10px 10px 0px 0;
 }
-#wrapper button:active, #wrapper input[type="submit"]:active {
+#wrapper button:active, #wrapper input[type="submit"]:active, #wrapper input[type="button"]:active {
 	background: #eee url(./i/white-grad-active.png) repeat-x scroll left top;
 }
 .disabled, .disabled:hover {

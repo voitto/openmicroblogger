@@ -42,7 +42,7 @@ env:
   site_subtitle: 
   site_description: 
   
-  theme: prologue-theme
+  theme: p2
   
   email_from: root@localhost
   email_name: Notifier
@@ -75,8 +75,12 @@ env:
     - themepack1
     - all_in_one_seo_pack
     - notifixious
+    - apps
+    - password
   
   installed:
+    - apps
+    - password
   
   boot: omb
   

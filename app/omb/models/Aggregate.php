@@ -18,7 +18,7 @@ class Aggregate extends Model {
     
     // permissions
     
-    $this->let_read( 'all:always' );
+    $this->let_read( 'all:everyone' );
     
     $this->let_access( 'all:administrators' );
     

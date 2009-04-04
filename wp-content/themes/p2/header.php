@@ -12,7 +12,7 @@
 <?php wp_head(); ?>
 
 	</head>
-<body<?php if(is_single()) echo ' class="single"'; ?>>
+<body onLoad="JavaScript:setMaxLength();"<?php if(is_single()) echo ' class="single"'; ?>>
 
 <div id="notify"></div>
 

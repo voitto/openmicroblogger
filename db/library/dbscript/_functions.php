@@ -27,6 +27,9 @@ function classify( $resource ) {
   
   $inflector =& Inflector::getInstance();
   
+  if (substr($resource,2,1) == '_')
+    $resouce = substr($resource,3);
+  
   return $inflector->classify($resource);
   
 }
@@ -656,7 +659,7 @@ function base_url($return = false) {
   global $pretty_url_base;
   
   if (isset($pretty_url_base) && !empty($pretty_url_base))
-    $base = $pretty_url_base;
+    $base = $pretty_url_base."/".$request->prefix;
   else
     $base = $request->base;
   
@@ -1671,6 +1674,11 @@ function get_person_id() {
       return $i->person_id;
   }
   
+  if (isset($_SERVER['PHP_AUTH_USER'])) {
+    global $person_id;
+    return $person_id;
+  }
+  
   $p = get_cookie_id();
   
   if ($p)
@@ -2287,14 +2295,15 @@ function ajax_put_field( &$model, &$rec ) {
 
 function migrate() {
   
-  global $db;
+  global $db,$request;
   
   $db->just_get_objects();
   
   foreach($db->models as $model)
-    $model->migrate();
+    if ($model)
+      $model->migrate();
   
-  echo "<BR>The database schema is now synched to the data models.<BR><BR>";
+  echo "<BR>The database schema is now synced to the data models. <a href=\"".$request->url_for('admin')."\">Return to Admin</a><BR><BR>";
   exit;
   
 }
@@ -2446,7 +2455,7 @@ function load_apps() {
   
   // enable wp-style callback functions
   
-  global $db,$request;
+  global $db,$request,$env;
   
   $identity = get_app_id();
   
@@ -2458,12 +2467,21 @@ function load_apps() {
   
   $i = $Identity->find($identity);
   
+  $activated = array();
+  
   while ($s = $i->NextChild('settings')){
     $s = $Setting->find($s->id);
-    if ($s->name == 'app')
+    if ($s->name == 'app') {
       app_init( $s->value );
+      $activated[] = $s->value;
+    }
   }
-  
+  if (isset($env['installed'])){
+    $list = $env['installed'];
+    foreach($list as $app)
+      if (!in_array($app,$activated))
+        app_init( $app );
+  }
   global $current_user;
   trigger_before( 'init', $current_user, $current_user );
   

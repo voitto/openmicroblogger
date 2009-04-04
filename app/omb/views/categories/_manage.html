@@ -1,9 +1,7 @@
 
-<table align="center" cellpadding="3" cellspacing="0" border="0">
+<table align="center" cellpadding="13" cellspacing="0" border="0">
 
-  <th colspan="4">
-    <b><?php breadcrumbs(); ?></b>
-  </th>
+
 
   <tr>
     <td><b>Name</b></td>
@@ -38,6 +36,10 @@
     </tr>
 
   <?php endwhile; ?>
+  <tr>
+    <td colspan="2"><a href="<?php url_for( array( 'resource'=>'categories','action'=>'new' )); ?>">Create a new Category...</a></td>
+
+  </tr>
 
 </table>
 

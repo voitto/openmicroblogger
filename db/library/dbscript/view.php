@@ -55,6 +55,7 @@ class View {
       $this->named_vars['resource'] =& $db->get_table( $request->resource );
     else
       $this->named_vars['resource'] = false;
+    $this->named_vars['prefix'] = $db->prefix;
     $this->controller = $request->controller;
     
     load_apps();
@@ -100,6 +101,18 @@ class View {
     $view = $request->get_template_path( $ext );
     
     $action = $request->action;
+    
+    global $api_methods,$api_method_perms;
+    
+    $api_method = $action;
+    
+    if (array_key_exists($action,$api_methods)){
+      trigger_before( $api_method, $request, $db );
+      $action = @create_function( '&$vars', $api_methods[$action] );
+      $model =& $db->get_table($api_method_perms[$api_method]['table']);
+      if (!($model->can($api_method_perms[$api_method]['perm'])))
+        trigger_error('not allowed sorry',E_USER_ERROR);
+    }
     
     if (!(function_exists($action)))
       $action = 'index';

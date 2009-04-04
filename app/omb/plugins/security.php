@@ -46,6 +46,8 @@ function model_security( &$request, &$db ) {
   
   authenticate_with_openid();
   
+  // this switch is now repeated in $model->can($action)
+  
   switch( $action ) {
     case 'get':
       if (!($model && $model->can_read_fields( $model->field_array )))
@@ -178,7 +180,6 @@ function start_simple_openid() {
 
   $openid->SetApprovedURL( $request->url_for( 'openid_continue' )); // y'all come back now
 
-  $openid->SetTrustRoot( $request->protected_url ); // protected site
   $openid->SetTrustRoot( $request->protected_url ); // protected site
 
   $openid->SetOptionalFields(array(
@@ -348,6 +349,7 @@ function _email( &$vars ) {
   else
     $return_to = $request->base;
   $protected_url = $request->base;
+  $Identity =& $db->model('Identity');
   if (isset($request->params['ident'])) {
     $ident = $Identity->find_by('token',$request->params['ident']);
     if ($ident) {
@@ -618,6 +620,32 @@ function email_register( &$vars ) {
   extract( $vars );
   $_SESSION['requested_url'] = $request->base;
   render( 'action', 'register' );
+}
+
+function authenticate_with_oauth() {
+  //
+}
+
+function authenticate_with_http() {
+  global $db,$request;
+  global $person_id;
+  if (!isset($_SERVER['PHP_AUTH_USER'])) {
+    header('WWW-Authenticate: Basic realm="your username/password"');
+  } else {
+    $Identity =& $db->get_table( 'identities' );
+    $Person =& $db->get_table( 'people' );
+    $i = $Identity->find_by(array(
+      'nickname'=>$_SERVER['PHP_AUTH_USER'],
+      'password'=>md5($_SERVER['PHP_AUTH_PW'])
+    ),1);
+    $p = $Person->find( $i->person_id );
+    if (!(isset( $p->id ) && $p->id > 0)) {
+      header('HTTP/1.1 401 Unauthorized');
+      echo 'BAD LOGIN';
+      exit;
+    }
+    $person_id = $p->id;
+  }
 }
 
 function openid_login( &$vars ) {

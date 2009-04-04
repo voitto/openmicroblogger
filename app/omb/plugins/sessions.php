@@ -49,7 +49,7 @@ function session_error( &$req, $errstr ) {
    */
 
 function session_save( &$req, &$model ) {
-  global $db;
+  global $db,$prefix;
   $pkfield = $model->primary_key;
   $rec = $model->base();
   foreach ($model->field_array as $fieldname=>$datatypename) {
@@ -124,7 +124,7 @@ session_set_save_handler(
    */
 
 function sess_open() {
-  global $db;
+  global $db,$prefix;
   global $request;
   
   $req =& $request;
@@ -164,11 +164,11 @@ function sess_close() {
    */
 
 function sess_read( $id ) {
-  global $db;
+  global $db,$prefix;
   if (!(isset($db)))
     return false;
   $result = $db->get_result( "SELECT data
-                              FROM db_sessions
+                              FROM $prefix"."db_sessions
                               WHERE id = '$id'" );
   if ($result && $db->num_rows($result) > 0) {
     return $db->result_value( $result, 0, 'data' );
@@ -186,21 +186,21 @@ function sess_read( $id ) {
    */
 
 function sess_write( $id, $data ) {
-  global $db;
+  global $db,$prefix;
   if (!(isset($db)))
     return false;
   $access = time();
   $result = $db->get_result( "SELECT id
-                              FROM db_sessions
+                              FROM $prefix"."db_sessions
                               WHERE id = '$id'" );
                               
   if ($result && $db->num_rows($result) > 0) {
-    return $db->get_result( "UPDATE db_sessions
+    return $db->get_result( "UPDATE $prefix"."db_sessions
                              SET access = '$access', data = '$data'
                              WHERE id = '$id'" );
   }
   return $db->get_result( "INSERT
-                           INTO db_sessions ( id, access, data )
+                           INTO $prefix"."db_sessions ( id, access, data )
                            VALUES ( '$id', '$access', '$data' )" );
 }
 
@@ -214,11 +214,11 @@ function sess_write( $id, $data ) {
    */
 
 function sess_destroy( $id ) {
-  global $db;
+  global $db,$prefix;
   if (!(isset($db)))
     return false;
   return $db->get_result( "DELETE
-                           FROM db_sessions
+                           FROM $prefix"."db_sessions
                            WHERE id = '$id'" );
 }
 
@@ -232,12 +232,12 @@ function sess_destroy( $id ) {
    */
 
 function sess_clean( $max ) {
-  global $db;
+  global $db,$prefix;
   if (!(isset($db)))
     return false;
   $old = time() - $max;
   return $db->get_result( "DELETE
-                           FROM db_sessions
+                           FROM $prefix"."db_sessions
                            WHERE access < '$old'" );
 }
 

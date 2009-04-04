@@ -4,6 +4,8 @@ class Setting extends Model {
   
   function Setting() {
     
+    $this->set_limit(5000);
+    
     $this->time_field( 'created' );
     $this->time_field( 'modified' );
     
