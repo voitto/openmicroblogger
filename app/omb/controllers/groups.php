@@ -172,7 +172,10 @@ function index( &$vars ) {
 function _index( &$vars ) {
 
   extract( $vars );
-  $Group->find();
+  $Group->find_by(array('eq'=>'<','id'=>4));
+  while ($g = $collection->MoveNext())
+    $g->set_etag();
+  $collection = new Collection( 'groups' );
   return vars(
     array(
 

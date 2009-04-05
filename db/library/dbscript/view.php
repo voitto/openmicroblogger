@@ -43,6 +43,7 @@ class View {
       $this->collection = new Collection( $request->resource );
     else
       $this->collection = new Collection( null );
+    
     $this->named_vars['db'] =& $db;
     $this->named_vars['request'] =& $request;
     $this->named_vars['collection'] =& $this->collection;
@@ -109,8 +110,8 @@ class View {
     if (array_key_exists($action,$api_methods)){
       trigger_before( $api_method, $request, $db );
       $action = @create_function( '&$vars', $api_methods[$action] );
-      $model =& $db->get_table($api_method_perms[$api_method]['table']);
-      if (!($model->can($api_method_perms[$api_method]['perm'])))
+      $this->named_vars['resource'] =& $db->get_table($api_method_perms[$api_method]['table']);
+      if (!($this->named_vars['resource']->can($api_method_perms[$api_method]['perm'])))
         trigger_error('not allowed sorry',E_USER_ERROR);
     }
     
