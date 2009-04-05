@@ -276,7 +276,7 @@ function _edit( &$vars ) {
   $avatars = array();
   foreach ( $arr as $member_ident ) {
     $subscribers .= htmlentities($member_ident->email_value)."\n";
-    $avatars[$member_ident->id] = $member_ident->avatar;
+    $avatars[$member_ident->person_id] = $member_ident->avatar;
   }
   
   // custom controller adds $group_perms named variable

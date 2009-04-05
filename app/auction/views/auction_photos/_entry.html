@@ -5,17 +5,17 @@
   <td>
     <?php if (extension_for($Entry->content_type) == 'mp3') : ?>
 
-  <script src="<?php base_url(); ?>script/swfobject.js" type="text/javascript"></script>
+  <script src="<?php base_path(); ?>script/swfobject.js" type="text/javascript"></script>
 
-  <script src="<?php base_url(); ?>script/ep_player.js" type="text/javascript"></script>
+  <script src="<?php base_path(); ?>script/ep_player.js" type="text/javascript"></script>
 
   <script type="text/javascript">
 
   // <![CDATA[
 
-  var so = new SWFObject("<?php base_url(); ?>resource/ep_player.swf", "ep_player", "269", "226", "9", "#FFFFFF");
+  var so = new SWFObject("<?php base_path(); ?>resource/ep_player.swf", "ep_player", "269", "226", "9", "#FFFFFF");
 
-  so.addVariable("skin", "<?php base_url(); ?>resource/micro_player/skin.xml");
+  so.addVariable("skin", "<?php base_path(); ?>resource/micro_player/skin.xml");
 
   so.addVariable("file", "<location><?php url_for( array( 'action'=>'attachment.mp3', 'resource'=>$request->resource, 'id'=>$Member->id )); ?></location><creator><?php print $Member->body; ?></creator><title><?php print $Member->title; ?></title>");
 

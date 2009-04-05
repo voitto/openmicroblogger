@@ -11,6 +11,9 @@ class Method extends Model {
     $this->int_field( 'entry_id' );
     $this->int_field( 'oauth' );
     $this->int_field( 'http' );
+    $this->int_field( 'omb' );
+    
+    $this->bool_field( 'enabled' );
     
     $this->char_field( 'function' );
     $this->char_field( 'route' );

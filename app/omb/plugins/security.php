@@ -626,6 +626,10 @@ function authenticate_with_oauth() {
   //
 }
 
+function authenticate_with_omb() {
+  //
+}
+
 function authenticate_with_http() {
   global $db,$request;
   global $person_id;

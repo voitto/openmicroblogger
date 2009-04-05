@@ -394,6 +394,8 @@ while ($m = $Method->MoveNext()) {
       'action'=>$m->function
     )
   );
+  if ($m->omb)
+    before_filter( 'authenticate_with_omb', $m->function );
   if ($m->http)
     before_filter( 'authenticate_with_http', $m->function );
   if ($m->oauth)

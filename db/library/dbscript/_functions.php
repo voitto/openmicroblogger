@@ -652,6 +652,13 @@ function url_for( $params, $altparams = NULL ) {
   
 }
 
+function base_path($return = false) {
+  global $request;
+  $path = $request->values[1].$request->values[2].$request->path;
+  if ($return)
+    return $path;
+  echo $path;
+}
 
 function base_url($return = false) {
 
@@ -684,7 +691,9 @@ function base_url($return = false) {
 
 function redirect_to( $param, $altparam = NULL ) {
   
-  global $request;
+  global $request,$db;
+  
+  trigger_before( 'redirect_to', $request, $db );
   
   if (is_ajax()){
     echo "OK";
@@ -1654,6 +1663,11 @@ function get_profile_id() {
   
 }
 
+function return_ok() {
+  header( 'Status: 200 OK' );
+  exit;
+}
+
 
   /**
    * get_person_id
@@ -1666,7 +1680,7 @@ function get_profile_id() {
 
 function get_person_id() {
   
-  global $response;
+  global $response,$request;
   
   if (isset($response->named_vars['profile'])) {
     $i = $response->named_vars['profile'];
@@ -1676,13 +1690,32 @@ function get_person_id() {
   
   if (isset($_SERVER['PHP_AUTH_USER'])) {
     global $person_id;
-    return $person_id;
+    if ($person_id) {
+      before_filter( 'return_ok', 'redirect_to' );
+      return $person_id;
+    }
   }
   
   $p = get_cookie_id();
   
   if ($p)
     return $p;
+  
+  if (isset($_POST['auth']) && $_POST['auth'] == 'http')
+    authenticate_with_http();
+
+  if (isset($_POST['auth']) && $_POST['auth'] == 'omb')
+    authenticate_with_omb();
+
+  if (isset($_POST['auth']) && $_POST['auth'] == 'oauth')
+    authenticate_with_oauth();
+  
+  global $person_id;
+
+  if ($person_id) {
+    before_filter( 'return_ok', 'redirect_to' );
+    return $person_id;
+  }
   
   return 0;
   

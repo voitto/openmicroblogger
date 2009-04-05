@@ -31,6 +31,7 @@
         show_tabs_page('<?php url_for( array( 'resource'=>'groups', 'action'=>'edit/partial', 'id'=>$Member->id )); ?>');
       });
     });
+    
   <?php endforeach; ?>
 <?php endforeach; ?>
 
@@ -50,6 +51,30 @@
         show_tabs_page('<?php url_for( array( 'resource'=>'groups', 'action'=>'edit/partial', 'id'=>$Member->id )); ?>');
       });
     });
+
+
+<?php foreach($avatars as $key=>$ava) : ?>
+
+
+
+<?php $pname = $key."avatar"; ?>
+
+    
+    $("#<?php echo $pname; ?>").click(function(e){
+      $("#<?php echo $pname; ?>").html("<img src='resource/jeditable/indicator.gif'>");
+      var someurl = "<?php url_for(array(
+        'resource'=>'memberships'
+      )); ?>";
+      var submitdata = {};
+      submitdata['entry[etag]'] = <?php echo ''; ?>;
+      submitdata['method'] = 'delete';
+      $.post(someurl, submitdata, function(str) {
+        show_tabs_page('<?php url_for( array( 'resource'=>'groups', 'action'=>'edit/partial', 'id'=>$Member->id )); ?>');
+      });
+    });
+    
+  <?php endforeach; ?>
+
 
 
   });
@@ -77,7 +102,7 @@
 	  <td colspan="2">
 	    
 <?php foreach($avatars as $key=>$ava) : ?>
-<img width="50" height="50" src="<?php echo $ava ?>" alt="image" />
+<img id="<?php echo $key."avatar"; ?>" width="50" height="50" src="<?php echo $ava ?>" alt="image" />
 <?php endforeach; ?>
 <br /><br />
     </td>
@@ -121,9 +146,9 @@
       $can[] = $p;
     
     if (in_array($table,array('groups','posts','reviews','blogs')))
-      echo "<tr><td>[<a href=\"".$request->url_for(array('resource'=>$table))."\">".$table."</a>]</td><td>";
+      echo "<tr><td>[<a href=\"".$request->url_for(array('resource'=>$table))."\">".$table."</a>]<div id=\"".$table."_fields"."\"></div></td><td>";
     else
-      echo "<tr><td><b>".$table."</b></td><td>";
+      echo "<tr><td><b>".$table."</b><div id=\"".$table."_fields"."\"></div></td><td>";
     
     $comma = "";
     
@@ -199,13 +224,51 @@
 <?php if (!in_array($Member->name, array('members','everyone'))) : ?>
 <p>Add a person to the <?php echo $Member->name; ?> group: </p>
 <?php $Identity->find(); ?>
-<?php while ($i = $Identity->MoveNext()) : ?>
-  <?php if (!array_key_exists($i->id,$avatars)) : ?>
+<script type="text/javascript">
+  $(document).ready(function(){
 
-<img width="50" height="50" src="<?php echo $i->avatar; ?>" alt="image" />
+
+<?php while ($i = $Identity->MoveNext()) : ?>
+  <?php if (!array_key_exists($i->person_id,$avatars)) : ?>
+
+
+
+
+<?php $pname = $i->person_id."avatar"; ?>
+
+
+    $("#<?php echo $pname; ?>").click(function(e){
+      $("#<?php echo $pname; ?>").html("<img src='resource/jeditable/indicator.gif'>");
+      var someurl = "<?php url_for(array(
+        'resource'=>'memberships'
+      )); ?>";
+      var submitdata = {};
+      submitdata['membership[group_id]'] = <?php echo $Member->id; ?>;
+      submitdata['membership[person_id]'] = <?php echo $i->person_id; ?>;
+      submitdata['method'] = 'post';
+      $.post(someurl, submitdata, function(str) {
+        show_tabs_page('<?php url_for( array( 'resource'=>'groups', 'action'=>'edit/partial', 'id'=>$Member->id )); ?>');
+      });
+    });
+
+
+
 
 <?php endif; ?>
 <?php endwhile; ?>
+
+  });
+</script>
+
+<?php $Identity->find(); ?>
+
+<?php while ($i = $Identity->MoveNext()) : ?>
+  <?php if (!array_key_exists($i->person_id,$avatars)) : ?>
+<img id="<?php echo $i->person_id."avatar"; ?>" width="50" height="50" src="<?php echo $i->avatar; ?>" alt="image" />
+<?php endif; ?>
+<?php endwhile; ?>
+
+
 
 <?php endif; ?>
 
@@ -252,13 +315,13 @@
 <br />
 <br />
       <ul>
-        <li>http://example.com/widgets</li>
-        <li>http://example.com/widgets.html</li>
-        <li>http://example.com/widgets.json</li>
-        <li>http://example.com/widgets/1</li>
-        <li>http://example.com/widgets/1/entry</li>
-        <li>http://example.com/widgets/1/entry.json</li>
-        <li>http://example.com/widgets/1/entry.jpg</li>
+        <li><?php url_for(array('resource'=>'events')); ?></li>
+        <li><?php url_for(array('resource'=>'events.html')); ?></li>
+        <li><?php url_for(array('resource'=>'events.json')); ?></li>
+        <li><?php url_for(array('resource'=>'events/1')); ?></li>
+        <li><?php url_for(array('resource'=>'events/1/entry')); ?></li>
+        <li><?php url_for(array('resource'=>'events/1/entry.json')); ?></li>
+        <li><?php url_for(array('resource'=>'events/1/entry.jpg')); ?></li>
       </ul>
       <br /><br />
     </td>
@@ -271,9 +334,10 @@
 <br />
 <br />
       <ul>
-        <li>form action: http://example.com/widgets</li>
+        <li>url: <?php url_for(array('resource'=>'events')); ?><br /></li>
         <li>form <b>method</b> parameter:</u> &quot;post&quot;</li>
-        <li>form <b>widget[name]</b> parameter: &quot;Cool Widget&quot;</li>
+        <li>form <b>auth</b> parameter:</u> &quot;http&quot;</li>
+        <li>form <b>event[name]</b> parameter: &quot;Cool event&quot;</li>
       </ul>
       <br /><br />
     </td>
@@ -286,10 +350,11 @@
 <br />
 <br />
       <ul>
-        <li>form action: http://example.com/widgets</li>
+        <li>url: <?php url_for(array('resource'=>'events')); ?><br /></li>
         <li>form <b>method</b> parameter:</u> &quot;put&quot;</li>
+        <li>form <b>auth</b> parameter:</u> &quot;http&quot;</li>
         <li>form <b>entry[etag]</b> parameter: &quot;et-3425934&quot; </li>
-        <li>form <b>widget[name]</b> parameter: &quot;Radio Widget&quot;</li>
+        <li>form <b>event[name]</b> parameter: &quot;Radio event&quot;</li>
       </ul>
       <br /><br />
     </td>

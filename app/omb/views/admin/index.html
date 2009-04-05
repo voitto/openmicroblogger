@@ -1,13 +1,15 @@
 <!doctype html>
 <html lang="en">
 <head>
-	<title>Open Microblogger Admin</title>
-  <link type="text/css" href="app/omb/views/tabs.css" rel="stylesheet" />	
-	<link rel="stylesheet" href="<?php echo $request->base; ?>app/omb/views/admin/style.css" type="text/css">
-	<script type="text/javascript" src="resource/jquery-1.2.6.min.js"></script>
-	<script type="text/javascript" src="resource/jquery.ui/ui/ui.core.js"></script>
-	<script type="text/javascript" src="resource/jquery.ui/ui/ui.tabs.js"></script>
-
+	<title>OpenMicroBlogger Admin</title>
+  <link type="text/css" href="<?php base_path(); ?>app/omb/views/tabs.css" rel="stylesheet" />	
+  	<link rel="stylesheet" href="<?php base_path(); ?>app/omb/views/admin/style.css" type="text/css">
+	<script type="text/javascript" src="<?php base_path(); ?>resource/jquery-1.2.6.min.js"></script>
+	<script type="text/javascript" src="<?php base_path(); ?>resource/jquery.ui/ui/ui.core.js"></script>
+	<script type="text/javascript" src="<?php base_path(); ?>resource/jquery.ui/ui/ui.tabs.js"></script>
+<?php
+//print_r($request); exit;
+?>
 	<script type="text/javascript">
 	$(function() {
 		$("#tabs").tabs();
@@ -40,12 +42,12 @@
   		    'resource'=>'admin',
   		    'action'=>'theme/partial'
   		  )); ?>">Themes</a></li>
-  		
+  		<?php if (empty($request->prefix)) : ?>
   		<li><a href="<?php url_for(array(
   		    'resource'=>'blogs',
   		    'action'=>'index/partial'
   		  )); ?>">Microblogs</a></li>
-  		
+  		<?php endif; ?>
   		<li><a href="JavaScript:top.location.href('<?php base_url(); ?>');">Return To Site</a></li>
   	</ul>
   	

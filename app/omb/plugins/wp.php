@@ -865,22 +865,22 @@ function wp_head() {
     
     //trigger_before( 'admin_head', $current_user, $current_user );
     
-    echo '<link rel="shortcut icon" href="resource/favicon.ico" >';
-    echo '<script type="text/javascript" src="'.$request->base_url.'resource/jquery-1.2.6.min.js"></script>';
+    echo '<link rel="shortcut icon" href="'.base_path(true).'resource/favicon.ico" >';
+    echo '<script type="text/javascript" src="'.base_path(true).'resource/jquery-1.2.6.min.js"></script>';
     
     if ($request->resource == "posts" && $request->action == 'new')
       echo '
-    <script type="text/javascript" src="resource/markitup/jquery.markitup.pack.js"></script>
-    <script type="text/javascript" src="resource/markitup/sets/default/set.js"></script>
-    <link rel="stylesheet" type="text/css" href="resource/markitup/skins/markitup/style.css" />
-    <link rel="stylesheet" type="text/css" href="resource/markitup/sets/default/style.css" />
+    <script type="text/javascript" src="'.base_path(true).'resource/markitup/jquery.markitup.pack.js"></script>
+    <script type="text/javascript" src="'.base_path(true).'resource/markitup/sets/default/set.js"></script>
+    <link rel="stylesheet" type="text/css" href="'.base_path(true).'resource/markitup/skins/markitup/style.css" />
+    <link rel="stylesheet" type="text/css" href="'.base_path(true).'resource/markitup/sets/default/style.css" />
     
     ';
     
     echo '
-    <script type="text/javascript" src=" '.$request->base_url.'resource/jquery.corner.js"></script>
-    <script type="text/javascript" src=" '.$request->base_url.'resource/jquery.flash.js"></script>
-    <script type="text/javascript" src=" '.$request->base_url.'resource/jquery.jqUploader.js"></script>
+    <script type="text/javascript" src="'.base_path(true).'resource/jquery.corner.js"></script>
+    <script type="text/javascript" src="'.base_path(true).'resource/jquery.flash.js"></script>
+    <script type="text/javascript" src="'.base_path(true).'resource/jquery.jqUploader.js"></script>
 
     <script type="text/javascript">
     $(document).ready(function(){
@@ -1723,7 +1723,7 @@ $userurl = "http://megapump.com";
 $etag = 1;
 
 echo '
-<script src="resource/jeditable/jquery.jeditable.js" type="text/javascript"></script>
+<script src="'.base_path(true).'resource/jeditable/jquery.jeditable.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 // <![CDATA[
