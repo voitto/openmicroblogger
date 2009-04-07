@@ -366,8 +366,7 @@ function set_identity_from_nick(&$request,&$route) {
   
   if ($id)
     $request->set_param('id',$id);
-  else
-    trigger_error("Sorry, the person named ".$nick." could not be found.", E_USER_ERROR);
+
 }
 
 

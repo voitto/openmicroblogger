@@ -7,7 +7,8 @@
   }
 
 function wp_create_nonce($action = -1) {
-	return wp_get_current_user();
+  global $current_user;
+  return $current_user;
 }
 
 function post_password_required() {
@@ -121,48 +122,11 @@ function &get_post(&$post, $output = OBJECT, $filter = 'raw') {
 }
 
 function do_action($tag, $arg = '') {
-	global $wp_filter, $wp_actions;
-
-	if ( is_array($wp_actions) )
-		$wp_actions[] = $tag;
-	else
-		$wp_actions = array($tag);
-
-	$args = array();
-	
-	if ( is_array($arg) && 1 == count($arg) && is_object($arg[0]) ) // array(&$this)
-		$args[] =& $arg[0];
-	else
-		$args[] = $arg;
-	
-	for ( $a = 2; $a < func_num_args(); $a++ )
-		$args[] = func_get_arg($a);
-
-	merge_filters($tag);
-
-	if ( !isset($wp_filter[$tag]) )
-		return;
-
-	do{
-		foreach( (array) current($wp_filter[$tag]) as $the_ )
-			if ( !is_null($the_['function']) )
-				call_user_func_array($the_['function'], array_slice($args, 0, (int) $the_['accepted_args']));
-
-	} while ( next($wp_filter[$tag]) !== false );
-
+  global $db;
+  trigger_before('wp_head',$db,$db);
 }
 
 function merge_filters($tag) {
-	global $wp_filter, $merged_filters;
-
-	if ( isset($wp_filter['all']) && is_array($wp_filter['all']) )
-		$wp_filter[$tag] = array_merge($wp_filter['all'], (array) $wp_filter[$tag]);
-
-	if ( isset($wp_filter[$tag]) ){
-		reset($wp_filter[$tag]);
-		uksort($wp_filter[$tag], "strnatcasecmp");
-	}
-	$merged_filters[ $tag ] = true;
 }
 
 class wpdb {

@@ -415,8 +415,11 @@ class Model {
       $s3 = new S3( environment('awsAccessKey'), environment('awsSecretKey') );
       if (!$s3)
         trigger_error( 'Sorry, there was a problem connecting to Amazon Web Services', E_USER_ERROR );
-      if (!($s3->deleteObject(environment('awsBucket'), urlencode($aws_file))))
+      if ($s3->bucketExists(environment('awsBucket'))
+      && $s3->objectExists(environment('awsBucket'),urlencode($aws_file))) {
+        $result = $s3->deleteObject(environment('awsBucket'), urlencode($aws_file));
         trigger_error( 'Sorry, there was a problem deleting the file from Amazon Web Services', E_USER_ERROR );
+      }
     }
     
     $result = $db->delete_record($rec);
