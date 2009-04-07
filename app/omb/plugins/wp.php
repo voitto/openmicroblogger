@@ -830,7 +830,14 @@ function wp_head() {
     //trigger_before( 'admin_head', $current_user, $current_user );
     
     echo '<link rel="shortcut icon" href="'.base_path(true).'resource/favicon.ico" >';
-    echo '<script type="text/javascript" src="'.base_path(true).'resource/jquery-1.2.6.min.js"></script>';
+    if ($request->resource == "identities" || ($request->resource == "posts" && $request->action == 'new'))
+
+      echo '<script type="text/javascript" src="'.$request->base_url.'resource/jquery-1.2.6.min.js"></script>';
+
+    else
+
+      echo '<script type="text/javascript" src="'.$request->base_url.'resource/jquery-1.2.1.min.js"></script>';
+
     
     if ($request->resource == "posts" && $request->action == 'new')
       echo '

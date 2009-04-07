@@ -577,8 +577,8 @@ class Database {
     $s3 = new S3( environment('awsAccessKey'), environment('awsSecretKey') );
     if (!$s3)
       trigger_error( 'Sorry, there was a problem connecting to Amazon Web Services', E_USER_ERROR );
-    if ($s3->bucketExists(environment('awsBucket'))
-    && $s3->objectExists(environment('awsBucket'),urlencode($aws_file))) {
+    if ($s3->getBucket(environment('awsBucket'))
+    && $s3->getObject(environment('awsBucket'),urlencode($aws_file))) {
       if (!($s3->deleteObject(environment('awsBucket'), urlencode($aws_file))))
         trigger_error( 'Sorry, there was a problem deleting the file from Amazon Web Services', E_USER_ERROR );
     }
@@ -592,7 +592,7 @@ class Database {
     $s3 = new S3( environment('awsAccessKey'), environment('awsSecretKey') );
     if (!$s3)
       trigger_error( 'Sorry, there was a problem connecting to Amazon Web Services', E_USER_ERROR );
-    if (!$s3->bucketExists(environment('awsBucket'))) {
+    if (!($s3->getBucket(environment('awsBucket')))) {
       $result = $s3->putBucket( environment('awsBucket'), 'public-read' );
       if (!$result)
         trigger_error( 'Sorry, there was a problem creating the bucket '.environment('awsBucket').' at Amazon Web Services', E_USER_ERROR );
