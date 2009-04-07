@@ -801,15 +801,17 @@ function _oauth( &$vars ) {
           trigger_error('sorry I was unable to create a twitter user', E_USER_ERROR);
       }
           
-      $content = "<p>success!</p>";
-      
       $_SESSION['oauth_person_id'] = $i->person_id;
       
-      $content = '<script type="text/javascript">'."\n";
-      $content .= '  // <![CDATA['."\n";
-      $content .= "  location.href='".$session_twitter."';"."\n";
-      $content .= '  // ]]>'."\n";
-      $content .= '</script>'."\n";
+      if (empty($session_twitter)) {
+        $content = "<p>there was an error in the oauth routine, sorry</p>";
+      } else {
+        $content = '<script type="text/javascript">'."\n";
+        $content .= '  // <![CDATA['."\n";
+        $content .= "  location.href='".$session_twitter."';"."\n";
+        $content .= '  // ]]>'."\n";
+        $content .= '</script>'."\n";
+      }
 
       //$content = $to->OAuthRequest('https://twitter.com/statuses/update.xml', array('status' => 'Test OAuth update. #testoauth'), 'POST');
       //$content = $to->OAuthRequest('https://twitter.com/statuses/replies.xml', array(), 'POST');

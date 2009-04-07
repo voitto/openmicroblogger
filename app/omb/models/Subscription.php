@@ -30,6 +30,8 @@ class Subscription extends Model {
     $this->let_modify( 'all:members' );
     $this->let_delete( 'all:members' );
     
+    $this->set_limit(100);
+    
     $this->set_hidden();
     
   }
