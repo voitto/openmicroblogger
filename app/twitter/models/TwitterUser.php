@@ -16,6 +16,11 @@ class TwitterUser extends Model {
     $this->char_field('profile_image_url');
     $this->char_field('twitter_id');
     
+    $this->char_field('oauth_key');
+    $this->char_field('oauth_secret');
+    
+    $this->int_field('profile_id');
+    
     $this->int_field('followers_count');
     
   }

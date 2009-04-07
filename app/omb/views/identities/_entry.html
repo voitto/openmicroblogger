@@ -20,7 +20,7 @@ $subscribers = array();
 ?>
 
 <br />
-<h2><?php echo $Member->nickname; ?>'s subscribers</h2>
+<h3><?php echo $Member->nickname; ?>'s subscribers</h3>
 
 <?php $Subscription->find_by('subscribed',$Member->id); ?>
 
@@ -34,7 +34,7 @@ $subscribers = array();
 
 
 <br />
-<h2><?php echo $Member->nickname; ?>'s subscriptions</h2>
+<h3><?php echo $Member->nickname; ?>'s subscriptions</h3>
 
 <?php $Subscription->find_by('subscriber',$Member->id); ?>
 

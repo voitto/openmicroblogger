@@ -46,7 +46,9 @@
   		<li><a href="<?php url_for(array(
   		    'resource'=>'blogs',
   		    'action'=>'index/partial'
-  		  )); ?>">Microblogs</a></li>
+  		  )); ?>">Streams</a></li>
+		  <?php else : ?>
+  		<li><a href="#tabs-4">&nbsp;</a></li>
   		<?php endif; ?>
   		<li><a href="JavaScript:top.location.href('<?php base_url(); ?>');">Return To Site</a></li>
   	</ul>

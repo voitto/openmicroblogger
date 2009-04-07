@@ -1465,8 +1465,10 @@ function have_posts() {
 
   if ($response->collection->_currentRow >= $rows)
     return false;
+  
   if (!$response->collection->EOF && (0 < $rows))
     return true;
+    
   return !$response->collection->EOF;
 }
 

@@ -86,6 +86,24 @@ function _index( &$vars ) {
   );
 }
 
+function _mystreams( &$vars ) {
+  // index controller returns
+  // a Collection of recent entries
+  extract( $vars );
+  
+  $Blog =& $db->model('Blog');
+  $Blog->set_param( 'find_by', array(
+    'entries.person_id'=>get_person_id()
+  ));
+  $collection = new Collection('blogs');
+    
+  return vars(
+    array( &$collection, &$profile ),
+    get_defined_vars()
+  );
+  
+}
+
 
 function _entry( &$vars ) {
   // entry controller returns
@@ -101,6 +119,16 @@ function _entry( &$vars ) {
 
 
 function _new( &$vars ) {
+  extract( $vars );
+  $model =& $db->get_table( $request->resource );
+  $Member = $model->base();
+  return vars(
+    array( &$Member, &$profile ),
+    get_defined_vars()
+  );
+}
+
+function _newajax( &$vars ) {
   extract( $vars );
   $model =& $db->get_table( $request->resource );
   $Member = $model->base();

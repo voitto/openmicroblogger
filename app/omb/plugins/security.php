@@ -303,12 +303,20 @@ function complete_openid_authentication( &$request ) {
         redirect_to( $_SESSION['requested_url'] );
       else
         redirect_to( $request->base );
+        
     } else {
-
-      trigger_error( "unable to find the Person, sorry", E_USER_ERROR );
-
+      
+      // no person defined yet
+      if ( isset($_SESSION['oauth_person_id'])
+      && $_SESSION['oauth_person_id'] > 0 ) {
+        // try to set the cookie
+        // set_cookie( $_SESSION['oauth_person_id'] );
+      } else {
+        trigger_error( "unable to find the Person, sorry", E_USER_ERROR );
+      }
+      
     }
-
+    
   } else {
     
     // cookie OK
@@ -601,6 +609,9 @@ function openid_logout( &$vars ) {
   $_SESSION['openid_complete'] = false;
   //unset($_SESSION['openid_email']);
   //unset($_SESSION['openid_url']);
+  $_SESSION['oauth_person_id']=0;
+  unset($_SESSION['oauth_twitter']);
+  unset($_SESSION['oauth_person_id']);
   unset($_SESSION['requested_url']);
   unset($_SESSION['openid_complete']);
   unset($_SESSION['oid_return_to']);
@@ -624,6 +635,244 @@ function email_register( &$vars ) {
 
 function authenticate_with_oauth() {
   //
+}
+
+function oauth_login( &$vars ) {
+  render( 'action', 'oauth' );
+}
+
+function _oauth( &$vars ) {
+  
+  // top stream, re-connect to subtwitter-db
+  
+  extract( $vars );
+  global $prefix;
+  $Blog =& $db->model('Blog');
+  
+  if (empty($db->prefix)) {
+    
+    if (isset($_REQUEST['oauth_token'])) {
+      
+      while ($b = $Blog->MoveNext()) {
+        if (!empty($b->prefix)) {
+          $sql = "SELECT data FROM ".$b->prefix."_db_sessions WHERE data LIKE '%".$db->escape_string($_REQUEST['oauth_token'])."%'";
+          $result = $db->get_result( $sql );
+          if ($db->num_rows($result) == 1) {
+            $prefix = $b->prefix."_";
+            $db->set_param('prefix',$prefix);
+          }
+        }
+      }
+    }
+  
+  }
+  
+  // http://abrah.am
+  lib_include('twitteroauth');
+  
+  /* Sessions are used to keep track of tokens while user authenticates with twitter */
+  /* Consumer key from twitter */
+  $consumer_key = environment( 'twitterKey' );
+  /* Consumer Secret from twitter */
+  $consumer_secret = environment( 'twitterSecret' );
+  /* Set up placeholder */
+  $content = NULL;
+  /* Set state if previous session */
+  $state = $_SESSION['oauth_state'];
+  /* Checks if oauth_token is set from returning from twitter */
+  $session_token = $_SESSION['oauth_request_token'];
+  /* Checks if oauth_token is set from returning from twitter */
+  $oauth_token = $_REQUEST['oauth_token'];
+  /* Set section var */
+  $section = $_REQUEST['section'];
+
+  /* If oauth_token is missing get it */
+  if ($_REQUEST['oauth_token'] != NULL && $_SESSION['oauth_state'] === 'start') {/*{{{*/
+    $_SESSION['oauth_state'] = $state = 'returned';
+  }/*}}}*/
+
+  /*
+   * 'default': Get a request token from twitter for new user
+   * 'returned': The user has authorize the app on twitter
+   */
+  switch ($state) {/*{{{*/
+    default:
+      /* Create TwitterOAuth object with app key/secret */
+      $to = new TwitterOAuth($consumer_key, $consumer_secret);
+      /* Request tokens from twitter */
+      $tok = $to->getRequestToken();
+      /* Save tokens for later */
+      $_SESSION['oauth_request_token'] = $token = $tok['oauth_token'];
+      $_SESSION['oauth_request_token_secret'] = $tok['oauth_token_secret'];
+      $_SESSION['oauth_state'] = "start";
+      $_SESSION['oauth_twitter'] = $request->base;
+      /* Build the authorization URL */
+      $request_link = $to->getAuthorizeURL($token);
+      if (empty($token)) {
+        $content = 'Request token not found, <a href="'.$request->url_for('oauth_login').'">click here to try again...</a>';
+      } else {
+        $content = '<script type="text/javascript">'."\n";
+        $content .= '  // <![CDATA['."\n";
+        $content .= "  location.href='".$session_twitter."';"."\n";
+        $content .= '  // ]]>'."\n";
+        $content .= '</script>'."\n";
+      }
+      //redirect_to($request_link);
+      /* Build link that gets user to twitter to authorize the app */
+      //$content = 'Click on the link to go to twitter to authorize your account.';
+      //$content .= '<br /><a href="'.$request_link.'">'.$request_link.'</a>';
+      break;
+      
+    case 'returned':
+      /* If the access tokens are already set skip to the API call */
+      $session_twitter = $request->base;
+      if ($_SESSION['oauth_access_token'] === NULL && $_SESSION['oauth_access_token_secret'] === NULL) {
+        /* Create TwitterOAuth object with app key/secret and token key/secret from default phase */
+        $to = new TwitterOAuth($consumer_key, $consumer_secret, $_SESSION['oauth_request_token'], $_SESSION['oauth_request_token_secret']);
+        /* Request access tokens from twitter */
+        $tok = $to->getAccessToken();
+        /* Save the access tokens. Normally these would be saved in a database for future use. */
+        
+        $_SESSION['oauth_access_token'] = $tok['oauth_token'];
+        $_SESSION['oauth_access_token_secret'] = $tok['oauth_token_secret'];
+        $session_twitter = $_SESSION['oauth_twitter'];
+
+      }
+      //location.replace('http://www./');
+      $to = new TwitterOAuth(
+        $consumer_key, 
+        $consumer_secret, 
+        $_SESSION['oauth_access_token'], 
+        $_SESSION['oauth_access_token_secret']
+      );
+      
+      $session_oauth_token = $_SESSION['oauth_access_token'];
+      $session_oauth_secret = $_SESSION['oauth_access_token_secret'];
+      
+
+      $content = $to->OAuthRequest('https://twitter.com/account/verify_credentials.json', array(), 'POST');
+
+      
+      if (!(class_exists('Services_JSON')))
+        lib_include( 'json' );
+      $json = new Services_JSON();
+      $user = $json->decode($content);
+      
+      $Identity =& $db->model('Identity');
+      $Person =& $db->model('Person');
+      $TwitterUser =& $db->model('TwitterUser');
+      
+      $Identity->save();
+      $Person->save();
+      $TwitterUser->save();
+      
+      $twuser = $TwitterUser->find_by( 'twitter_id',$user->id );
+      
+      // a) twitter user exists, does not have a profile_id
+      // b) twitter user exists, HAS a profile_id
+      // c) twitter user does not exist
+      
+      if ($twuser) {
+        
+        if (!$twuser->profile_id) {
+          // a
+          $i = make_identity($user);
+          if (!$i)
+            trigger_error('sorry I was unable to create an identity', E_USER_ERROR);
+          $twuser->set_value('profile_id',$i->id);
+          $twuser->set_value('oauth_key',$session_oauth_token);
+          $twuser->set_value('oauth_secret',$session_oauth_secret);
+          $twuser->save_changes();
+          if (!$twuser)
+            trigger_error('sorry I was unable to create a twitter user', E_USER_ERROR);
+        } else {
+          // b
+          $i = $Identity->find($twuser->profile_id);
+          if (!$i)
+            trigger_error('sorry I was unable to find the identity', E_USER_ERROR);
+        }
+      } else {
+        // c
+        $i = make_identity($user);
+        if (!$i)
+          trigger_error('sorry I was unable to create an identity', E_USER_ERROR);
+        $twuser = make_twuser($user,$i->id,$session_oauth_token,$session_oauth_secret);
+        if (!$twuser)
+          trigger_error('sorry I was unable to create a twitter user', E_USER_ERROR);
+      }
+          
+      $content = "<p>success!</p>";
+      
+      $_SESSION['oauth_person_id'] = $i->person_id;
+      
+      $content = '<script type="text/javascript">'."\n";
+      $content .= '  // <![CDATA['."\n";
+      $content .= "  location.href='".$session_twitter."';"."\n";
+      $content .= '  // ]]>'."\n";
+      $content .= '</script>'."\n";
+
+      //$content = $to->OAuthRequest('https://twitter.com/statuses/update.xml', array('status' => 'Test OAuth update. #testoauth'), 'POST');
+      //$content = $to->OAuthRequest('https://twitter.com/statuses/replies.xml', array(), 'POST');
+      break;
+      
+  }/*}}}*/
+  return vars(
+  array(
+    
+    &$content,
+    
+  ),
+  get_defined_vars()
+);
+}
+
+function make_identity( $user ) {
+  global $db;
+  $Identity =& $db->model('Identity');
+  $Person =& $db->model('Person');
+  $p = $Person->base();
+  $p->save();
+  $i = $Identity->base();
+  $i->set_value( 'nickname', $user->screen_name );
+  $i->set_value( 'avatar', $user->profile_image_url ); 
+  $i->set_value( 'fullname', $user->name );
+  $i->set_value( 'bio', $user->description );
+  $i->set_value( 'homepage', $user->url );
+  $i->set_value( 'locality', $user->location );
+  $i->set_value( 'label', 'profile 1' );
+  $i->set_value( 'person_id', $p->id );
+  $i->save_changes();
+  $i->set_etag($p->id);
+  //$i->set_value( 'profile', $prof );
+  //$i->set_value( 'update_profile', $updateProfile );
+  //$i->set_value( 'post_notice', $postNotice );
+  return $i;
+}
+
+function make_twuser( $user, $profile_id, $oauthkey, $oauthsecret ) {
+  global $db;
+  $Identity =& $db->model('Identity');
+  $Person =& $db->model('Person');
+  $nickname = $user->screen_name;
+  $TwitterUser =& $db->model('TwitterUser');
+  $twuser = $TwitterUser->find_by( 'twitter_id',$user->id );
+  if ($twuser)
+    return $twuser;
+  $twuser = $TwitterUser->base();
+  $twuser->set_value('description',$user->description);
+  $twuser->set_value('screen_name',$nickname);
+  $twuser->set_value('url',$user->url);
+  $twuser->set_value('name',$user->name);
+  $twuser->set_value('protected',$user->protected);
+  $twuser->set_value('followers_count',$user->followers_count);
+  $twuser->set_value('profile_image_url',$user->profile_image_url);
+  $twuser->set_value('location',$user->location);
+  $twuser->set_value('twitter_id',$user->id);
+  $twuser->set_value('profile_id',$profile_id);
+  $twuser->set_value('oauth_key',$oauthkey);
+  $twuser->set_value('oauth_secret',$oauthsecret);
+  $twuser->save_changes();
+  return $twuser;
 }
 
 function authenticate_with_omb() {
@@ -799,11 +1048,18 @@ function security_init() {
   
   $request->connect( 'ldap_submit' );
   
+  $request->connect( 'oauth_login' );
+  
   $request->routematch();
   
-  if ( isset( $_SESSION['openid_complete'] ) && check_cookie() )
+  if (isset($_SESSION['oauth_person_id'])
+  && $_SESSION['oauth_person_id'] >0) {
+      $request->openid_complete = true;
+    return $_SESSION['oauth_person_id'];
+  } elseif ( isset( $_SESSION['openid_complete'] ) && check_cookie() ) {
     if ( !isset($request->openid_url) && $_SESSION['openid_complete'] == true)
       $request->openid_complete = true;
+  }
   
 }
 
@@ -815,4 +1071,4 @@ function security_uninstall() {
   //
 }
 
-?>
+

@@ -23,16 +23,15 @@ function do_install(appnam) {
   submitdata['setting[value]'] = appnam;
   
   
-  $(".box").html("<img src='resource/jeditable/indicator.gif'>");
+  $("#sidebar ul").html("<img src='resource/jeditable/indicator.gif'>");
   
   $.post(someurl, submitdata, function(str) {
     
     var url = "<?php url_for(array('resource'=>'identities','action'=>'admin')); ?>"+"/partial";
     $.get(url, function(str) {
-      $(".box").hide();
-      $(".box").html(str);
-      $(".box").slideDown("slow");
-      $("ul.sf-menu").corner("round 10px");
+      $("#sidebar ul").hide();
+      $("#sidebar ul").html(str);
+      $("#sidebar ul").slideDown("slow");
       $("#install"+appnam).html("Installed");
     });
     
@@ -78,12 +77,11 @@ $(document).ready(function() {
         var t = "Install another Application...";
         $(this).html(t);
         var url = "<?php url_for(array('resource'=>'identities','action'=>'admin')); ?>"+"/partial";
-        $(".box").html(settings.indicator);
+        $("#sidebar ul").html(settings.indicator);
         $.get(url, function(str) {
-          $(".box").hide();
-          $(".box").html(str);
-          $(".box").slideDown("slow");
-          $("ul.sf-menu").corner("round 10px");
+          $("#sidebar ul").hide();
+          $("#sidebar ul").html(str);
+          $("#sidebar ul").slideDown("slow");
       });
       
 
@@ -118,12 +116,11 @@ $(document).ready(function() {
         var t = "Uninstall another...";
         $(this).html(t);
         var url = "<?php url_for(array('resource'=>'identities','action'=>'admin')); ?>"+"/partial";
-        $(".box").html(settings.indicator);
+        $("#sidebar ul").html(settings.indicator);
         $.get(url, function(str) {
-          $(".box").hide();
-          $(".box").html(str);
-          $(".box").slideDown("slow");
-          $("ul.sf-menu").corner("round 10px");
+          $("#sidebar ul").hide();
+          $("#sidebar ul").html(str);
+          $("#sidebar ul").slideDown("slow");
         });
         
      

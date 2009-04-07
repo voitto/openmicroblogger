@@ -77,10 +77,11 @@ env:
     - notifixious
     - apps
     - password
+    - streams
   
   installed:
-    - apps
     - password
+    - streams
   
   boot: omb
   
@@ -116,6 +117,9 @@ env:
         namespace_uri: http://openid.net/xmlns/1.0
         priority: 10
         local_id_handler: http://example.com
+  
+  twitterKey: 
+  twitterSecret: 
   
   awsAccessKey: 
   awsSecretKey: 

@@ -1,5 +1,30 @@
 
 
+
+
+<script type="text/javascript">
+//<![CDATA[
+
+
+
+
+function do_form_submit() {
+  var submitdata = {};
+  submitdata['blog[title]'] = $('#blog_title').val();
+  submitdata['method'] = 'post';
+  var someurl = "<?php url_for(array(
+    'resource'=>'blogs'
+  )); ?>";
+  $.post(someurl, submitdata, function(str) {
+    show_page('<?php url_for(array('resource'=>'blogs','action'=>'mystreams/partial')); ?>');
+  });
+}
+
+//]]>
+</script>
+
+
+
 <form action="<?php url_for( 'blogs' ); ?>" method="post" name="blogs" id="blogs">
 <div>
 <input name="method" type="hidden" value="post" />
@@ -18,7 +43,7 @@
 		<td align="right" valign="top"><b></b></td>
 		<td valign="top" align="left"><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="Cancel" type="button" />
 
-<input value="Save Stream" type="submit" name="button_group" /></td>
+<input value="Save Stream" type="button" onclick="JavaScript:do_form_submit();" name="button_group" /></td>
 	</tr>
 </table>
 </div>

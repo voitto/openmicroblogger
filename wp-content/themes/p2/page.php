@@ -1,6 +1,7 @@
 <?php get_header( ); ?>
 <div id="postpage">
 <div id="main">
+<ul id="postlist">
 
 <?php 
 if( have_posts( ) ) { 

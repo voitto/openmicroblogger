@@ -470,7 +470,7 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
     $sql .= ") CHARACTER SET utf8";
     $result = $this->get_result($sql);
     if ($result)
-      $this->tables[] = $table;
+      $this->tables[] = $this->prefix.$table;
   }
   function add_field( $table, $field, $data_type ) {
     $table = $this->prefix.$table;

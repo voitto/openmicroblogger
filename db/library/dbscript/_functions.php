@@ -1648,9 +1648,10 @@ function get_profile($id=NULL) {
   if ($p) {
     $i = $p->FirstChild('identities');
     if ($i)
+      $response->named_vars['profile'] = $i;
+    if ($i)
       return $i;
   }
-  
   return false;
 }
 
@@ -1694,6 +1695,11 @@ function get_person_id() {
       before_filter( 'return_ok', 'redirect_to' );
       return $person_id;
     }
+  }
+  
+  if (isset($_SESSION['oauth_person_id'])
+  && $_SESSION['oauth_person_id'] >0) {
+    return $_SESSION['oauth_person_id'];
   }
   
   $p = get_cookie_id();

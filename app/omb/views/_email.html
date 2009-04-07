@@ -63,8 +63,12 @@
 
 <form name="loginform" method="post" action="<?php print $submit_url; ?>">
 
-  <p>Sign in with your E-Mail Address, or use the <a href="<?php url_for('openid_login'); ?>">OpenID login form</a>.</p>
 
+<?php $key = environment('twitterKey'); if (!empty($key)) : ?>
+    <br><p><a href="<?php url_for('oauth_login'); ?>">Sign in with your Twitter Account...</a></p><br>
+    <?php endif; ?>
+    <p><a href="<?php url_for('openid_login'); ?>">Sign in with your OpenID...</a></p><br>
+  <p>Sign in with your E-Mail Address:</p>
   <p>E-Mail Address:&nbsp;<input name="email" value="<?php if ($email) print $email; elseif (isset($_SESSION['openid_email'])) print $_SESSION['openid_email']; else print ""; ?>" size="40">  </p>
   <input name="return_url" value="<?php print $return_url; ?>" type="hidden">
   <input name="protected_url" value="<?php print $protected_url; ?>" type="hidden">
