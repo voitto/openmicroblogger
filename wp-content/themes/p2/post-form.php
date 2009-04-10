@@ -11,7 +11,7 @@ $first_name		= attribute_escape( $user->first_name );
 		<div class="inputarea">
 			<label for="posttext"><?php _e('Hi'); ?>, <?php echo $first_name; ?>. <?php _e('Whatcha up to?'); ?></label>
 			<div>
-				<textarea name="posttext" id="posttext" rows="3" cols="60" tabindex="0"></textarea>
+				<textarea name="posttext" id="posttext" rows="3" cols="60" tabindex="0" maxlength="140"></textarea>
 			</div>
 			<label class="post-error" for="posttext" id="posttext_error"></label>  
 			<div class="postrow">

@@ -1265,6 +1265,8 @@ function wp_plugin_include( $file, $basedir=NULL ) {
    */
 
 function lib_include( $file ) {
+  if ($file == 'json' && class_exists('Services_JSON'))
+    return;
   if (is_array($file)) {
     foreach($file as $f) {
       if (file_exists(library_path() . $f . ".php"))
@@ -2577,5 +2579,49 @@ function array_sort($array, $key, $max=false)
    return $sorted_arr; 
 } 
 
+global $timezone_offsets;
+$timezone_offsets = array(
+  '-12'    =>  'Baker Island',
+  '-11'    =>  'Niue, Samoa',
+  '-10'    =>  'Hawaii-Aleutian, Cook Island',
+  '-9.5'   =>  'Marquesas Islands',
+  '-9'     =>  'Alaska, Gambier Island',
+  '-8'     =>  'Pacific',
+  '-7'     =>  'Mountain',
+  '-6'     =>  'Central',
+  '-5'     =>  'Eastern',
+  '-4'     =>  'Atlantic',
+  '-3.5'   =>  'Newfoundland',
+  '-3'     =>  'Amazon, Central Greenland',
+  '-2'     =>  'Fernando de Noronha, South Georgia',
+  '-1'     =>  'Azores, Cape Verde, Eastern Greenland',
+  '0'      =>  'Western European, Greenwich Mean',
+  '+1'     =>  'Central European, West African',
+  '+2'     =>  'Eastern European, Central African',
+  '+3'     =>  'Moscow, Eastern African',
+  '+3.5'   =>  'Iran',
+  '+4'     =>  'Gulf, Samara',
+  '+4.5'   =>  'Afghanistan',
+  '+5'     =>  'Pakistan, Yekaterinburg',
+  '+5.5'   =>  'Indian, Sri Lanka',
+  '+5.75'  =>  'Nepal',
+  '+6'     =>  'Bangladesh, Bhutan, Novosibirsk',
+  '+6.5'   =>  'Cocos Islands, Myanmar',
+  '+7'     =>  'Indochina, Krasnoyarsk',
+  '+8'     =>  'Chinese, Australian Western, Irkutsk',
+  '+8.75'  =>  'Southeastern Western Australia',
+  '+9'     =>  'Japan, Korea, Chita',
+  '+9.5'   =>  'Australian Central',
+  '+10'    =>  'Australian Eastern, Vladivostok',
+  '+10.5'  =>  'Lord Howe',
+  '+11'    =>  'Solomon Island, Magadan',
+  '+11.5'  =>  'Norfolk Island',
+  '+12'    =>  'New Zealand, Fiji, Kamchatka',
+  '+12.75' =>  'Chatham Islands',
+  '+13'    =>  'Tonga, Phoenix Islands',
+  '+14'    =>  'Line Island'
+);
 
-?>
+
+
+

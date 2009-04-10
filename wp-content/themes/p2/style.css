@@ -338,7 +338,7 @@ h2 img {
 	list-style: none;
 }
 #main ul.commentlist .commentcontent li {
-	list-style: disc;
+	list-style: none;
 }
 #main ul.commentlist {
 	border-top: 0;
@@ -569,7 +569,7 @@ margin-bottom: 0px;
 	margin-top: 16px;
 }
 #main ul#postlist ul, #main .post ul {
-	list-style: disc;
+	list-style: none;
 }
 #main ul#postlist ul ul, #main ul#postlist ol ul, #main .post ul ul, #main .post ol ul {
 	margin-top: 0;

@@ -72,6 +72,17 @@ function _index( &$vars ) {
 }
 
 
+function _widget( &$vars ) {
+  // index controller returns
+  // a Collection of recent entries
+  extract( $vars );
+  return vars(
+    array( &$collection, &$profile ),
+    get_defined_vars()
+  );
+}
+
+
 function _entry( &$vars ) {
   // entry controller returns
   // a Collection w/ 1 member entry

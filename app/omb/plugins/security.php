@@ -610,6 +610,7 @@ function openid_logout( &$vars ) {
   //unset($_SESSION['openid_email']);
   //unset($_SESSION['openid_url']);
   $_SESSION['oauth_person_id']=0;
+  unset($_SESSION['oauth_state']);
   unset($_SESSION['oauth_twitter']);
   unset($_SESSION['oauth_person_id']);
   unset($_SESSION['requested_url']);
@@ -650,21 +651,26 @@ function _oauth( &$vars ) {
   $Blog =& $db->model('Blog');
   
   if (empty($db->prefix)) {
-    
     if (isset($_REQUEST['oauth_token'])) {
-      
       while ($b = $Blog->MoveNext()) {
         if (!empty($b->prefix)) {
           $sql = "SELECT data FROM ".$b->prefix."_db_sessions WHERE data LIKE '%".$db->escape_string($_REQUEST['oauth_token'])."%'";
           $result = $db->get_result( $sql );
           if ($db->num_rows($result) == 1) {
-            $prefix = $b->prefix."_";
-            $db->set_param('prefix',$prefix);
+            $auth_url = $request->base."?twitter/".$b->nickname."/oauth_login&oauth_token=".$_REQUEST['oauth_token'];
+            $content = '<script type="text/javascript">'."\n";
+            $content .= '  // <![CDATA['."\n";
+            $content .= "  location.replace('".$auth_url."');"."\n";
+            $content .= '  // ]]>'."\n";
+            $content .= '</script>'."\n";
+            return vars(
+              array(&$content),
+              get_defined_vars()
+            );
           }
         }
       }
     }
-  
   }
   
   // http://abrah.am
@@ -705,27 +711,32 @@ function _oauth( &$vars ) {
       $_SESSION['oauth_request_token'] = $token = $tok['oauth_token'];
       $_SESSION['oauth_request_token_secret'] = $tok['oauth_token_secret'];
       $_SESSION['oauth_state'] = "start";
-      $_SESSION['oauth_twitter'] = $request->base;
+      
+      if (isset($_GET['forward']) && !empty($_SERVER['HTTP_REFERER']))
+        $_SESSION['oauth_twitter'] = $_SERVER['HTTP_REFERER'];
+      else
+        $_SESSION['oauth_twitter'] = $request->base;
+      
       /* Build the authorization URL */
-      $request_link = $to->getAuthorizeURL($token);
-      if (empty($token)) {
+      $auth_url = $to->getAuthorizeURL($token);
+      if (empty($auth_url)) {
         $content = 'Request token not found, <a href="'.$request->url_for('oauth_login').'">click here to try again...</a>';
       } else {
         $content = '<script type="text/javascript">'."\n";
         $content .= '  // <![CDATA['."\n";
-        $content .= "  location.href='".$session_twitter."';"."\n";
+        $content .= "  location.replace('".$auth_url."');"."\n";
         $content .= '  // ]]>'."\n";
         $content .= '</script>'."\n";
       }
-      //redirect_to($request_link);
-      /* Build link that gets user to twitter to authorize the app */
-      //$content = 'Click on the link to go to twitter to authorize your account.';
-      //$content .= '<br /><a href="'.$request_link.'">'.$request_link.'</a>';
       break;
       
     case 'returned':
+      if (isset($_SESSION['oauth_twitter']))
+        $redirect_to = $_SESSION['oauth_twitter'];
+      else
+        $redirect_to = $request->base;
       /* If the access tokens are already set skip to the API call */
-      $session_twitter = $request->base;
+
       if ($_SESSION['oauth_access_token'] === NULL && $_SESSION['oauth_access_token_secret'] === NULL) {
         /* Create TwitterOAuth object with app key/secret and token key/secret from default phase */
         $to = new TwitterOAuth($consumer_key, $consumer_secret, $_SESSION['oauth_request_token'], $_SESSION['oauth_request_token_secret']);
@@ -735,10 +746,9 @@ function _oauth( &$vars ) {
         
         $_SESSION['oauth_access_token'] = $tok['oauth_token'];
         $_SESSION['oauth_access_token_secret'] = $tok['oauth_token_secret'];
-        $session_twitter = $_SESSION['oauth_twitter'];
 
       }
-      //location.replace('http://www./');
+      
       $to = new TwitterOAuth(
         $consumer_key, 
         $consumer_secret, 
@@ -750,7 +760,7 @@ function _oauth( &$vars ) {
       $session_oauth_secret = $_SESSION['oauth_access_token_secret'];
       
 
-      $content = $to->OAuthRequest('https://twitter.com/account/verify_credentials.json', array(), 'POST');
+      $content = $to->OAuthRequest('https://twitter.com/account/verify_credentials.json', array(), 'GET');
 
       
       if (!(class_exists('Services_JSON')))
@@ -803,20 +813,16 @@ function _oauth( &$vars ) {
           
       $_SESSION['oauth_person_id'] = $i->person_id;
       
-      if (empty($session_twitter)) {
+      if (empty($redirect_to)) {
         $content = "<p>there was an error in the oauth routine, sorry</p>";
       } else {
         $content = '<script type="text/javascript">'."\n";
         $content .= '  // <![CDATA['."\n";
-        $content .= "  location.href='".$session_twitter."';"."\n";
+        $content .= "  location.replace('".$redirect_to."');"."\n";
         $content .= '  // ]]>'."\n";
         $content .= '</script>'."\n";
       }
-
-      //$content = $to->OAuthRequest('https://twitter.com/statuses/update.xml', array('status' => 'Test OAuth update. #testoauth'), 'POST');
-      //$content = $to->OAuthRequest('https://twitter.com/statuses/replies.xml', array(), 'POST');
       break;
-      
   }/*}}}*/
   return vars(
   array(
@@ -884,6 +890,14 @@ function authenticate_with_omb() {
 function authenticate_with_http() {
   global $db,$request;
   global $person_id;
+  global $api_methods,$api_method_perms;
+  
+  if (array_key_exists($request->action,$api_method_perms)) {
+    $arr = $api_method_perms[$request->action];
+    if ($db->models[$arr['table']]->can($arr['perm']))
+      return;
+  }
+  
   if (!isset($_SERVER['PHP_AUTH_USER'])) {
     header('WWW-Authenticate: Basic realm="your username/password"');
   } else {

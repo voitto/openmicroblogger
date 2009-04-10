@@ -135,12 +135,12 @@
 <?php $i = 0; ?>
 
 <?php while ($i < $r->rating) : ?>
-<img src="<?php echo base_url(true).$request->layout_path; ?>reviews/full_star.gif" alt="*">
+<img src="<?php echo base_path(true).$request->layout_path; ?>reviews/full_star.gif" alt="*">
 <?php $i++; ?>
 <?php endwhile; ?>
 
 <?php while ($i < 5) : ?>
-<img src="<?php echo base_url(true).$request->layout_path; ?>reviews/empty_star.gif" alt="">
+<img src="<?php echo base_path(true).$request->layout_path; ?>reviews/empty_star.gif" alt="">
 <?php $i++; ?>
 <?php endwhile; ?>
 <?php print "<font size=\"-1\">".$reviewer->nickname." ".time_of($r->created)."</font><br>"; ?>
@@ -216,7 +216,7 @@
 <input type="radio" name="review[rating]" value="<?php print ($i+1); ?>">
 <?php $j = 0; ?>
 <?php while ($j < $i+1) : ?>
-<img src="<?php echo base_url(true).$request->layout_path; ?>reviews/full_star.gif" alt="*">
+<img src="<?php echo base_path(true).$request->layout_path; ?>reviews/full_star.gif" alt="*">
 <?php $j++; ?>
 <?php endwhile; ?>
 <BR>
