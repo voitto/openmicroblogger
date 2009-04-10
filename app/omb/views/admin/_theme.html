@@ -5,7 +5,7 @@
   
   
 <p>
-  <img src="<?php echo $pimg; ?>" border="0" >
+  <img src="<?php base_path(); ?><?php echo $pimg; ?>" border="0" >
   <?php echo $pname; ?>
   <input name="<?php echo $pname; ?>" id="<?php echo $pname; ?>" type="checkbox" <?php if ($installedtheme == $pname) echo "checked"; ?>>
 </p>

@@ -94,6 +94,7 @@ echo ");";
     $m->set_value( 'http', 1 );
 
     $m->save_changes();
+    $m->set_etag(1);
   
 
     $m = $this->base();
@@ -119,6 +120,7 @@ header( \'Status: 200 OK\' );
     $m->set_value( 'http', 1 );
 
     $m->save_changes();
+    $m->set_etag(1);
   
   }
 
