@@ -52,9 +52,9 @@
       });
     });
 
+<?php $disabled = true; if (!$disabled) : ?>
 
 <?php foreach($avatars as $key=>$ava) : ?>
-
 
 
 <?php $pname = $key."avatar"; ?>
@@ -74,7 +74,7 @@
     });
     
   <?php endforeach; ?>
-
+<?php endif; ?>
 
 
   });
@@ -212,7 +212,7 @@
     </table>
     </td></tr></table>
   </td></tr>
-  
+  </form>
   
   <tr><td colspan="2">
     <?php
@@ -274,7 +274,7 @@
 
   </td></tr>
   
-</form>
+
   <tr>
     <td colspan="2">
             <br /><br /><br /><br />

@@ -1,6 +1,23 @@
 <?php
 
 
+after_filter( 'append_url_for_blobs', 'insert_from_post' );
+
+function append_url_for_blobs( &$model, &$rec ) {
+  global $request;
+  if ((is_upload('posts','attachment'))) {
+    $post = $model->find($request->id);
+    if ($post) {
+      $url = $request->url_for(array(
+        'resource'=>'posts',
+        'id'=>$post->id
+      ));
+      $post->set_value('title',substr(substr($post->title,0,140),0,-(strlen($url)+1))." ".$url);
+      $post->save_changes();
+    }
+  }
+}
+
 function get( &$vars ) {
   extract( $vars );
   switch ( count( $collection->members )) {
@@ -18,17 +35,7 @@ function post( &$vars ) {
 
   $resource->insert_from_post( $request );
   
-  if ((is_upload('posts','attachment'))) {
-    $post = $resource->find($request->id);
-    if ($post) {
-      $url = $request->url_for(array(
-        'resource'=>'posts',
-        'id'=>$post->id
-      ));
-      $post->set_value('title',substr(substr($post->title,0,140),0,-(strlen($url)+1))." ".$url);
-      $post->save_changes();
-    }
-  }
+
   
   header_status( '201 Created' );
   redirect_to( $request->base );

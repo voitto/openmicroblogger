@@ -802,7 +802,14 @@ function _oauth( &$vars ) {
 
       if (empty($user)) 
         trigger_error('The server said: '.$content, E_USER_ERROR );
-        
+      
+      if (empty($prefix) && in_array('invites',$db->tables)) {
+        $Invite =& $db->model( 'Invite' );
+        $result = $Invite->find_by( 'nickname',$user->screen_name );
+        if (!$result)
+          trigger_error('Sorry, you have not been invited yet '.environment('email_from'), E_USER_ERROR);
+      }
+      
       $Identity =& $db->model('Identity');
       $Person =& $db->model('Person');
       $TwitterUser =& $db->model('TwitterUser');
@@ -866,7 +873,7 @@ function _oauth( &$vars ) {
 }
 
 function make_identity( $user ) {
-  global $db,$prefix;
+  global $db,$prefix,$request;
   $Identity =& $db->model('Identity');
   $Person =& $db->model('Person');
   $p = $Person->base();
@@ -895,7 +902,17 @@ function make_identity( $user ) {
   $i->set_value( 'person_id', $p->id );
   $i->save_changes();
   $i->set_etag($p->id);
-  //$i->set_value( 'profile', $prof );
+  
+  if (empty($prefix) && in_array('invites',$db->tables)) {
+    $Membership =& $db->model( 'Membership' );
+    $m = $Membership->base();
+    $m->set_value( 'group_id', 4 ); // XXX
+    $m->set_value( 'person_id', $p->id );
+    $m->save_changes();
+  }
+  
+  $i->set_value( 'profile', $request->url_for(array('resource'=>$nicker)) );
+  $i->save_changes();
   //$i->set_value( 'update_profile', $updateProfile );
   //$i->set_value( 'post_notice', $postNotice );
   return $i;
