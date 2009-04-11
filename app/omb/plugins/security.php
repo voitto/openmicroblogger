@@ -65,8 +65,6 @@ function model_security( &$request, &$db ) {
       $submitted = $model->fields_from_request( $request );
       foreach ( $submitted as $table=>$fieldlist ) {
         $model =& $db->get_table($table);
-        if (!($model && $model->can_write_fields( $fieldlist )))
-          $failed = true;
         if (!($model && $model->can_create( $table )))
           $failed = true;
       }
@@ -610,6 +608,10 @@ function openid_logout( &$vars ) {
   //unset($_SESSION['openid_email']);
   //unset($_SESSION['openid_url']);
   $_SESSION['oauth_person_id']=0;
+  unset($_SESSION['oauth_access_token']);
+  unset($_SESSION['oauth_access_token_secret']);
+  unset($_SESSION['oauth_request_token']);
+  unset($_SESSION['oauth_request_token_secret']);  
   unset($_SESSION['oauth_state']);
   unset($_SESSION['oauth_twitter']);
   unset($_SESSION['oauth_person_id']);
@@ -652,8 +654,13 @@ function _oauth( &$vars ) {
   
   if (empty($db->prefix)) {
     if (isset($_REQUEST['oauth_token'])) {
+      $tabresult = $db->get_result("SHOW tables");
+      $tables = array();
+      $tablist = array();
+      for($i=0;$tables[$i]=mysql_fetch_assoc($tabresult);$i++)
+        foreach($tables[$i] as $k=>$v) $tablist[] = $v;
       while ($b = $Blog->MoveNext()) {
-        if (!empty($b->prefix)) {
+        if (!empty($b->prefix) && in_array($b->prefix."_db_sessions",$tablist)) {
           $sql = "SELECT data FROM ".$b->prefix."_db_sessions WHERE data LIKE '%".$db->escape_string($_REQUEST['oauth_token'])."%'";
           $result = $db->get_result( $sql );
           if ($db->num_rows($result) == 1) {
@@ -708,6 +715,26 @@ function _oauth( &$vars ) {
       /* Request tokens from twitter */
       $tok = $to->getRequestToken();
       /* Save tokens for later */
+      
+      $Blog =& $db->model('Blog');
+      if (!empty($db->prefix) && isset($_REQUEST['oauth_token'])) {
+        $tabresult = $db->get_result("SHOW tables");
+        $tables = array();
+        $tablist = array();
+        for($i=0;$tables[$i]=mysql_fetch_assoc($tabresult);$i++)
+          foreach($tables[$i] as $k=>$v) $tablist[] = $v;
+        while ($b = $Blog->MoveNext()) {
+          if (!empty($b->prefix) && in_array($b->prefix."_db_sessions",$tablist)) {
+            $sql = "SELECT id FROM ".$b->prefix."_db_sessions WHERE data LIKE '%".$db->escape_string($_REQUEST['oauth_token'])."%'";
+            $result = $db->get_result( $sql );
+            if ($db->num_rows($result) == 1) {
+              $sess = $db->result_value( $result, 0, "id" );
+              $del = $db->get_result( "DELETE FROM ".$b->prefix."_db_sessions WHERE id = '$sess'" );
+            }
+          }
+        }
+      }
+      
       $_SESSION['oauth_request_token'] = $token = $tok['oauth_token'];
       $_SESSION['oauth_request_token_secret'] = $tok['oauth_token_secret'];
       $_SESSION['oauth_state'] = "start";
@@ -746,7 +773,12 @@ function _oauth( &$vars ) {
         
         $_SESSION['oauth_access_token'] = $tok['oauth_token'];
         $_SESSION['oauth_access_token_secret'] = $tok['oauth_token_secret'];
-
+        
+        if (!($_SESSION['oauth_access_token'] === NULL && $_SESSION['oauth_access_token_secret'] === NULL)) {
+          unset( $_SESSION['oauth_request_token'] );
+          unset( $_SESSION['oauth_request_token_secret'] );
+        }
+        
       }
       
       $to = new TwitterOAuth(
@@ -767,14 +799,13 @@ function _oauth( &$vars ) {
         lib_include( 'json' );
       $json = new Services_JSON();
       $user = $json->decode($content);
-      
+
+      if (empty($user)) 
+        trigger_error('The server said: '.$content, E_USER_ERROR );
+        
       $Identity =& $db->model('Identity');
       $Person =& $db->model('Person');
       $TwitterUser =& $db->model('TwitterUser');
-      
-      $Identity->save();
-      $Person->save();
-      $TwitterUser->save();
       
       $twuser = $TwitterUser->find_by( 'twitter_id',$user->id );
       
@@ -835,13 +866,26 @@ function _oauth( &$vars ) {
 }
 
 function make_identity( $user ) {
-  global $db;
+  global $db,$prefix;
   $Identity =& $db->model('Identity');
   $Person =& $db->model('Person');
   $p = $Person->base();
   $p->save();
   $i = $Identity->base();
-  $i->set_value( 'nickname', $user->screen_name );
+
+  $nicker = $db->escape_string($user->screen_name);
+  
+  for ( $j=1; $j<5000; $j++ ) {
+    $sql = "SELECT nickname FROM ".$prefix."identities WHERE nickname LIKE '".$nicker."' AND (post_notice = '' OR post_notice IS NULL)";
+    $result = $db->get_result( $sql );
+    if ($db->num_rows($result) > 0) {
+      $nicker = $nicker.$j;
+    } else {
+      continue;
+    }
+  }
+
+  $i->set_value( 'nickname', $nicker );
   $i->set_value( 'avatar', $user->profile_image_url ); 
   $i->set_value( 'fullname', $user->name );
   $i->set_value( 'bio', $user->description );

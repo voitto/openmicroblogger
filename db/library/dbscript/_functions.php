@@ -2444,7 +2444,7 @@ function get_nav_links() {
     if (member_of('administrators'))
       $links["Site Admin"] = $request->url_for(array('resource'=>'admin'));
     
-    $links["Write Post"] = $request->url_for(array('resource'=>'posts','action'=>'new'));
+    $links["Upload"] = $request->url_for(array('resource'=>'posts','action'=>'upload'));
     
     $links["Logout"] = $request->url_for("openid_logout");
   

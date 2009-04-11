@@ -25,6 +25,14 @@ function post( &$vars ) {
   
   $prefix = substr($nickname,0,2);
   
+  for ($i=0;$i<10;$i++) {
+    $b = $Blog->find_by('prefix',$prefix);
+    if (!$b && !in_array($prefix."_db_sessions",$db->tables))
+      continue;
+    else
+      $prefix = randomstring(2);
+  }
+
   $request->set_param( array( 'blog', 'prefix' ), $prefix );
   $request->set_param( array( 'blog', 'nickname' ), $nickname );
   

@@ -15,7 +15,21 @@ function get( &$vars ) {
 
 function post( &$vars ) {
   extract( $vars );
+
   $resource->insert_from_post( $request );
+  
+  if ((is_upload('posts','attachment'))) {
+    $post = $resource->find($request->id);
+    if ($post) {
+      $url = $request->url_for(array(
+        'resource'=>'posts',
+        'id'=>$post->id
+      ));
+      $post->set_value('title',substr(substr($post->title,0,140),0,-(strlen($url)+1))." ".$url);
+      $post->save_changes();
+    }
+  }
+  
   header_status( '201 Created' );
   redirect_to( $request->base );
 }
@@ -94,6 +108,30 @@ function _entry( &$vars ) {
     get_defined_vars()
   );
 }
+
+
+function _upload( &$vars ) {
+  extract( $vars );
+  $model =& $db->get_table( $request->resource );
+  $Member = $model->base();
+  
+  $Post->find();
+  $p = $Post->MoveFirst();
+  if (!$p) $p = 0;
+  $url = $request->url_for(array(
+    'resource'=>'posts',
+    'id'=>$p->id
+  ));
+  $url_length = strlen($url);
+  
+  return vars(
+    array( &$Member, &$profile, &$url_length ),
+    get_defined_vars()
+  );
+}
+
+
+
 
 
 function _new( &$vars ) {

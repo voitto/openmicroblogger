@@ -56,6 +56,14 @@
     
     <img src="<?php url_for( array( 'action'=>'attachment.jpg', 'resource'=>$request->resource, 'id'=>$Member->id )); ?>">
     
+    
+<?php $profile = owner_of($Entry); ?>
+    <link rel="image_src" href="<?php url_for( array( 'action'=>'attachment.jpg', 'resource'=>$request->resource, 'id'=>$Member->id )); ?>" type="<?php echo $Entry->content_type; ?>" />
+    <meta name="title" content="<?php print $Member->title; ?>" />
+    <meta name="description" content="<?php print $profile->nickname; ?>'s status on <?php print time_of($Member->created); ?>" />
+
+    
+    
     <?php elseif (extension_for($Entry->content_type) == 'mov') : ?>
     
     <script src="<?php base_path(); ?>resource/AC_QuickTime.js" language="JavaScript" type="text/javascript"></script>

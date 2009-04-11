@@ -1,0 +1,51 @@
+<?php 
+
+  global $request;
+  $post = strtolower(classify($request->resource));
+
+?>
+
+
+<form action="<?php url_for( $request->resource ); ?>" method="post" name="<?php url_for( $request->resource ); ?>" id="<?php url_for( $request->resource ); ?>" enctype="multipart/form-data">
+<div>
+<input name="MAX_FILE_SIZE" type="hidden" value="6000000" />
+<input name="method" type="hidden" value="post" />
+<input name="<?php print $post; ?>[parent_id]" value="0" type="hidden" />
+<input name="<?php print $post; ?>[local]" value="1" type="hidden" />
+<table border="0" style="margin-left:20px;">
+
+    <tr><td colspan="2" valign="top"><p>&nbsp;</p></td></tr>
+
+  <tr>
+    <td align="right" valign="top"><b>Status&nbsp;&nbsp;</b></td>
+    <td valign="top" align="left"><textarea style="margin-left:5px;width:405px;" rows="3" cols="56" id="<?php print $post; ?>_title" name="<?php print $post; ?>[title]" maxlength="<?php echo (140 - $url_length) -1; ?>"><?php print $Member->title; ?></textarea></td>
+  </tr>
+  
+
+  <td align="right" valign="top"><b>File&nbsp;&nbsp;</b></td>
+    <td valign="top" align="left"><input id="<?php print $post; ?>_attachment" name="<?php print $post; ?>[attachment]" type="file"></td>
+  </tr>
+
+
+
+
+
+
+
+  <tr>
+    <td align="right" valign="top"><b></b></td>
+    <td valign="top" align="left"><br><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="Cancel" type="button">
+<input type="hidden" name="<?php print $post; ?>[contributor]" value="<?php print $p->given_name." ".$p->family_name; ?>">
+<input value="Upload" type="submit" name="button_group"></td>
+  </tr>
+</table>
+</div>
+</form>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
