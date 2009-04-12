@@ -170,6 +170,7 @@ class Model {
     trigger_before( 'insert_from_post', $this, $req );
     
     global $db;
+    
     $fields = $this->fields_from_request($req);
     
     foreach ($fields as $table=>$fieldlist) {
@@ -206,70 +207,79 @@ class Model {
         }
       }
       
-      
       $result = $rec->save_changes();
       
       if ( !$result )
         trigger_error( "The record could not be saved into the database.", E_USER_ERROR );
       
       if ( $this->has_metadata ) {
-        $atomentry = $db->models['entries']->base();
-        if ($atomentry) {
-          $atomentry->set_value( 'etag', getEtag( $rec->$pkfield ) );
-          $atomentry->set_value( 'resource', $table );
-          $atomentry->set_value( 'record_id', $rec->$pkfield );
-          
-          $atomentry->set_value( 'content_type', $content_type );
-          
-          $atomentry->set_value( 'last_modified', timestamp() );
-          $atomentry->set_value( 'person_id', get_person_id() );
-          $aresult = $atomentry->save_changes();
-          if ($aresult) {
-            if ( array_key_exists( 'entry_id', $rec->attributes ))
-              $rec->set_value( 'entry_id', $atomentry->id );
-            if ( array_key_exists( 'person_id', $rec->attributes ))
-              $rec->set_value( 'person_id', get_person_id() );
-            $rec->save_changes();
-          }
-        }
-        if (($rec->table == $this->table) && isset($rec->id)) {
-          $req->set_param( 'id', $rec->id );
-          $req->id = $rec->id;
-          $Category =& $db->model('Category');
-          $Entry =& $db->model('Entry');
-          foreach($req->params as $cname=>$catval) {
-            if (substr($cname,0,8) == 'category') {
-              $added = array();
-              if (!in_array($req->$cname, $added)) {
-                $join =& $db->get_table($Entry->join_table_for('categories', 'entries'));
-                $j = $join->base();
-                $j->set_value('entry_id',$atomentry->id);
-                $c = $Category->find_by('term',$req->$cname);
-                if ($c) {
-                  $j->set_value('category_id',$c->id);
-                  $j->save_changes();
-                  $added[] = $req->$cname;
-                } elseif (!empty($req->$cname)) {
-                  if (isset_admin_email()) {
-                    $c = $Category->base();
-                    $c->set_value( 'name', $req->$cname);
-                    $c->set_value( 'term', strtolower($req->$cname));
-                    $c->save();
-                    $j->set_value('category_id',$c->id);
-                    $j->save_changes();
-                    $added[] = $req->$cname;
-                    admin_alert( "created a new category: ".$req->$cname." at ".$req->base );
-                  }
-                }
-              }
+        $this->set_metadata($rec,$content_type,$table);
+      }
+      
+      if (($rec->table == $this->table) && isset($rec->id)) {
+        $this->set_categories($rec,$req);
+      }
+      
+    }
+    
+    trigger_after( 'insert_from_post', $this, $rec );
+    
+  }
+  
+  function set_metadata(&$rec,$content_type,$table,$pkfield) {
+    global $db;
+    $atomentry = $db->models['entries']->base();
+    if ($atomentry) {
+      $atomentry->set_value( 'etag', getEtag( $rec->$pkfield ) );
+      $atomentry->set_value( 'resource', $table );
+      $atomentry->set_value( 'record_id', $rec->$pkfield );
+      $atomentry->set_value( 'content_type', $content_type );
+      $atomentry->set_value( 'last_modified', timestamp() );
+      $atomentry->set_value( 'person_id', get_person_id() );
+      $aresult = $atomentry->save_changes();
+      if ($aresult) {
+        if ( array_key_exists( 'entry_id', $rec->attributes ))
+          $rec->set_value( 'entry_id', $atomentry->id );
+        if ( array_key_exists( 'person_id', $rec->attributes ))
+          $rec->set_value( 'person_id', get_person_id() );
+        $rec->save_changes();
+      }
+    }
+  }
+  
+  function set_categories(&$rec,&$req) {
+    global $db;
+    $req->set_param( 'id', $rec->id );
+    $req->id = $rec->id;
+    $Category =& $db->model('Category');
+    $Entry =& $db->model('Entry');
+    foreach($req->params as $cname=>$catval) {
+      if (substr($cname,0,8) == 'category') {
+        $added = array();
+        if (!in_array($req->$cname, $added)) {
+          $join =& $db->get_table($Entry->join_table_for('categories', 'entries'));
+          $j = $join->base();
+          $j->set_value('entry_id',$atomentry->id);
+          $c = $Category->find_by('term',$req->$cname);
+          if ($c) {
+            $j->set_value('category_id',$c->id);
+            $j->save_changes();
+            $added[] = $req->$cname;
+          } elseif (!empty($req->$cname)) {
+            if (isset_admin_email()) {
+              $c = $Category->base();
+              $c->set_value( 'name', $req->$cname);
+              $c->set_value( 'term', strtolower($req->$cname));
+              $c->save();
+              $j->set_value('category_id',$c->id);
+              $j->save_changes();
+              $added[] = $req->$cname;
+              admin_alert( "created a new category: ".$req->$cname." at ".$req->base );
             }
           }
         }
       }
     }
-    
-    trigger_after( 'insert_from_post', $this, $rec );
-    
   }
   
   function update_from_post( &$req ) {

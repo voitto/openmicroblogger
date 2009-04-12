@@ -1,22 +1,7 @@
 <?php
 
 
-after_filter( 'append_url_for_blobs', 'insert_from_post' );
 
-function append_url_for_blobs( &$model, &$rec ) {
-  global $request;
-  if ((is_upload('posts','attachment'))) {
-    $post = $model->find($request->id);
-    if ($post) {
-      $url = $request->url_for(array(
-        'resource'=>'posts',
-        'id'=>$post->id
-      ));
-      $post->set_value('title',substr(substr($post->title,0,140),0,-(strlen($url)+1))." ".$url);
-      $post->save_changes();
-    }
-  }
-}
 
 function get( &$vars ) {
   extract( $vars );
@@ -32,11 +17,41 @@ function get( &$vars ) {
 
 function post( &$vars ) {
   extract( $vars );
-
-  $resource->insert_from_post( $request );
-  
-
-  
+  trigger_before( 'insert_from_post', $Post, $request );
+  $table = 'posts';
+  $content_type = 'text/html';
+  $rec = $Post->base();
+  if (!($Post->can_create( $table )))
+    trigger_error( "Sorry, you do not have permission to " . $request->action . " " . $table, E_USER_ERROR );
+  $fields = $Post->fields_from_request($request);
+  $fieldlist = $fields['posts'];
+  foreach ( $fieldlist as $field=>$type ) {
+    if ($Post->has_metadata && is_blob($table.'.'.$field)) {
+      if (isset($_FILES[strtolower(classify($table))]['name'][$field]))
+        $content_type = type_of( $_FILES[strtolower(classify($table))]['name'][$field] );
+    }
+    $rec->set_value( $field, $request->params[strtolower(classify($table))][$field] );
+  }
+  $rec->set_value('profile_id',get_profile_id());
+  $result = $rec->save_changes();
+  if ( !$result )
+    trigger_error( "The record could not be saved into the database.", E_USER_ERROR );
+  $Post->set_metadata($rec,$content_type,$table,'id');
+  $Post->set_categories($rec,$request);
+  if ((is_upload('posts','attachment'))) {
+    $url = $request->url_for(array(
+      'resource'=>'posts',
+      'id'=>$rec->id
+    ));
+    $title = substr($rec->title,0,140);
+    $over = ((strlen($title) + strlen($url) + 1) - 140);
+    if ($over > 0)
+      $rec->set_value('title',substr($title,0,-$over)." ".$url);
+    else
+      $rec->set_value('title',$title." ".$url);
+    $rec->save_changes();
+  }
+  trigger_after( 'insert_from_post', $Post, $rec );
   header_status( '201 Created' );
   redirect_to( $request->base );
 }
