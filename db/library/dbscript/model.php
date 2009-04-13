@@ -213,7 +213,7 @@ class Model {
         trigger_error( "The record could not be saved into the database.", E_USER_ERROR );
       
       if ( $this->has_metadata ) {
-        $this->set_metadata($rec,$content_type,$table);
+        $this->set_metadata($rec,$content_type,$table,$pkfield);
       }
       
       if (($rec->table == $this->table) && isset($rec->id)) {
@@ -420,7 +420,8 @@ class Model {
     if ($this->has_metadata && isset($coll[$req->resource]) && $coll[$req->resource]['location'] == 'aws') {
       $ext = extension_for($atomentry->content_type);
       $pkname = $rec->primary_key;
-      $aws_file = $rec->table . $rec->$pkname . "." . $ext;
+      global $prefix;
+      $aws_file = $prefix.$rec->table . $rec->$pkname . "." . $ext;
       lib_include( 'S3' );
       $s3 = new S3( environment('awsAccessKey'), environment('awsSecretKey') );
       if (!$s3)

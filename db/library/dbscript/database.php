@@ -572,7 +572,8 @@ class Database {
 
   function aws_delfile(&$rec, $pkvalue) {
     $ext = extension_for(type_of( $_FILES[strtolower(classify($rec->table))]['name'][$this->file_upload[0]] ));
-    $aws_file = $rec->table . $pkvalue . "." . $ext;
+    global $prefix;
+    $aws_file = $prefix.$rec->table . $pkvalue . "." . $ext;
     lib_include( 'S3' );
     $s3 = new S3( environment('awsAccessKey'), environment('awsSecretKey') );
     if (!$s3)
@@ -586,8 +587,8 @@ class Database {
   
   
   function aws_putfile(&$rec, $pkvalue) {
-    global $request;
-    $file = $rec->table . $pkvalue . "." . extension_for(type_of( $_FILES[strtolower(classify($rec->table))]['name'][$this->file_upload[0]] ));
+    global $request,$prefix;
+    $file = $prefix.$rec->table . $pkvalue . "." . extension_for(type_of( $_FILES[strtolower(classify($rec->table))]['name'][$this->file_upload[0]] ));
     lib_include( 'S3' );
     $s3 = new S3( environment('awsAccessKey'), environment('awsSecretKey') );
     if (!$s3)

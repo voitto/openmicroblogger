@@ -400,9 +400,10 @@ function introspect_tables() {
 
 
 function read_aws_blob( &$request, $value, $coll, $ext ) {
+  global $prefix;
   if (isset($coll[$request->resource])) {
     if ($coll[$request->resource]['location'] == 'aws')
-      redirect_to( 'http://' . environment('awsBucket') . '.s3.amazonaws.com/' . $request->resource . $request->id . "." . $ext );
+      redirect_to( 'http://' . environment('awsBucket') . '.s3.amazonaws.com/' . $prefix.$request->resource . $request->id . "." . $ext );
   }
 }
 
