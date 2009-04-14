@@ -39,7 +39,7 @@ $(function() {
 	});
 function show_tabs_page(url) {
   $( "#<?php echo $tabs; ?>" ).tabs( "select", 0 );
-  $( "#<?php echo $tabs1; ?>" ).html( "<img src=\"resource/jeditable/indicator.gif\">" );
+  $( "#<?php echo $tabs1; ?>" ).html( "<img src=\"<?php base_path(); ?>resource/jeditable/indicator.gif\">" );
   $.get(url, function(str) {
     $("#<?php echo $tabs1; ?>").hide();
     $("#<?php echo $tabs1; ?>").html(str);

@@ -36,8 +36,8 @@ function post( &$vars ) {
   $result = $rec->save_changes();
   if ( !$result )
     trigger_error( "The record could not be saved into the database.", E_USER_ERROR );
-  $Post->set_metadata($rec,$content_type,$table,'id');
-  $Post->set_categories($rec,$request);
+  $atomentry = $Post->set_metadata($rec,$content_type,$table,'id');
+  $Post->set_categories($rec,$request,$atomentry);
   if ((is_upload('posts','attachment'))) {
     $url = $request->url_for(array(
       'resource'=>'posts',

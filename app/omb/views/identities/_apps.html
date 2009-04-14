@@ -10,7 +10,7 @@
 
 function do_install(appnam) {
   
-  $("#install"+appnam).html("<img src='resource/jeditable/indicator.gif'>");
+  $("#install"+appnam).html("<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>");
   
   var someurl = "<?php url_for(array(
     'resource'=>'settings'
@@ -23,7 +23,7 @@ function do_install(appnam) {
   submitdata['setting[value]'] = appnam;
   
   
-  $("#sidebar ul").html("<img src='resource/jeditable/indicator.gif'>");
+  $("#sidebar ul").html("<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>");
   
   $.post(someurl, submitdata, function(str) {
     
@@ -55,7 +55,7 @@ $(document).ready(function() {
       $(this).highlightFade({end:'#fff', speed:200});
   });
   $(".editable_select_installer").editable(submit_to, { 
-      indicator   : "<img src='resource/jeditable/indicator.gif'>",
+      indicator   : "<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>",
       loadurl     : '<?php url_for(array(
         "resource"=>"identities",
         "id"=>$Member->id,
@@ -98,7 +98,7 @@ $(document).ready(function() {
       $(this).highlightFade({end:'#fff', speed:200});
   });
   $(".editable_select_installed").editable(submit_to, { 
-      indicator   : "<img src='resource/jeditable/indicator.gif'>",
+      indicator   : "<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>",
       loadurl     : '<?php url_for(array("resource"=>"identities","id"=>$Member->id,"action"=>"installed_apps_json")); ?>',
       submitdata  : function() {
         return {

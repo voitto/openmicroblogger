@@ -4,7 +4,7 @@
   
   function show_auction(url) {
     
-    $("#auction").html("<img src='resource/jeditable/indicator.gif'>");
+    $("#auction").html("<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>");
     
     $.get(url, function(str) {
       $("#auction").hide();

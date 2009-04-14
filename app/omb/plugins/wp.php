@@ -878,7 +878,7 @@ function wp_head() {
   
   function show_page(url) {
     
-    $("#main").html("<img src='.base_path(true).'\"resource/jeditable/indicator.gif\">");
+    $("#main").html("<img src=\"'.base_path(true).'resource/jeditable/indicator.gif\">");
     
     $.get(url, function(str) {
       $("#main").hide();
@@ -1385,6 +1385,14 @@ function the_content( $linklabel ) {
   }
   
   
+  $title = render_notice( $title, $the_post, $the_author );
+  
+  echo "<p>".$title."</p>";
+  
+}
+
+function render_notice($title,&$the_post,&$the_author) {
+  global $request;
   if (strpos($title, 'http') !== false || strpos($title, '@') !== false) {
     $title = str_replace("\n"," ",$title);
     $expl = explode( " ", $title );
@@ -1397,7 +1405,6 @@ function the_content( $linklabel ) {
             $parsed = parse_url($the_author->profile);
             $expl[$k] = "@<a href=\"".$parsed['scheme']."://".$parsed['host']."/".substr($v,1)."\">".substr($v,1)."</a>";
           }
-          
         }
         if (substr($v,0,4) == 'http') {
           $expl[$k] = "<a href=\"".$v."\">".$v."</a>";
@@ -1406,9 +1413,7 @@ function the_content( $linklabel ) {
       $title = implode(" ", $expl);
     }
   }
-  
-  echo "<p>".$title."</p>";
-  
+  return $title;
 }
 
 
@@ -1705,7 +1710,7 @@ function add_comment(divid) {
   var submit_to = "'.$userurl.'";
   
   $("#"+divid).editable(submit_to, { 
-      indicator   : "<img src=\"resource/jeditable/indicator.gif\">",
+      indicator   : "<img src=\"'.base_path(true).'resource/jeditable/indicator.gif\">",
       submitdata  : function() {
         return {
           "entry[etag]"     : "'.$etag.'",

@@ -2380,7 +2380,7 @@ function app_profile_show($resource,$action) {
   echo '// <![CDATA['."\n\n";
   echo '  $(document).ready(function() {'."\n\n";
   echo "  var url = '".$request->url_for(array('resource'=>$resource,'action'=>$action))."' + '/partial';"."\n\n";
-  echo '  $("#'.$resource.'_profile").html("<img src=\'resource/jeditable/indicator.gif\'>");'."\n\n";
+  echo '  $("#'.$resource.'_profile").html("<img src=\''.base_path(true).'resource/jeditable/indicator.gif\'>");'."\n\n";
   echo '  $.get(url, function(str) {'."\n\n";
   echo '    $("#'.$resource.'_profile").html(str);'."\n\n";
   echo '  });'."\n\n";

@@ -21,7 +21,7 @@ $(document).ready(function() {
       $(this).highlightFade({end:'#fff', speed:200});
   });
   $(".editable_identica_username").editable(submit_to, { 
-      indicator   : "<img src='resource/jeditable/indicator.gif'>",
+      indicator   : "<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>",
       submitdata  : function() {
         return {
           "entry[etag]"     : "<?php echo $uEntry->etag; ?>",
@@ -47,7 +47,7 @@ $(document).ready(function() {
       $(this).highlightFade({end:'#fff', speed:200});
   });
   $(".editable_identica_password").editable(submit_to, { 
-      indicator   : "<img src='resource/jeditable/indicator.gif'>",
+      indicator   : "<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>",
       submitdata  : function() {
         return {
           "entry[etag]"     : "<?php echo $pEntry->etag; ?>",
@@ -73,7 +73,7 @@ $(document).ready(function() {
       $(this).highlightFade({end:'#fff', speed:200});
   });
   $(".editable_select_tw_text").editable(submit_to, { 
-      indicator   : "<img src='resource/jeditable/indicator.gif'>",
+      indicator   : "<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>",
          data     : '<?php $json = new Services_JSON(); echo $json->encode( $akidentica_tw_text_options ); ?>',
       submitdata  : function() {
         return {"entry[etag]" : "<?php echo $sEntry->etag; ?>"};
@@ -95,7 +95,7 @@ $(document).ready(function() {
   
   $("#clicktest").click(function() { 
      var submit_to = "<?php url_for(array('resource'=>'dents','action'=>'identica_login_test')); ?>";
-     $("#clicktest").html("<img src='resource/jeditable/indicator.gif'>");
+     $("#clicktest").html("<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>");
      $.get(submit_to, function(str) {
       var result = (str - 0);
       if (result > 0) {

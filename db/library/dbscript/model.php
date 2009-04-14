@@ -213,12 +213,12 @@ class Model {
         trigger_error( "The record could not be saved into the database.", E_USER_ERROR );
       
       if ( $this->has_metadata ) {
-        $this->set_metadata($rec,$content_type,$table,$pkfield);
+        $atomentry = $this->set_metadata($rec,$content_type,$table,$pkfield);
+        if (($rec->table == $this->table) && isset($rec->id)) {
+          $this->set_categories($rec,$req,$atomentry);
+        }
       }
       
-      if (($rec->table == $this->table) && isset($rec->id)) {
-        $this->set_categories($rec,$req);
-      }
       
     }
     
@@ -245,9 +245,10 @@ class Model {
         $rec->save_changes();
       }
     }
+    return $atomentry;
   }
   
-  function set_categories(&$rec,&$req) {
+  function set_categories(&$rec,&$req,&$atomentry) {
     global $db;
     $req->set_param( 'id', $rec->id );
     $req->id = $rec->id;

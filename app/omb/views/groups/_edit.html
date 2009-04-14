@@ -19,7 +19,7 @@
     ?>
 
     $("#<?php echo $pname; ?>").click(function(e){
-      $("#<?php echo $pname; ?>").html("<img src='resource/jeditable/indicator.gif'>");
+      $("#<?php echo $pname; ?>").html("<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>");
       var someurl = "<?php url_for(array(
         'resource'=>'settings'
       )); ?>";
@@ -36,7 +36,7 @@
 <?php endforeach; ?>
 
     $("#addperm").click(function(e){
-      $("#addperm").html("<img src='resource/jeditable/indicator.gif'>");
+      $("#addperm").html("<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>");
       var someurl = "<?php url_for(array(
         'resource'=>'settings'
       )); ?>";
@@ -61,7 +61,7 @@
 
     
     $("#<?php echo $pname; ?>").click(function(e){
-      $("#<?php echo $pname; ?>").html("<img src='resource/jeditable/indicator.gif'>");
+      $("#<?php echo $pname; ?>").html("<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>");
       var someurl = "<?php url_for(array(
         'resource'=>'memberships'
       )); ?>";
@@ -238,7 +238,7 @@
 
 
     $("#<?php echo $pname; ?>").click(function(e){
-      $("#<?php echo $pname; ?>").html("<img src='resource/jeditable/indicator.gif'>");
+      $("#<?php echo $pname; ?>").html("<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>");
       var someurl = "<?php url_for(array(
         'resource'=>'memberships'
       )); ?>";

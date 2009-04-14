@@ -8,10 +8,9 @@
 
    <tr>
 <td align="right"><p></p></td>
-  <td><h1>
-  <?php print $Member->title ?>
-  </h1>
-  </td>
+  <td><h3>
+  <?php print render_notice( $Member->title, $Member, $profile ); ?>
+  <br><br></h3></td>
 </tr>
 
    <tr>
@@ -101,7 +100,9 @@
 <tr>
   <td align="right"><p></p></td>
   <td>
-  <?php $author = get_profile($Member->profile_id); print $author->nickname." ".time_of($Member->created); ?>
+  <?php $author = get_profile($Member->profile_id); ?>
+  <img src="<?php echo $author->avatar; ?>" alt="image" style="margin-top:10px; width:30px; height:30px;" />&nbsp;
+  <a href="<?php url_for(array('resource'=>$author->nickname)); ?>"><?php print $author->nickname."</a> ".time_of($Member->created); ?>
   </td>
 </tr>
 
