@@ -53,6 +53,93 @@
   		<li><a href="JavaScript:top.location.href('<?php base_url(); ?>');">Return To Site</a></li>
   	</ul>
   	
+  	
+  	<script src="<?php base_path(); ?>resource/jquery.ajaxfileupload.js" type="text/javascript"></script>
+
+    <script src="<?php base_path(); ?>resource/jeditable/jquery.jeditable.js" type="text/javascript"></script>
+    <script src="<?php base_path(); ?>resource/jeditable/jquery.highlightFade.js" type="text/javascript"></script>
+
+    <script src="<?php base_path(); ?>resource/jeditable/jquery.jeditable.ajaxupload.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+    // <![CDATA[
+
+<?php
+  
+  global $db;
+  
+  $Setting =& $db->model('Setting');
+  
+  $threadmode = $Setting->find_by(array('name'=>'config.env.threaded','profile_id'=>get_profile_id()));
+  
+  if (!$threadmode) {
+    $threadmode = $Setting->base();
+    $threadmode->set_value('profile_id',get_profile_id());
+    $threadmode->set_value('person_id',get_person_id());
+    $threadmode->set_value('name','config.env.threaded');
+    $threadmode->set_value('value','false');
+    $threadmode->save_changes();
+    $threadmode->set_etag();
+    $threadmode = $Setting->find($threadmode->id);
+  }
+  $seturl = $request->url_for(array('resource'=>'settings','id'=>$threadmode->id,'action'=>'put'));
+  
+  $threadentry = $threadmode->FirstChild('entries');
+
+?>
+
+    $(document).ready(function() {
+      
+    var submit_to = "<?php url_for(array(
+      'resource'=>'settings',
+      'id'=>$threadmode->id,
+      'action'=>'put'
+    )); ?>";
+
+        var submit_to = "<?php echo $seturl; ?>";
+  
+        $(".editable_select_tw_text").mouseover(function() { 
+            $(this).highlightFade({end:'#def'});
+        });
+        $(".editable_select_tw_text").mouseout(function() { 
+            $(this).highlightFade({end:'#fff', speed:200});
+        });
+        $(".editable_select_tw_text").editable(submit_to, { 
+            indicator   : "<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>",
+               data     : '<?php $json = new Services_JSON(); echo $json->encode( $aktwitter_tw_text_options ); ?>',
+            submitdata  : function() {
+              return {"entry[etag]" : "<?php echo $threadentry->etag; ?>"};
+            },
+            name        : "setting[value]",
+            type        : "select",
+            placeholder : "<?php echo $threadmode->value; ?>",
+            noappend    : "true",
+            submit      : "OK",
+            tooltip     : "Click to edit...",
+            cancel      : "Cancel",
+            callback    : function(value, settings) {
+              $(this).html(settings['jsonarr'][value-0]);
+              return(value);
+            }
+        });
+    });
+    // ]]>
+    </script>
+
+
+<table cellpadding="10" border="0">
+<tr>
+  <td>
+<h3>Threaded:</h3>
+</td>
+<td>
+<div class="editable_select_tw_text" id="editable_select_tw_text"></div>      
+</td>
+</tr>
+</table>
+
+
+  	
   	<div id="tabs-1">
   		<p>
   		  OpenMicroBlogger Administration Tools

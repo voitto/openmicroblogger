@@ -77,6 +77,7 @@ if( have_posts( ) ) {
 				echo post_reply_link(array('before' => ' | ', 'reply_text' => 'Reply', 'add_below' => 'prologue'), get_the_id()); ?>
 			<?php if (current_user_can('edit_post', get_the_id())) { ?>
 			|  <a href="<?php echo (get_edit_post_link( get_the_id() ))?>" class="post-edit-link" rel="<?php the_ID(); ?>">Edit</a>
+			|  <a href="<?php echo (get_edit_post_link( get_the_id(), 'remove' ))?>" class="post-edit-link" rel="<?php the_ID(); ?>">Remove</a>
 			<?php } ?>
 			</span>
 			<br />

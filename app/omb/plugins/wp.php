@@ -15,8 +15,71 @@ function post_password_required() {
   return false;
 }
 
+function post_reply_link($arr,$post_id) {
+  // peh
+  // array('before' => ' | ', 'reply_text' => 'Reply', 'add_below' => 'prologue')
+  global $the_post,$request;
+  if (!isset($the_post->id))
+    return;
+
+    
+	echo 	$arr['before'].'<a href="'.$request->url_for(array(
+      'resource'  => 'posts',
+      'id'        => $post_id,
+    )).'" class="post-reply-link" rel="'. $post_id.'">Reply</a>';
+    
+  
+}
+
 function wp_list_comments() {
-  echo "";
+  
+  $comments = "";
+  
+  if (environment('theme') == 'p2' && environment('threaded')) {
+
+
+global $db,$the_post,$prefix,$request;
+$result = $db->get_result( "SELECT id FROM ".$prefix."posts WHERE parent_id = ".$the_post->id );
+
+    while ( $row = $db->fetch_array( $result ) ) {
+$pp = $db->get_record('posts',$row['id']);
+$cc = owner_of($pp);
+
+$cctime = date( "g:i A" , strtotime($pp->created) );
+$ccdate = date( get_settings('date_format'), strtotime($pp->created) );
+$ccurl = $request->url_for(array('resource'=>'posts','id'=>$pp->id));
+$comments .= '  <li class="comment byuser comment-author-'.$cc->nickname.' even thread-even depth-1" id="comment-'.$pp->id.'">';
+$comments .= '<img alt=\'image\' src=\''.$cc->avatar.'\' class=\'avatar avatar-32\' height=\'32\' width=\'32\' />';
+$comments .= '<h4>';
+$comments .= $cc->nickname;
+$comments .= ' <span class="meta">';
+$comments .= $cctime.' <em>on</em> '.$ccdate;
+$comments .= '<span class="actions">';
+
+
+
+$comments .= '<a href="'.$ccurl.'">Permalink</a>  | <a rel=\'nofollow\' class=\'comment-reply-link\' href=\''.$ccurl.'\'>Reply</a>';
+ if (get_profile_id() == $pp->profile_id) { 
+	$comments .= 	' | <a href="'.get_edit_post_link( $pp ).'" class="post-edit-link" rel="'. $pp->id.'">Edit</a>';
+	$comments .= 	' | <a href="'.get_edit_post_link( $pp, 'remove' ).'" class="post-remove-link" rel="'. $pp->id.'">Remove</a>';
+			 } 
+
+$comments .= '</span>';
+$comments .= '<br />';
+$comments .= '</span>';
+$comments .= '</h4>';
+$comments .= '<div class="commentcontent" id="commentcontent-'.$pp->id.'">';
+$comments .= '<p>'.$pp->title.'</p>';
+$comments .= '</div>';
+$comments .= '</li>';
+
+}
+  
+  
+  }
+  
+  
+  echo $comments;
 }
 
 function cancel_comment_reply_link() {
@@ -33,8 +96,8 @@ function get_the_tags( $id = 0 ) {
 
 
 function get_the_id() {
-	global $id;
-	return $id;
+	global $the_post;
+	return $the_post->id;
 }
 
 function is_front_page() {
@@ -1598,16 +1661,27 @@ function register_sidebar() {
 function add_custom_image_header( $var, $name ) {
   return false;
 }
-
-function get_edit_post_link( &$post ) {
+function get_edit_post_link( &$post, $action=false ) {
   global $the_post,$request;
+  if (!$action)
+    $action = 'edit';
   if (!isset($the_post->id))
     return "";
-  return $request->url_for(array(
-    'resource'  => 'posts',
-    'id'        => $the_post->id,
-    'action'    => 'edit'
-  ));
+  if ($the_post->profile_id == get_profile_id() || get_profile_id() == 1)
+    return $request->url_for(array(
+      'resource'  => 'posts',
+      'id'        => $the_post->id,
+      'action'    => $action
+    ));
+  elseif (!empty($post->id))
+    if ($post->profile_id == get_profile_id() || get_profile_id() == 1)
+      return $request->url_for(array(
+        'resource'  => 'posts',
+        'id'        => $post->id,
+        'action'    => $action
+      ));
+  else
+    return false;
 }
 
 function edit_post_link( $post ) {
@@ -1679,18 +1753,27 @@ function comments_popup_link( $var1, $var2, $var3 ) {
   
   $theme = environment('theme');
   
-  if ($theme == 'prologue-theme') {
+  if (in_array($theme,array('prologue-theme','p2','twitteronia'))) {
+
+global $db,$the_post,$prefix,$request;
+$result = $db->get_result( "SELECT id FROM ".$prefix."posts WHERE parent_id = ".$the_post->id );
+if ($result)
+  $commentcount = $db->num_rows($result);
+else
+  return;
+
+
     echo "<a href=\"";
     echo $request->url_for(array(
       'resource'  => 'posts',
       'id'        => $the_post->id
     ));
-    echo "\">reply</a>";
+    echo "\">$commentcount</a>";
     if (!(environment('threaded')))
       return;
   }
   
-  if ($theme == 'p2')
+  //if (in_array($theme,array('prologue-theme','p2','twitteronia')))
     return "";
   
   echo "|&nbsp;<a href=\"JavaScript:add_comment('addcomment-$the_post->id')";
@@ -1799,9 +1882,9 @@ function comment_type() {
 function comment_text() {
   
   global $the_post;
-global $db;
+global $db,$prefix;
 if ($the_post->id) {
-$sql = "SELECT title from posts where parent_id = ".$the_post->id;
+$sql = "SELECT title from ".$prefix."posts where parent_id = ".$the_post->id;
 
 $result = $db->get_result($sql);
 
@@ -1845,18 +1928,22 @@ function apply_filters($tag, $string) {
 	return $string;
 }
 
-function current_user_can( $action ) {
-  global $request;
+function current_user_can( $action,$post_id=false ) {
+  global $request,$the_author;
   if ($action == 'publish_posts' && ($request->resource != 'posts' || $request->action != 'index'))
     return false;
-  $id = get_profile_id();
+  elseif ($action == 'publish_posts' && get_profile_id())
+    return true;
+  
+    $id = get_profile_id();
+  
   if (isset($request->params['byid']))
     $byid = $request->params['byid'];
   else
     $byid = 0;
   if ($byid && $id == $byid)
     return true;
-  elseif (!$byid && $id)
+  elseif ($id == $the_author->id)
     return true;
   return false;
 }

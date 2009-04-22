@@ -350,6 +350,16 @@ function tags_with_count($format = 'list', $before = '', $sep = '', $after = '')
 	if ( !$posttags )
 		return;	
 	
+	// global $post
+	// $posttags
+	// $tag->count
+	// $tag->slug
+	// $tag->name
+	// $tag
+	// get_term_linnk
+	// is_tag
+	
+	
 	foreach ( $posttags as $tag ) {
 		if ( $tag->count > 1 && !is_tag($tag->slug) ) {
 			$tag_link = '<a href="' . get_term_link($tag, 'post_tag') . '" rel="tag">' . $tag->name . ' (' . $tag->count . ')</a>';

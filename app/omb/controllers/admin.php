@@ -59,9 +59,16 @@ function _theme( &$vars ) {
 
 function index( &$vars ) {
   extract( $vars );
+  
+  $aktwitter_tw_text_options = array(
+    'false'=>'false',
+    'true'=>'true'
+  );
+  
   return vars(
     array( 
       &$collection,
+      &$aktwitter_tw_text_options,
       &$profile
     ),
     get_defined_vars()
