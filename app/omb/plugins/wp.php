@@ -48,6 +48,7 @@ $cc = owner_of($pp);
 $cctime = date( "g:i A" , strtotime($pp->created) );
 $ccdate = date( get_settings('date_format'), strtotime($pp->created) );
 $ccurl = $request->url_for(array('resource'=>'posts','id'=>$pp->id));
+$ccrurl = $request->url_for(array('resource'=>'posts','id'=>$the_post->id));
 $comments .= '  <li class="comment byuser comment-author-'.$cc->nickname.' even thread-even depth-1" id="comment-'.$pp->id.'">';
 $comments .= '<img alt=\'image\' src=\''.$cc->avatar.'\' class=\'avatar avatar-32\' height=\'32\' width=\'32\' />';
 $comments .= '<h4>';
@@ -58,7 +59,7 @@ $comments .= '<span class="actions">';
 
 
 
-$comments .= '<a href="'.$ccurl.'">Permalink</a>  | <a rel=\'nofollow\' class=\'comment-reply-link\' href=\''.$ccurl.'\'>Reply</a>';
+$comments .= '<a href="'.$ccurl.'">Permalink</a>  | <a rel=\'nofollow\' class=\'comment-reply-link\' href=\''.$ccrurl.'\'>Reply</a>';
  if (get_profile_id() == $pp->profile_id) { 
 	$comments .= 	' | <a href="'.get_edit_post_link( $pp ).'" class="post-edit-link" rel="'. $pp->id.'">Edit</a>';
 	$comments .= 	' | <a href="'.get_edit_post_link( $pp, 'remove' ).'" class="post-remove-link" rel="'. $pp->id.'">Remove</a>';
