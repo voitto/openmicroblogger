@@ -234,6 +234,10 @@ class View {
     
   }
   
+  function set_var($name,$value) {
+    $this->named_vars[$name] = $value;
+  }
+  
   function negotiate_content( &$request, $template ) {
     trigger_before('render_partial',$this,$this);
     foreach ( $this->negotiator as $client_wants ) {

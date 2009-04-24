@@ -1,0 +1,13 @@
+{
+	"version": "<?php echo $version; ?>",
+	"type": "<?php echo $type; ?>",
+	"title": "<?php echo $title; ?>",
+	"author_name": "<?php echo $author_name; ?>",
+	"author_url": "<?php echo $author_url; ?>",
+	"cache_age": "<?php echo $cache_age; ?>",
+	"provider_name": "<?php echo $provider_name; ?>",
+	"provider_url": "<?php echo $provider_url; ?>",
+	"width": "<?php echo $width; ?>",
+	"height": "<?php echo $height; ?>",
+	"url": "<?php echo $url; ?>"
+}

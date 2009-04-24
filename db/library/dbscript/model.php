@@ -430,7 +430,8 @@ class Model {
       if ($s3->getBucket(environment('awsBucket'))
       && $s3->getObject(environment('awsBucket'),urlencode($aws_file))) {
         $result = $s3->deleteObject(environment('awsBucket'), urlencode($aws_file));
-        trigger_error( 'Sorry, there was a problem deleting the file from Amazon Web Services', E_USER_ERROR );
+        if (!$result) 
+          trigger_error( 'Sorry, there was a problem deleting the file from Amazon Web Services', E_USER_ERROR );
       }
     }
     

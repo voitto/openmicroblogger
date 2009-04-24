@@ -31,57 +31,66 @@ function post_reply_link($arr,$post_id) {
   
 }
 
+function is_microblog_theme() {
+  global $microblog_themes;
+  if (in_array(environment('theme'),$microblog_themes))
+    return true;
+  return false;
+}
+
 function wp_list_comments() {
   
   $comments = "";
   
-  if (environment('theme') == 'p2' && environment('threaded')) {
+  if (is_microblog_theme() && environment('threaded')) {
 
-
-global $db,$the_post,$prefix,$request;
-$result = $db->get_result( "SELECT id FROM ".$prefix."posts WHERE parent_id = ".$the_post->id );
-
+    global $db,$the_post,$prefix,$request;
+  
+    $result = $db->get_result( "SELECT id FROM ".$prefix."posts WHERE parent_id = ".$the_post->id );
+  
     while ( $row = $db->fetch_array( $result ) ) {
-$pp = $db->get_record('posts',$row['id']);
-$cc = owner_of($pp);
-
-$cctime = date( "g:i A" , strtotime($pp->created) );
-$ccdate = date( get_settings('date_format'), strtotime($pp->created) );
-$ccurl = $request->url_for(array('resource'=>'posts','id'=>$pp->id));
-$ccrurl = $request->url_for(array('resource'=>'posts','id'=>$the_post->id));
-$comments .= '  <li class="comment byuser comment-author-'.$cc->nickname.' even thread-even depth-1" id="comment-'.$pp->id.'">';
-$comments .= '<img alt=\'image\' src=\''.$cc->avatar.'\' class=\'avatar avatar-32\' height=\'32\' width=\'32\' />';
-$comments .= '<h4>';
-$comments .= $cc->nickname;
-$comments .= ' <span class="meta">';
-$comments .= $cctime.' <em>on</em> '.$ccdate;
-$comments .= '<span class="actions">';
-
-
-
-$comments .= '<a href="'.$ccurl.'">Permalink</a>  | <a rel=\'nofollow\' class=\'comment-reply-link\' href=\''.$ccrurl.'\'>Reply</a>';
- if (get_profile_id() == $pp->profile_id) { 
-	$comments .= 	' | <a href="'.get_edit_post_link( $pp ).'" class="post-edit-link" rel="'. $pp->id.'">Edit</a>';
-	$comments .= 	' | <a href="'.get_edit_post_link( $pp, 'remove' ).'" class="post-remove-link" rel="'. $pp->id.'">Remove</a>';
-			 } 
-
-$comments .= '</span>';
-$comments .= '<br />';
-$comments .= '</span>';
-$comments .= '</h4>';
-$comments .= '<div class="commentcontent" id="commentcontent-'.$pp->id.'">';
-$comments .= '<p>'.$pp->title.'</p>';
-$comments .= '</div>';
-$comments .= '</li>';
-
-}
-  
-  
+      $pp = $db->get_record('posts',$row['id']);
+      $cc = owner_of($pp);
+      $comments .= render_comment($pp,$cc,$the_post);
+    }
   }
   
-  
   echo $comments;
+  
 }
+
+
+
+function render_comment(&$post,&$profile,&$parent) {
+  global $request;
+  $comments = "";
+  $cctime = date( "g:i A" , strtotime($post->created) );
+  $ccdate = date( get_settings('date_format'), strtotime($post->created) );
+  $ccurl = $request->url_for(array('resource'=>'posts','id'=>$post->id));
+  $ccrurl = $request->url_for(array('resource'=>'posts','id'=>$parent->id));
+  $comments .= '  <li class="comment byuser comment-author-'.$profile->nickname.' even thread-even depth-1" id="comment-'.$post->id.'">';
+  $comments .= '<img alt=\'image\' src=\''.$profile->avatar.'\' class=\'avatar avatar-32\' height=\'32\' width=\'32\' />';
+  $comments .= '<h4>';
+  $comments .= $profile->nickname;
+  $comments .= ' <span class="meta">';
+  $comments .= $cctime.' <em>on</em> '.$ccdate;
+  $comments .= '<span class="actions">';
+  $comments .= '<a href="'.$ccurl.'">Permalink</a>  | <a rel=\'nofollow\' class=\'comment-reply-link\' href=\''.$ccrurl.'\'>Reply</a>';
+  if ( get_profile_id() == $post->profile_id ) { 
+	  $comments .= 	' | <a href="'.get_edit_post_link( $post ).'" class="post-edit-link" rel="'. $post->id.'">Edit</a>';
+	  $comments .= 	' | <a href="'.get_edit_post_link( $post, 'remove' ).'" class="post-remove-link" rel="'. $post->id.'">Remove</a>';
+	}
+  $comments .= '</span>';
+  $comments .= '<br />';
+  $comments .= '</span>';
+  $comments .= '</h4>';
+  $comments .= '<div class="commentcontent" id="commentcontent-'.$post->id.'">';
+  $comments .= '<p>'.render_notice($post->title,$post,$profile).'</p>';
+  $comments .= '</div>';
+  $comments .= '</li>';
+  return $comments;
+}
+
 
 function cancel_comment_reply_link() {
   echo "";
@@ -207,12 +216,11 @@ class wpdb {
   var $posts;
   
   function wpdb() {
-    global $prefix;
     $this->posts = 'posts';
     $this->col_info = array();
     $this->last_result = array();
     $this->base_prefix = "";
-    $this->prefix = $prefix;
+    $this->prefix = "";
     $this->show_errors = false;
     global $db;
     $this->dbh =& $db->conn;
@@ -743,7 +751,6 @@ function bloginfo( $attr ) {
 
 function get_option( $opt ) {
   global $optiondata;
-  
   if (!isset($optiondata[$opt])){
     global $db;
     $Setting =& $db->model('Setting');
@@ -901,6 +908,10 @@ function wp_head() {
     else
       echo '<script type="text/javascript" src="'.base_path(true).'resource/jquery-1.2.6.min.js"></script>';
 
+echo '
+<script type="text/javascript" src="'.base_path(true).'resource/jquery.longurl.js"></script>  
+
+';
     
     if ($request->resource == "posts" && $request->action == 'new')
       echo '
@@ -911,7 +922,27 @@ function wp_head() {
     
     ';
     
+    $oembedbase = str_replace("https://","",base_url(true));
+    $oembedbase = str_replace("http://","",$oembedbase);
+    global $pretty_url_base;
+    if (isset($pretty_url_base) && !empty($pretty_url_base))
+      $oembedsuffix = 'oembed.json';
+    else
+      $oembedsuffix = '?oembed.json';
+    
+    echo '<script type="text/javascript" src="'.base_path(true).'resource/jquery.oembed.js"></script>'."\n".
+      '  <script type="text/javascript">'."\n".
+      '    $(document).ready(function() {'."\n".
+      ' var p="'.$oembedbase.'"; 
+          $("a.oembed").oembed(null,{},"myphotos",p,"http://"+p+"'.$oembedsuffix.'");'."\n".
+      '  $("a.oembed").longurl();'."\n".' 
+      
+         });'."\n".
+      '  </script>'."\n";
+      
+    if ($request->resource == "posts" && environment('theme') == 'prologue-theme')
     echo '
+
     <script type="text/javascript" src="'.base_path(true).'resource/jquery.corner.js"></script>
     <script type="text/javascript" src="'.base_path(true).'resource/jquery.flash.js"></script>
     <script type="text/javascript" src="'.base_path(true).'resource/jquery.jqUploader.js"></script>
@@ -933,9 +964,9 @@ function wp_head() {
     
     
     
-    
-    
-    
+';
+
+echo '   
     
     <script type="text/javascript">
 
@@ -951,7 +982,7 @@ function wp_head() {
     });
     
   }
-   
+
 function setMaxLength() {
 	var x = document.getElementsByTagName("textarea");
 	var counter = document.createElement("div");
@@ -994,12 +1025,13 @@ function checkMaxLength() {
     
     if (isset($request->resource) && $request->resource == 'identities' && $request->id > 0) {
       
-      // headers for a profile page
-      
-      echo '<meta http-equiv="X-XRDS-Location" content="'.$request->uri.'.xrds" />'."\n";
-      echo '<meta http-equiv="X-Yadis-Location" content="'.$request->uri.'.xrds" />'."\n";
-      
-      // need to add OpenID headers here
+      global $db,$prefix,$request;
+      $result = $db->get_result( "SELECT nickname FROM ".$prefix."identities WHERE id = ".$request->id );
+      if ($result) {
+        $nick = $db->result_value($result,0,"nickname");
+        echo '<meta http-equiv="X-XRDS-Location" content="'.base_url(true).$nick.'.xrds" />'."\n";
+        echo '<meta http-equiv="X-Yadis-Location" content="'.base_url(true).$nick.'.xrds" />'."\n";
+      }
       
     }
 }
@@ -1440,7 +1472,7 @@ function the_content( $linklabel ) {
   
   $title = $the_post->title;
   
-  if (!in_array(environment('theme'),array('p2','prologue-theme'))) {
+  if (!is_microblog_theme()) {
     
     $current_user_id = get_the_author_ID( );
     if (function_exists('prologue_get_avatar'))
@@ -1471,7 +1503,10 @@ function render_notice($title,&$the_post,&$the_author) {
           }
         }
         if (substr($v,0,4) == 'http') {
-          $expl[$k] = "<a href=\"".$v."\">".$v."</a>";
+          if ($request->action == 'entry')
+            $expl[$k] = "<div><a href=\"".$v."\">".$v."</a></div>";
+          else
+            $expl[$k] = "<div><a class=\"oembed\" href=\"".$v."\">".$v."</a></div>";
         }
       }
       $title = implode(" ", $expl);
@@ -1754,7 +1789,7 @@ function comments_popup_link( $var1, $var2, $var3 ) {
   
   $theme = environment('theme');
   
-  if (in_array($theme,array('prologue-theme','p2','twitteronia'))) {
+  if (is_microblog_theme()) {
 
 global $db,$the_post,$prefix,$request;
 $result = $db->get_result( "SELECT id FROM ".$prefix."posts WHERE parent_id = ".$the_post->id );
@@ -1936,7 +1971,10 @@ function current_user_can( $action,$post_id=false ) {
   elseif ($action == 'publish_posts' && get_profile_id())
     return true;
   
-    $id = get_profile_id();
+  $id = get_profile_id();
+  
+  if (!$id)
+    return false;
   
   if (isset($request->params['byid']))
     $byid = $request->params['byid'];
@@ -2052,6 +2090,7 @@ global $submenu;
 global $comment_author; 
 global $comment_author_email;
 global $comment_author_url;
+global $microblog_themes;
 
 
 // added the following line to ParanoidHTTPFetcher line 171
@@ -2121,6 +2160,7 @@ $limit_max = get_option( 'posts_per_page' );
 $limit_offset = 0;
 
 
+$microblog_themes = array('twitteronia','p2','prologue-theme');
 
 
 
@@ -2129,7 +2169,3 @@ $limit_offset = 0;
 
 
 
-
-
-
-?>

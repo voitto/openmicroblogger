@@ -202,3 +202,59 @@ function _block( &$vars ) {
 
 }
 
+function _oembed( &$vars ) {
+  
+  extract( $vars );
+  
+  $width = $_GET['maxWidth'];
+  $height = $_GET['maxHeight'];
+  
+  $id = array_pop(split("\/",$_GET['url']));
+
+  $version = '1.0';
+  
+  $type = 'photo'; // photo video link rich
+  
+  $p = $Post->find($id);
+  $e = $p->FirstChild('entries');
+  $title = $p->title;
+  
+  $o = owner_of($p);
+  
+  $author_name = $o->nickname;
+  $author_url = $o->profile;
+  $cache_age = 3600;
+  $provider_name = "myphotos";
+  $provider_url = $request->base;
+
+  $thumbnail_url = 0;
+  $thumbnail_width = 0;
+  $thumbnail_height = 0;
+  
+  $url = $request->url_for(array(
+    'resource'=>'posts',
+    'id'=>$id,
+    'action'=>'attachment.'.extension_for($e->content_type)
+  ));
+  
+  return vars(
+    array(
+      &$version,
+      &$type,
+      &$title,
+      &$author_name,
+      &$author_url,
+      &$cache_age,
+      &$provider_name,
+      &$provider_url,
+      &$width,
+      &$height,
+      &$thumbnail_url,
+      &$thumbnail_width,
+      &$thumbnail_height,
+      &$url
+    ),
+    get_defined_vars()
+  );
+  
+}

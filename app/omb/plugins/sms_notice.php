@@ -26,17 +26,9 @@ function mobile_event( &$vars ) {
     if ($i)
       $p->set_etag($i->person_id);
     
-    if (!function_exists('broadcast_email_notice'))
-      load_plugin('email_notice');
+    $response->set_var('profile',$i);
     
-    if (function_exists('broadcast_email_notice'))
-      broadcast_email_notice( $p, $p );
-      
-    if (!function_exists('broadcast_sms_notice'))
-      load_plugin('sms_notice');
-    
-    if (function_exists('broadcast_sms_notice'))
-      broadcast_sms_notice( $p, $p );
+    trigger_after( 'insert_from_post', $Post, $p );
     
     $response = "";
     

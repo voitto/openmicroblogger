@@ -5,7 +5,7 @@ after_filter( 'send_to_twitter', 'insert_from_post' );
 
 // the "hook" function itself
 function send_to_twitter( &$model, &$rec ) {
-  
+
   // if the Record does not have a title or uri, bail out
   if (!(isset($rec->title)) || !(isset($rec->uri)))
     return;

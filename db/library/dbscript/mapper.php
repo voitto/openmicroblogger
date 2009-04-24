@@ -213,9 +213,16 @@ class Mapper {
     
     if (!($this->values[2] == 'localhost'))
       $this->domain = $this->values[2];
-
+    
+    $paramstr = substr($this->uri,$qp+1);
+    
+    $urlsplit = split("http%3A//",$paramstr);
+    
+    if (count($urlsplit)>1)
+      $paramstr = $urlsplit[0];
+    
     if ($qp > $lenbase)
-      $this->params = explode( '/', substr($this->uri,$qp+1));
+      $this->params = explode( '/', $paramstr);
     else
       $this->params = array('');
     

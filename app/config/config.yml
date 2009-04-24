@@ -82,6 +82,7 @@ env:
   installed:
     - password
     - streams
+    - twitter
   
   boot: omb
   
@@ -176,7 +177,7 @@ env:
     - 3:
       id       : json
       qs       : "0.000"
-      type     : application/javascript
+      type     : application/json
       encoding : gzip
       charset  : utf-8
       language : en

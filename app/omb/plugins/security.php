@@ -911,7 +911,9 @@ function make_identity( $user ) {
     $m->save_changes();
   }
   
-  $i->set_value( 'profile', $request->url_for(array('resource'=>$nicker)) );
+  $i->set_value( 'profile', $request->url_for(array('resource'=>"_".$i->id)) );
+  $i->set_value( 'profile_url', $request->url_for(array('resource'=>$nicker)) );
+
   $i->save_changes();
   //$i->set_value( 'update_profile', $updateProfile );
   //$i->set_value( 'post_notice', $postNotice );

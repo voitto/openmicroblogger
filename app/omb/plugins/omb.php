@@ -38,6 +38,11 @@ $request->connect( 'groups', array(
     'resource'=>'groups'
 ));
 
+$request->connect( 'oembed', array(
+  'resource'=>'posts',
+  'action'=>'oembed'
+));
+
 $request->connect(
   ':nickname',
   array(
@@ -476,7 +481,10 @@ function filter_MatchesAnyOMBType(&$service)
 function oauth_omb_subscribe( &$vars ) {
   
   extract($vars);
-
+  
+  if (!(environment('openid_version') > 1))
+    $db->create_openid_tables();
+  
   wp_plugin_include(array(
     'wp-oauth'
   ));
@@ -614,6 +622,9 @@ function oauth_omb_subscribe( &$vars ) {
 function oauth_authorize( &$vars ) {
   
   extract($vars);
+  
+  if (!(environment('openid_version') > 1))
+    $db->create_openid_tables();
 
   wp_plugin_include(array(
     'wp-oauth'
@@ -1050,6 +1061,8 @@ function oauth_omb_post( &$vars ) {
     exit;
   }
   
+  $response->set_var('profile',$sender);
+
   $Subscription =& $db->model('Subscription');
   
   $sub = $Subscription->find_by( array(
@@ -1080,22 +1093,7 @@ function oauth_omb_post( &$vars ) {
     $p->set_value( 'title', $content );
     $p->save_changes();
     $p->set_etag($sender->person_id);
-    
-    
-    if (!function_exists('broadcast_email_notice'))
-      load_plugin('email_notice');
-    
-    if (function_exists('broadcast_email_notice'))
-      broadcast_email_notice( $p, $p );
-      
-    if (!function_exists('broadcast_sms_notice'))
-      load_plugin('sms_notice');
-    
-    if (function_exists('broadcast_sms_notice'))
-      broadcast_sms_notice( $p, $p );
-    
-    
-    
+    trigger_after( 'insert_from_post', $Post, $p );
   }
   
   print "omb_version=".OMB_VERSION;
@@ -1353,6 +1351,12 @@ function oauth_omb_register_services() {
   register_xrd('oauth');
   
   register_xrd('omb');
+  
+  if (empty($i->profile)) {
+    $i->set_value( 'profile', $request->url_for(array('resource'=>"_".$i->id)) );
+    $i->set_value( 'profile_url', $request->url_for(array('resource'=>$i->nickname)) );
+    $i->save_changes();
+  }
   
   register_xrd_service( 'omb', 'OMB Post Notice', array(
     'Type' => array( 
