@@ -106,7 +106,7 @@
         });
         $(".editable_select_tw_text").editable(submit_to, { 
             indicator   : "<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>",
-               data     : '<?php $json = new Services_JSON(); echo $json->encode( $aktwitter_tw_text_options ); ?>',
+               data     : '<?php if (!class_exists("Services_JSON")) lib_include("json"); $json = new Services_JSON(); echo $json->encode( $aktwitter_tw_text_options ); ?>',
             submitdata  : function() {
               return {"entry[etag]" : "<?php echo $threadentry->etag; ?>"};
             },

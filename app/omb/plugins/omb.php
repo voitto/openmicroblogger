@@ -1061,8 +1061,6 @@ function oauth_omb_post( &$vars ) {
     exit;
   }
   
-  $response->set_var('profile',$sender);
-
   $Subscription =& $db->model('Subscription');
   
   $sub = $Subscription->find_by( array(

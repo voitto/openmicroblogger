@@ -11,6 +11,9 @@ function send_email_notice( &$model, &$rec ) {
   global $db;
   global $request;
   
+  if (!(get_profile_id() && $request->resource == 'groups'))
+    return;
+  
   // get data modesl for 3 tables
   $Entry =&  $db->get_table( 'entries' );
   $Group =&  $db->get_table( 'groups'  );
@@ -42,7 +45,7 @@ function send_email_notice( &$model, &$rec ) {
   $datamodel =& $db->get_table($notify_table);
   
   // get the profile data for the current user
-  $profile = get_profile();
+  $profile = owner_of($rec);
   
   // loop over each group
   while ($g = $Group->MoveNext()) {

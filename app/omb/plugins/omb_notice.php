@@ -20,7 +20,7 @@ function broadcast_omb_notice( &$model, &$rec ) {
     'wp-oauth'
   ));
   
-  $i = get_profile();
+  $i = owner_of($rec);
   
   $listenee_uri = $i->profile;
   

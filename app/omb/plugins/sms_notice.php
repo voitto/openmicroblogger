@@ -27,7 +27,7 @@ function mobile_event( &$vars ) {
       $p->set_etag($i->person_id);
     
     $response->set_var('profile',$i);
-    
+    load_apps();
     trigger_after( 'insert_from_post', $Post, $p );
     
     $response = "";
