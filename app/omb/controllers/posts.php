@@ -17,6 +17,7 @@ function get( &$vars ) {
 
 function post( &$vars ) {
   extract( $vars );
+  global $request;
   trigger_before( 'insert_from_post', $Post, $request );
   $table = 'posts';
   $content_type = 'text/html';

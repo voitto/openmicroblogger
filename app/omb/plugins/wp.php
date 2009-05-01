@@ -1218,7 +1218,7 @@ function the_post() {
   }
   
   global $the_post,$response,$the_author,$the_entry,$request;
-  $the_post =& $response->collection->MoveNext();
+  $the_post = $response->collection->MoveNext();
   if (isset($the_post->profile_id) && $the_post->table == 'posts'){
     $the_author = get_profile($the_post->profile_id);
   }else{
