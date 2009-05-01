@@ -175,9 +175,7 @@ function put( &$vars ) {
   
   header_status( '200 OK' );
   redirect_to( $request->url_for( array(
-    'resource'=>'posts',
-    'byid'=>$rec->id,
-    'page'=>1
+    'resource'=>'posts'
   )));
 }
 

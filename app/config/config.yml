@@ -83,6 +83,7 @@ env:
     - password
     - streams
     - twitter
+    - identica
   
   boot: omb
   

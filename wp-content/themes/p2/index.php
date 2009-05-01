@@ -40,9 +40,12 @@ if( 'POST' == $_SERVER['REQUEST_METHOD'] && !empty( $_POST['action'] ) && $_POST
 	wp_redirect( get_bloginfo( 'url' ) . '/' );
 	exit;
 		
-} ?>
+} 
 
-<?php get_header(); ?>
+get_header();
+
+?>
+
 <div class="sleeve_main">
 		<?php if( current_user_can( 'publish_posts' ) )
 			require_once dirname( __FILE__ ) . '/post-form.php'; ?>
