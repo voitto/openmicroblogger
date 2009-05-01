@@ -330,7 +330,10 @@ class Mapper {
     $links[] = '<a href="'. $this->base .'">Home</a>';
     
     if ( isset( $this->resource ) && ( $this->resource != 'introspection' ))
-      $links[] = '<a href="'. $this->base .'?'.$this->resource.'">'.ucwords($this->resource).'</a>';
+      if (pretty_urls())
+        $links[] = '<a href="'. $this->base .''.$this->resource.'">'.ucwords($this->resource).'</a>';
+      else
+        $links[] = '<a href="'. $this->base .'?'.$this->resource.'">'.ucwords($this->resource).'</a>';
     
     if ( ($this->id != 0) && isset( $this->resource ) && ( $this->resource != 'introspection' ))
        $links[] = '<a href="'.$this->entry_url($this->id).'">Entry '.ucwords($this->id).'</a>';

@@ -387,7 +387,10 @@ function omb_request_munger( &$request, &$route ) {
   foreach($omb_routes as $func) {
     if (array_key_exists($func,$params)) {
         // if found, lie to the mapper about the URI
-        $request->set('uri',$request->base."?".$func);
+        if (pretty_urls())
+          $request->set('uri',$request->base."".$func);
+        else
+          $request->set('uri',$request->base."?".$func);
         $request->set('params', array($func));
     }
   }

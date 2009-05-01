@@ -354,7 +354,7 @@ function _email( &$vars ) {
     $return_to = $_SESSION['requested_url'];
   else
     $return_to = $request->base;
-  $protected_url = $request->base;
+  $protected_url = base_url(true);
   $Identity =& $db->model('Identity');
   if (isset($request->params['ident'])) {
     $ident = $Identity->find_by('token',$request->params['ident']);
@@ -396,7 +396,7 @@ function _register( &$vars ) {
     $return_to = $_SESSION['requested_url'];
   else
     $return_to = $request->base;
-  $protected_url = $request->base;
+  $protected_url = base_url(true);
   if (isset($request->params['ident'])) {
     $ident = $Identity->find_by('token',$request->params['ident']);
     if ($ident) {
@@ -433,7 +433,7 @@ function _login( &$vars ) {
     $return_to = $_SESSION['requested_url'];
   else
     $return_to = $request->base;
-  $protected_url = $request->base;
+  $protected_url = base_url(true);
   if (isset($_SESSION['openid_url']))
     $openid_url = $_SESSION['openid_url'];
   else

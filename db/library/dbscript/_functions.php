@@ -2623,6 +2623,11 @@ $timezone_offsets = array(
   '+14'    =>  'Line Island'
 );
 
-
+function pretty_urls() {
+  global $pretty_url_base;
+  if (isset($pretty_url_base) && !empty($pretty_url_base))
+    return true;
+  return false;
+}
 
 
