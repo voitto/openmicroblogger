@@ -174,8 +174,7 @@ class View {
       
     } elseif ( !( in_array( 'partial', $request->activeroute->patterns, true )) ) {
       
-      // layout_template_not_exists
-      
+      // layout_template_not_exists (get/post/put/delete action)
       $this->render_partial( $request, $request->action );
       
     }
@@ -200,15 +199,15 @@ class View {
     
     global $db;
     
-    if ( function_exists( $action )) {
+    if ( file_exists( $view ) && function_exists( $action ) ) {
+      
       trigger_before( $request->action, $request, $db );
       $result = $action( array_merge( $this->named_vars, $db->get_resource() ));
       trigger_after( $request->action, $request, $db );
+      
       if ( is_array( $result ))
         extract( $result );
-    }
-    
-    if ( file_exists( $view ) ) {
+      
       if (!($this->header_sent)) {
         $content_type = 'Content-Type: ' . $this->pick_content_type( $ext );
         if ($this->pick_content_charset( $ext ))
@@ -216,7 +215,9 @@ class View {
         header( $content_type );
         $this->header_sent = true;
       }
+      
       include( $view );
+      
     } else {
       
       // no template, maybe it's a blobcall

@@ -281,6 +281,8 @@ after_filter( 'wp_set_post_fields_after', 'insert_from_post' );
 
 function wp_set_post_fields_after( &$model, &$rec ) {
   global $request;
+  if ($request->action == 'oauth_omb_post')
+    return;
   if ($model->table == 'posts') {
     $rec->set_value( 'uri', $request->url_for( array(
       'resource'=>'__'.$rec->id,
