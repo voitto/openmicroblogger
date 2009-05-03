@@ -26,7 +26,7 @@ class Subscription extends Model {
     $this->has_one( 'entry' );
     $this->has_one( 'person' );
     
-    $this->let_read( 'all:remove' );
+    $this->let_read( 'all:always' );
     $this->let_modify( 'all:members' );
     $this->let_delete( 'all:members' );
     

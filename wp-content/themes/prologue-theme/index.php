@@ -36,10 +36,15 @@ get_header( );
 
 show_prologue_nav();
 
+	global $request;
+	if (!(isset($request->params['nickname']))) {
+    if( current_user_can( 'publish_posts' ) ) {
+      require_once dirname( __FILE__ ) . '/post-form.php';
+    }
+	} else {
+	  render_partial('profile');
+  }
 
-if( current_user_can( 'publish_posts' ) ) {
-  require_once dirname( __FILE__ ) . '/post-form.php';
-}
 ?>
 
 <div id="main">

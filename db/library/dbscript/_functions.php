@@ -1053,7 +1053,7 @@ function render_theme( $theme ) {
   
   $wpmode = "posts";
   
-  if ($request->resource != 'posts' || !($request->action == 'index')) {
+  if ($request->resource != 'posts' || !(in_array($request->action,array('replies','index')))) {
     $wpmode = "other";
     if (is_file($folder . "functions.php" ))
       require_once( $folder . "functions.php" );
@@ -2437,13 +2437,18 @@ function get_nav_links() {
       $links["Profile"] = $request->url_for(array("resource"=>$i->nickname));
     else
       $links["Profile"] = $i->profile;
+
+    if (empty($i->post_notice))
+      $links["@".$i->nickname] = $request->url_for(array("resource"=>$i->nickname))."/replies";
+    else
+      $links["@".$i->nickname] = $i->profile."/replies";
       
   }
   
   if ($pid > 0) {
     
     if (member_of('administrators'))
-      $links["Site Admin"] = $request->url_for(array('resource'=>'admin'));
+      $links["Admin"] = $request->url_for(array('resource'=>'admin'));
     
     $links["Upload"] = $request->url_for(array('resource'=>'posts','action'=>'upload'));
     
@@ -2498,6 +2503,10 @@ function load_apps() {
   // enable wp-style callback functions
   
   global $db,$request,$env;
+  
+  if (in_array($request->action,array(
+    'replies','following','followers'
+  ))) return;
   
   $identity = get_app_id();
   

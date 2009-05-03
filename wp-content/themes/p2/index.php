@@ -47,8 +47,15 @@ get_header();
 ?>
 
 <div class="sleeve_main">
-		<?php if( current_user_can( 'publish_posts' ) )
-			require_once dirname( __FILE__ ) . '/post-form.php'; ?>
+<?php
+	global $request;
+	if (!(isset($request->params['nickname']))) {
+	  if( current_user_can( 'publish_posts' ) )
+			require_once dirname( __FILE__ ) . '/post-form.php';
+	} else {
+	  render_partial('profile');
+  }
+?>
 <div id="main">
 		<?php global $paged;?>
 	<h2>Recent Updates <?php if ($paged>1) echo('(Page '.$paged.') '); ?><a class="rss" href="<?php bloginfo( 'rss2_url' ); ?>">RSS</a> <span class="controls"></span></h2>

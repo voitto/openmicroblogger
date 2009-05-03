@@ -244,6 +244,7 @@ function _entry( &$vars ) {
     if ($s->name == 'app')
       $installed_apps[] = $s->value; 
   }
+  $Subscription->set_limit(10);
   return vars(
     array( &$collection, &$Member, &$Entry, &$profile, &$Identity, &$Subscription, &$installed_apps ),
     get_defined_vars()

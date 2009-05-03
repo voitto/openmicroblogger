@@ -49,3 +49,98 @@ function _remove( &$vars ) {
   );
 }
 
+
+
+function _followers( &$vars ) {
+  extract($vars);
+  global $request;
+  global $response;
+  
+  $pagevar = "followerspage";
+  
+  if (isset($request->params[$pagevar]))
+    $page = $request->params[$pagevar];
+  else
+    $page = 1;
+  
+  $mapper = array(
+    'nickname'=>$request->params['nickname'],
+  );
+  
+  $where = array(
+    'subscribed'=>$request->params['byid']
+  );
+  
+  $Subscription->set_param( 'find_by', $where );
+  
+  $request->set_param('page',$page);
+  
+  $Subscription->set_limit(10);
+
+  $response->collection = new Collection('subscriptions');
+  if (count($response->collection->members) >= $response->collection->per_page ) {
+    $mapper[$pagevar] = ($page + 1);
+    $older = '<a href="'.$request->url_for( $mapper );
+    $older .= '">&lt; older</a>';
+  }
+  if ($page > 1) {
+    $mapper[$pagevar] = ($page - 1);
+    $newer = "&nbsp;&nbsp;&nbsp;";
+    $newer .= '<a href="'.$request->url_for( $mapper );
+    $newer .= '">newer &gt;</a>';
+  }
+  $Identity =& $db->model('Identity');
+  return vars(
+    array( &$newer, &$older, &$collection, &$Identity ),
+    get_defined_vars()
+  );
+}
+
+function _following( &$vars ) {
+  extract($vars);
+  global $request;
+  global $response;
+  
+  $pagevar = "followingpage";
+  
+  if (isset($request->params[$pagevar]))
+    $page = $request->params[$pagevar];
+  else
+    $page = 1;
+  
+  $mapper = array(
+    'nickname'=>$request->params['nickname'],
+  );
+  
+  $where = array(
+    'subscriber'=>$request->params['byid']
+  );
+  
+  $Subscription->set_param( 'find_by', $where );
+  
+  $request->set_param('page',$page);
+  
+  $Subscription->set_limit(10);
+  
+  $response->collection = new Collection('subscriptions');
+  if (count($response->collection->members) >= $response->collection->per_page ) {
+    $mapper[$pagevar] = ($page + 1);
+    $older = '<a href="'.$request->url_for( $mapper );
+    $older .= '">&lt; older</a>';
+  }
+  if ($page > 1) {
+    $mapper[$pagevar] = ($page - 1);
+    $newer = "&nbsp;&nbsp;&nbsp;";
+    $newer .= '<a href="'.$request->url_for( $mapper );
+    $newer .= '">newer &gt;</a>';
+  }
+  $Identity =& $db->model('Identity');
+  return vars(
+    array( &$newer, &$older, &$collection, &$Identity ),
+    get_defined_vars()
+  );
+}
+
+
+
+

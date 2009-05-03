@@ -71,8 +71,8 @@ class Identity extends Model {
     $this->let_read( 'all:entry.jpg' );
     $this->let_read( 'all:entry.xrds' );
     
-    $this->let_read( 'all:installed_apps_json' );
-    $this->let_read( 'all:app_installer_json' );
+    $this->let_read( 'all:installed_apps_json.json' );
+    $this->let_read( 'all:app_installer_json.json' );
     
     
     

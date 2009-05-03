@@ -46,11 +46,58 @@ $request->connect( 'oembed', array(
 $request->connect(
   ':nickname',
   array(
-    'resource'=>'identities',
-    'action'=>'entry',
+    'resource'=>'posts',
+    'action'=>'index',
     'requirements' => array ( '[A-Za-z0-9_.]+' )
   )
 );
+
+$request->connect(
+  ':nickname/replies',
+  array(
+    'resource'=>'posts',
+    'action'=>'replies',
+    'requirements' => array ( '[A-Za-z0-9_.]+' )
+  )
+);
+
+$request->connect(
+  ':nickname/subscriptions',
+  array(
+    'resource'=>'subscriptions',
+    'action'=>'following',
+    'requirements' => array ( '[A-Za-z0-9_.]+' )
+  )
+);
+
+$request->connect(
+  ':nickname/subscribers',
+  array(
+    'resource'=>'subscriptions',
+    'action'=>'followers',
+    'requirements' => array ( '[A-Za-z0-9_.]+' )
+  )
+);
+
+
+$request->connect(
+  ':nickname/subscriptions/:followingpage',
+  array(
+    'resource'=>'subscriptions',
+    'action'=>'following',
+    'requirements' => array ( '[A-Za-z0-9_.]+','[0-9]+' )
+  )
+);
+
+$request->connect(
+  ':nickname/subscribers/:followerspage',
+  array(
+    'resource'=>'subscriptions',
+    'action'=>'followers',
+    'requirements' => array ( '[A-Za-z0-9_.]+','[0-9]+' )
+  )
+);
+
 
 $request->connect(
   ':resource/by/:byid/:page',
@@ -74,7 +121,18 @@ before_filter( 'omb_filter_posts', 'get_query' );
 
 function omb_filter_posts( &$model, &$db ) {
   global $request;
-  if (isset($request->params['byid']) && $request->resource == 'posts' && $model->table == 'posts'){
+  if (isset($request->params['nickname']) && isset($request->params['byid']) && $request->resource == 'posts' && $model->table == 'posts'){
+    $where = array(
+      'profile_id'=>$request->params['byid']
+    );
+    if ($request->action == 'replies')
+      $where = array(
+        'eq'=>'like',
+        'title'=>'%@'.$request->params['nickname'].'%'
+      );
+    
+    $model->set_param( 'find_by', $where );
+  } elseif (isset($request->params['byid']) && $request->resource == 'posts' && $model->table == 'posts'){
     $model->has_many( 'profile_id:subscriptions.subscribed' );
     $model->set_groupby( 'id' );
     $where = array(
@@ -83,19 +141,7 @@ function omb_filter_posts( &$model, &$db ) {
       'subscriptions.subscriber'=>$request->params['byid']
     );
     $model->set_param( 'find_by', $where );
-  } elseif ($request->action == 'index' && isset($request->params['for']) && $request->resource == 'posts' && $model->table == 'posts') {
-    trigger_error('The replies tab is to be implemented here', E_USER_ERROR);
-    //$model->has_many( 'profile_id:subscriptions.subscribed' );
-    //$model->set_groupby( 'id' );
-    //$where = array(
-    //  'op'=>'OR',
-    //  'profile_id'=>$request->params['byid'],
-    //  'subscriptions.subscriber'=>$request->params['byid']
-    //);
-    //$model->set_param( 'find_by', $where );
-
-// THREADED MODE
-
+  
   } elseif (environment('threaded') && in_array($request->action, array('index','get')) && $model->table == 'posts' && $request->resource == 'posts' && $request->id == 0) {
     $where = array(
       'parent_id'=>0
@@ -371,10 +417,16 @@ function set_identity_from_nick(&$request,&$route) {
       $id = $db->result_value($result,0,"id");
   }
   
-  if ($id)
+  if (substr($nick,0,1) == '_' && $id) {
     $request->set_param('id',$id);
-  else
-    trigger_error("Sorry, the person named ".$nick." could not be found.", E_USER_ERROR);
+    $request->set_param('resource','identities');
+    $request->set_param('action','entry');
+  } elseif ($id) {
+    $request->set_param('byid',$id);
+    if (!(isset($request->page)))
+      $request->set_param('page',1);
+  }
+
 }
 
 

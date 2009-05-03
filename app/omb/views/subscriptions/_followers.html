@@ -1,0 +1,44 @@
+<?php
+global $request,$db;
+$Subscription =& $db->model('Subscription');
+
+$zeep = environment('zeepKeyWord');
+?>
+
+
+<h2><?php echo $request->params['nickname']; ?>'s subscribers</h2>
+
+<br />
+
+
+<?php while ($subscriber = $collection->MoveNext()) : ?>
+  
+
+
+
+
+<?php $subentry = $subscriber->FirstChild('entries'); ?>
+<?php if (empty($subentry->etag)) $subscriber->set_etag(); ?>
+
+<?php $si = $Identity->find( $subscriber->subscriber ); ?>
+
+<h3><?php echo $si->nickname; ?>
+<?php if (!empty($si->fullname)) : ?>
+  &nbsp;(<?php echo $si->fullname; ?>)
+<?php endif; ?></h3>
+
+<p><a style="hover:none;" href="<?php echo $request->url_for(array('resource'=>$si->nickname)); ?>"><img style="border:none;width:48px;height:48px;" src="<?php echo $si->avatar; ?>"></a>
+  </p>
+
+
+
+<br />
+
+
+
+
+  
+<?php endwhile; ?>
+
+<?php echo $older; ?>
+<?php echo $newer; ?>

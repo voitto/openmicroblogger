@@ -220,7 +220,7 @@ class View {
       
     } else {
       
-      // no template, maybe it's a blobcall
+      // no template, check for blobcall
       
       if ((in_array(type_of( $ext ), mime_types())) && !($this->header_sent)) {
         $model =& $db->get_table($request->resource);
@@ -229,6 +229,11 @@ class View {
         trigger_before( $request->action, $request, $db );
         $Member = $this->collection->MoveFirst();
         render_blob( $Member->$template, $ext );
+      } else {
+        
+        // nothing to do
+        admin_alert("nothing to do for view $view and action $action");
+        
       }
       
     }

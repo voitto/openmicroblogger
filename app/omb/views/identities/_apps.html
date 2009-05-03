@@ -59,7 +59,7 @@ $(document).ready(function() {
       loadurl     : '<?php url_for(array(
         "resource"=>"identities",
         "id"=>$Member->id,
-        "action"=>"app_installer_json")); ?>',
+        "action"=>"app_installer_json.json")); ?>',
       submitdata  : function() {
         return {
           "setting[name]"   : "app",
@@ -99,7 +99,7 @@ $(document).ready(function() {
   });
   $(".editable_select_installed").editable(submit_to, { 
       indicator   : "<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>",
-      loadurl     : '<?php url_for(array("resource"=>"identities","id"=>$Member->id,"action"=>"installed_apps_json")); ?>',
+      loadurl     : '<?php url_for(array("resource"=>"identities","id"=>$Member->id,"action"=>"installed_apps_json.json")); ?>',
       submitdata  : function() {
         return {
           "method"          : "delete"

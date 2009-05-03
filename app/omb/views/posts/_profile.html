@@ -1,0 +1,103 @@
+<?php
+
+lib_include( 'php_microformats' );
+
+global $request;
+
+$i = array(
+  'url'      => $Member->url,
+  'name'     => $Member->nickname,
+  'photo'    => $Member->avatar
+);
+
+// url, name, email, org() name/title, location() street/town/zip/state/country
+// phone() home/cell, photo, im() skype/aim
+
+echo phpMicroformats::createHCard( $i );
+
+$subscribers = array();
+
+?>
+
+<br />
+<h3><?php echo $Member->nickname; ?>'s subscribers</h3>
+
+<?php $Subscription->find_by('subscribed',$Member->id); ?>
+
+<?php while ($subscriber = $Subscription->MoveNext()) : ?>
+  <?php if ($subscriber->subscribed == $Member->id) : ?>
+    <?php $subscribers[] = $subscriber->subscriber; ?>
+    <?php $si = $Identity->find( $subscriber->subscriber ); ?>
+    <a href="<?php if (!empty($si->profile_url)) echo $si->profile_url; else echo $si->profile;  ?>"><img style="border:none;width:48px;height:48px;" src="<?php echo $si->avatar; ?>"></a>
+  <?php endif; ?>
+<?php endwhile; ?>
+<a href="<?php url_for(array('nickname'=>$request->params['nickname'],'followerspage'=>1)); ?>">All Subscribers...</a>
+
+<br />
+<h3><?php echo $Member->nickname; ?>'s subscriptions</h3>
+
+<?php $Subscription->find_by('subscriber',$Member->id); ?>
+
+<?php while ($subscriber = $Subscription->MoveNext()) : ?>
+<?php if ($subscriber->subscriber == $Member->id) : ?>
+<?php $si = $Identity->find( $subscriber->subscribed ); ?>
+<a href="<?php if (!empty($si->profile_url)) echo $si->profile_url; else echo $si->profile; ?>"><img style="border:none;width:48px;height:48px;" src="<?php echo $si->avatar; ?>"></a>
+<?php endif; ?>
+<?php endwhile; ?>
+<a href="<?php url_for(array('nickname'=>$request->params['nickname'],'followingpage'=>1)); ?>">All Subscriptions...</a>
+
+
+
+<br />
+<?php $pro = get_profile(); ?>
+
+<?php if (isset($pro->id) && $pro->id > 0 && ($pro->id != $Member->id) && !in_array($pro->id,$subscribers)) : ?>
+
+<form method="post" action="<?php url_for('local_subscribe'); ?>">
+<input type="hidden" name="listenee_nick" value="<?php echo $Member->nickname; ?>">
+<input type="hidden" name="listenee_id" value="<?php echo $Member->id; ?>">
+<input type="submit" value="Subscribe to <?php echo $Member->nickname; ?>'s notices">
+</form>
+
+<br />
+<a href="<?php url_for(array('resource'=>$pro->nickname)); ?>">Go back to My Profile</a>
+
+
+<?php elseif (isset($pro->id) && $pro->id > 0 && ($pro->id != $Member->id) && in_array($pro->id,$subscribers)) : ?>
+
+<form method="post" action="<?php url_for('local_unsubscribe'); ?>">
+<input type="hidden" name="listenee_nick" value="<?php echo $Member->nickname; ?>">
+<input type="hidden" name="listenee_id" value="<?php echo $Member->id; ?>">
+<input type="submit" value="Unsubscribe from <?php echo $Member->nickname; ?>'s notices">
+</form>
+
+<br />
+<a href="<?php url_for(array('resource'=>$pro->nickname)); ?>">Go back to My Profile</a>
+
+<?php elseif (isset($pro->id) && $pro->id > 0 && ($pro->id == $Member->id)) : ?>
+<br />
+<br />
+<form>
+<p>Copy &amp; paste the following URL to subscribe to people on other Web sites:</p>
+<p>Profile URL: <input name="profid" size="40" value="<?php echo $request->url_for(array('resource'=>$pro->nickname)); ?>"/></p>
+</form>
+<br />
+
+<?php elseif (!isset($pro->id)) : ?>
+
+<h2>Subscribe to <?php echo $Member->nickname; ?>'s notices:</h2>
+<form method="post" action="<?php url_for('oauth_omb_subscribe'); ?>">
+  <input type="hidden" name="listenee_id" value="<?php echo $Member->id; ?>">
+  Your Profile URL <input size="40" name="listener_url">
+  <input type="submit" value="Subscribe to <?php echo $Member->nickname; ?>'s notices">
+</form>
+
+<?php endif; ?>
+
+
+<?php
+  
+      trigger_before( 'the_content', $current_user, $current_user );
+
+?>
+

@@ -97,6 +97,31 @@ function index( &$vars ) {
   );
 }
 
+function _profile( &$vars ) {
+  // entry controller returns
+  // a Collection w/ 1 member entry
+  extract( $vars );
+  $Identity =& $db->model('Identity');
+  $Member = $Identity->find($request->byid);
+  $Entry = $Member->FirstChild( 'entries' );
+  $installed_apps = array();
+  $Subscription->set_limit(10);
+  return vars(
+    array( &$collection, &$Member, &$Entry, &$profile, &$Identity, &$Subscription, &$installed_apps ),
+    get_defined_vars()
+  );
+}
+
+
+function _replies( &$vars ) {
+  // index controller returns
+  // a Collection of recent entries
+  extract( $vars );
+  return vars(
+    array( &$collection, &$profile ),
+    get_defined_vars()
+  );
+}
 
 function _index( &$vars ) {
   // index controller returns
@@ -258,4 +283,47 @@ function _oembed( &$vars ) {
     get_defined_vars()
   );
   
+}
+
+
+
+function _apps( &$vars ) {
+  extract($vars);
+  $Identity =& $db->model('Identity');
+  global $submenu,$current_user;
+  trigger_before( 'admin_menu', $current_user, $current_user );
+  $menuitems = array();
+  $apps_list = array();
+  global $env;
+  if (is_array($env['apps']))
+    $apps_list = $env['apps'];
+  $i = $Identity->find(get_profile_id());
+  while ($s = $i->NextChild('settings')){
+    $s = $Setting->find($s->id);
+    $e = $s->FirstChild('entries');
+    $apps_list[] = $s->value;
+  }
+  $menuitems[$request->url_for(array(
+    'resource'=>'identities',
+    'id'=>get_profile_id(),
+    'action'=>'edit'
+    )).'/partial'] = 'Settings';
+  $menuitems[$request->url_for(array(
+    'resource'=>'identities',
+    'id'=>get_profile_id(),
+    'action'=>'subs'
+    )).'/partial'] = 'Friends';
+  //$menuitems[$request->url_for(array(
+  //  'resource'=>'identities',
+  //  'id'=>get_profile_id(),
+  //  'action'=>'apps'
+  //  )).'/partial'] = 'Apps';
+  foreach ($submenu as $arr) {
+    if (in_array($arr[0][0],$apps_list))
+      $menuitems[$arr[0][4]] = $arr[0][3];
+  }
+  return vars(
+    array(&$menuitems),
+    get_defined_vars()
+  );
 }

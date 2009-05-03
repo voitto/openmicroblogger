@@ -1589,6 +1589,12 @@ function show_prologue_nav() {
       $links['Profile'] = $request->url_for(array('resource'=>$i->nickname));
     else
       $links['Profile'] = $i->profile;
+    
+    if (empty($i->post_notice))
+      $links["@".$i->nickname] = $request->url_for(array("resource"=>$i->nickname))."/replies";
+    else
+      $links["@".$i->nickname] = $i->profile."/replies";
+
   }
   if ($pid > 0) {
     if (member_of('administrators')) {
@@ -1998,6 +2004,14 @@ function setup_postdata( &$post ) {
 function dynamic_sidebar() {
   global $request;
   global $sidebar_done;
+  
+  if (isset($request->params['nickname'])) {
+    if ($request->action == 'index' && $request->byid == get_profile_id())
+      render_partial('apps');
+    echo '<script type="text/javascript" src="'.$request->url_for(array('resource'=>'pages','action'=>'block.js')).'"></script>';
+    $sidebar_done = true;
+    return true;
+  }
 
   if (!$sidebar_done && get_profile_id() && $request->resource == 'identities' && in_array($request->action,array('edit','entry'))) {
     if ($request->id == get_profile_id())
@@ -2005,7 +2019,7 @@ function dynamic_sidebar() {
     $sidebar_done = true;
     return true;
   }
-    
+  
     
   $blocks = environment('blocks');
   if (!empty($blocks) && !$sidebar_done) {
