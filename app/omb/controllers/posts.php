@@ -102,6 +102,8 @@ function _profile( &$vars ) {
   // a Collection w/ 1 member entry
   extract( $vars );
   $Identity =& $db->model('Identity');
+  if (!isset($request->byid))
+    $request->set_param('byid',get_profile_id());
   $Member = $Identity->find($request->byid);
   $Entry = $Member->FirstChild( 'entries' );
   $installed_apps = array();

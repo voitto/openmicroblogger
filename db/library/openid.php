@@ -66,6 +66,13 @@ class SimpleOpenID{
 	var $URLs = array();
 	var $error = array();
 	var $fields = array();
+  var $openid_url_identity = 'http://specs.openid.net/auth/2.0/identifier_select';
+  var $typeEmail = 'http://axschema.org/contact/email';
+  var $extNs = 'http://openid.net/srv/ax/1.0';
+  var $OpenIdServer = 'https://www.google.com/accounts/o8/ud';
+  var $claimed_id = 'http://specs.openid.net/auth/2.0/identifier_select';
+  var $openid_ns = 'http://specs.openid.net/auth/2.0';
+  var $realm = '';
 	
 	function SimpleOpenID(){
 		if (!function_exists('curl_exec')) {
@@ -257,11 +264,14 @@ class SimpleOpenID{
 	}
 	
 	function GetRedirectURL(){
-		$params = array();
-		$params['openid.return_to'] = urlencode($this->URLs['approved']);
-		$params['openid.mode'] = 'checkid_setup';
-		$params['openid.identity'] = urlencode($this->openid_url_identity);
-		$params['openid.trust_root'] = urlencode($this->URLs['trust_root']);
+    $params = array();
+    $params['openid.ns'] = urlencode($this->openid_ns);
+    $params['openid.claimed_id'] = urlencode($this->openid_url_identity);
+    $params['openid.return_to'] = urlencode($this->URLs['approved']);
+    $params['openid.mode'] = 'checkid_setup';
+    $params['openid.identity'] = urlencode($this->openid_url_identity);
+    $params['openid.trust_root'] = urlencode($this->URLs['trust_root']);
+    $params['openid.realm'] = urlencode($this->URLs['approved']);
 		
     if (isset($this->fields['required'])) {
 		if (count($this->fields['required']) > 0){
@@ -273,6 +283,10 @@ class SimpleOpenID{
 			$params['openid.sreg.optional'] = implode(',',$this->fields['optional']);
 		}
     }
+    $params['openid.ns.ext1'] = urlencode($this->extNs);
+    $params['openid.ext1.mode'] = "fetch_request";
+    $params['openid.ext1.type.email']= urlencode($this->typeEmail);
+    $params['openid.ext1.required'] = "email";
 		return $this->URLs['openid_server'] . "?". $this->array2url($params);
 	}
 	
@@ -294,14 +308,15 @@ class SimpleOpenID{
 			'openid.sig' => urlencode($_GET['openid_sig'])
 		);
 		// Send only required parameters to confirm validity
-		$arr_signed = explode(",",str_replace('sreg.','sreg_',$_GET['openid_signed']));
-		for ($i=0; $i<count($arr_signed); $i++){
-			$s = str_replace('sreg_','sreg.', $arr_signed[$i]);
-			$c = $_GET['openid_' . $arr_signed[$i]];
-			// if ($c != ""){
-				$params['openid.' . $s] = urlencode($c);
-			// }
-		}
+		
+  	$arr_signed = explode(",", $_GET['openid_signed']);
+    for ($i=0; $i<count($arr_signed);$i++) {
+      $s = str_replace(".",'_',$arr_signed[$i]);
+      $s2 = $arr_signed[$i];
+      $c = $_GET['openid_' . $s];
+      $params['openid.' . $s2] = urlencode($c);
+    }
+
 		$params['openid.mode'] = "check_authentication";
 		// print "<pre>";
 		// print_r($_GET);
@@ -312,6 +327,7 @@ class SimpleOpenID{
 			return false;
 		}
 		$response = $this->CURL_Request($openid_server,'GET',$params);
+		
 		$data = $this->splitResponse($response);
 		if ($data['is_valid'] == "true") {
 			return true;
@@ -321,4 +337,3 @@ class SimpleOpenID{
 	}
 }
 
-?>

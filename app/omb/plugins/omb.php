@@ -151,7 +151,7 @@ function omb_filter_posts( &$model, &$db ) {
     $where = array(
       'local'=>1
     );
-    $model->set_param( 'find_by', $where );
+    //$model->set_param( 'find_by', $where );
   }
 }
 
@@ -371,16 +371,13 @@ after_filter('set_identity_from_nick','routematch');
 
 function set_identity_from_nick(&$request,&$route) {
   
+global $db;
+
   if (!(isset($request->params['nickname'])))
     return;
-  
-  if ($request->route_exists($request->params['nickname']))
-    return;
-  
-  global $db;
+
   $nick = $db->escape_string(urldecode($request->params['nickname']));
   $nick = split( '\.', $nick );
-  
   if (is_array($nick)) {
     if (isset($nick[1]))
       $request->set('client_wants',$nick[1]);
@@ -388,18 +385,22 @@ function set_identity_from_nick(&$request,&$route) {
   } else {
     $nick = trim($nick);
   }
+
+  if ($db->table_exists($nick)) {
+    $request->set_param('resource',$nick);
+    if (!(isset($_POST['method'])))
+      $request->set_param('action','index');
+    return;
+  }
+
+  if ($request->route_exists($request->params['nickname']))
+    return;
+  
   
   if (substr($nick,0,2) == '__') {
     $request->set_param('id',substr($nick,2));
     $request->set_param('resource','posts');
     $request->set_param('action','entry');
-    return;
-  }
-  
-  if ($db->table_exists($nick)) {
-    $request->set_param('resource',$nick);
-    if (!(isset($_POST['method'])))
-      $request->set_param('action','index');
     return;
   }
   

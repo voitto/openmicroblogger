@@ -174,9 +174,7 @@ function put( &$vars ) {
   broadcast_omb_profile_update();
   
   header_status( '200 OK' );
-  redirect_to( $request->url_for( array(
-    'resource'=>'posts'
-  )));
+  redirect_to( base_url(true) );
 }
 
 
