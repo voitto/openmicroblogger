@@ -900,9 +900,9 @@ function member_of( $group ) {
 
 // add_include_path by ricardo dot ferro at gmail dot com
 
-function add_include_path($path) {
-    foreach (func_get_args() AS $path)
-    {
+function add_include_path($path,$prepend = false) {
+    //foreach (func_get_args() AS $path)
+    //{
         if (!file_exists($path) OR (file_exists($path) && filetype($path) !== 'dir'))
         {
             trigger_error("Include path '{$path}' not exists", E_USER_WARNING);
@@ -911,11 +911,13 @@ function add_include_path($path) {
         
         $paths = explode(PATH_SEPARATOR, get_include_path());
         
+        if (array_search($path, $paths) === false && $prepend)
+            array_unshift($paths, $path);
         if (array_search($path, $paths) === false)
             array_push($paths, $path);
         
         set_include_path(implode(PATH_SEPARATOR, $paths));
-    }
+    //}
 }
 
 
