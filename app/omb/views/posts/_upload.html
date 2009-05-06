@@ -1,5 +1,4 @@
 <?php 
-include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 
   global $request;
   $post = strtolower(classify($request->resource));
@@ -18,12 +17,12 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
     <tr><td colspan="2" valign="top"><p>&nbsp;</p></td></tr>
 
   <tr>
-    <td align="right" valign="top"><b><?php echo $txt['upload_description']; ?>&nbsp;&nbsp;</b></td>
+    <td align="right" valign="top"><b>Status&nbsp;&nbsp;</b></td>
     <td valign="top" align="left"><textarea style="margin-left:5px;width:405px;" rows="3" cols="56" id="<?php print $post; ?>_title" name="<?php print $post; ?>[title]" maxlength="<?php echo (140 - $url_length) -1; ?>"><?php print $Member->title; ?></textarea></td>
   </tr>
   
 
-  <td align="right" valign="top"><b><?php echo $txt['upload_file']; ?>&nbsp;&nbsp;</b></td>
+  <td align="right" valign="top"><b>File&nbsp;&nbsp;</b></td>
     <td valign="top" align="left"><input id="<?php print $post; ?>_attachment" name="<?php print $post; ?>[attachment]" type="file"></td>
   </tr>
 

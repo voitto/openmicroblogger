@@ -1,5 +1,4 @@
 <?php
-include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 $user			= get_userdata( $current_user->ID );
 $first_name		= attribute_escape( $user->first_name );
 ?>
@@ -10,18 +9,19 @@ $first_name		= attribute_escape( $user->first_name );
 		<?php wp_nonce_field( 'new-post' ); ?>
 		<div class="avatar"><?php echo prologue_get_avatar( $user->ID, $user->user_email, 48 ); ?></div>
 		<div class="inputarea">
-			<label for="posttext"><?php _e($txt['postform_greeting']); ?>, <?php echo $first_name; ?>. <?php _e($txt['postform_whatsup']); ?></label>
+			<label for="posttext"><?php _e('Hi'); ?>, <?php echo $first_name; ?>. <?php _e('Whatcha up to?'); ?></label>
 			<div>
 				<textarea name="posttext" id="posttext" rows="3" cols="60" tabindex="0" maxlength="140"></textarea>
 			</div>
 			<label class="post-error" for="posttext" id="posttext_error"></label>  
 			<div class="postrow">
-
-			<?php if (environment('use_tags')) : ?>
-			<input type="text" name="tags" id="tags" tagindex="1" autocomplete="off" value="<?php _e($txt['postform_tagit']); ?>" onfocus="this.value=(this.value=='<?php _e( $txt['postform_tagit'] ); ?>') ? '' : this.value;" onblur="this.value=(this.value=='') ? '<?php _e( $txt['postform_tagit'] ); ?>' : this.value;"/><?php else : ?>
-			<input type="hidden" name="tags" id="tags" />
+				
+				<?php if (environment('use_tags')) : ?>
+			<input type="text" name="tags" id="tags" tagindex="1" autocomplete="off" value="<?php _e('Tag it'); ?>" onfocus="this.value=(this.value=='<?php _e( 'Tag it' ); ?>') ? '' : this.value;" onblur="this.value=(this.value=='') ? '<?php _e( 'Tag it' ); ?>' : this.value;"/><?php else : ?>
+			 
+			 <input type="hidden" name="tags" id="tags" />
 			<?php endif; ?>
-				<input id="submit" type="submit" value="<?php _e($txt['postform_postit']); ?>" />
+				<input id="submit" type="submit" value="<?php _e('Post it'); ?>" />
 			</div>
 			<span class="progress" id="ajaxActivity"><img src="<?php bloginfo('template_directory'); ?>/i/indicator.gif" alt="Loading..." /></span>
 		</div>

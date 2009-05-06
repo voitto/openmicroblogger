@@ -1,68 +1,86 @@
-<?php
-include 'wp-content/language/lang_chooser.php'; //Loads the language-file
+<?php 
+
+  global $request;
+  $post = strtolower(classify($request->resource));
+
 ?>
-<form action="<?php url_for( 'identities' ); ?>" method="post" name="identities" id="identities" enctype="multipart/form-data">
+
+
+<form action="<?php url_for( $request->resource ); ?>" method="post" name="<?php url_for( $request->resource ); ?>" id="<?php url_for( $request->resource ); ?>" enctype="multipart/form-data">
 <div>
-<input name="MAX_FILE_SIZE" type="hidden" value="300000" />
+<input name="MAX_FILE_SIZE" type="hidden" value="6000000" />
 <input name="method" type="hidden" value="post" />
-<input name="entry[etag]" type="hidden" value="<?php print $Entry->etag; ?>" />
-<table border="0">
+<input name="<?php print $post; ?>[parent_id]" value="0" type="hidden" />
+<input name="<?php print $post; ?>[local]" value="1" type="hidden" />
+<table border="0" style="margin-left:20px;">
 
-<tr><th colspan="2">
-
-</th></tr>
+    <tr><td colspan="2" valign="top"><p>&nbsp;</p></td></tr>
 
   <tr>
-    <td align="right"><b><?php echo $txt['newprofile_last_name']; ?></b></td>
-    <td valign="top" align="left"><input size="50" maxlength="255" id="identity_family_name" name="identity[family_name]" type="text" value="<?php print $Member->family_name; ?>" /></td>
+    <td align="right" valign="top"><b>Status</b></td>
+    <td valign="top" align="left"><textarea style="margin-left:5px;width:405px;" rows="3" cols="56" id="<?php print $post; ?>_title" name="<?php print $post; ?>[title]"><?php print $Member->title; ?></textarea></td>
   </tr>
+  
   <tr>
-    <td align="right"><b><?php echo $txt['newprofile_first_name']; ?></b></td>
-    <td valign="top" align="left"><input size="50" maxlength="255" id="identity_given_name" name="identity[given_name]" type="text" value="<?php print $Member->given_name; ?>" /></td>
-  </tr>
-  <tr>
-    <td align="right"><b><?php echo $txt['newprofile_organization']; ?></b></td>
-    <td valign="top" align="left"><input size="50" maxlength="255" id="identity_organization_name" name="identity[organization_name]" type="text" value="<?php print $Member->organization_name; ?>" /></td>
-  </tr>
-  <tr>
-    <td align="right"><b><?php echo $txt['newprofile_title']; ?></b></td>
-    <td valign="top" align="left"><input size="50" maxlength="255" id="identity_title" name="identity[title]" type="text" value="<?php print $Member->title; ?>" /></td>
-  </tr>
-  <tr>
-    <td align="right"><b><?php echo $txt['newprofile_homepage']; ?></b></td>
-    <td valign="top" align="left"><input size="50" maxlength="255" id="identity_url" name="identity[url]" type="text" value="<?php print $Member->url; ?>" /></td>
-  </tr>
-  <tr>
-    <td align="right"><b><?php echo $txt['newprofile_email']; ?></b></td>
-    <td valign="top" align="left"><input size="50" maxlength="255" id="identity_email_value" name="identity[email_value]" type="text" value="<?php print $Member->email_value; ?>" /></td>
-  </tr>
-  <tr>
-    <td align="right"><b><?php echo $txt['newprofile_zip']; ?></b></td>
-    <td valign="top" align="left"><input size="50" maxlength="255" id="identity_postal_code" name="identity[postal_code]" type="text" value="<?php print $Member->postal_code; ?>" /></td>
-  </tr>
-  <tr>
-    <td align="right"><b><?php echo $txt['newprofile_tz']; ?></b></td>
-    <td valign="top" align="left"><select name="identity[tz]" size="1">
-    <?php foreach( $identity_tz_options as $opt ) : ?>
-
-    <option<?php if ( $Member->tz == $opt ) { print " selected"; } ?>><?php print $opt; ?></option>
-
-  <?php endforeach; ?>
+    <td align="right" valign="top"><b>Article</b></td>
+    <td valign="top" align="left">
+      
+      
+      
 
 
-</select></td>
+      <textarea rows="4" style="width:350px;" cols="40" wrap="virtual" id="markItUp" name="<?php print $post; ?>[body]"><?php print $Member->body; ?></textarea></td>
   </tr>
+        <script type="text/javascript">
+        <!--
+        $(document).ready(function()	{
+        	$('#markItUp').markItUp(mySettings);
+        });
+        -->
+        </script>
   <tr>
-    <td align="right"><b><?php echo $txt['newprofile_photo']; ?></b></td>
-    <td valign="top" align="left"><input id="identity_photo" name="identity[photo]" type="file" /></td>
+  <td align="right" valign="top"><b>Choose File</b></td>
+    <td valign="top" align="left"><input id="<?php print $post; ?>_attachment" name="<?php print $post; ?>[attachment]" type="file"></td>
   </tr>
+    <tr>
+    <td colspan="2" valign="top"><p><ul><li><i>jpeg photo</i></li><li><i>avi or mov (quicktime) movie</i></li><li><i>mp3 audio</i></li></ul></p></td>
+  </tr>
+
+
+  <?php
+       global $db;
+       $Category =& $db->model('Category');
+       //$Category->find();
+       
+       $p = get_profile();
+?>
+
   <tr>
-    <td align="right"><b></b></td>
+    <td align="right" valign="top"><b>Categories</b></td>
+    <td valign="top" align="left"><select style="margin-left:5px;" size="6" name="category0">
+      <?php while ( $c = $Category->MoveNext() ) : ?>
+        <option><?php print $c->name; ?></option>
+      <?php endwhile; ?>
+    </select></td>
+  </tr>
 
-    <td valign="top" align="left"><br><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="<?php echo $txt['newprofile_button_cancel']; ?>" type="button" />
 
-<input value="<?php echo $txt['newprofile_button_save_identity']; ?>" type="submit" name="button_group" /></td>
+
+
+  <tr>
+    <td align="right" valign="top"><b></b></td>
+    <td valign="top" align="left"><br><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="Cancel" type="button">
+<input type="hidden" name="<?php print $post; ?>[contributor]" value="<?php print $p->given_name." ".$p->family_name; ?>">
+<input value="Submit Post" type="submit" name="button_group"></td>
   </tr>
 </table>
 </div>
 </form>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
