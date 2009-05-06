@@ -17,7 +17,10 @@ $first_name		= attribute_escape( $user->first_name );
 			<div class="postrow">
 				
 				<?php if (environment('use_tags')) : ?>
-			<input type="text" name="tags" id="tags" tagindex="1" autocomplete="off" value="<?php _e('Tag it'); ?>" onfocus="this.value=(this.value=='<?php _e( 'Tag it' ); ?>') ? '' : this.value;" onblur="this.value=(this.value=='') ? '<?php _e( 'Tag it' ); ?>' : this.value;"/><?php endif; ?>
+			<input type="text" name="tags" id="tags" tagindex="1" autocomplete="off" value="<?php _e('Tag it'); ?>" onfocus="this.value=(this.value=='<?php _e( 'Tag it' ); ?>') ? '' : this.value;" onblur="this.value=(this.value=='') ? '<?php _e( 'Tag it' ); ?>' : this.value;"/><?php else : ?>
+			 
+			 <input type="hidden" name="tags" id="tags" />
+			<?php endif; ?>
 				<input id="submit" type="submit" value="<?php _e('Post it'); ?>" />
 			</div>
 			<span class="progress" id="ajaxActivity"><img src="<?php bloginfo('template_directory'); ?>/i/indicator.gif" alt="Loading..." /></span>
