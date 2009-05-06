@@ -5,7 +5,7 @@
    * @version 0.6.0 -- 22-October-2008
    * @author Brian Hendrickson <brian@dbscript.net>
    * @link http://dbscript.net/
-   * @copyright Copyright 2008 Brian Hendrickson
+   * @copyright Copyright 2009 Brian Hendrickson
    * @package dbscript
    * @license http://www.opensource.org/licenses/mit-license.php MIT License
    */
@@ -60,14 +60,11 @@ $version = '0.6.0';
 global $views,$app,$config,$env,$exec_time,$version,$response;
 global $variants,$request,$loader,$db,$logic;
 
-
   /**
-   * optional pretty URLs
+   * load config
    */
 
-//global $pretty_url_base;
-//$pretty_url_base = "http://openmicroblogger.com";
-
+include('config.php');
 
   // set path to db directory
 if (is_dir('db'))
@@ -279,6 +276,19 @@ db_include( array(
   $adapter
 ));
 
+if (DB_NAME)
+  $database = DB_NAME;
+
+if (DB_USER)
+  $username = DB_USER;
+
+if (DB_PASSWORD)
+  $password = DB_PASSWORD;
+
+if (DB_HOST)
+  $host = DB_HOST;
+
+
   // init the Database ($db) object and connect to the database
 $db = new $adapter(
   $host,
@@ -371,6 +381,20 @@ while ($s = $Setting->MoveNext()) {
     }
   }
 }
+
+
+/**
+ * overrides from config.php
+ */
+
+if (INTRANET)
+  $env['authentication'] = 'password';
+
+//if (UPLOADS)
+//  $env['collection_cache']['posts']['location'] = UPLOADS;
+
+//if (UPLOADS)
+//  $env['collection_cache']['identities']['location'] = UPLOADS;
 
 
 /**

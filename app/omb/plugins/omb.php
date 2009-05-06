@@ -62,6 +62,15 @@ $request->connect(
 );
 
 $request->connect(
+  ':nickname/settings',
+  array(
+    'resource'=>'identities',
+    'action'=>'entry',
+    'requirements' => array ( '[A-Za-z0-9_.]+' )
+  )
+);
+
+$request->connect(
   ':nickname/subscriptions',
   array(
     'resource'=>'subscriptions',

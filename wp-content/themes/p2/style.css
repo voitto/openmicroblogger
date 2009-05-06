@@ -165,7 +165,7 @@ h4, h5, h6 {
 	font-size: 13px;
 	padding: 1%;
 }
-#wrapper form input[type="text"] {
+#wrapper form input[type="text"], input[type="password"] {
 	border: 1px solid #d1d1d1;
 	background: #fafafa;
 	color: #666;
@@ -173,7 +173,7 @@ h4, h5, h6 {
 	padding: 5px 7px;
 	line-height: 16px;
 }
-#sidebar form input[type="text"] {
+#sidebar form input[type="text"], input[type="password"] {
 	background: #fff;
 }
 #postbox label {

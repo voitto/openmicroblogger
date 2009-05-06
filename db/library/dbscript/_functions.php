@@ -5,7 +5,7 @@
    * @version 0.6.0 -- 22-October-2008
    * @author Brian Hendrickson <brian@dbscript.net>
    * @link http://dbscript.net/
-   * @copyright Copyright 2008 Brian Hendrickson
+   * @copyright Copyright 2009 Brian Hendrickson
    * @package dbscript
    * @license http://www.opensource.org/licenses/mit-license.php MIT License
    */
@@ -2140,10 +2140,13 @@ function resource_group_members( $gid=NULL ) {
   
 }
 
+function _t($t) {
+  return $t;
+}
 
-function laconica_time($dt) {
+function laconica_time($ts) {
   
-  $t = strtotime($dt);
+  $t = strtotime($ts);
 	$now = time();
 	$diff = $now - $t;
 

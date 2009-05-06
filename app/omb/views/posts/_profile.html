@@ -1,54 +1,68 @@
 <?php
 
-lib_include( 'php_microformats' );
-
-global $request;
-
-$i = array(
-  'url'      => $Member->url,
-  'name'     => $Member->nickname,
-  'photo'    => $Member->avatar
-);
-
-// url, name, email, org() name/title, location() street/town/zip/state/country
-// phone() home/cell, photo, im() skype/aim
-
-echo phpMicroformats::createHCard( $i );
+$profile = $Member;
 
 $subscribers = array();
 
 ?>
 
-<br />
+<div style="padding:10px;">
+
+<h3 style="margin-left:5px;font-size:18px;font-family: arial, helvetica, sans-serif;"><img src="<?php echo $profile->avatar; ?>" alt="<?php echo $profile->fullname; ?>" border="0" style="vertical-align:middle;">
+  <?php echo $profile->nickname; ?>
+</h3>
+
+<?php if (environment('show subs')) : ?>
+<hr>
+
 <h3><?php echo $Member->nickname; ?>'s subscribers</h3>
 
 <?php $Subscription->find_by('subscribed',$Member->id); ?>
-
 <?php while ($subscriber = $Subscription->MoveNext()) : ?>
+
   <?php if ($subscriber->subscribed == $Member->id) : ?>
+
     <?php $subscribers[] = $subscriber->subscriber; ?>
+
     <?php $si = $Identity->find( $subscriber->subscriber ); ?>
-    <a href="<?php if (!empty($si->profile_url)) echo $si->profile_url; else echo $si->profile;  ?>"><img style="border:none;width:48px;height:48px;" src="<?php echo $si->avatar; ?>"></a>
-  <?php endif; ?>
-<?php endwhile; ?>
-<a href="<?php url_for(array('nickname'=>$request->params['nickname'],'followerspage'=>1)); ?>">All Subscribers...</a>
+
+      <a href="<?php if (!empty($si->profile_url)) echo $si->profile_url; else echo $si->profile;  ?>">
+        <img style="border:none;width:48px;height:48px;" src="<?php echo $si->avatar; ?>">
+      </a>
+      
+    <?php endif; ?>
+  <?php endwhile; ?>
+  
+  <a href="<?php url_for(array('nickname'=>$request->params['nickname'],'followerspage'=>1)); ?>">
+    All Subscribers...
+  </a>
 
 <br />
+
+<hr>
 <h3><?php echo $Member->nickname; ?>'s subscriptions</h3>
 
 <?php $Subscription->find_by('subscriber',$Member->id); ?>
 
 <?php while ($subscriber = $Subscription->MoveNext()) : ?>
-<?php if ($subscriber->subscriber == $Member->id) : ?>
-<?php $si = $Identity->find( $subscriber->subscribed ); ?>
-<a href="<?php if (!empty($si->profile_url)) echo $si->profile_url; else echo $si->profile; ?>"><img style="border:none;width:48px;height:48px;" src="<?php echo $si->avatar; ?>"></a>
-<?php endif; ?>
+
+  <?php if ($subscriber->subscriber == $Member->id) : ?>
+
+  <?php $si = $Identity->find( $subscriber->subscribed ); ?>
+
+  <a href="<?php if (!empty($si->profile_url)) echo $si->profile_url; else echo $si->profile; ?>">
+    <img style="border:none;width:48px;height:48px;" src="<?php echo $si->avatar; ?>">
+  </a>
+  
+  <?php endif; ?>
 <?php endwhile; ?>
-<a href="<?php url_for(array('nickname'=>$request->params['nickname'],'followingpage'=>1)); ?>">All Subscriptions...</a>
-
-
+  
+  <a href="<?php url_for(array('nickname'=>$request->params['nickname'],'followingpage'=>1)); ?>">
+    All Subscriptions...
+  </a>
 
 <br />
+
 <?php $pro = get_profile(); ?>
 
 <?php if (isset($pro->id) && $pro->id > 0 && ($pro->id != $Member->id) && !in_array($pro->id,$subscribers)) : ?>
@@ -100,4 +114,6 @@ $subscribers = array();
       trigger_before( 'the_content', $current_user, $current_user );
 
 ?>
+<?php endif; ?>
 
+</div>

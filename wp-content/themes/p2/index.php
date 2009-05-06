@@ -46,6 +46,33 @@ get_header();
 
 ?>
 
+
+<?php if (REALTIME_HOST) : ?>
+  <script type="text/javascript">
+    // <![CDATA[<script type="text/javascript">
+    Meteor.hostid = '<?php echo get_profile_id(); ?>';
+    Meteor.host = "<?php echo REALTIME_HOST; ?>";
+    Meteor.registerEventCallback("process", test);
+    Meteor.joinChannel("<?php echo $prefix; ?>", 0);
+    Meteor.mode = 'stream';
+    Meteor.connect();
+    function test(data) {
+      data = data.substring(0,(data.length - 10));
+      eval( "data = " + data );
+      if (data['in_reply_to'] > 0) {
+        var selectr = "#prologue-"+data['in_reply_to']+" ul#comments";
+        $(selectr).append(data['html']);
+      } else {
+        $("#postlist").prepend(data['html']);
+      }
+      $('a.oembed').oembed();
+    };
+    // ]]>
+  </script>
+<?php endif; ?>
+
+
+
 <div class="sleeve_main">
 <?php
 	global $request;
@@ -79,7 +106,7 @@ if( have_posts( ) ) {
 	<h4>
 		<?php the_author_posts_link( ); ?>
 		<span class="meta">
-			<?php the_time( ); ?> <em>on</em> <?php the_time( 'F j, Y' ); ?> |
+			<?php global $the_post; echo laconica_time($the_post->created); ?> |
 			<?php comments_popup_link( __( '0' ), __( '1' ), __( '%' ) ); ?>
 			<span class="actions">
 			<a href="<?php the_permalink( ); ?>" class="thepermalink">Permalink</a>

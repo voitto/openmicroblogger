@@ -2020,9 +2020,11 @@ function dynamic_sidebar() {
     return true;
   }
   
-    
+  // toggle this on/off to use the blocks
+  $use_sidebar_blocks = false;
+  
   $blocks = environment('blocks');
-  if (!empty($blocks) && !$sidebar_done) {
+  if ($use_sidebar_blocks && !empty($blocks) && !$sidebar_done) {
     foreach ($blocks as $b) {
       // if it's the prologue theme, don't show PAGES in sidebar
       if (!($b == 'pages' && environment('theme') == 'prologue-theme')){
