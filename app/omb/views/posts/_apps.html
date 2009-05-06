@@ -1,0 +1,51 @@
+
+<?php global $request; ?>
+
+<?php if (!in_array('partial',$request->activeroute->patterns)) : ?>
+
+
+
+<?php endif; ?>
+
+<?php if (count($menuitems > 0)) : ?>
+
+
+  <li class="pagenav">
+    <h2>Profile</h2>
+      <ul>
+
+
+  <?php foreach( $menuitems as $link=>$item ) : ?>
+
+     <li class="page_item">
+		<a href="JavaScript:show_page('<?php echo $link; ?>');"><?php echo $item; ?></a>
+	</li>	
+
+	<?php endforeach; ?>
+
+  <?php $smskey = environment('awsAccessKey'); ?>
+  
+  <?php if (!empty($smskey)) : ?>
+
+     <li class="page_item">
+		<a href="JavaScript:show_page('<?php url_for(array('resource'=>'mobile_settings/partial')); ?>');">Mobile</a>
+	</li>	
+	
+	<?php endif; ?>
+
+
+  </ul>
+</li>
+
+
+
+
+<?php endif; ?>
+
+<?php if (!in_array('partial',$request->activeroute->patterns)) : ?>
+
+<?php endif; ?>
+
+
+
+

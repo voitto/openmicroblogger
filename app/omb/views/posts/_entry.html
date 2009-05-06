@@ -1,362 +1,103 @@
-<?php 
+<?php
+include 'wp-content/language/lang_chooser.php'; //Loads the language-file
+lib_include( 'php_microformats' );
 
-  global $request;
-  $post = strtolower(classify($request->resource));
+global $request;
+
+$i = array(
+  'url'      => $Member->url,
+  'name'     => $Member->nickname,
+  'photo'    => $Member->avatar
+);
+
+// url, name, email, org() name/title, location() street/town/zip/state/country
+// phone() home/cell, photo, im() skype/aim
+
+echo phpMicroformats::createHCard( $i );
+
+$subscribers = array();
 
 ?>
-<table align="center" cellpadding="3" cellspacing="0" border="0"><tr><td colspan="2"><br></td></tr>
-
-   <tr>
-<td align="right"><p></p></td>
-  <td><h3>
-  <?php print render_notice( $Member->title, $Member, $profile ); ?>
-  <br><br></h3></td>
-</tr>
-
-   <tr>
-<td align="right"></td>
-  <td>
-  <?php print $Member->body ?>
-  </td>
-</tr>
-
-<?php if ($Member->attachment) : ?>
-
-<tr>
-  <td align="right"><p></p></td>
-  <td>
-    
-    <?php if (extension_for($Entry->content_type) == 'mp3') : ?>
-    
-    <script src="<?php base_path(); ?>resource/swfobject.js" type="text/javascript"></script>
-    
-    <script src="<?php base_path(); ?>resource/ep_player.js" type="text/javascript"></script>
-    
-    <div id="flashcontent">
-    	To use the <a href="http://www.e-phonic.com/mp3player/" target="_blank">E-Phonic MP3 Player</a>
-    	you will need <a href="http://www.adobe.com/products/flashplayer/" target="_blank">Adobe Flash Player 9</a> 
-    	or better and a Javascript enabled browser.
-    </div>
-    
-    <script type="text/javascript">
-    	// <![CDATA[
-    
-    	var so = new SWFObject("<?php base_path(); ?>resource/ep_player.swf", "ep_player", "269", "226", "9", "#FFFFFF");
-      so.addVariable("skin", "<?php base_path(); ?>resource/micro_player/skin.xml");
-    	so.addVariable("file", "<location><?php url_for( array( 'action'=>'attachment.mp3', 'resource'=>$request->resource, 'id'=>$Member->id )); ?></location><creator><?php print $Member->body; ?></creator><title><?php print $Member->title; ?></title>");
-    	so.addVariable("autoplay", "true");
-    	so.addVariable("buffertime", "1");
-    	so.write("flashcontent");
-    
-    	// ]]>
-    </script>
-    
-    <?php elseif (extension_for($Entry->content_type) == 'jpg') : ?>
-    
-    <img src="<?php url_for( array( 'action'=>'attachment.jpg', 'resource'=>$request->resource, 'id'=>$Member->id )); ?>">
-    
-    
-<?php $profile = owner_of($Entry); ?>
-    <link rel="image_src" href="<?php url_for( array( 'action'=>'attachment.jpg', 'resource'=>$request->resource, 'id'=>$Member->id )); ?>" type="<?php echo $Entry->content_type; ?>" />
-    <meta name="title" content="<?php print $Member->title; ?>" />
-    <meta name="description" content="<?php print $profile->nickname; ?>'s status on <?php print time_of($Member->created); ?>" />
-
-    
-    
-    <?php elseif (extension_for($Entry->content_type) == 'mov') : ?>
-    
-    <script src="<?php base_path(); ?>resource/AC_QuickTime.js" language="JavaScript" type="text/javascript"></script>
-    
-    <script language="JavaScript" type="text/javascript">
-      QT_WriteOBJECT_XHTML('<?php url_for( array( 'action'=>'attachment.mov', 'resource'=>$request->resource, 'id'=>$Member->id )); ?>', '640', '480', '',
-        'autoplay', 'true',
-        'emb#bgcolor', 'black',
-        'align', 'middle'); 
-    </script>
-    
-    <?php elseif (extension_for($Entry->content_type) == 'avi') : ?>
-    
-    <OBJECT ID="MediaPlayer" WIDTH=320 HEIGHT=240
-      CLASSID="CLSID:22D6F312-B0F6-11D0-94AB-0080C74C7E95"
-      STANDBY="Loading Windows Media Player components..."
-      TYPE="application/x-oleobject"> 
-      <PARAM NAME="FileName" VALUE="<?php url_for( array( 'action'=>'attachment.avi', 'resource'=>$request->resource, 'id'=>$Member->id )); ?>">
-      <EMBED TYPE="application/x-mplayer2"
-      SRC="<?php url_for( array( 'action'=>'attachment.avi', 'resource'=>$request->resource, 'id'=>$Member->id )); ?>"
-      NAME="<?php print $Member->title ?>"
-      WIDTH=320
-      HEIGHT=240> 
-    </EMBED>
-    </OBJECT>
-    
-    <?php endif; ?>
-    
-    
-  </td>
-</tr>
-<?php endif; ?>
-
-
-<tr>
-  <td align="right"><p></p></td>
-  <td>
-  <?php $author = get_profile($Member->profile_id); ?>
-  <img src="<?php echo $author->avatar; ?>" alt="image" style="margin-top:10px; width:30px; height:30px;" />&nbsp;
-  <a href="<?php url_for(array('resource'=>$author->nickname)); ?>"><?php print $author->nickname."</a> ".time_of($Member->created); ?>
-  </td>
-</tr>
-
-
-<tr>
-  <td align="right"><p></p></td>
-  <td>
-  <BR><BR><BR><BR>
-  </td>
-</tr>
-
-
-
-   <tr>
-<td align="right"><p></p></td>
-  <td>
-  <table align="center" cellpadding="3" cellspacing="0" border="0">
-  <?php global $request; ?>
-  <?php $Post =& $db->model(tableize($request->resource)); $Post->has_one('profile_id:identities'); $Post->find_by('parent_id',$Member->id); ?>
-  <?php while ($c = $Post->MoveNext()) : ?>
-  <?php $replyauthor = $c->FirstChild('identities'); ?>
-  <tr><td>
-  <?php
-    $current_user_id = get_the_author_ID( );
-    echo prologue_get_avatar( $current_user_id, get_the_author_email( ), 48 );
-  ?>
-  <?php echo "<p><font size=\"-1\">".'reply by '.$replyauthor->nickname."&nbsp; ".time_of($c->created)."</font></p></td></tr><tr><td><p>".htmlentities($c->title)."</p><br>"; ?>
-  </td></tr>
-  <?php endwhile; ?>
-  </table>
-  </td>
-</tr>
-
-<tr><td colspan="2">
-<?php $Review =& $db->model('Review'); $Review->has_one('profile_id:identities'); $Review->find_by('target_id',$Entry->id); ?>
-
-<?php while ( $r = $Review->MoveNext()) : ?>
-<?php $reviewer = $r->FirstChild('identities'); ?>
-<?php $i = 0; ?>
-
-<?php while ($i < $r->rating) : ?>
-<img src="<?php echo base_path(true).$request->layout_path; ?>reviews/full_star.gif" alt="*">
-<?php $i++; ?>
-<?php endwhile; ?>
-
-<?php while ($i < 5) : ?>
-<img src="<?php echo base_path(true).$request->layout_path; ?>reviews/empty_star.gif" alt="">
-<?php $i++; ?>
-<?php endwhile; ?>
-<?php print "<font size=\"-1\">".$reviewer->nickname." ".time_of($r->created)."</font><br>"; ?>
-
-<?php endwhile; ?>
 
 <br />
-</td></tr>
+<h3><?php echo $Member->nickname; ?><?php echo $txt['profile_usr_subscribers']; ?></h3>
+
+<?php $Subscription->find_by('subscribed',$Member->id); ?>
+
+<?php while ($subscriber = $Subscription->MoveNext()) : ?>
+  <?php if ($subscriber->subscribed == $Member->id) : ?>
+    <?php $subscribers[] = $subscriber->subscriber; ?>
+    <?php $si = $Identity->find( $subscriber->subscriber ); ?>
+    <a href="<?php if (!empty($si->profile_url)) echo $si->profile_url; else echo $si->profile;  ?>"><img style="border:none;width:48px;height:48px;" src="<?php echo $si->avatar; ?>"></a>
+  <?php endif; ?>
+<?php endwhile; ?>
+<a href="<?php url_for(array('nickname'=>$request->params['nickname'],'followerspage'=>1)); ?>"><?php echo $txt['profile_all_subscribers']; ?></a>
+
+<br />
+<h3><?php echo $Member->nickname; ?><?php echo $txt['profile_usr_subscriptions']; ?></h3>
+
+<?php $Subscription->find_by('subscriber',$Member->id); ?>
+
+<?php while ($subscriber = $Subscription->MoveNext()) : ?>
+<?php if ($subscriber->subscriber == $Member->id) : ?>
+<?php $si = $Identity->find( $subscriber->subscribed ); ?>
+<a href="<?php if (!empty($si->profile_url)) echo $si->profile_url; else echo $si->profile; ?>"><img style="border:none;width:48px;height:48px;" src="<?php echo $si->avatar; ?>"></a>
+<?php endif; ?>
+<?php endwhile; ?>
+<a href="<?php url_for(array('nickname'=>$request->params['nickname'],'followingpage'=>1)); ?>"><?php echo $txt['profile_all_subscriptions']; ?></a>
 
 
 
+<br />
+<?php $pro = get_profile(); ?>
+
+<?php if (isset($pro->id) && $pro->id > 0 && ($pro->id != $Member->id) && !in_array($pro->id,$subscribers)) : ?>
+
+<form method="post" action="<?php url_for('local_subscribe'); ?>">
+<input type="hidden" name="listenee_nick" value="<?php echo $Member->nickname; ?>">
+<input type="hidden" name="listenee_id" value="<?php echo $Member->id; ?>">
+<input type="submit" value="Subscribe to <?php echo $Member->nickname; ?>'s notices">
+</form>
+
+<br />
+<a href="<?php url_for(array('resource'=>$pro->nickname)); ?>"><?php echo $txt['profile_back_to_my_profile']; ?></a>
 
 
-<?php if (signed_in()) : ?>
+<?php elseif (isset($pro->id) && $pro->id > 0 && ($pro->id != $Member->id) && in_array($pro->id,$subscribers)) : ?>
 
+<form method="post" action="<?php url_for('local_unsubscribe'); ?>">
+<input type="hidden" name="listenee_nick" value="<?php echo $Member->nickname; ?>">
+<input type="hidden" name="listenee_id" value="<?php echo $Member->id; ?>">
+<input type="submit" value="Unsubscribe from <?php echo $Member->nickname; ?>'s notices">
+</form>
 
+<br />
+<a href="<?php url_for(array('resource'=>$pro->nickname)); ?>"><?php echo $txt['profile_back_to_my_profile']; ?></a>
 
+<?php elseif (isset($pro->id) && $pro->id > 0 && ($pro->id == $Member->id)) : ?>
+<br />
+<br />
+<form>
+<p><?php echo $txt['profile_subscribe_people']; ?>:</p>
+<p><?php echo $txt['profile_profile_url']; ?>: <input name="profid" size="40" value="<?php echo $request->url_for(array('resource'=>$pro->nickname)); ?>"/></p>
+</form>
+<br />
 
+<?php elseif (!isset($pro->id)) : ?>
 
-   <tr>
-<td align="right"><p></p></td>
-  <td>
-  <BR><BR><BR><BR>
-  </td>
-</tr>
+<h2><?php echo $txt['profile_subscribe_to']; ?><?php echo $Member->nickname; ?><?php echo $txt['profile_usr_notices']; ?>:</h2>
+<form method="post" action="<?php url_for('oauth_omb_subscribe'); ?>">
+  <input type="hidden" name="listenee_id" value="<?php echo $Member->id; ?>">
+  Your Profile URL <input size="40" name="listener_url">
+  <input type="submit" value="<?php echo $txt['profile_subscribe_to']; echo $Member->nickname; echo $txt['profile_usr_notices']; ?>">
+</form>
+
+<?php endif; ?>
 
 
 <?php
   
-  $Identity =& $db->get_table('identities');
-  
-  $Person =& $db->get_table('people');
-  
-  $p = $Person->find(get_person_id());
-  
-  if ($p)
-    $ident = $p->FirstChild('identities');
-  else
-    $ident = $Identity->base();
-  
-  
+      trigger_before( 'the_content', $current_user, $current_user );
+
 ?>
 
-
-
-<tr><td colspan="2"><p>Reply:</p>
-
-<form name="replypost" method="post" action="<?php url_for(array('resource'=>$request->resource)); ?>">
-<input type="hidden" name="method" value="post">
-<textarea cols="40" maxlength="140" rows="5" name="<?php echo $post; ?>[title]"><?php if ($author) print "@".$author->nickname." "; ?></textarea>
-<input type="hidden" name="<?php echo $post; ?>[local]" value="1">
-<input type="hidden" name="<?php echo $post; ?>[parent_id]" value="<?php print $Member->id; ?>">
-<input type="hidden" name="<?php echo $post; ?>[profile_id]" value="<?php echo get_profile_id(); ?>">
-<input type="submit" value="Submit Reply">
-</form>
-
-
-<br />
-</td></tr>
-
-<tr><td colspan="2"><p>Rating:</p>
-
-
-
-
-<form name="reviewpost" method="post" action="<?php url_for(array('resource'=>'reviews')); ?>">
-<input type="hidden" name="method" value="post">
-
-
-<?php $i = 0; ?>
-
-<?php while ($i < 5) : ?>
-<input type="radio" name="review[rating]" value="<?php print ($i+1); ?>">
-<?php $j = 0; ?>
-<?php while ($j < $i+1) : ?>
-<img src="<?php echo base_path(true).$request->layout_path; ?>reviews/full_star.gif" alt="*">
-<?php $j++; ?>
-<?php endwhile; ?>
-<BR>
-<?php $i++; ?>
-<?php endwhile; ?>
-
-
-
-
-<input type="hidden" name="review[target_id]" value="<?php print $Entry->id; ?>">
-<input type="hidden" name="review[profile_id]" value="<?php echo get_profile_id(); ?>">
-<input type="hidden" name="review[reviewer]" value="<?php if ($ident) print $ident->nickname; ?>">
-<input type="submit" value="Submit Rating">
-</form>
-
-
-
-
-<?php else : ?>
-
-
-
-
-
-<tr>
-  <td align="right"><p></p></td>
-  <td>
-  <BR><BR><BR><BR>
-  </td>
-</tr>
-
-<tr><td colspan="2">
-
-<p><b><a href="<?php url_for( 'email_login' ); ?>">Sign In</a> to post a reply</b></p>
-
-
-</td></tr>
-
-
-
-
-<?php endif; ?>
-
-
-<?php if (!public_resource()) : ?>
-</td></tr>
-   <tr>
-<td align="right"><p></p></td>
-  <td>
-  <BR><BR><BR><BR>
-  </td>
-</tr>
-
-   <tr>
-   <td align="right"><p></p></td>
-  <td>
-  <?php $arr = resource_group_members(); ?>
-  
-  <p>Members of this forum:</p>
-  
-  <?php foreach ( $arr as $member_ident ) : ?>
-
-  <p><font size="-1"><?php print $member_ident->given_name." ".$member_ident->url.""; ?></font></p>
-  
-  <?php endforeach; ?>
-  
-  </td>
-</tr>
-
-<?php endif; ?>
-   <tr>
-<td align="right"><p></p></td>
-  <td>
-  <BR><BR><BR><BR>
-  </td>
-</tr>
-
-
-<tr><td colspan="2">
-
-
-<?php if (public_resource()) : ?>
-
-<br>
-<br>
-<h4>Bookmark this:</h4> 
-<a href="http://blogmarks.net/my/new.php?mini=1&simple=1&url=<?php print urlencode($request->uri); ?>&title=<?php print urlencode($Member->title); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/blogmarks.gif" border="0" title="Bookmark to Blogmarks!" alt="Bookmark to Blogmarks!"></a>
-<a href="http://del.icio.us/post?url=<?php print urlencode($request->uri); ?>&title=<?php print urlencode($Member->title); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/delicious.gif" border="0" title="Bookmark to Del.icio.us!" alt="Bookmark to Del.icio.us!"></a>
-<a href="http://digg.com/submit?phase=2&url=<?php print urlencode($request->uri); ?>&title=<?php print urlencode($Member->title); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/digg.gif" border="0" title="Bookmark to Digg!" alt="Bookmark to Digg!"></a>
-<a href="http://furl.net/storeIt.jsp?t=<?php print urlencode($Member->title); ?>&u=<?php print urlencode($request->uri); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/furl.gif" border="0" title="Bookmark to Furl!" alt="Bookmark to Furl!"></a>
-<a href="http://ma.gnolia.com/beta/bookmarklet/add?url=<?php print urlencode($request->uri); ?>&title=<?php print urlencode($Member->title); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/magnolia.gif" border="0" title="Bookmark to Ma.gnolia!" alt="Bookmark to Ma.gnolia!"></a>
-<a href="http://www.newsvine.com/_tools/seed&save?u=<?php print urlencode($request->uri); ?>&h=<?php print urlencode($Member->title); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/newsvine.gif" border="0" title="Bookmark to Newsvine!" alt="Bookmark to Newsvine!"></a>
-<a href="http://reddit.com/submit?url=<?php print urlencode($request->uri); ?>&title=<?php print urlencode($Member->title); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/reddit.gif" border="0" title="Bookmark to Reddit!" alt="Bookmark to Reddit!"></a>
-<a href="http://www.spurl.net/spurl.php?title=<?php print urlencode($Member->title); ?>&url=<?php print urlencode($request->uri); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/spurl.gif" border="0" title="Bookmark to Spurl!" alt="Bookmark to Spurl!"></a>
-<a href="http://www.stumbleupon.com/submit?url=<?php print urlencode($request->uri); ?>&title=<?php print urlencode($Member->title); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/stumbleupon.gif" border="0" title="Bookmark to StumbleUpon!" alt="Bookmark to StumbleUpon!"></a>
-<a href="http://technorati.com/faves?add=<?php print urlencode($request->uri); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/technorati.gif" border="0" title="Bookmark to Technorati!" alt="Bookmark to Technorati!"></a>
-<a href="http://myweb2.search.yahoo.com/myresults/bookmarklet?t=<?php print urlencode($Member->title); ?>&u=<?php print urlencode($request->uri); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/yahoomyweb.png" border="0" title="Bookmark to Yahoo! My Web!" alt="Bookmark to Yahoo! My Web!"></a>
-<a href="http://co.mments.com/track?url=<?php print urlencode($request->uri); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/co.mments.gif" border="0" title="Bookmark to co.mments" alt="Bookmark to co.mments"></a>
-<a href="http://www.propeller.com/submit/?U=<?php print urlencode($request->uri); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/propeller.gif" border="0" title="Bookmark to Propeller" alt="Bookmark to Propeller"></a>
-<a href="https://favorites.live.com/quickadd.aspx?marklet=1&url=<?php print urlencode($request->uri); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/live.png" border="0" title="Bookmark to Live" alt="Bookmark to Live"></a>
-<a href="http://www.facebook.com/sharer.php?u=<?php print urlencode($request->uri); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/facebook.png" border="0" title="Bookmark to Facebook" alt="Bookmark to Facebook"></a>
-<a href="http://sphinn.com/submit.php?url=<?php print urlencode($request->uri); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/sphinn.png" border="0" title="Bookmark to Sphinn" alt="Bookmark to Sphinn"></a>
-<a href="http://www.google.com/bookmarks/mark?op=edit&bkmk=<?php print urlencode($request->uri); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/googlebookmark.png" border="0" title="Bookmark to Google" alt="Bookmark to Google"></a>
-<a href="http://twitthis.com/twit?url=<?php print urlencode($request->uri); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/twitter.png" border="0" title="Bookmark to Twitthis" alt="Bookmark to Twitthis"></a>
-<a href="http://pownce.com/send/link/?url=<?php print urlencode($request->uri); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/pownce.gif" border="0" title="Bookmark to Pownce" alt="Bookmark to Pownce"></a>
-
-<?php endif; ?>
-
-
-
-  </td>
-</tr>
-
-
-
-
-   <tr>
-<td align="right"><p></p></td>
-  <td>
-  <BR><BR><BR><BR>
-  </td>
-</tr>
-
- <script type="text/javascript">
-    	// <![CDATA[
-  
-  //document.replypost.post[title].focus();
-    
-    	// ]]>
-    </script>
-    
-
-
-</table>
