@@ -1023,14 +1023,14 @@ function checkMaxLength() {
     
     do_action('wp_head');
     
-    if (isset($request->resource) && $request->resource == 'identities' && $request->id > 0) {
+    if (isset($request->resource) && $request->resource == 'posts' && $request->params['byid'] > 0) {
       
       global $db,$prefix,$request;
-      $result = $db->get_result( "SELECT nickname FROM ".$prefix."identities WHERE id = ".$request->id );
+      $result = $db->get_result( "SELECT nickname FROM ".$prefix."identities WHERE id = ".$request->params['byid'] );
       if ($result) {
         $nick = $db->result_value($result,0,"nickname");
-        echo '<meta http-equiv="X-XRDS-Location" content="'.base_url(true).$nick.'.xrds" />'."\n";
-        echo '<meta http-equiv="X-Yadis-Location" content="'.base_url(true).$nick.'.xrds" />'."\n";
+        echo '<meta http-equiv="X-XRDS-Location" content="'.$request->url_for(array('resource'=>$nick.".xrds")).'" />'."\n";
+        echo '<meta http-equiv="X-Yadis-Location" content="'.$request->url_for(array('resource'=>$nick.".xrds")).'" />'."\n";
       }
       
     }

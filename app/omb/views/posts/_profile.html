@@ -1,4 +1,5 @@
 <?php
+include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 
 $profile = $Member;
 
@@ -15,7 +16,7 @@ $subscribers = array();
 <?php if (environment('show subs')) : ?>
 <hr>
 
-<h3><?php echo $Member->nickname; ?>'s subscribers</h3>
+<h3><?php echo $Member->nickname; ?><?php echo $txt['profile_usr_subscribers']; ?></h3>
 
 <?php $Subscription->find_by('subscribed',$Member->id); ?>
 <?php while ($subscriber = $Subscription->MoveNext()) : ?>
@@ -34,13 +35,13 @@ $subscribers = array();
   <?php endwhile; ?>
   
   <a href="<?php url_for(array('nickname'=>$request->params['nickname'],'followerspage'=>1)); ?>">
-    All Subscribers...
+    <?php echo $txt['profile_all_subscribers']; ?>
   </a>
 
 <br />
 
 <hr>
-<h3><?php echo $Member->nickname; ?>'s subscriptions</h3>
+<h3><?php echo $Member->nickname; ?><?php echo $txt['profile_usr_subscriptions']; ?></h3>
 
 <?php $Subscription->find_by('subscriber',$Member->id); ?>
 
@@ -58,7 +59,7 @@ $subscribers = array();
 <?php endwhile; ?>
   
   <a href="<?php url_for(array('nickname'=>$request->params['nickname'],'followingpage'=>1)); ?>">
-    All Subscriptions...
+    <?php echo $txt['profile_all_subscriptions']; ?>
   </a>
 
 <br />
@@ -74,7 +75,7 @@ $subscribers = array();
 </form>
 
 <br />
-<a href="<?php url_for(array('resource'=>$pro->nickname)); ?>">Go back to My Profile</a>
+<a href="<?php url_for(array('resource'=>$pro->nickname)); ?>"><?php echo $txt['profile_back_to_my_profile']; ?></a>
 
 
 <?php elseif (isset($pro->id) && $pro->id > 0 && ($pro->id != $Member->id) && in_array($pro->id,$subscribers)) : ?>
@@ -86,24 +87,24 @@ $subscribers = array();
 </form>
 
 <br />
-<a href="<?php url_for(array('resource'=>$pro->nickname)); ?>">Go back to My Profile</a>
+<a href="<?php url_for(array('resource'=>$pro->nickname)); ?>"><?php echo $txt['profile_back_to_my_profile']; ?></a>
 
 <?php elseif (isset($pro->id) && $pro->id > 0 && ($pro->id == $Member->id)) : ?>
 <br />
 <br />
 <form>
-<p>Copy &amp; paste the following URL to subscribe to people on other Web sites:</p>
-<p>Profile URL: <input name="profid" size="40" value="<?php echo $request->url_for(array('resource'=>$pro->nickname)); ?>"/></p>
+<p><?php echo $txt['profile_subscribe_people']; ?>:</p>
+<p><?php echo $txt['profile_profile_url']; ?>: <input name="profid" size="40" value="<?php echo $request->url_for(array('resource'=>$pro->nickname)); ?>"/></p>
 </form>
 <br />
 
 <?php elseif (!isset($pro->id)) : ?>
 
-<h2>Subscribe to <?php echo $Member->nickname; ?>'s notices:</h2>
+<h2><?php echo $txt['profile_subscribe_to']; ?><?php echo $Member->nickname; ?><?php echo $txt['profile_usr_notices']; ?>:</h2>
 <form method="post" action="<?php url_for('oauth_omb_subscribe'); ?>">
   <input type="hidden" name="listenee_id" value="<?php echo $Member->id; ?>">
   Your Profile URL <input size="40" name="listener_url">
-  <input type="submit" value="Subscribe to <?php echo $Member->nickname; ?>'s notices">
+  <input type="submit" value="<?php echo $txt['profile_subscribe_to']; echo $Member->nickname; echo $txt['profile_usr_notices']; ?>">
 </form>
 
 <?php endif; ?>

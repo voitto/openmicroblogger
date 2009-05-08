@@ -16,6 +16,10 @@ function send_ping( &$model, &$rec ) {
   if (!(get_profile_id()))
     return;
   
+  if (!empty($db->prefix))
+    $chan = $db->prefix;
+  else
+    $chan = "chan";
   
   if (REALTIME_HOST) {
     
@@ -63,7 +67,7 @@ function send_ping( &$model, &$rec ) {
     
     curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );
     curl_setopt( $curl, CURLOPT_TIMEOUT, 1);
-    curl_setopt( $curl, CURLOPT_CUSTOMREQUEST, 'ADDMESSAGE '.$db->prefix.' '.addslashes($load) );
+    curl_setopt( $curl, CURLOPT_CUSTOMREQUEST, 'ADDMESSAGE '.$chan.' '.addslashes($load) );
     
     $output = curl_exec($curl);
     

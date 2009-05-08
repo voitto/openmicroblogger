@@ -1,4 +1,6 @@
-<?php 
+<?php
+include 'wp-content/language/lang_chooser.php'; //Loads the language-file
+
 if( 'POST' == $_SERVER['REQUEST_METHOD'] && !empty( $_POST['action'] ) && $_POST['action'] == 'post' ) {
 	if ( ! is_user_logged_in() )
 		auth_redirect();
@@ -23,11 +25,11 @@ if( 'POST' == $_SERVER['REQUEST_METHOD'] && !empty( $_POST['action'] ) && $_POST
 	//Try to detect image or video only posts, and set post title accordingly
 	if ($post_title=='') {
 		if (preg_match("/<object|<embed/", $post_content))
-			$post_title='Video Post';
+			$post_title= $txt['index_video_post'];
 		elseif (preg_match("/<img/", $post_content))
-			$post_title='Image Post';
+			$post_title= $txt['index_image_post'];
 		else
-			$post_title='No Title';
+			$post_title= $txt['index_no_title'];
 		}
 	$post_id = wp_insert_post( array(
 		'post_author'	=> $user_id,
@@ -48,12 +50,21 @@ get_header();
 
 
 <?php if (REALTIME_HOST) : ?>
+  
+  <?php
+    global $db;
+    if (!empty($db->prefix))
+      $chan = $db->prefix;
+    else
+      $chan = "chan";
+  ?>
+  
   <script type="text/javascript">
     // <![CDATA[<script type="text/javascript">
     Meteor.hostid = '<?php echo get_profile_id(); ?>';
     Meteor.host = "<?php echo REALTIME_HOST; ?>";
     Meteor.registerEventCallback("process", test);
-    Meteor.joinChannel("<?php echo $prefix; ?>", 0);
+    Meteor.joinChannel("<?php echo $chan; ?>", 0);
     Meteor.mode = 'stream';
     Meteor.connect();
     function test(data) {
@@ -85,7 +96,7 @@ get_header();
 ?>
 <div id="main">
 		<?php global $paged;?>
-	<h2>Recent Updates <?php if ($paged>1) echo('(Page '.$paged.') '); ?><a class="rss" href="<?php bloginfo( 'rss2_url' ); ?>">RSS</a> <span class="controls"></span></h2>
+	<h2><?php echo $txt['index_recent_updates']; ?><?php if ($paged>1) echo('(Page '.$paged.') '); ?><a class="rss" href="<?php bloginfo( 'rss2_url' ); ?>"><?php echo $txt['index_rss']; ?></a> <span class="controls"></span></h2>
 <?php
 if( have_posts( ) ) {
 ?>
@@ -109,16 +120,16 @@ if( have_posts( ) ) {
 			<?php global $the_post; echo laconica_time($the_post->created); ?> |
 			<?php comments_popup_link( __( '0' ), __( '1' ), __( '%' ) ); ?>
 			<span class="actions">
-			<a href="<?php the_permalink( ); ?>" class="thepermalink">Permalink</a>
+			<a href="<?php the_permalink( ); ?>" class="thepermalink"><?php echo $txt['index_permalink']; ?></a>
 			<?php if (function_exists('post_reply_link')) 
-				echo post_reply_link(array('before' => ' | ', 'reply_text' => 'Reply', 'add_below' => 'prologue'), get_the_id()); ?>
+				echo post_reply_link(array('before' => ' | ', 'reply_text' => $txt['index_link'], 'add_below' => 'prologue'), get_the_id()); ?>
 			<?php if (current_user_can('edit_post', get_the_id())) { ?>
-			|  <a href="<?php echo (get_edit_post_link( get_the_id() ))?>" class="post-edit-link" rel="<?php the_ID(); ?>">Edit</a>
-			|  <a href="<?php echo (get_edit_post_link( get_the_id(), 'remove' ))?>" class="post-edit-link" rel="<?php the_ID(); ?>">Remove</a>
+			|  <a href="<?php echo (get_edit_post_link( get_the_id() ))?>" class="post-edit-link" rel="<?php the_ID(); ?>"><?php echo $txt['index_edit']; ?></a>
+			|  <a href="<?php echo (get_edit_post_link( get_the_id(), 'remove' ))?>" class="post-edit-link" rel="<?php the_ID(); ?>"><?php echo $txt['index_remove']; ?></a>
 			<?php } ?>
 			</span>
 			<br />
-			<?php tags_with_count( '', __( 'Tags: ' ), ', ', ' ' ); ?>
+			<?php tags_with_count( '', __( 'Tags:' ), ', ', ' ' ); ?>
 		</span>
 	</h4>
 	<div class="postcontent<?php if (current_user_can( 'edit_post', get_the_id() )) {?> editarea<?php }?>" id="content-<?php the_ID(); ?>"><?php the_content( __( '(More ...)' ) ); ?></div> <!-- // postcontent -->
@@ -135,13 +146,13 @@ $formvisible=1;
 <div id="wp-temp-form-div" style="display:none">
 <div id="respond" style="display:none">
 
-<h3>Reply <small id="cancel-comment-reply"><?php echo cancel_comment_reply_link() ?></small></h3>
+<h3><?php echo $txt['index_reply']; ?> <small id="cancel-comment-reply"><?php echo cancel_comment_reply_link() ?></small></h3>
 
 <?php
 if ( get_option('comment_registration') && !$user_ID ) {
 ?>
 
-<p>You must be <a href="<?php echo get_option('siteurl'); ?>/wp-login.php?redirect_to=<?php the_permalink(); ?>" title="Log in">logged in</a> to post a comment.</p>
+<p><?php echo $txt['index_you_must_be']; ?><a href="<?php echo get_option('siteurl'); ?>/wp-login.php?redirect_to=<?php the_permalink(); ?>" title="Log in"><?php echo $txt['index_logged_in']; ?></a><?php echo $txt['index_to_post_a_comment']; ?>.</p>
 
 <?php
 // if option comment_registration and not user_ID
@@ -149,9 +160,9 @@ if ( get_option('comment_registration') && !$user_ID ) {
 
 <form id="commentform" action="<?php echo get_option( 'siteurl' ); ?>/wp-comments-post.php" method="post">
 	<div class="form"><textarea id="comment" name="comment" cols ="45" rows="3"></textarea></div>
-	<label class="post-error" for="comment" id="commenttext_error"></label>
+	<label class="post-error" for="comment" id="commentindex_error"></label>
 	<?php if( $user_ID ) { ?>
-		<p>Logged in as <a href="<?php echo get_option( 'siteurl' ); ?>/wp-admin/profile.php"><?php echo $user_identity; ?></a>.  <a href="<?php echo get_option( 'siteurl' ); ?>/wp-login.php?action=logout" title="Log out">Log out &rarr;</a></p>
+		<p>Logged in as <a href="<?php echo get_option( 'siteurl' ); ?>/wp-admin/profile.php"><?php echo $user_identity; ?></a>.  <a href="<?php echo get_option( 'siteurl' ); ?>/wp-login.php?action=logout" title="Log out"><?php echo $txt['index_logout']; ?> &rarr;</a></p>
 <?php // if user_ID 
 } else { ?>
 <table>
@@ -190,7 +201,7 @@ if ( get_option('comment_registration') && !$user_ID ) {
 } // if have_posts
 else {
 ?>
-<h3>No updates yet!</h3>
+<h3><?php echo $txt['index_no_updates_yet']; ?></h3>
 <?php } ?>
 
 

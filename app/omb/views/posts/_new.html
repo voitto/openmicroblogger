@@ -1,4 +1,5 @@
 <?php 
+include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 
   global $request;
   $post = strtolower(classify($request->resource));
@@ -17,12 +18,12 @@
     <tr><td colspan="2" valign="top"><p>&nbsp;</p></td></tr>
 
   <tr>
-    <td align="right" valign="top"><b>Status</b></td>
+    <td align="right" valign="top"><b><?php echo $txt['new_status']; ?></b></td>
     <td valign="top" align="left"><textarea style="margin-left:5px;width:405px;" rows="3" cols="56" id="<?php print $post; ?>_title" name="<?php print $post; ?>[title]"><?php print $Member->title; ?></textarea></td>
   </tr>
   
   <tr>
-    <td align="right" valign="top"><b>Article</b></td>
+    <td align="right" valign="top"><b><?php echo $txt['new_article']; ?></b></td>
     <td valign="top" align="left">
       
       
@@ -39,11 +40,11 @@
         -->
         </script>
   <tr>
-  <td align="right" valign="top"><b>Choose File</b></td>
+  <td align="right" valign="top"><b><?php echo $txt['new_choose_file']; ?></b></td>
     <td valign="top" align="left"><input id="<?php print $post; ?>_attachment" name="<?php print $post; ?>[attachment]" type="file"></td>
   </tr>
     <tr>
-    <td colspan="2" valign="top"><p><ul><li><i>jpeg photo</i></li><li><i>avi or mov (quicktime) movie</i></li><li><i>mp3 audio</i></li></ul></p></td>
+    <td colspan="2" valign="top"><p><ul><li><i><?php echo $txt['new_image']; ?></i></li><li><i><?php echo $txt['new_movie']; ?></i></li><li><i><?php echo $txt['new_audio']; ?></i></li></ul></p></td>
   </tr>
 
 
@@ -56,7 +57,7 @@
 ?>
 
   <tr>
-    <td align="right" valign="top"><b>Categories</b></td>
+    <td align="right" valign="top"><b><?php echo $txt['new_categories']; ?></b></td>
     <td valign="top" align="left"><select style="margin-left:5px;" size="6" name="category0">
       <?php while ( $c = $Category->MoveNext() ) : ?>
         <option><?php print $c->name; ?></option>

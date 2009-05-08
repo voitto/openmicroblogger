@@ -46,8 +46,8 @@ $request->connect( 'oembed', array(
 $request->connect(
   ':nickname',
   array(
-    'resource'=>'posts',
-    'action'=>'index',
+    'resource'=>'identities',
+    'action'=>'entry',
     'requirements' => array ( '[A-Za-z0-9_.]+' )
   )
 );
@@ -429,12 +429,16 @@ global $db;
   
   if (substr($nick,0,1) == '_' && $id) {
     $request->set_param('id',$id);
-    $request->set_param('resource','identities');
-    $request->set_param('action','entry');
   } elseif ($id) {
-    $request->set_param('byid',$id);
-    if (!(isset($request->page)))
-      $request->set_param('page',1);
+    if (empty($request->client_wants)) {
+      $request->set_param('resource','posts');
+      $request->set_param('action','index');
+      $request->set_param('byid',$id);
+      if (!(isset($request->page)))
+        $request->set_param('page',1);
+    } else {
+      $request->set_param('id',$id);
+    }
   }
 
 }
