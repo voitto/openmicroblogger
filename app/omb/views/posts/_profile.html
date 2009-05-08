@@ -12,6 +12,7 @@ $subscribers = array();
 <h3 style="margin-left:5px;font-size:18px;font-family: arial, helvetica, sans-serif;"><img src="<?php echo $profile->avatar; ?>" alt="<?php echo $profile->fullname; ?>" border="0" style="vertical-align:middle;">
   <?php echo $profile->nickname; ?>
 </h3>
+<br />
 
 <?php if (environment('show subs')) : ?>
 <hr>
@@ -63,7 +64,7 @@ $subscribers = array();
   </a>
 
 <br />
-
+<?php endif; ?>
 <?php $pro = get_profile(); ?>
 
 <?php if (isset($pro->id) && $pro->id > 0 && ($pro->id != $Member->id) && !in_array($pro->id,$subscribers)) : ?>
@@ -115,6 +116,6 @@ $subscribers = array();
       trigger_before( 'the_content', $current_user, $current_user );
 
 ?>
-<?php endif; ?>
+
 
 </div>
