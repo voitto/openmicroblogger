@@ -21,7 +21,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
     <td align="right" valign="top"><b><?php echo $txt['edit_title']; ?></b></td>
     <td valign="top" align="left"><textarea rows="3" style="width:350px;" cols="40" wrap="virtual" id="<?php print $post; ?>_title" name="<?php print $post; ?>[title]"><?php print $Member->title; ?></textarea></td>
   </tr>
-  <?php if (!(environment('theme') == 'prologue-theme')) : ?>
+  <?php if (!is_microblog_theme()) : ?>
   <tr>
     <td align="right" valign="top"><b><?php echo $txt['edit_body']; ?></b></td>
     <td valign="top" align="left"><textarea rows="6" style="width:350px;" cols="40" wrap="virtual" id="<?php print $post; ?>_body" name="<?php print $post; ?>[body]"><?php print $Member->body; ?></textarea></td>

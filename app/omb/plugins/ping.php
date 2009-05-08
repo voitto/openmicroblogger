@@ -13,9 +13,6 @@ function send_ping( &$model, &$rec ) {
   $notify_table = $model->table;
   $recid = $rec->id;
   
-  if (!(get_profile_id()))
-    return;
-  
   if (!empty($db->prefix))
     $chan = $db->prefix;
   else
@@ -73,7 +70,8 @@ function send_ping( &$model, &$rec ) {
     
   }
 
-
+  if (!(get_profile_id()))
+    return;
   
   if (array_key_exists( 'target_id', $model->field_array )) {
     $e = $Entry->find($rec->attributes['target_id']);

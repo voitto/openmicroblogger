@@ -432,7 +432,8 @@ global $db;
   } elseif ($id) {
     if (empty($request->client_wants)) {
       $request->set_param('resource','posts');
-      $request->set_param('action','index');
+      if ($request->action == 'entry')
+        $request->set_param('action','index');
       $request->set_param('byid',$id);
       if (!(isset($request->page)))
         $request->set_param('page',1);

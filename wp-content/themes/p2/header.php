@@ -54,7 +54,7 @@ $profile= get_profile();
 
 
 <li id="nav_profile" style="display:inline;padding:5px;">
-<a href="<?php echo $profile->profile_url; ?>" title="Profile">Profile</a>
+<a href="<?php echo $request->url_for(array("resource"=>$profile->nickname)); ?>" title="Profile">Profile</a>
 </li>
 <li id="nav_find" style="display:inline;padding:5px;">
 <a href="<?php echo ''; ?>" title="Find People">Find People</a>
