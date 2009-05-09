@@ -6,6 +6,8 @@ define(       "DB_NAME", ""      ); // name of database
 define(       "DB_USER", ""      ); // user name
 define(   "DB_PASSWORD", ""      ); // user password
 
+define( "STANDARD_LANG", "eng"   ); // ger, eng
+
 // options
 
 define(      "INTRANET", "0"     ); // change to 1 for password login
