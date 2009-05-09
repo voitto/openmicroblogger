@@ -479,9 +479,11 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
     $result = $this->get_result($sql);
   }
   function has_table($t) {
-    $t = $this->prefix.$t;
     trigger_before( 'has_table', $this, $this );
-    return in_array( $t, $this->get_tables(), true );
+    $t = $this->prefix.$t;
+    if (!(isset($this->tables)))
+      $this->tables = $this->get_tables();
+    return in_array( $t, $this->tables, true );
   }
   function get_tables() {
     trigger_before( 'get_tables', $this, $this );

@@ -401,7 +401,7 @@ class Database {
    */
   function table_exists( $table ) {
     trigger_before( 'table_exists', $this, $this );
-    return isset( $this->models[$table] );
+    return $this->has_table($table);
   }
   
   function set_param( $param, $value ) {

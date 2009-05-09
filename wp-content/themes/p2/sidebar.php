@@ -49,20 +49,25 @@
   $count2 = 0;
   $count3 = 0;
   global $db;
-  $sql = "SELECT count(*) as count FROM ".$db->prefix."subscriptions WHERE subscriber = ".$profile->id;
-  $result = $db->get_result($sql);
-  if ($result)
-    $count1 = $db->result_value($result,0,"count");
-
-  $sql = "SELECT count(*) as count FROM ".$db->prefix."subscriptions WHERE subscribed = ".$profile->id;
-  $result = $db->get_result($sql);
-  if ($result)
-    $count2 = $db->result_value($result,0,"count");
-
-  $sql = "SELECT count(*) as count FROM ".$db->prefix."posts WHERE profile_id = ".$profile->id;
-  $result = $db->get_result($sql);
-  if ($result)
-    $count3 = $db->result_value($result,0,"count");
+  
+  if ($db->table_exists('subscriptions') && $db->table_exists('posts')) {
+    
+    $sql = "SELECT count(*) as count FROM ".$db->prefix."subscriptions WHERE subscriber = ".$profile->id;
+    $result = $db->get_result($sql);
+    if ($result)
+      $count1 = $db->result_value($result,0,"count");
+    
+    $sql = "SELECT count(*) as count FROM ".$db->prefix."subscriptions WHERE subscribed = ".$profile->id;
+    $result = $db->get_result($sql);
+    if ($result)
+      $count2 = $db->result_value($result,0,"count");
+    
+    $sql = "SELECT count(*) as count FROM ".$db->prefix."posts WHERE profile_id = ".$profile->id;
+    $result = $db->get_result($sql);
+    if ($result)
+      $count3 = $db->result_value($result,0,"count");
+    
+  }
 
   ?>
   <?php if (!isset($request->params['nickname'])) : ?>

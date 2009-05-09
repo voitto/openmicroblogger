@@ -395,7 +395,7 @@ global $db;
     $nick = trim($nick);
   }
 
-  if ($db->table_exists($nick)) {
+  if (isset($db->tables[$nick])) {
     $request->set_param('resource',$nick);
     if (!(isset($_POST['method'])))
       $request->set_param('action','index');
@@ -431,10 +431,11 @@ global $db;
     $request->set_param('id',$id);
   } elseif ($id) {
     if (empty($request->client_wants)) {
-      if (count($request->pattern) == 1 ) {
+      if (count($request->activeroute->patterns) == 1 ) {
         $request->set_param('resource','posts');
         if ($request->action == 'entry')
           $request->set_param('action','index');
+        $request->set_param('byid',$id);
       } elseif ($request->resource == 'identities') {
         $request->set_param('id',$id);
       } else {
