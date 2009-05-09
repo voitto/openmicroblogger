@@ -4,18 +4,15 @@
 
 <?php global $request; ?>
 
-<?php if ((signed_in() || isset($request->params['byid'])) && !(environment('use_sidebar_blocks'))) : ?>
+<?php if (get_app_id() && !(environment('use_sidebar_blocks'))) : ?>
 
   <?php
 
-  if (signed_in() && !isset($request->params['byid']))
-    $profile = get_profile();
-  else
-    $profile = get_profile($request->params['byid']);
+  $profile = get_profile(get_app_id());
 
   if ($profile->id == get_profile_id()) {
    if (in_array('settings',$request->activeroute->patterns))
-     render_partial('apps');
+     render_partial('admin');
   }
   
   //  echo '<script type="text/javascript" src="'.$request->url_for(array('resource'=>'pages','action'=>'block.js')).'"></script>';   }
@@ -83,8 +80,8 @@
       <?php endif; ?>
       </tr>
       <tr>
-        <td>following</td>
-        <td>followers</td>
+        <td><a href="<?php echo $request->url_for(array("resource"=>$profile->nickname))."/subscriptions"; ?>">following</a></td>
+        <td><a href="<?php echo $request->url_for(array("resource"=>$profile->nickname))."/subscribers"; ?>">followers</a></td>
   <?php if (!isset($request->params['nickname'])) : ?>
         <td>updates</td>
       <?php endif; ?>

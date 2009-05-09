@@ -431,10 +431,15 @@ global $db;
     $request->set_param('id',$id);
   } elseif ($id) {
     if (empty($request->client_wants)) {
-      $request->set_param('resource','posts');
-      if ($request->action == 'entry')
-        $request->set_param('action','index');
-      $request->set_param('byid',$id);
+      if (count($request->pattern) == 1 ) {
+        $request->set_param('resource','posts');
+        if ($request->action == 'entry')
+          $request->set_param('action','index');
+      } elseif ($request->resource == 'identities') {
+        $request->set_param('id',$id);
+      } else {
+        $request->set_param('byid',$id);
+      }
       if (!(isset($request->page)))
         $request->set_param('page',1);
     } else {

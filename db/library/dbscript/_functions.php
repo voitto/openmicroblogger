@@ -2477,7 +2477,9 @@ function get_app_id() {
   global $request;
   
   if (!($request->resource == 'identities'))
-    if (get_profile_id())
+    if ($request->params['byid'] > 0)
+      return $request->params['byid'];
+    elseif (get_profile_id())
       return get_profile_id();
     else
       return false;
