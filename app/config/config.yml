@@ -78,12 +78,14 @@ env:
     - apps
     - password
     - streams
+    - translate
   
   installed:
     - password
     - streams
     - twitter
     - identica
+    - translate
   
   boot: omb
   

@@ -1,0 +1,6 @@
+
+<?php echo $Member->name; ?>
+
+<?php echo $Member->code; ?>
+
+<?php echo $Member->data; ?>

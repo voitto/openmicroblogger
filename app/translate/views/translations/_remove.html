@@ -1,0 +1,33 @@
+<table align="center" cellpadding="3" cellspacing="0" border="0"><th colspan="2"></th>
+
+   <tr>
+<td align="right"><p></p></td>
+  <td>
+  <?php print $Member->name ?>
+  </td>
+</tr>
+
+
+  <tr>
+    <td align="center" colspan="2"><p>
+  <form action="<?php url_for( array( 'resource'=>$request->resource, 'id'=>$Member->id )); ?>" method="post" name="identities" id="identities" enctype="multipart/form-data">
+  <div>
+  <input name="method" type="hidden" value="delete" />
+  <input name="entry[etag]" type="hidden" value="<?php print $Entry->etag; ?>" />
+  <table border="0">
+  <tr><th colspan="2">
+  </th></tr>
+    <tr>
+      <td align="right"><b></b></td>
+      <td valign="top" align="left"><br><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="Cancel" type="button" />
+  
+  <input value="Delete This Entry" type="submit" name="button_group" /></td>
+    </tr>
+  </table>
+  </div>
+  </form>
+    </p></td>
+  </tr>
+</table>
+
+

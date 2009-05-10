@@ -1,0 +1,139 @@
+<br />
+<br />
+<br />
+<table align="center" cellpadding="3" cellspacing="10" border="0">
+
+  <th colspan="4">
+    <b></b>
+  </th>
+
+  <tr>
+    <td><b></b></td>
+    <td><b></b></td>
+    <td><b></b></td>
+    <td><p></p></td>
+  </tr>
+
+  <?php while( $Member = $collection->MoveNext() ) : ?>
+
+  <?php $Entry = $Member->FirstChild('entries'); ?>
+
+    <tr>
+      <td>
+        
+        <?php $pname = $Member->code; ?>
+<div id="boxp<?php echo $pname; ?>">      
+<p>
+  <input class="unchecker" name="<?php echo $pname; ?>" id="<?php echo $pname; ?>" type="checkbox" <?php if (environment('lang') == $pname) echo "checked"; ?>>
+</p>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("#<?php echo $pname; ?>").click(function(e){
+      
+      var someurl = "<?php url_for(array(
+        'resource'=>'settings'
+      )); ?>";
+      
+      var submitdata = {};
+      
+      submitdata['setting[name]'] = 'config.env.lang';
+      submitdata['method'] = 'post';
+      submitdata['setting[value]'] = '<?php echo $pname; ?>';
+      
+      if (!$("#<?php echo $pname; ?>").attr('checked')) {
+        return;
+      }
+      
+      $(".unchecker").attr('checked', false);
+      $("#boxp<?php echo $pname; ?>").html("<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>");
+      $.post(someurl, submitdata, function(str) {
+        $("#boxp<?php echo $pname; ?>").html('<p><input class="unchecker" name="<?php echo $pname; ?>" id="<?php echo $pname; ?>" type="checkbox" checked /></p>');
+      });
+      
+    });
+  });
+</script>
+        
+        
+        
+        
+      </td>
+      <td>
+        <a href="JavaScript:show_page('<?php url_for( array( 'resource'=>'translations', 'id'=>$Member->id,'action'=>'edit' )); ?>/partial');">
+          <?php print $Member->name; ?>
+        </a>
+      </td>
+      <td><p><?php print $Member->code; ?></p></td>
+      <td><p><?php $o = owner_of($Member); ?>@<a href="<?php url_for(array('resource'=>$o->nickname)); ?>"><?php echo $o->nickname ?></a></p></td>
+      <td><a href="<?php url_for( array('resource'=>'translations','id'=>$Member->id,'action'=>'export.txt') ); ?>">export</a>
+</td>
+<td><a href="JavaScript:show_page('<?php url_for( array('resource'=>'translations','id'=>$Member->id,'action'=>'remove') ); ?>/partial');">remove</a></td>
+    </tr>
+
+  <?php endwhile; ?>
+  
+  <?php foreach ($translation_files as $tran) : ?>
+  
+      <tr>
+        <td>
+          
+          
+    <?php $pname = $tran['code']; ?>
+
+<div id="boxp<?php echo $pname; ?>">        
+<p>
+  <input class="unchecker" name="<?php echo $pname; ?>" id="<?php echo $pname; ?>" type="checkbox" <?php if (environment('lang') == $pname) echo "checked"; ?>>
+</p>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("#<?php echo $pname; ?>").click(function(e){
+      
+      var someurl = "<?php url_for(array(
+        'resource'=>'settings'
+      )); ?>";
+      
+      var submitdata = {};
+      
+      submitdata['setting[name]'] = 'config.env.lang';
+      submitdata['method'] = 'post';
+      submitdata['setting[value]'] = '<?php echo $pname; ?>';
+      
+      if (!$("#<?php echo $pname; ?>").attr('checked')) {
+        return;
+      }
+      $(".unchecker").attr('checked', false);
+      $("#boxp<?php echo $pname; ?>").html("<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>");
+      $.post(someurl, submitdata, function(str) {
+        $("#boxp<?php echo $pname; ?>").html('<p><input class="unchecker" name="<?php echo $pname; ?>" id="<?php echo $pname; ?>" type="checkbox" checked /></p>');
+      });
+      
+    });
+  });
+</script>
+        
+                  
+          
+        </td>
+      <td>
+        
+          <?php print $tran['name']; ?>
+        
+      </td>
+      <td><p><?php print $tran['code']; ?></p></td>
+      <td><p>@<a href="http://openmicroblogger.org/discuss/?shen84">Shen84</a></p></td>
+      <td><p></p></td>
+      <td><p></p></td>
+    </tr>
+
+<?php endforeach; ?>
+</table>
+<br />
+<br />
+<br />
+<a href="JavaScript:show_page('<?php url_for(array('resource'=>'translations','action'=>'new')); ?>/partial');">Add new translation...</a>
+
+

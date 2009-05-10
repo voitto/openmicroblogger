@@ -401,6 +401,13 @@ global $db;
       $request->set_param('action','index');
     return;
   }
+  
+  if ($db->has_table($request->params['nickname'])) {
+    $request->set_param('resource',$request->params['nickname']);
+    if (!$request->id && $request->action == 'entry')
+      $request->set_param('action','index');
+    return;
+  }
 
   if ($request->route_exists($request->params['nickname']))
     return;

@@ -65,9 +65,9 @@ global $variants,$request,$loader,$db,$logic;
    */
 
 if (file_exists('config/config.php'))
-  include('config/config.php');
+  require('config/config.php');
 else
-  include('config.php');
+  require('config.php');
 
   // set path to db directory
 if (is_dir('db'))

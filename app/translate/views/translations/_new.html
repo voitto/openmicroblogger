@@ -1,0 +1,34 @@
+
+
+<form action="<?php url_for( 'translations' ); ?>" method="post" name="translations" id="translations">
+<div>
+<input name="method" type="hidden" value="post" />
+<input name="submit_form" type="hidden" value="translations" />
+<table border="0">
+
+<tr><th colspan="2">
+
+</th></tr>
+
+	<tr>
+		<td align="right" valign="top"><p>Language: (English, German, _______)</p></td>
+		<td valign="top" align="left"><input size="50" maxlength="255" id="translation_name" name="translation[name]" type="text" value="" /></td>
+	</tr>
+	<tr>
+		<td align="right" valign="top"><p>3-letter code: (eng,ger,___)</p></td>
+		<td valign="top" align="left"><input size="50" maxlength="255" id="translation_code" name="translation[code]" type="text" value="" /></td>
+	</tr>
+<tr>
+		<td align="right" valign="top"><p>(optional) data</p></td>
+		<td valign="top" align="left"><input size="50" id="translation_data" name="translation[data]" type="text" value="" /></td>
+	</tr>
+	<tr>
+		<td align="right" valign="top"><b></b></td>
+		<td valign="top" align="left"><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="Cancel" type="button" />
+
+<input value="Save Translation" type="submit" name="button_group" /></td>
+	</tr>
+</table>
+</div>
+</form>
+
