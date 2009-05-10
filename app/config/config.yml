@@ -38,7 +38,7 @@ production:
 
 env:
   
-  site_title: Latest Updates
+  site_title: Recent Updates
   site_subtitle: 
   site_description: 
   

@@ -4,7 +4,7 @@ $tag_obj = $wp_query->get_queried_object();
 ?>
 
 <div id="main">
-  <h2>Latest Updates: <?php single_tag_title( ); ?> <a class="rss" href="<?php echo get_tag_feed_link( $tag_obj->term_id ); ?>">RSS</a></h2>
+  <h2>Recent Updates: <?php single_tag_title( ); ?> <a class="rss" href="<?php echo get_tag_feed_link( $tag_obj->term_id ); ?>">RSS</a></h2>
   <ul>
 
 <?php

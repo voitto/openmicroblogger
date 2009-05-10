@@ -48,7 +48,7 @@ show_prologue_nav();
 ?>
 
 <div id="main">
-  <h2>Latest Updates <a class="rss" href="<?php bloginfo( 'rss2_url' ); ?>">RSS</a></h2>
+  <h2>Recent Updates <a class="rss" href="<?php bloginfo( 'rss2_url' ); ?>">RSS</a></h2>
   <ul>
 
 <?php

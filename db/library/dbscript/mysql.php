@@ -653,11 +653,17 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
           else
             $field = $col;
           
+          if ($eq == 'IS')
+            $eqval = $val;
+          else
+            $eqval = "'$val'";
+          
           if ($findfirst) {
-            $sql .= " WHERE $field $eq '$val' ";
+            $sql .= " WHERE $field $eq $eqval ";
           } else {
-            $sql .= " $op $field $eq '$val' ";
+            $sql .= " $op $field $eq $eqval ";
           }
+          
           $findfirst = false;
           
         }

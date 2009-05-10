@@ -74,8 +74,11 @@ $profile= get_profile();
 <li id="nav_help" style="display:inline;padding:5px;">
 <a href="<?php echo ''; ?>" title="Help">Help</a>
 </li>
-<li id="nav_logout" style="display:inline;padding:5px;">
+<li id="nav_login" style="display:inline;padding:5px;">
 <a href="<?php url_for(array('resource'=>'email_login')); ?>" title="Sign in">Sign in</a>
+</li>
+<li id="nav_reg" style="display:inline;padding:5px;">
+<a href="<?php url_for(array('resource'=>'register')); ?>" title="Register">Register</a>
 </li>
   
 <?php endif; ?>

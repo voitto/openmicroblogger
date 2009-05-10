@@ -15,16 +15,14 @@ if ( file_exists( $language_file )) {
   
 } else {
   
-  if (signed_in()) {
-    $Setting =& $db->model('Setting');
-    $lang = $Setting->find_by(array('name'=>'lang','profile_id'=>get_profile_id()));
-    if ($lang)
-      $txt = unserialize($lang->data);
-  }
+  $Translation =& $db->model('Translation');
+  $lang = $Translation->find_by('code',$language_selected);
+  if ($lang)
+    $txt = unserialize($lang->data);
   
 }
 
-if (!(count($txt) > 10))
+if (!(count($txt) > 1))
   include 'wp-content/language/eng.php';
 
 
