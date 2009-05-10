@@ -231,8 +231,8 @@ class View {
         render_blob( $Member->$template, $ext );
       } else {
         
-        // nothing to do
-        admin_alert($request->uri." view $view action $action");
+        if (strpos($request->uri, 'robots') === false)
+          admin_alert($request->uri." view $view action $action");
         
       }
       

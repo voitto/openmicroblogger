@@ -402,8 +402,8 @@ global $db;
     return;
   }
   
-  if ($db->has_table($request->params['nickname'])) {
-    $request->set_param('resource',$request->params['nickname']);
+  if ($db->has_table($nick)) {
+    $request->set_param('resource',$nick);
     if (!$request->id && $request->action == 'entry')
       $request->set_param('action','index');
     return;
@@ -567,8 +567,11 @@ function oauth_omb_subscribe( &$vars ) {
   
   extract($vars);
   
-  if (!(environment('openid_version') > 1))
-    $db->create_openid_tables();
+  if (!(environment('openid_version') > 1)
+   || (!$db->has_table('oauth_consumers')
+   || (!$db->has_table('oauth_tokens')
+  )))
+  $db->create_openid_tables();
   
   wp_plugin_include(array(
     'wp-oauth'
@@ -708,8 +711,11 @@ function oauth_authorize( &$vars ) {
   
   extract($vars);
   
-  if (!(environment('openid_version') > 1))
-    $db->create_openid_tables();
+  if (!(environment('openid_version') > 1)
+   || (!$db->has_table('oauth_consumers')
+   || (!$db->has_table('oauth_tokens')
+  )))
+  $db->create_openid_tables();
 
   wp_plugin_include(array(
     'wp-oauth'
@@ -1081,7 +1087,13 @@ function access_token( &$vars ) {
 function request_token( &$vars ) {
   
   extract($vars);
-
+  
+  if (!(environment('openid_version') > 1)
+   || (!$db->has_table('oauth_consumers')
+   || (!$db->has_table('oauth_tokens')
+  )))
+  $db->create_openid_tables();
+  
   wp_plugin_include(array(
     'wp-oauth'
   ));
