@@ -232,7 +232,7 @@ class View {
       } else {
         
         // nothing to do
-        admin_alert($request->url." view $view action $action");
+        admin_alert($request->uri." view $view action $action");
         
       }
       

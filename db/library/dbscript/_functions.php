@@ -2646,4 +2646,22 @@ function pretty_urls() {
   return false;
 }
 
+function setting($name) {
+  if (!signed_in())
+    return;
+  global $db;
+  global $ombsettings;
+  if (!is_array($ombsettings))
+    $ombsettings = array();
+  if (isset($ombsettings[$name]))
+    return $ombsettings[$name];
+  $Setting =& $db->model('Setting');
+  $sett = $Setting->find_by(array('name'=>$name,'profile_id'=>get_profile_id()));
+  if ($sett) {
+    $ombsettings[$name] = $sett->value;
+    return $ombsettings[$name];
+  }
+  $ombsettings[$name] = false;
+  return false;
+}
 

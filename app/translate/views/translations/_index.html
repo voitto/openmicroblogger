@@ -24,7 +24,7 @@
         <?php $pname = $Member->code; ?>
 <div id="boxp<?php echo $pname; ?>">      
 <p>
-  <input class="unchecker" name="<?php echo $pname; ?>" id="<?php echo $pname; ?>" type="checkbox" <?php if (environment('lang') == $pname) echo "checked"; ?>>
+  <input class="unchecker" name="<?php echo $pname; ?>" id="<?php echo $pname; ?>" type="checkbox" <?php if (setting('lang') == $pname) echo "checked"; ?>>
 </p>
 </div>
 
@@ -38,7 +38,7 @@
       
       var submitdata = {};
       
-      submitdata['setting[name]'] = 'config.env.lang';
+      submitdata['setting[name]'] = 'lang';
       submitdata['method'] = 'post';
       submitdata['setting[value]'] = '<?php echo $pname; ?>';
       
@@ -84,7 +84,7 @@
 
 <div id="boxp<?php echo $pname; ?>">        
 <p>
-  <input class="unchecker" name="<?php echo $pname; ?>" id="<?php echo $pname; ?>" type="checkbox" <?php if (environment('lang') == $pname) echo "checked"; ?>>
+  <input class="unchecker" name="<?php echo $pname; ?>" id="<?php echo $pname; ?>" type="checkbox" <?php if (setting('lang') == $pname) echo "checked"; ?>>
 </p>
 </div>
 
@@ -98,7 +98,7 @@
       
       var submitdata = {};
       
-      submitdata['setting[name]'] = 'config.env.lang';
+      submitdata['setting[name]'] = 'lang';
       submitdata['method'] = 'post';
       submitdata['setting[value]'] = '<?php echo $pname; ?>';
       

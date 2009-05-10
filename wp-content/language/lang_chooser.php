@@ -2,8 +2,8 @@
 
 $txt = array();
 
-if (environment('lang'))
-  $language_selected = environment('lang');
+if (setting('lang'))
+  $language_selected = setting('lang');
 else
   $language_selected = STANDARD_LANG;
 
@@ -17,7 +17,7 @@ if ( file_exists( $language_file )) {
   
   if (signed_in()) {
     $Setting =& $db->model('Setting');
-    $lang = $Setting->find_by(array('name'=>'config.env.lang','profile_id'=>get_profile_id()));
+    $lang = $Setting->find_by(array('name'=>'lang','profile_id'=>get_profile_id()));
     if ($lang)
       $txt = unserialize($lang->data);
   }
