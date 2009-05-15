@@ -9,7 +9,10 @@
 <link rel="alternate" type="application/rss+xml" title="<?php bloginfo('name'); ?> RSS Feed" href="<?php bloginfo('rss2_url'); ?>" />
 <link rel="pingback" href="<?php bloginfo('pingback_url'); ?>" />
 
-<?php wp_head(); ?>
+<?php 
+wp_head(); 
+include 'wp-content/language/lang_chooser.php'; //Loads the language-file
+?>
 
 
 <?php if (REALTIME_HOST) : ?>
@@ -24,14 +27,14 @@
 
 <div id="help">
 	<dl class="directions">
-		<dt>c</dt><dd> compose new post</dd>
-		<dt>j</dt><dd>next post/next comment</dd>
-		<dt>k</dt> <dd>previous post/previous comment</dd>
-		<dt>r</dt> <dd>reply</dd>
-		<dt>e</dt> <dd>edit</dd>
-		<dt>o</dt> <dd>show/hide comments</dd>
-		<dt>t</dt> <dd>go to top</dd>
-		<dt>esc</dt> <dd>cancel</dd>
+		<dt>c</dt><dd><?php echo $txt['header_compose_new_post']; ?></dd>
+		<dt>j</dt><dd><?php echo $txt['header_next_post_comment']; ?></dd>
+		<dt>k</dt> <dd><?php echo $txt['header_previous_post_comment']; ?></dd>
+		<dt>r</dt> <dd><?php echo $txt['header_reply']; ?></dd>
+		<dt>e</dt> <dd><?php echo $txt['header_edit']; ?></dd>
+		<dt>o</dt> <dd><?php echo $txt['header_show_hide_comments']; ?></dd>
+		<dt>t</dt> <dd><?php echo $txt['header_go_to_top']; ?></dd>
+		<dt>esc</dt> <dd><?php echo $txt['header_cancel']; ?></dd>
 	</dl>
 </div>
 
@@ -43,7 +46,7 @@
 	</div>
 <ul class="omb_nav" style="float:right;padding:10px;margin:0;color:#fff;font-size:14px;font-family: arial, helvetica, sans-serif;white-space:nowrap;list-style-type:none">
 <li id="nav_home" style="display:inline;padding:5px;">
-<a href="<?php base_url(); ?>" title="Home">Home</a>
+<a href="<?php base_url(); ?>" title="Home"><?php echo $txt['header_home']; ?></a>
 </li>
 <?php if (signed_in()) : ?>
 
@@ -54,31 +57,31 @@ $profile= get_profile();
 
 
 <li id="nav_profile" style="display:inline;padding:5px;">
-<a href="<?php echo $request->url_for(array("resource"=>$profile->nickname)); ?>" title="Profile">Profile</a>
+<a href="<?php echo $request->url_for(array("resource"=>$profile->nickname)); ?>" title="Profile"><?php echo $txt['header_profile']; ?></a>
 </li>
 <li id="nav_find" style="display:inline;padding:5px;">
-<a href="<?php echo ''; ?>" title="Find People">Find People</a>
+<a href="<?php echo ''; ?>" title="Find People"><?php echo $txt['header_find_people']; ?></a>
 </li>
 <li id="nav_settings" style="display:inline;padding:5px;">
-<a href="<?php echo $request->url_for(array("resource"=>$profile->nickname))."/settings"; ?>" title="Settings">Settings</a>
+<a href="<?php echo $request->url_for(array("resource"=>$profile->nickname))."/settings"; ?>" title="Settings"><?php echo $txt['header_settings']; ?></a>
 </li>
 <li id="nav_help" style="display:inline;padding:5px;">
-<a href="<?php echo ''; ?>" title="Help">Help</a>
+<a href="<?php echo ''; ?>" title="Help"><?php echo $txt['header_help']; ?></a>
 </li>
 <li id="nav_logout" style="display:inline;padding:5px;">
-<a href="<?php url_for(array('resource'=>'openid_logout')); ?>" title="Sign out">Sign out</a>
+<a href="<?php url_for(array('resource'=>'openid_logout')); ?>" title="Sign out"><?php echo $txt['header_sign_out']; ?></a>
 </li>
 
 <?php else : ?>
 
 <li id="nav_help" style="display:inline;padding:5px;">
-<a href="<?php echo ''; ?>" title="Help">Help</a>
+<a href="<?php echo ''; ?>" title="Help"><?php echo $txt['header_help']; ?></a>
 </li>
 <li id="nav_login" style="display:inline;padding:5px;">
-<a href="<?php url_for(array('resource'=>'email_login')); ?>" title="Sign in">Sign in</a>
+<a href="<?php url_for(array('resource'=>'email_login')); ?>" title="Sign in"><?php echo $txt['header_sign_in']; ?></a>
 </li>
 <li id="nav_reg" style="display:inline;padding:5px;">
-<a href="<?php url_for(array('resource'=>'register')); ?>" title="Register">Register</a>
+<a href="<?php url_for(array('resource'=>'register')); ?>" title="Register"><?php echo $txt['header_register']; ?></a>
 </li>
   
 <?php endif; ?>

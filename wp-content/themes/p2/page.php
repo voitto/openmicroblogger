@@ -1,4 +1,7 @@
-<?php get_header( ); ?>
+<?php
+get_header( ); 
+include 'wp-content/language/lang_chooser.php'; //Loads the language-file
+?>
 <div id="postpage">
 <div id="main">
 <ul id="postlist">
@@ -13,11 +16,13 @@ if( have_posts( ) ) {
 	<h2><?php the_title( ); ?></h2>
 	<div class="entry">
 
-		<?php the_content('<p class="serif">Read the rest of this page &rarr;</p>'); ?>
+
+		<?php the_content('<p class="serif">'.$txt['page_read_rest'].'&rarr;</p>'); ?>
 
 		<?php if ( comments_open() ) comments_template(); ?>
 
-		<?php wp_link_pages(array('before' => '<p><strong>Pages:</strong> ', 'after' => '</p>', 'next_or_number' => 'number')); ?>
+		<?php wp_link_pages(array('before' => '<p><strong>'.$txt['page_pages'].'</strong> ', 'after' => '</p>', 'next_or_number' => 'number')); ?>
+
 
 	</div> <!-- // entry -->
 </div> <!-- post-<?php the_ID( ); ?> -->

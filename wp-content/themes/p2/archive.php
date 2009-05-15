@@ -1,10 +1,11 @@
-<?php 
+<?php
+include 'wp-content/language/lang_chooser.php'; //Loads the language-file 
 get_header( ); 
 $tag_obj = $wp_query->get_queried_object();
 ?>
 <div class="sleeve_main">
 <div id="main">
-	<h2>Updates from <?php the_time('F, Y'); ?></h2>
+	<h2><?php echo $txt['archive_updates_from']; ?><?php the_time('F, Y'); ?></h2>
 	<ul id="postlist">
 
 <?php
@@ -33,14 +34,14 @@ if( have_posts( ) ) {
 			<?php if (function_exists('post_reply_link')) 
 				echo post_reply_link(array('before' => ' | ', 'reply_text' => 'Reply', 'add_below' => 'prologue'), get_the_id()); ?>
 			<?php if (current_user_can('edit_post', get_the_id())) { ?>
-			|  <a href="<?php echo (get_edit_post_link( get_the_id() ))?>" class="post-edit-link" rel="<?php the_ID(); ?>">Edit</a>
+			|  <a href="<?php echo (get_edit_post_link( get_the_id() ))?>" class="post-edit-link" rel="<?php the_ID(); ?>"><?php echo $txt['archive_edit']; ?></a>
 			<?php } ?>
 			</span>
 			<br />
-			<?php tags_with_count( '', __( 'Tags: ' ), ', ', ' ' ); ?>
+			<?php tags_with_count( '', __( <?php echo $txt['archive_tags']; ?> ), ', ', ' ' ); ?>
 		</span>
 	</h4>
-	<div class="postcontent<?php if (current_user_can( 'edit_post', get_the_id() )) {?> editarea<?}?>" id="content-<?php the_ID(); ?>"><?php the_content( __( '(More ...)' ) ); ?></div> <!-- // postcontent -->
+	<div class="postcontent<?php if (current_user_can( 'edit_post', get_the_id() )) {?> editarea<?}?>" id="content-<?php the_ID(); ?>"><?php the_content( __( <?php echo $txt['archive_more']; ?> ) ); ?></div> <!-- // postcontent -->
 	<div class="bottom_of_entry">&nbsp;</div>
 	<?php 
 		if (is_month())  $withcomments = true; 
@@ -54,13 +55,13 @@ $formvisible=1;
 <div id="wp-temp-form-div" style="display:none">
 <div id="respond" style="display:none">
 
-<h3>Reply <small id="cancel-comment-reply"><?php echo cancel_comment_reply_link() ?></small></h3>
+<h3><?php echo $txt['archive_reply']; ?><small id="cancel-comment-reply"><?php echo cancel_comment_reply_link() ?></small></h3>
 
 <?php
 if ( get_option('comment_registration') && !$user_ID ) {
 ?>
 
-<p>You must be <a href="<?php echo get_option('siteurl'); ?>/wp-login.php?redirect_to=<?php the_permalink(); ?>" title="Log in">logged in</a> to post a comment.</p>
+<p><?php echo $txt['archive_you_must_be']; ?><a href="<?php echo get_option('siteurl'); ?>/wp-login.php?redirect_to=<?php the_permalink(); ?>" title="Log in"><?php echo $txt['archive_logged_in']; ?></a<?php echo $txt['archive_to_post_a_comment']; ?>p>
 
 <?php
 // if option comment_registration and not user_ID
@@ -70,28 +71,28 @@ if ( get_option('comment_registration') && !$user_ID ) {
 	<div class="form"><textarea id="comment" name="comment" cols ="45" rows="3"></textarea></div>
 	<label class="post-error" for="comment" id="commenttext_error"></label>
 	<?php if( $user_ID ) { ?>
-		<p>Logged in as <a href="<?php echo get_option( 'siteurl' ); ?>/wp-admin/profile.php"><?php echo $user_identity; ?></a>.  <a href="<?php echo get_option( 'siteurl' ); ?>/wp-login.php?action=logout" title="Log out">Log out &rarr;</a></p>
+		<p><?php echo $txt['archive_logged_in_as']; ?><a href="<?php echo get_option( 'siteurl' ); ?>/wp-admin/profile.php"><?php echo $user_identity; ?></a>.  <a href="<?php echo get_option( 'siteurl' ); ?>/wp-login.php?action=logout" title="Log out"><?php echo $txt['archive_logout']; ?>&rarr;</a></p>
 <?php // if user_ID 
 } else { ?>
 <table>
 	<tr>
 		<td>
-			<label for="author">Name <em>(required)</em></label>
+			<label for="author"><?php echo $txt['archive_name']; ?><em><?php echo $txt['archive_required']; ?></em></label>
 			<div class="form"><input id="author" name="author" type="text" value="<?php echo $comment_author; ?>" /></div>
 		</td>
 		<td>
-			<label for="email">Email <em>(required)</em></label>
+			<label for="email"><?php echo $txt['archive_email']; ?><em><?php echo $txt['archive_required']; ?></em></label>
 			<div class="form"><input id="email" name="email" type="text" value="<?php echo $comment_author_email; ?>"  /></div>
 		</td>
 		<td class="last-child">
-			<label for="url">Web Site</label>
+			<label for="url"><?php echo $txt['archive_website']; ?></label>
 			<div class="form"><input id="url" name="url" type="text" value="<?php echo $comment_author_url; ?>"  /></div>
 		</td>
 	</tr>
 </table>
 <?php } // else user_ID ?>
 
-<div><input id="comment-submit" name="submit" type="submit" value="Post Comment"  /><?php comment_id_fields(); ?>&nbsp;<span class="progress"><img src="<?php bloginfo('template_directory'); ?>/i/indicator.gif" alt="Loading..." /></span></div>
+<div><input id="comment-submit" name="submit" type="submit" value="Post Comment"  /><?php comment_id_fields(); ?>&nbsp;<span class="progress"><img src="<?php bloginfo('template_directory'); ?>/i/indicator.gif" alt="<?php echo $txt['archive_loading']; ?>" /></span></div>
 
 </form>
 </div>

@@ -1,6 +1,8 @@
-
 <div id="sidebar">
 <ul>
+
+<?php include 'wp-content/language/lang_chooser.php'; //Loads the language-file ?>
+
 
 <?php global $request; ?>
 
@@ -27,16 +29,16 @@
 
   <ul>
     <?php if (!empty($profile->fullname)) : ?>
-      <li>Name: <?php echo $profile->fullname; ?></li>
+      <li><?php echo $txt['sidebar_name']; ?><?php echo $profile->fullname; ?></li>
     <?php endif; ?>
     <?php if (!empty($profile->locality)) : ?>
-      <li>Location: <?php echo $profile->locality; ?></li>
+      <li><?php echo $txt['sidebar_location']; ?><?php echo $profile->locality; ?></li>
     <?php endif; ?>
     <?php if (!empty($profile->homepage)) : ?>
-      <li>Web: <?php echo $profile->homepage; ?></li>
+      <li><?php echo $txt['sidebar_web']; ?><?php echo $profile->homepage; ?></li>
     <?php endif; ?>
     <?php if (!empty($profile->bio)) : ?>
-      <li>Bio: <?php echo $profile->bio; ?></li>
+      <li><?php echo $txt['sidebar_bio']; ?><?php echo $profile->bio; ?></li>
     <?php endif; ?>
   
   </ul>
@@ -85,10 +87,10 @@
       <?php endif; ?>
       </tr>
       <tr>
-        <td><a href="<?php echo $request->url_for(array("resource"=>$profile->nickname))."/subscriptions"; ?>">following</a></td>
-        <td><a href="<?php echo $request->url_for(array("resource"=>$profile->nickname))."/subscribers"; ?>">followers</a></td>
+        <td><a href="<?php echo $request->url_for(array("resource"=>$profile->nickname))."/subscriptions"; ?>"><?php echo $txt['sidebar_following']; ?></a></td>
+        <td><a href="<?php echo $request->url_for(array("resource"=>$profile->nickname))."/subscribers"; ?>"><?php echo $txt['sidebar_followers']; ?></a></td>
   <?php if (!isset($request->params['nickname'])) : ?>
-        <td>updates</td>
+        <td><?php echo $txt['sidebar_updates']; ?></td>
       <?php endif; ?>
       </tr>
     </table>
@@ -97,7 +99,7 @@
     <li>
       <table border="0">
         <tr>
-          <td>Updates</td>
+          <td><?php echo $txt['sidebar_Updates']; ?></td>
           <td>&nbsp;&nbsp;</td>
           <td><h2><?php echo $count3; ?></h2></td>
         </tr>
@@ -126,20 +128,20 @@
   </li>
   <?php endif; ?>
   <?php if (!signed_in()) : ?>
-  <li>Favorites</li>
+  <li><?php echo $txt['sidebar_favorities']; ?></li>
   <?php elseif (isset($request->params['nickname'])) : ?>
-  <li>Favorites</li>
-  <li>Following</li>
+  <li><?php echo $txt['sidebar_favorities']; ?></li>
+  <li><?php echo $txt['sidebar_following']; ?></li>
 <?php else : ?>
     <li>Direct Messages</li>
   <li>Favorites</li>
-  <li><form method="post"><input size="14" value="Search"></form></li>
+  <li><form method="post"><input size="14" value="<?php echo $txt['sidebar_search']; ?>"></form></li>
 
-  <li>Trending Topics</li>
-  <li>Following</li>
+  <li><?php echo $txt['sidebar_trinding_topics']; ?></li>
+  <li><?php echo $txt['sidebar_following']; ?></li>
 
   <?php endif; ?>
-  <li><a class="rss" style="float:left;" href="<?php bloginfo( 'rss2_url' ); ?>">RSS</a></li>
+  <li><a class="rss" style="float:left;" href="<?php bloginfo( 'rss2_url' ); ?>"><?php echo $txt['sidebar_rss']; ?></a></li>
 
 
 
@@ -150,7 +152,7 @@ if( !function_exists('dynamic_sidebar') || !dynamic_sidebar() ) {
 
 	echo prologue_widget_recent_comments_avatar(array('before_widget' => ' <li id="recent-comments" class="widget widget_recent_comments"> ', 'after_widget' => '</li>', 'before_title' =>'<h2>', 'after_title' => '</h2>'  ));
 
-	$before = "<li><h2>Recent Projects</h2>\n";
+	$before = "<li><h2>".$txt['recent_projects']."</h2>\n";
 	$after = "</li>\n";
 	$num_to_show = 35;
 	echo prologue_recent_projects( $num_to_show, $before, $after );

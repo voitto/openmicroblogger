@@ -1,9 +1,10 @@
 <?php 
-get_header( ); 
+get_header( );
+include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 ?>
 <div class="sleeve_main">
 <div id="main">
-	<h2>Search Results for: <?php the_search_query(); ?></h2>
+	<h2><?php echo $txt['search_search_results']; ?><?php the_search_query(); ?></h2>
 	
 
 <?php
@@ -39,10 +40,10 @@ if( have_posts( ) ) {
 			|  <a href="<?php echo (get_edit_post_link( get_the_id() ))?>" class="editpost" rel="<?php the_ID(); ?>">e</a>
 			<?php } ?>
 			<br />
-			<?php tags_with_count( '', __( 'Tags: ' ), ', ', ' ' ); ?>
+			<?php tags_with_count( '', __( <?php echo $txt['search_tags']; ?> ), ', ', ' ' ); ?>
 		</span>
 	</h4>
-	<div class="postcontent<?php if (current_user_can( 'edit_post', get_the_id() )) {?> editarea<?}?>" id="content-<?php the_ID(); ?>"><?php the_content( __( '(More ...)' ) ); ?></div> <!-- // postcontent -->
+	<div class="postcontent<?php if (current_user_can( 'edit_post', get_the_id() )) {?> editarea<?}?>" id="content-<?php the_ID(); ?>"><?php the_content( __( <?php echo $txt['search_more']; ?> ) ); ?></div> <!-- // postcontent -->
 	<div class="bottom_of_entry">&nbsp;</div>
 	<?php $withcomments = true; comments_template('/inline-comments.php'); ?>
 
