@@ -276,4 +276,13 @@ $txt['removeprofile_button_cancel'] = "Abrechen";
 $txt['removeprofile_button_delete'] = "Diese Identit&auml;t l&ouml;schen";
 
 
+/////////////////////////////////////
+# /app/omb/plugins/wp.php
+/////////////////////////////////////
+$txt['wp_reply'] = "Antworten";
+$txt['wp_edit'] = "editieren";
+$txt['wp_remove'] = "l&ouml;schen";
+$txt['wp_post'] = "Absenden";
+$txt['wp_photo_nick'] = "Foto und Nickname werden ben&ouml;tigt.";
+
 ?>

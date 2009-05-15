@@ -1,5 +1,5 @@
 <?php
-
+require('wp-content/language/lang_chooser.php'); //Loads the language-file
   if (isset($_GET['s']) && !empty($_GET['s'])) {
     
     redirect_to('http://dejafeed.com:8080/search.jsp?query='.$_GET['s']);
@@ -16,17 +16,17 @@ function post_password_required() {
 }
 
 function post_reply_link($arr,$post_id) {
+require('wp-content/language/lang_chooser.php'); //Loads the language-file
   // peh
   // array('before' => ' | ', 'reply_text' => 'Reply', 'add_below' => 'prologue')
   global $the_post,$request;
   if (!isset($the_post->id))
     return;
-
     
 	echo 	$arr['before'].'<a href="'.$request->url_for(array(
       'resource'  => 'posts',
       'id'        => $post_id,
-    )).'" class="post-reply-link" rel="'. $post_id.'">Reply</a>';
+    )).'" class="post-reply-link" rel="'. $post_id.'">' . $txt['wp_reply'] . '</a>';
     
   
 }
@@ -64,6 +64,7 @@ function wp_list_comments() {
 
 
 function render_comment(&$post,&$profile,&$parent) {
+require('wp-content/language/lang_chooser.php'); //Loads the language-file
   global $request;
   $comments = "";
   $cctime = date( "g:i A" , strtotime($post->created) );
@@ -77,10 +78,10 @@ function render_comment(&$post,&$profile,&$parent) {
   $comments .= ' <span class="meta">';
   $comments .= $cctime.' <em>on</em> '.$ccdate;
   $comments .= '<span class="actions">';
-  $comments .= '<a href="'.$ccurl.'">Permalink</a>  | <a rel=\'nofollow\' class=\'comment-reply-link\' href=\''.$ccrurl.'\'>Reply</a>';
+  $comments .= '<a href="'.$ccurl.'">Permalink</a>  | <a rel=\'nofollow\' class=\'comment-reply-link\' href=\''.$ccrurl.'\'>' . $txt['wp_reply'] . '</a>';
   if ( get_profile_id() == $post->profile_id ) { 
-	  $comments .= 	' | <a href="'.get_edit_post_link( $post ).'" class="post-edit-link" rel="'. $post->id.'">Edit</a>';
-	  $comments .= 	' | <a href="'.get_edit_post_link( $post, 'remove' ).'" class="post-remove-link" rel="'. $post->id.'">Remove</a>';
+	  $comments .= 	' | <a href="'.get_edit_post_link( $post ).'" class="post-edit-link" rel="'. $post->id.'">'.$txt['wp_edit'].'; ?></a>';
+	  $comments .= 	' | <a href="'.get_edit_post_link( $post, 'remove' ).'" class="post-remove-link" rel="'. $post->id.'">'.$txt['wp_remove'].'</a>';
 	}
   $comments .= '</span>';
   $comments .= '<br />';
@@ -786,7 +787,8 @@ function get_usermeta( $user_id, $what ) {
 }
 
 function wp_nonce_field( $var ) {
-  echo '<input type="hidden" name="method" value="post" />'."\n";
+require('wp-content/language/lang_chooser.php'); //Loads the language-file
+  echo '<input type="hidden" name="method" value="'.$txt['wp_post'].'" />'."\n";
 }
 
 function wp_schedule_event( $when, $howoften, $event ) {
@@ -1105,6 +1107,7 @@ function wp_get_archives($type) {
 }
 
 function get_header() {
+require('wp-content/language/lang_chooser.php'); //Loads the language-file
   global $request;
   // this should be a separate filter, but it catches
   // folks who are not completely set-up and sends them
@@ -1121,7 +1124,7 @@ function get_header() {
       ));
 
     if (($request->resource != 'identities' || $request->action != 'edit') && (!isset($p->nickname) || empty($p->avatar))) {
-      $_SESSION['message'] = "Photo and Nickname are required.";
+      $_SESSION['message'] = $txt['wp_photo_nick'];
       redirect_to($edit_uri);
     }
 
@@ -1729,6 +1732,7 @@ function get_edit_post_link( &$post, $action=false ) {
 }
 
 function edit_post_link( $post ) {
+require('wp-content/language/lang_chooser.php'); //Loads the language-file
   global $the_post,$request;
   if (!isset($the_post->id))
     return;
@@ -1741,7 +1745,7 @@ function edit_post_link( $post ) {
     'resource'  => 'posts',
     'id'        => $the_post->id,
     'action'    => 'remove'
-  ))."\">remove</a>";
+  ))."\">".$txt['wp_remove']."</a>";
 }
 
 function comments_rss_link() {

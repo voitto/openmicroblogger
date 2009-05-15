@@ -276,4 +276,14 @@ $txt['removeprofile_button_cancel'] = "Cancel";
 $txt['removeprofile_button_delete'] = "Delete This Identity";
 
 
+/////////////////////////////////////
+# /app/omb/plugins/wp.php
+/////////////////////////////////////
+$txt['wp_reply'] = "Reply";
+$txt['wp_edit'] = "edit";
+$txt['wp_remove'] = "remove";
+$txt['wp_post'] = "Post";
+$txt['wp_photo_nick'] = "Photo and Nickname are required.";
+
+
 ?>
