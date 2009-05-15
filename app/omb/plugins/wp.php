@@ -1617,6 +1617,7 @@ function show_prologue_nav() {
 }
 
 function posts_nav_link() {
+require('wp-content/language/lang_chooser.php'); //Loads the language-file
   global $request;
   global $response;
   if (isset($request->params['page']))
@@ -1632,7 +1633,7 @@ function posts_nav_link() {
   if (count($response->collection->members) >= $response->collection->per_page ) {
     $mapper['page'] = ($page + 1);
     echo '<a href="'.$request->url_for( $mapper );
-    echo '">&lt; older</a>';
+    echo '">&lt; ' . $txt['wp_older'] . '</a>';
 
   }
   
@@ -1640,7 +1641,7 @@ function posts_nav_link() {
     $mapper['page'] = ($page - 1);
     echo "&nbsp;&nbsp;&nbsp;";
     echo '<a href="'.$request->url_for( $mapper );
-    echo '">newer &gt;</a>';
+    echo '">' . $txt['wp_newer'] . ' &gt;</a>';
   }
 
 }
@@ -1827,7 +1828,7 @@ else
   echo "|&nbsp;<a href=\"JavaScript:add_comment('addcomment-$the_post->id')";
   echo "\">comment</a><div id=\"addcomment-$the_post->id\"></div>";
   
-$userurl = "http://megapump.com";
+$userurl = "http://openmicroblogger.org";
 $etag = 1;
 
 echo '

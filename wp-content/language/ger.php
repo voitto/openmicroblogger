@@ -92,7 +92,6 @@ $txt['index_no_title'] = "Kein Titel";
 $txt['index_recent_updates'] = "Neue Eintr&auml;ge ";
 $txt['index_rss'] = "RSS";
 $txt['index_permalink'] = "Permalink";
-$txt['index_link'] = "Antworten";
 $txt['index_edit'] = "Editieren";
 $txt['index_remove'] = "L&ouml;schen";
 $txt['index_reply'] = "Antworten";
@@ -102,6 +101,10 @@ $txt['index_logged_in'] = "eingeloggt ";
 $txt['index_to_post_a_comment'] = "sein um einen Kommentar zu verfassen";
 $txt['index_logout'] = "Ausloggen";
 $txt['index_no_updates_yet'] = "Bisher gibt es keine Eintr&auml;ge!";
+$txt['index_newer'] = "Neuere";
+$txt['index_older'] = "&Auml;ltere";
+$txt['index_posts'] = "Eintr&auml;ge";
+$txt['index_post_comment'] = "Kommentar absenden";
 
 
 //////////////////////
@@ -146,6 +149,29 @@ $txt['sidebar_rss'] = "RSS";
 $txt['sidebar_recent_projects'] = "neuste Projekte";
 
 
+//////////////////////
+# /wp-content/themes/p2/sidebar.php
+//////////////////////
+$txt['single_edit'] = "editeren";
+$txt['single_more'] = "Mehr ...";
+$txt['single_reply'] = "Antworten";
+
+
+/////////////////////////////////////
+# /app/omb/views/pages/_entry.html
+/////////////////////////////////////
+$txt['pages_entry_ephonic1'] = "Um das ";
+$txt['pages_entry_ephonic2'] = "zu nutzen ben&ouml;tigst du ";
+$txt['pages_entry_ephonic3'] = "oder neuer und Javascript muss im Browser aktiviert sein.";
+$txt['pages_entry_reply'] = "Antworten";
+$txt['pages_entry_button_submit_reply'] = "Antwort absenden";
+$txt['pages_entry_rating'] = "Bewerten";
+$txt['pages_entry_button_submit_rating'] = "Bewertung absenden";
+$txt['pages_entry_sign_in'] = "Logg dich ein";
+$txt['pages_entry_to_post_a_reply'] = " um eine Antwort zu erstellen";
+$txt['pages_entry_members_forum'] = "Mitglieder dieses Forums";
+
+
 /////////////////////////////////////
 # /app/omb/views/posts/_edit.html
 /////////////////////////////////////
@@ -168,6 +194,7 @@ $txt['entry_rating'] = "Bewerten";
 $txt['entry_button_submit_rating'] = "Bewertung absenden";
 $txt['entry_sign_in'] = "Logg dich ein";
 $txt['entry_to_post_a_reply'] = " um eine Antwort zu erstellen";
+$txt['entry_members_forum'] = "Mitglieder dieses Forums";
 
 
 /////////////////////////////////////
@@ -222,7 +249,7 @@ $txt['admin_mobile'] = "Mobil";
 /////////////////////////////////////
 $txt['editprofile_nickname'] = "Nickname";
 $txt['editprofile_full_name'] = "Vollst&auml;ndiger Name";
-$txt['editprofile_openid'] = "OpenID";
+$txt['editprofile_openid'] = "OpenID URL";
 $txt['editprofile_bio'] = "Bio";
 $txt['editprofile_email'] = "E-mail";
 $txt['editprofile_photo'] = "Foto im jpg-Format";
@@ -284,5 +311,7 @@ $txt['wp_edit'] = "editieren";
 $txt['wp_remove'] = "l&ouml;schen";
 $txt['wp_post'] = "Absenden";
 $txt['wp_photo_nick'] = "Foto und Nickname werden ben&ouml;tigt.";
+$txt['wp_older'] = "&Auml;ltere";
+$txt['wp_newer'] = "Neuere";
 
 ?>

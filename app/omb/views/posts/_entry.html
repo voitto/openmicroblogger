@@ -204,14 +204,15 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 <input type="hidden" name="<?php echo $post; ?>[local]" value="1">
 <input type="hidden" name="<?php echo $post; ?>[parent_id]" value="<?php print $Member->id; ?>">
 <input type="hidden" name="<?php echo $post; ?>[profile_id]" value="<?php echo get_profile_id(); ?>">
-<input type="submit" value="Submit Reply">
+<input type="submit" value="<?php echo $txt['entry_button_submit_reply']; ?>
+">
 </form>
 
 
 <br />
 </td></tr>
 
-<tr><td colspan="2"><p>Rating:</p>
+<tr><td colspan="2"><p><?php echo $txt['entry_rating']; ?>:</p>
 
 
 
@@ -285,7 +286,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
   <td>
   <?php $arr = resource_group_members(); ?>
   
-  <p>Members of this forum:</p>
+  <p><?php echo $txt['entry_members_forum']; ?>:</p>
   
   <?php foreach ( $arr as $member_ident ) : ?>
 

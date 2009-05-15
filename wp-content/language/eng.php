@@ -92,7 +92,6 @@ $txt['index_no_title'] = "No Title";
 $txt['index_recent_updates'] = "Recent Updates ";
 $txt['index_rss'] = "RSS";
 $txt['index_permalink'] = "Permalink";
-$txt['index_link'] = "Reply";
 $txt['index_edit'] = "Edit";
 $txt['index_remove'] = "Remove";
 $txt['index_reply'] = "Reply";
@@ -102,6 +101,10 @@ $txt['index_logged_in'] = "logged in ";
 $txt['index_to_post_a_comment'] = "to post a comment";
 $txt['index_logout'] = "Log out";
 $txt['index_no_updates_yet'] = "No updates yet!";
+$txt['index_newer'] = "Newer";
+$txt['index_older'] = "Older";
+$txt['index_posts'] = "Posts";
+$txt['index_post_comment'] = "Post comment";
 
 
 //////////////////////
@@ -146,6 +149,30 @@ $txt['sidebar_rss'] = "RSS";
 $txt['sidebar_recent_projects'] = "Recent Projects";
 
 
+//////////////////////
+# /wp-content/themes/p2/sidebar.php
+//////////////////////
+$txt['single_edit'] = "edit";
+$txt['single_more'] = "More...";
+$txt['single_reply'] = "Reply";
+
+
+/////////////////////////////////////
+# /app/omb/views/pages/_entry.html
+/////////////////////////////////////
+$txt['pages_entry_ephonic1'] = "To use the ";
+$txt['pages_entry_ephonic2'] = "you will need ";
+$txt['pages_entry_ephonic3'] = "or better and a Javascript enabled browser";
+$txt['pages_entry_reply'] = "Reply";
+$txt['pages_entry_button_submit_reply'] = "Submit reply";
+$txt['pages_entry_rating'] = "Rating";
+$txt['pages_entry_button_submit_rating'] = "Submit rating";
+$txt['pages_entry_sign_in'] = "Sign In";
+$txt['pages_entry_to_post_a_reply'] = " to post a reply";
+$txt['pages_entry_members_forum'] = "Members of this forum";
+
+
+
 /////////////////////////////////////
 # /app/omb/views/posts/_edit.html
 /////////////////////////////////////
@@ -168,6 +195,7 @@ $txt['entry_rating'] = "Rating";
 $txt['entry_button_submit_rating'] = "Submit rating";
 $txt['entry_sign_in'] = "Sign In";
 $txt['entry_to_post_a_reply'] = " to post a reply";
+$txt['entry_members_forum'] = "Members of this forum";
 
 
 /////////////////////////////////////
@@ -222,7 +250,7 @@ $txt['admin_mobile'] = "Mobile";
 /////////////////////////////////////
 $txt['editprofile_nickname'] = "Nickname";
 $txt['editprofile_full_name'] = "Full name";
-$txt['editprofile_openid'] = "OpenID";
+$txt['editprofile_openid'] = "OpenID URL";
 $txt['editprofile_bio'] = "Bio";
 $txt['editprofile_email'] = "E-mail";
 $txt['editprofile_photo'] = "Jpeg Photo";
@@ -284,6 +312,8 @@ $txt['wp_edit'] = "edit";
 $txt['wp_remove'] = "remove";
 $txt['wp_post'] = "Post";
 $txt['wp_photo_nick'] = "Photo and Nickname are required.";
+$txt['wp_older'] = "older";
+$txt['wp_newer'] = "newer";
 
 
 ?>

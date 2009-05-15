@@ -122,7 +122,7 @@ if( have_posts( ) ) {
 			<span class="actions">
 			<a href="<?php the_permalink( ); ?>" class="thepermalink"><?php echo $txt['index_permalink']; ?></a>
 			<?php if (function_exists('post_reply_link')) 
-				echo post_reply_link(array('before' => ' | ', 'reply_text' => $txt['index_link'], 'add_below' => 'prologue'), get_the_id()); ?>
+				echo post_reply_link(array('before' => ' | ', 'reply_text' => $txt['index_reply'], 'add_below' => 'prologue'), get_the_id()); ?>
 			<?php if (current_user_can('edit_post', get_the_id())) { ?>
 			|  <a href="<?php echo (get_edit_post_link( get_the_id() ))?>" class="post-edit-link" rel="<?php the_ID(); ?>"><?php echo $txt['index_edit']; ?></a>
 			|  <a href="<?php echo (get_edit_post_link( get_the_id(), 'remove' ))?>" class="post-edit-link" rel="<?php the_ID(); ?>"><?php echo $txt['index_remove']; ?></a>
@@ -183,7 +183,7 @@ if ( get_option('comment_registration') && !$user_ID ) {
 </table>
 <?php } // else user_ID ?>
 
-<div><input id="comment-submit" name="submit" type="submit" value="Post Comment"  /><?php comment_id_fields(); ?>&nbsp;<span class="progress"><img src="<?php bloginfo('template_directory'); ?>/i/indicator.gif" alt="Loading..." /></span></div>
+<div><input id="comment-submit" name="submit" type="submit" value="<?php echo $txt['index_post_comment']; ?>"  /><?php comment_id_fields(); ?>&nbsp;<span class="progress"><img src="<?php bloginfo('template_directory'); ?>/i/indicator.gif" alt="Loading..." /></span></div>
 
 </form>
 </div>
@@ -205,7 +205,7 @@ else {
 <?php } ?>
 
 
-	<div class="navigation"><p><?php posts_nav_link(' | ','&larr;&nbsp;Newer&nbsp;Posts','Older&nbsp;Posts&nbsp;&rarr;'); ?></p></div>
+	<div class="navigation"><p><?php posts_nav_link(' | ','&larr;&nbsp;' . $txt['index_newer'] . '&nbsp;' . $txt['index_posts'] . '','' . $txt['index_older'] . '&nbsp;' . $txt['index_posts'] . '&nbsp;&rarr;'); ?></p></div>
 </div> <!-- // main -->
 </div> <!-- // sleeve -->
 
