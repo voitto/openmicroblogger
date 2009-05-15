@@ -133,11 +133,11 @@
   <li><?php echo $txt['sidebar_favorities']; ?></li>
   <li><?php echo $txt['sidebar_following']; ?></li>
 <?php else : ?>
-    <li>Direct Messages</li>
-  <li>Favorites</li>
+    <li><?php echo $txt['sidebar_direct_messages']; ?></li>
+  <li><?php echo $txt['sidebar_favorites']; ?></li>
   <li><form method="post"><input size="14" value="<?php echo $txt['sidebar_search']; ?>"></form></li>
 
-  <li><?php echo $txt['sidebar_trinding_topics']; ?></li>
+  <li><?php echo $txt['sidebar_trending_topics']; ?></li>
   <li><?php echo $txt['sidebar_following']; ?></li>
 
   <?php endif; ?>
