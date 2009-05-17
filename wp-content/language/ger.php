@@ -142,12 +142,16 @@ $txt['sidebar_following'] = "Abonnements";
 $txt['sidebar_followers'] = "Abonnenten";
 $txt['sidebar_updates'] = "Eintr&auml;ge";
 $txt['sidebar_Updates'] = "Eintr&auml;ge";
+$txt['sidebar_home'] = "Start";
 $txt['sidebar_favorites'] = "Favoriten";
 $txt['sidebar_search'] = "Suche";
 $txt['sidebar_direct_messages'] = "Direct Messages";
 $txt['sidebar_trending_topics'] = "Beliebte Themen";
 $txt['sidebar_rss'] = "RSS";
 $txt['sidebar_recent_projects'] = "neuste Projekte";
+$txt['sidebar_greeting_headline'] = "Willkommen auf ";
+$txt['sidebar_greeting_text'] = " ist eine microblogging-website. Du kannst dich kostenlos registrieren und die Welt wissen lassen, was du gerade tust.";
+$txt['sidebar_sign_in_register'] = "Einloggen oder registrieren";
 
 
 //////////////////////

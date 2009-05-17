@@ -142,12 +142,17 @@ $txt['sidebar_following'] = "following";
 $txt['sidebar_followers'] = "followers";
 $txt['sidebar_updates'] = "updates";
 $txt['sidebar_Updates'] = "Updates";
+$txt['sidebar_home'] = "Home";
 $txt['sidebar_favorites'] = "Favorites";
 $txt['sidebar_search'] = "Search";
 $txt['sidebar_direct_messages'] = "Direct Messages";
 $txt['sidebar_trending_topics'] = "Trending Topics";
 $txt['sidebar_rss'] = "RSS";
 $txt['sidebar_recent_projects'] = "Recent Projects";
+$txt['sidebar_greeting_headline'] = "Welcome to ";
+$txt['sidebar_greeting_text'] = " is yet another microblogging-website. You can register for free and let the world know what you are doing.";
+$txt['sidebar_sign_in_register'] = "Log in or register";
+
 
 
 //////////////////////

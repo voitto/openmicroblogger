@@ -121,7 +121,7 @@
     
   <?php if (!isset($request->params['nickname'])) : ?>
   <li>
-    <a href="<?php base_url(); ?>">Home</a>
+    <a href="<?php base_url(); ?>"><?php echo $txt['sidebar_home']; ?></a>
   </li>
   <li>
     <a href="<?php echo $request->url_for(array("resource"=>$profile->nickname))."/replies"; ?>"><?php echo "@".$profile->nickname; ?></a>
@@ -163,4 +163,12 @@ if( !function_exists('dynamic_sidebar') || !dynamic_sidebar() ) {
 
 <?php endif; ?>
 
+<?php if (!isset($profile)) { ?>
+<ul>
+<li style="font-weight:bold;"><?php echo $txt['sidebar_greeting_headline']; ?><?php bloginfo( 'name' ); ?>!</li>
+
+<li style="font-weight:normal; font-size:1.0em; font-style:italic"><?php bloginfo( 'name' ); ?><?php echo $txt['sidebar_greeting_text']; ?></li>
+<li style="font-weight:normal; font-size:1.0em;"><a href="<?php url_for(array('resource'=>'email_login')); ?>" title="Sign in"><?php echo $txt['sidebar_sign_in_register']; ?></a></li>
+</ul>
+<?php } ?>
 </div> <!-- // sidebar -->
