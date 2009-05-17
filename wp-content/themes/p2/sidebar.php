@@ -80,36 +80,31 @@
   ?>
   <?php if (!isset($request->params['nickname'])) : ?>
 
-  <li><img width="32" height="32" style="vertical-align:middle;width:32px;height:32px;" src="<?php echo $profile->avatar; ?>" alt="<?php echo $profile->fullname; ?>"><a style="font-size:16px;margin-left:8px;" href="<?php echo $profile->profile_url; ?>"><?php echo $profile->nickname; ?></a></li>
+  <li><img width="32" height="32" style="vertical-align:middle;width:32px;height:32px;" src="<?php echo $profile->avatar; ?>" alt="<?php echo $profile->fullname; ?>"><a style="font-size:20px;margin-left:8px;" href="<?php echo $profile->profile_url; ?>"><?php echo $profile->nickname; ?></a></li>
   <?php endif; ?>
   
   <li>
-    <table border="0" cellpadding="0" cellspacing="10">
+    <table style="border:0; margin-left:-10px;">
       <tr>
-        <td><h2><?php echo $count1; ?></h2></td>
-        <td><h2><?php echo $count2; ?></h2></td>
+        <td class="sidebar_subscriptions_count"><?php echo $count1; ?></td>
+        <td class="sidebar_subscribers_count"><?php echo $count2; ?></td>
   <?php if (!isset($request->params['nickname'])) : ?>
-        <td><h2><?php echo $count3; ?></h2></td>
+        <td class="sidebar_updates_count"><?php echo $count3; ?></td>
       <?php endif; ?>
       </tr>
       <tr>
-        <td><a href="<?php echo $request->url_for(array("resource"=>$profile->nickname))."/subscriptions"; ?>"><?php echo $txt['sidebar_following']; ?></a></td>
-        <td><a href="<?php echo $request->url_for(array("resource"=>$profile->nickname))."/subscribers"; ?>"><?php echo $txt['sidebar_followers']; ?></a></td>
+        <td class="sidebar_subscriptions"><a href="<?php echo $request->url_for(array("resource"=>$profile->nickname))."/subscriptions"; ?>"><?php echo $txt['sidebar_following']; ?></a></td>
+        <td class="sidebar_subscribers"><a href="<?php echo $request->url_for(array("resource"=>$profile->nickname))."/subscribers"; ?>"><?php echo $txt['sidebar_followers']; ?></a></td>
   <?php if (!isset($request->params['nickname'])) : ?>
-        <td><?php echo $txt['sidebar_updates']; ?></td>
+        <td  class="sidebar_updates"><?php echo $txt['sidebar_updates']; ?></td>
       <?php endif; ?>
       </tr>
     </table>
   </li>
   <?php if (isset($request->params['nickname'])) : ?>
     <li>
-      <table border="0">
-        <tr>
-          <td><?php echo $txt['sidebar_Updates']; ?></td>
-          <td>&nbsp;&nbsp;</td>
-          <td><h2><?php echo $count3; ?></h2></td>
-        </tr>
-      </table>
+      <p class="sidebar_updates_nickname"><?php echo $txt['sidebar_Updates']; ?>
+          <span style="float:right;"><?php echo $count3; ?></span></p>
     </li>
   <?php endif; ?>
 

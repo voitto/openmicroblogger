@@ -486,7 +486,7 @@ h2 a.rss:hover {
 	list-style: none;
 	margin-bottom: 22px;
 	color: #888;
-	font-size: 1.1em;
+	font-size: 1.3em;
 }
 #sidebar ul ul {
 margin-bottom: 0px;
@@ -503,6 +503,44 @@ margin-bottom: 0px;
 #sidebar ul li ul li ul {
 	margin-left: 10px;
 	font-size: 1em;
+}
+#sidebar td {
+	font-weight:bold;
+	font-size:16px;
+	padding-left:10px
+}
+
+#sidebar td.sidebar_subscriptions_count {
+	font-size:1.4em;
+	font-weight:bold;
+}
+#sidebar td.sidebar_subscribers_count {
+	font-weight:bold;
+	font-size:1.4em;
+	padding-left:10px;
+}
+#sidebar td.sidebar_updates_count {
+	font-weight:bold;
+	font-size:1.4em;
+	padding-left:10px;
+}
+#sidebar td.sidebar_subscribers {
+	font-weight:normal;
+	font-size:1em;
+}
+#sidebar td.sidebar_subscriptions {
+	font-weight:normal;
+	font-size:1em;
+	padding-left:10px;
+}
+#sidebar td.sidebar_updates {
+	font-weight:normal;
+	font-size:1em;
+	padding-left:10px;
+}
+#sidebar p.sidebar_updates_nickname {
+	font-weight:bold;
+	font-size:1.1em;
 }
 
 #sidebar ul li#authors ul li {
