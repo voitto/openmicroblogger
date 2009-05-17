@@ -29,17 +29,23 @@
 
   <ul>
     <?php if (!empty($profile->fullname)) : ?>
-      <li><?php echo $txt['sidebar_name']; ?><?php echo $profile->fullname; ?></li>
+      <li style="font-weight:bold;"><?php echo $txt['sidebar_name']; ?><?php echo $profile->fullname; ?>
     <?php endif; ?>
+    <li style="font-weight:normal; font-size:0.8em;">
     <?php if (!empty($profile->locality)) : ?>
-      <li><?php echo $txt['sidebar_location']; ?><?php echo $profile->locality; ?></li>
+    <?php echo $txt['sidebar_location']; ?><?php echo $profile->locality; ?><br />
     <?php endif; ?>
+    <?php if (!empty($profile->country_name)) : ?>
+    <?php echo $txt['sidebar_country']; ?><?php echo $profile->country_name; ?>
+    <?php endif; ?>
+    </li>
     <?php if (!empty($profile->homepage)) : ?>
-      <li><?php echo $txt['sidebar_web']; ?><?php echo $profile->homepage; ?></li>
+      <li style="font-weight:normal; font-size:0.8em;"><?php echo $txt['sidebar_web']; ?><br /><a href='<?php echo $profile->homepage; ?>'><?php echo $profile->homepage; ?></a></li>
     <?php endif; ?>
     <?php if (!empty($profile->bio)) : ?>
-      <li><?php echo $txt['sidebar_bio']; ?><?php echo $profile->bio; ?></li>
+      <li style="font-weight:normal; font-size:0.8em;"><?php echo $txt['sidebar_bio']; ?><span style="font-style:italic";><?php echo $profile->bio; ?></span></li>
     <?php endif; ?>
+
   
   </ul>
 

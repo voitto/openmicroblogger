@@ -37,6 +37,19 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
     <td align="right"><b><?php echo $txt['editprofile_email']; ?></b></td>
     <td valign="top" align="left"><input size="50" maxlength="255" id="identity_email_value" name="identity[email_value]" type="text" value="<?php print $Member->email_value; ?>" /></td>
   </tr>
+      <tr>
+    <td align="right"><b><?php echo $txt['editprofile_country']; ?></b></td>
+    <td valign="top" align="left"><input size="50" maxlength="255" id="identity_country_name" name="identity[country_name]" type="text" value="<?php print $Member->country_name; ?>" /></td>
+  </tr>
+    <tr>
+    <td align="right"><b><?php echo $txt['editprofile_locality']; ?></b></td>
+    <td valign="top" align="left"><input size="50" maxlength="255" id="identity_locality" name="identity[locality]" type="text" value="<?php print $Member->locality; ?>" /></td>
+  </tr>
+    <tr>
+    <td align="right"><b><?php echo $txt['editprofile_homepage']; ?></b></td>
+    <td valign="top" align="left"><input size="50" maxlength="255" id="identity_homepage" name="identity[homepage]" type="text" value="<?php print $Member->homepage; ?>" /></td>
+  </tr>
+
   <tr>
     <td align="right"><b><?php echo $txt['editprofile_photo']; ?></b></td>
     <td valign="top" align="left"><input id="identity_photo" name="identity[photo]" type="file" /></td>

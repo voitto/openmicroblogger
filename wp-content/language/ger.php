@@ -135,7 +135,8 @@ $txt['search_more'] = "(Mehr ...)";
 # /wp-content/themes/p2/sidebar.php
 //////////////////////
 $txt['sidebar_name'] = "Name: ";
-$txt['sidebar_location'] = "Wohnort: ";
+$txt['sidebar_location'] = "Herkunftsort: ";
+$txt['sidebar_country'] = "Herkunftsland: ";
 $txt['sidebar_web'] = "Webadresse: ";
 $txt['sidebar_bio'] = "Biographie: ";
 $txt['sidebar_following'] = "Abonnements";
@@ -261,6 +262,9 @@ $txt['editprofile_photo'] = "Foto im jpg-Format";
 $txt['editprofile_licence_url'] = "Lizenz URL";
 $txt['editprofile_button_cancel'] = "Abbrechen";
 $txt['editprofile_button_save'] = "Speichern";
+$txt['editprofile_country'] = "Herkunftsland";
+$txt['editprofile_locality'] = "Herkunftsort";
+$txt['editprofile_homepage'] = "Website";
 
 
 /////////////////////////////////////

@@ -136,8 +136,9 @@ $txt['search_more'] = "(More ...)";
 //////////////////////
 $txt['sidebar_name'] = "Name: ";
 $txt['sidebar_location'] = "Location: ";
-$txt['sidebar_web'] = "Web: ";
-$txt['sidebar_bio'] = "Bio: ";
+$txt['sidebar_country'] = "Country: ";
+$txt['sidebar_web'] = "Website: ";
+$txt['sidebar_bio'] = "Biography: ";
 $txt['sidebar_following'] = "following";
 $txt['sidebar_followers'] = "followers";
 $txt['sidebar_updates'] = "updates";
@@ -263,6 +264,10 @@ $txt['editprofile_photo'] = "Jpeg Photo";
 $txt['editprofile_licence_url'] = "Licence URL";
 $txt['editprofile_button_cancel'] = "Cancel";
 $txt['editprofile_button_save'] = "Save";
+$txt['editprofile_country'] = "Country";
+$txt['editprofile_locality'] = "Locality";
+$txt['editprofile_homepage'] = "Homepage";
+
 
 
 /////////////////////////////////////
