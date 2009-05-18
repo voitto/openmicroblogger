@@ -65,6 +65,11 @@ $profile= get_profile();
 <li id="nav_settings" style="display:inline;padding:5px;">
 <a href="<?php echo $request->url_for(array("resource"=>$profile->nickname))."/settings"; ?>" title="Settings"><?php echo $txt['header_settings']; ?></a>
 </li>
+<?php if (member_of('administrators')) : ?>
+  <li id="nav_admin" style="display:inline;padding:5px;">
+  <a href="<?php echo $request->url_for(array("resource"=>"admin")); ?>" title="Help">Admin</a>
+  </li>
+<?php endif; ?>
 <li id="nav_help" style="display:inline;padding:5px;">
 <a href="<?php echo ''; ?>" title="Help"><?php echo $txt['header_help']; ?></a>
 </li>

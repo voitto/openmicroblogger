@@ -64,79 +64,82 @@
     <script type="text/javascript">
     // <![CDATA[
 
-<?php
-  
-  global $db;
-  
-  $Setting =& $db->model('Setting');
-  
-  $threadmode = $Setting->find_by(array('name'=>'config.env.threaded','profile_id'=>get_profile_id()));
-  
-  if (!$threadmode) {
-    $threadmode = $Setting->base();
-    $threadmode->set_value('profile_id',get_profile_id());
-    $threadmode->set_value('person_id',get_person_id());
-    $threadmode->set_value('name','config.env.threaded');
-    $threadmode->set_value('value','false');
-    $threadmode->save_changes();
-    $threadmode->set_etag();
-    $threadmode = $Setting->find($threadmode->id);
-  }
-  $seturl = $request->url_for(array('resource'=>'settings','id'=>$threadmode->id,'action'=>'put'));
-  
-  $threadentry = $threadmode->FirstChild('entries');
-
-?>
-
     $(document).ready(function() {
       
-    var submit_to = "<?php url_for(array(
-      'resource'=>'settings',
-      'id'=>$threadmode->id,
-      'action'=>'put'
-    )); ?>";
+      var submit_to = "<?php url_for(array(
+        'resource'=>'settings',
+        'id'=>$threadmode->id,
+        'action'=>'put'
+      )); ?>";
 
-        var submit_to = "<?php echo $seturl; ?>";
-  
-        $(".editable_select_tw_text").mouseover(function() { 
-            $(this).highlightFade({end:'#def'});
-        });
-        $(".editable_select_tw_text").mouseout(function() { 
-            $(this).highlightFade({end:'#fff', speed:200});
-        });
-        $(".editable_select_tw_text").editable(submit_to, { 
-            indicator   : "<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>",
-               data     : '<?php if (!class_exists("Services_JSON")) lib_include("json"); $json = new Services_JSON(); echo $json->encode( $aktwitter_tw_text_options ); ?>',
-            submitdata  : function() {
-              return {"entry[etag]" : "<?php echo $threadentry->etag; ?>"};
-            },
-            name        : "setting[value]",
-            type        : "select",
-            placeholder : "<?php echo $threadmode->value; ?>",
-            noappend    : "true",
-            submit      : "OK",
-            tooltip     : "Click to edit...",
-            cancel      : "Cancel",
-            callback    : function(value, settings) {
-              $(this).html(settings['jsonarr'][value-0]);
-              return(value);
-            }
-        });
+      var submit_to = "<?php echo $threadurl; ?>";
+
+      $(".editable_select_tw_text").mouseover(function() { 
+          $(this).highlightFade({end:'#def'});
+      });
+      $(".editable_select_tw_text").mouseout(function() { 
+          $(this).highlightFade({end:'#fff', speed:200});
+      });
+      $(".editable_select_tw_text").editable(submit_to, { 
+          indicator   : "<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>",
+             data     : '<?php if (!class_exists("Services_JSON")) lib_include("json"); $json = new Services_JSON(); echo $json->encode( $aktwitter_tw_text_options ); ?>',
+          submitdata  : function() {
+            return {"entry[etag]" : "<?php echo $threadentry->etag; ?>"};
+          },
+          name        : "setting[value]",
+          type        : "select",
+          placeholder : "<?php echo $threadmode->value; ?>",
+          noappend    : "true",
+          submit      : "OK",
+          tooltip     : "Click to edit...",
+          cancel      : "Cancel",
+          callback    : function(value, settings) {
+            $(this).html(settings['jsonarr'][value-0]);
+            return(value);
+          }
+      });
+      
+
+      var submit_to = "<?php url_for(array(
+        'resource'=>'settings',
+        'id'=>$catmode->id,
+        'action'=>'put'
+      )); ?>";
+
+      var submit_to = "<?php echo $caturl; ?>";
+
+      $(".editable_select_cat_text").mouseover(function() { 
+          $(this).highlightFade({end:'#def'});
+      });
+      $(".editable_select_cat_text").mouseout(function() { 
+          $(this).highlightFade({end:'#fff', speed:200});
+      });
+      $(".editable_select_cat_text").editable(submit_to, { 
+          indicator   : "<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>",
+             data     : '<?php if (!class_exists("Services_JSON")) lib_include("json"); $json = new Services_JSON(); echo $json->encode( $aktwitter_tw_text_options ); ?>',
+          submitdata  : function() {
+            return {"entry[etag]" : "<?php echo $catentry->etag; ?>"};
+          },
+          name        : "setting[value]",
+          type        : "select",
+          placeholder : "<?php echo $catmode->value; ?>",
+          noappend    : "true",
+          submit      : "OK",
+          tooltip     : "Click to edit...",
+          cancel      : "Cancel",
+          callback    : function(value, settings) {
+            $(this).html(settings['jsonarr'][value-0]);
+            return(value);
+          }
+      });
+
+        
+        
     });
     // ]]>
     </script>
 
 
-<table cellpadding="10" border="0">
-<tr>
-  <td>
-<h3>Threaded:</h3>
-</td>
-<td>
-<div class="editable_select_tw_text" id="editable_select_tw_text"></div>      
-</td>
-</tr>
-</table>
 
 
   	
@@ -144,11 +147,32 @@
   		<p>
   		  OpenMicroBlogger Administration Tools
   		</p>
-  		<ul>
-  		  <li><a href="<?php url_for(array('resource'=>'migrate')); ?>">Update Database</a></li>
-		  </ul>
-  		<ul>
-  		  <li><a href="<?php url_for(array('resource'=>'groups')); ?>">Rest API Permissions</a></li>
+  		<p>
+  		    		    <table cellpadding="10" border="0">
+<tr>
+  <td>
+<h4>Tags:</h4>
+</td>
+<td>
+<div class="editable_select_cat_text" id="editable_select_cat_text"></div>      
+</td>
+</tr>
+<tr>
+  <td>
+<h4>Threaded:</h4>
+</td>
+<td>
+<div class="editable_select_tw_text" id="editable_select_tw_text"></div>      
+</td>
+</tr>
+
+</table>
+
+
+  		</p>
+  		<ul style="list-style:none;">
+  		  <li style="padding:5px;"><a href="<?php url_for(array('resource'=>'migrate')); ?>">Update Database</a></li>
+  		  <li style="padding:5px;"><a href="<?php url_for(array('resource'=>'groups')); ?>">Rest API Permissions</a></li>
 		  </ul>
   	</div>
   	

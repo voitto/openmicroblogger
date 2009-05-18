@@ -2013,6 +2013,7 @@ function dynamic_sidebar() {
   global $sidebar_done;
   
   if (isset($request->params['nickname'])) {
+    
     if ($request->action == 'index' && $request->byid == get_profile_id())
       render_partial('apps');
     echo '<script type="text/javascript" src="'.$request->url_for(array('resource'=>'pages','action'=>'block.js')).'"></script>';
@@ -2027,11 +2028,8 @@ function dynamic_sidebar() {
     return true;
   }
   
-  // toggle this on/off to use the blocks
-  $use_sidebar_blocks = false;
-  
   $blocks = environment('blocks');
-  if ($use_sidebar_blocks && !empty($blocks) && !$sidebar_done) {
+  if (environment('categories') && !empty($blocks) && !$sidebar_done && $request->resource == 'posts') {
     foreach ($blocks as $b) {
       // if it's the prologue theme, don't show PAGES in sidebar
       if (!($b == 'pages' && environment('theme') == 'prologue-theme')){

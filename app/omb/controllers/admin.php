@@ -61,15 +61,51 @@ function index( &$vars ) {
   extract( $vars );
   
   $aktwitter_tw_text_options = array(
-    'false'=>'false',
-    'true'=>'true'
+    '0'=>'false',
+    '1'=>'true'
   );
+  
+  $Setting =& $db->model('Setting');
+
+  $threadmode = $Setting->find_by(array('name'=>'config.env.threaded','profile_id'=>get_profile_id()));
+  if (!$threadmode) {
+    $threadmode = $Setting->base();
+    $threadmode->set_value('profile_id',get_profile_id());
+    $threadmode->set_value('person_id',get_person_id());
+    $threadmode->set_value('name','config.env.threaded');
+    $threadmode->set_value('value',1);
+    $threadmode->save_changes();
+    $threadmode->set_etag();
+    $threadmode = $Setting->find($threadmode->id);
+  }
+  $threadurl = $request->url_for(array('resource'=>'settings','id'=>$threadmode->id,'action'=>'put'));
+  $threadentry = $threadmode->FirstChild('entries');
+
+  $catmode = $Setting->find_by(array('name'=>'config.env.categories','profile_id'=>get_profile_id()));
+  if (!$catmode) {
+    $catmode = $Setting->base();
+    $catmode->set_value('profile_id',get_profile_id());
+    $catmode->set_value('person_id',get_person_id());
+    $catmode->set_value('name','config.env.categories');
+    $catmode->set_value('value',0);
+    $catmode->save_changes();
+    $catmode->set_etag();
+    $catmode = $Setting->find($catmode->id);
+  }
+  $caturl = $request->url_for(array('resource'=>'settings','id'=>$catmode->id,'action'=>'put'));
+  $catentry = $catmode->FirstChild('entries');
   
   return vars(
     array( 
       &$collection,
       &$aktwitter_tw_text_options,
-      &$profile
+      &$profile,
+      &$threadmode,
+      &$threadurl,
+      &$threadentry,
+      &$catmode,
+      &$caturl,
+      &$catentry
     ),
     get_defined_vars()
   );

@@ -17,7 +17,7 @@ $first_name		= attribute_escape( $user->first_name );
 			<label class="post-error" for="posttext" id="posttext_error"></label>  
 			<div class="postrow">
 
-			<?php if (environment('use_tags')) : ?>
+			<?php if (environment('categories')) : ?>
 			<input type="text" name="tags" id="tags" tagindex="1" autocomplete="off" value="<?php _e($txt['postform_tagit']); ?>" onfocus="this.value=(this.value=='<?php _e( $txt['postform_tagit'] ); ?>') ? '' : this.value;" onblur="this.value=(this.value=='') ? '<?php _e( $txt['postform_tagit'] ); ?>' : this.value;"/><?php else : ?>
 			<input type="hidden" name="tags" id="tags" />
 			<?php endif; ?>

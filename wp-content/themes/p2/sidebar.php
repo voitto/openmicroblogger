@@ -6,7 +6,7 @@
 
 <?php global $request; ?>
 
-<?php if (get_app_id() && !(environment('use_sidebar_blocks'))) : ?>
+<?php if (get_app_id() && !(environment('categories'))) : ?>
 
   <?php
 

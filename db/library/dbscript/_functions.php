@@ -2648,7 +2648,7 @@ function pretty_urls() {
 
 function setting($name) {
   if (!signed_in())
-    return;
+    return false;
   global $db;
   global $ombsettings;
   if (!is_array($ombsettings))
