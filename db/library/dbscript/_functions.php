@@ -1505,6 +1505,14 @@ function public_resource() {
     return true;  
   
   $datamodel =& $db->get_table($req->resource);
+
+  $action = $request->action;
+
+  if ( !( in_array( $action, $datamodel->allowed_methods, true )))
+    $action = 'get';
+  
+  if (!($action == 'get'))
+    return false;
   
   if (!(isset($datamodel->access_list['read']['id'])))
     return false;
