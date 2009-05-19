@@ -14,7 +14,7 @@ if ( file_exists( $language_file )) {
   include $language_file;
   
 } else {
-  
+  global $db;
   $Translation =& $db->model('Translation');
   $lang = $Translation->find_by('code',$language_selected);
   if ($lang)
