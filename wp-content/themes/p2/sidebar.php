@@ -21,9 +21,7 @@
 
   ?>
 
-  <?php
-
-  ?>
+  <?php if (!in_array('settings',$request->activeroute->patterns)) { ?>
 
   <?php if (isset($request->params['nickname'])) : ?>
 
@@ -50,7 +48,7 @@
   </ul>
 
   <?php endif; ?>
-
+  <?php } ?>
   <?php
 
   $count1 = 0;
@@ -78,6 +76,7 @@
   }
 
   ?>
+    <?php if (!in_array('settings',$request->activeroute->patterns)) { ?>
   <?php if (!isset($request->params['nickname'])) : ?>
 
   <li><img width="32" height="32" style="vertical-align:middle;width:32px;height:32px;" src="<?php echo $profile->avatar; ?>" alt="<?php echo $profile->fullname; ?>"><a style="font-size:20px;margin-left:8px;" href="<?php echo $profile->profile_url; ?>"><?php echo $profile->nickname; ?></a></li>
@@ -107,7 +106,7 @@
           <span style="float:right;"><?php echo $count3; ?></span></p>
     </li>
   <?php endif; ?>
-
+<?php } ?>
   <?php
 
       $links = array();
@@ -128,6 +127,7 @@
     <a href="<?php echo $request->url_for(array("resource"=>$profile->nickname))."/replies"; ?>"><?php echo "@".$profile->nickname; ?></a>
   </li>
   <?php endif; ?>
+  <?php if (!in_array('settings',$request->activeroute->patterns)) { ?>
   <?php if (!signed_in()) : ?>
   <li><?php echo $txt['sidebar_favorities']; ?></li>
   <?php elseif (isset($request->params['nickname'])) : ?>
@@ -142,8 +142,10 @@
   <li><?php echo $txt['sidebar_following']; ?></li>
 
   <?php endif; ?>
+  <?php } ?>
+<?php if (!in_array('settings',$request->activeroute->patterns)) { ?>
   <li><a class="rss" style="float:left;" href="<?php bloginfo( 'rss2_url' ); ?>"><?php echo $txt['sidebar_rss']; ?></a></li>
-
+<?php } ?>
 
 
 <?php else : ?>
