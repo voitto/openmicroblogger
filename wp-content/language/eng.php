@@ -81,6 +81,7 @@ $txt['header_help'] = "Help";
 $txt['header_sign_out'] = "Sign out";
 $txt['header_sign_in'] = "Sign in";
 $txt['header_register'] = "Register";
+$txt['header_admin'] = "Admin";
 
 
 //////////////////////

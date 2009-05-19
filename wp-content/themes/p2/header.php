@@ -46,7 +46,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 	</div>
 <ul class="omb_nav" style="float:right;padding:10px;margin:0;color:#fff;font-size:14px;font-family: arial, helvetica, sans-serif;white-space:nowrap;list-style-type:none">
 <li id="nav_home" style="display:inline;padding:5px;">
-<a href="<?php base_url(); ?>" title="Home"><?php echo $txt['header_home']; ?></a>
+<a href="<?php base_url(); ?>" title="<?php echo $txt['header_home']; ?>"><?php echo $txt['header_home']; ?></a>
 </li>
 <?php if (signed_in()) : ?>
 
@@ -57,36 +57,36 @@ $profile= get_profile();
 
 
 <li id="nav_profile" style="display:inline;padding:5px;">
-<a href="<?php echo $request->url_for(array("resource"=>$profile->nickname)); ?>" title="Profile"><?php echo $txt['header_profile']; ?></a>
+<a href="<?php echo $request->url_for(array("resource"=>$profile->nickname)); ?>" title="<?php echo $txt['header_profile']; ?>"><?php echo $txt['header_profile']; ?></a>
 </li>
 <li id="nav_find" style="display:inline;padding:5px;">
-<a href="<?php echo ''; ?>" title="Find People"><?php echo $txt['header_find_people']; ?></a>
+<a href="<?php echo ''; ?>" title="<?php echo $txt['header_find_people']; ?>"><?php echo $txt['header_find_people']; ?></a>
 </li>
 <li id="nav_settings" style="display:inline;padding:5px;">
-<a href="<?php echo $request->url_for(array("resource"=>$profile->nickname))."/settings"; ?>" title="Settings"><?php echo $txt['header_settings']; ?></a>
+<a href="<?php echo $request->url_for(array("resource"=>$profile->nickname))."/settings"; ?>" title="<?php echo $txt['header_settings']; ?>"><?php echo $txt['header_settings']; ?></a>
 </li>
 <?php if (member_of('administrators')) : ?>
   <li id="nav_admin" style="display:inline;padding:5px;">
-  <a href="<?php echo $request->url_for(array("resource"=>"admin")); ?>" title="Help">Admin</a>
+  <a href="<?php echo $request->url_for(array("resource"=>"admin")); ?>" title="<?php echo $txt['header_admin']; ?>"><?php echo $txt['header_admin']; ?></a>
   </li>
 <?php endif; ?>
 <li id="nav_help" style="display:inline;padding:5px;">
-<a href="<?php echo ''; ?>" title="Help"><?php echo $txt['header_help']; ?></a>
+<a href="<?php echo ''; ?>" title="<?php echo $txt['header_help']; ?>"><?php echo $txt['header_help']; ?></a>
 </li>
 <li id="nav_logout" style="display:inline;padding:5px;">
-<a href="<?php url_for(array('resource'=>'openid_logout')); ?>" title="Sign out"><?php echo $txt['header_sign_out']; ?></a>
+<a href="<?php url_for(array('resource'=>'openid_logout')); ?>" title="<?php echo $txt['header_sign_out']; ?>"><?php echo $txt['header_sign_out']; ?></a>
 </li>
 
 <?php else : ?>
 
 <li id="nav_help" style="display:inline;padding:5px;">
-<a href="<?php echo ''; ?>" title="Help"><?php echo $txt['header_help']; ?></a>
+<a href="<?php echo ''; ?>" title="<?php echo $txt['header_help']; ?>"><?php echo $txt['header_help']; ?></a>
 </li>
 <li id="nav_login" style="display:inline;padding:5px;">
-<a href="<?php url_for(array('resource'=>'email_login')); ?>" title="Sign in"><?php echo $txt['header_sign_in']; ?></a>
+<a href="<?php url_for(array('resource'=>'email_login')); ?>" title="<?php echo $txt['header_sign_in']; ?>"><?php echo $txt['header_sign_in']; ?></a>
 </li>
 <li id="nav_reg" style="display:inline;padding:5px;">
-<a href="<?php url_for(array('resource'=>'register')); ?>" title="Register"><?php echo $txt['header_register']; ?></a>
+<a href="<?php url_for(array('resource'=>'register')); ?>" title="<?php echo $txt['header_register']; ?>"><?php echo $txt['header_register']; ?></a>
 </li>
   
 <?php endif; ?>
