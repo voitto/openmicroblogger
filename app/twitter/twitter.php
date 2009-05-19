@@ -32,7 +32,7 @@ function download_tweets(&$request,&$route) {
 }
 
 function twitter_init() {
-  
+  include 'wp-content/language/lang_chooser.php'; //Loads the language-file  
   // load Alex King's Twitter Tools WordPress plugin
   wp_plugin_include( 'twitter-tools' );
   
@@ -41,7 +41,7 @@ function twitter_init() {
   $aktt->tweet_from_sidebar = false;
   
   // set the resource, action, button label, app name, grouplevel-unimplemented
-  app_register_init( 'ak_twitter', 'edit.html', 'Twitter', 'twitter', 2 );
+  app_register_init( 'ak_twitter', 'edit.html', $txt['twitter_twitter'], 'twitter', 2 );
   
   before_filter('download_tweets','get');
 }

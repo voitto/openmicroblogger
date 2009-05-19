@@ -158,12 +158,48 @@ $txt['sidebar_sign_in_register'] = "Log in or register";
 
 
 //////////////////////
-# /wp-content/themes/p2/sidebar.php
+# /wp-content/themes/p2/single.php
 //////////////////////
 $txt['single_edit'] = "edit";
 $txt['single_more'] = "More...";
 $txt['single_reply'] = "Reply";
 
+
+//////////////////////
+# /app/streams/streams.php
+//////////////////////
+$txt['streams_streams'] = "Connect to Streams";
+
+
+//////////////////////
+# /app/translate/models/Translation.php
+//////////////////////
+$txt['translation_translate'] = "Select / Edit your language";
+
+
+//////////////////////
+# /app/identica/identica.php
+//////////////////////
+$txt['identica_identica'] = "Connect to Identi.ca";
+
+
+//////////////////////
+# /app/password/password.php
+//////////////////////
+$txt['password_password'] = "Change your Password";
+
+
+//////////////////////
+# /app/twitter/twitter.php
+//////////////////////
+$txt['twitter_twitter'] = "Connect to Twitter";
+
+
+/////////////////////////////////////
+# /app/omb/controllers/identities.php
+/////////////////////////////////////
+$txt['identities_friends'] = "View / Edit your Friends";
+$txt['identities_settings'] = "Edit your profile";
 
 /////////////////////////////////////
 # /app/omb/views/pages/_entry.html
@@ -249,7 +285,7 @@ $txt['upload_file'] = "File";
 /////////////////////////////////////
 # /app/omb/views/identities/_admin.html
 /////////////////////////////////////
-$txt['admin_profile'] = "Profile";
+$txt['admin_profile'] = "Settings";
 $txt['admin_mobile'] = "Mobile";
 
 

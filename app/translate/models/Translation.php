@@ -37,8 +37,8 @@ function translate_show() {
 }
 
 function translate_init() {
-  
-  app_register_init( 'translations', 'index.html', 'Translate', 'translate', 2 );
+  include 'wp-content/language/lang_chooser.php'; //Loads the language-file  
+  app_register_init( 'translations', 'index.html', $txt['translation_translate'], 'translate', 2 );
 }
 
 ?>
