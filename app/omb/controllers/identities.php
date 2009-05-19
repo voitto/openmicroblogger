@@ -301,6 +301,7 @@ function _edit( &$vars ) {
 }
 
 function _admin( &$vars ) {
+  include 'wp-content/language/lang_chooser.php'; //Loads the language-file
   extract($vars);
   global $submenu,$current_user;
   trigger_before( 'admin_menu', $current_user, $current_user );
@@ -319,12 +320,12 @@ function _admin( &$vars ) {
     'resource'=>'identities',
     'id'=>get_profile_id(),
     'action'=>'edit'
-    )).'/partial'] = 'Settings';
+    )).'/partial'] = $txt['identities_settings'];
   $menuitems[$request->url_for(array(
     'resource'=>'identities',
     'id'=>get_profile_id(),
     'action'=>'subs'
-    )).'/partial'] = 'Friends';
+    )).'/partial'] = $txt['identities_friends'];
   //$menuitems[$request->url_for(array(
   //  'resource'=>'identities',
   //  'id'=>get_profile_id(),

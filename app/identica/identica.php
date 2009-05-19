@@ -2,7 +2,7 @@
 
 
 function identica_init() {
-  
+  include 'wp-content/language/lang_chooser.php'; //Loads the language-file  
   // load Alex King's Twitter Tools WordPress plugin
   wp_plugin_include( 'twitter-tools' );
   
@@ -11,7 +11,7 @@ function identica_init() {
   $aktt->tweet_from_sidebar = false;
   
   // set the resource, action, button label, app name, grouplevel-unimplemented
-  app_register_init( 'dents', 'edit.html', 'Identica', 'identica', 2 );
+  app_register_init( 'dents', 'edit.html', $txt['identica_identica'], 'identica', 2 );
   
 }
 

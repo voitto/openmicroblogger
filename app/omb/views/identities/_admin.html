@@ -8,10 +8,10 @@
 <?php endif; ?>
 
 <?php if (count($menuitems > 0)) : ?>
-
+<?php include 'wp-content/language/lang_chooser.php'; //Loads the language-file ?>
 
   <li class="pagenav">
-    <h2>Profile</h2>
+    <h2><?php echo $txt['admin_profile']; ?></h2>
       <ul>
 
 
@@ -28,7 +28,7 @@
   <?php if (!empty($smskey)) : ?>
 
      <li class="page_item">
-		<a href="<?php url_for(array('resource'=>'mobile_settings')); ?>">Mobile</a>
+		<a href="<?php url_for(array('resource'=>'mobile_settings')); ?>"><?php echo $txt['admin_mobile']; ?></a>
 	</li>	
 	
 	<?php endif; ?>

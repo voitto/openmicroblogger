@@ -2,7 +2,8 @@
  
 
 function password_init() {
-  app_register_init( 'identities', 'pass', 'Password', 'password', 2 );
+  include 'wp-content/language/lang_chooser.php'; //Loads the language-file
+  app_register_init( 'identities', 'pass', $txt['password_password'], 'password', 2 );
 }
 
 function password_show() {
