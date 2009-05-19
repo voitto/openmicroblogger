@@ -59,6 +59,10 @@ code, pre {
 code {
 	background: #f1f1f1;
 }
+.counter {
+	font-weight: bold;
+	font-size: 1.2em;
+}
 blockquote {
 	padding-left: 8px;
 	font-style: italic;
@@ -95,6 +99,9 @@ h1 {
 }
 h4, h5, h6 {
 	font-weight: 500;
+}
+#nav_home a, #nav_find a, #nav_profile a, #nav_settings a, #nav_profile a, #nav_help a, #nav_logout a, #nav_login a, #nav_reg a, #nav_admin a {
+color:#3478e3;
 }
 #header, #footer {
 	width: 980px;
