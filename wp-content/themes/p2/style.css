@@ -488,6 +488,7 @@ h2 a.rss:hover {
 	position: relative;
 	top: 0;
 	padding: 6px 18px 18px 18px;
+	background-color: #f7f7f7
 }
 #sidebar h2 {
 	font-weight: normal;
