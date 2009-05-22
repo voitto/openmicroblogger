@@ -30,6 +30,7 @@ code, pre { font-family: Monaco, Consolas, "Courier New", monospace; }
 
 html {
 	font-size: 100%;
+	height: 100%;
 }
 body {
 	font-size: 62.5%;
@@ -118,15 +119,23 @@ color:#3478e3;
 	margin: 10px 16px;
 	color: #777;
 }
+#identicabox {
+	margin-right: 250px;
+	margin-left: 10px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	background-color: #fff;
+	padding:10px;
+}
 #wrapper {
-	/* this is #sidebar bg */
-	background: #f7f7f7;
+	background-color: #fff;
 	border: 1px solid #fff;
 	width: 980px;
 	margin: 0 auto;
 	position: relative;
 	margin-top: 20px;
 	overflow: hidden;
+	height: 100%;
 }
 .sleeve_main {
 	width: auto;
@@ -136,6 +145,11 @@ color:#3478e3;
 	padding-left: 18px;
 	padding-right: 18px;
 	padding-bottom: 10px;
+	height: 100%;
+}
+.entry {
+	background: #fff;
+	margin-right: 250px;
 }
 .single #main {
 	padding-top: 18px;
@@ -604,6 +618,14 @@ margin-bottom: 0px;
 }
 #searchform #searchsubmit {
 	width: 30%;
+}
+#twitterbox {
+	margin-right: 250px;
+	margin-left: 10px;
+	margin-bottom: 10px;
+	margin-top: 10px;
+	background-color: #fff;
+	padding:10px;
 }
 #wpstats {
 	position: relative;
