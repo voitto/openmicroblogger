@@ -1741,7 +1741,7 @@ require('wp-content/language/lang_chooser.php'); //Loads the language-file
       'resource'  => 'posts',
       'id'        => $the_post->id,
       'action'    => 'edit'
-    ))."\">.$txt['wp_edit'].</a>&nbsp;|&nbsp;<a href=\"".$request->url_for(array(
+    ))."\">".$txt['wp_edit']."</a>&nbsp;|&nbsp;<a href=\"".$request->url_for(array(
     'resource'  => 'posts',
     'id'        => $the_post->id,
     'action'    => 'remove'
