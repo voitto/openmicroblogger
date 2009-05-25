@@ -147,7 +147,7 @@ $txt['sidebar_Updates'] = "Eintr&auml;ge";
 $txt['sidebar_home'] = "Start";
 $txt['sidebar_favorites'] = "Favoriten";
 $txt['sidebar_search'] = "Suche";
-$txt['sidebar_direct_messages'] = "Direct Messages";
+$txt['sidebar_direct_messages'] = "Direkte Nachrichten";
 $txt['sidebar_trending_topics'] = "Beliebte Themen";
 $txt['sidebar_rss'] = "RSS";
 $txt['sidebar_recent_projects'] = "neuste Projekte";
@@ -354,6 +354,7 @@ $txt['removeprofile_button_delete'] = "Diese Identit&auml;t l&ouml;schen";
 /////////////////////////////////////
 $txt['wp_reply'] = "Antworten";
 $txt['wp_edit'] = "editieren";
+$txt['wp_Edit'] = "Editieren";
 $txt['wp_remove'] = "l&ouml;schen";
 $txt['wp_post'] = "Absenden";
 $txt['wp_photo_nick'] = "Foto und Nickname werden ben&ouml;tigt.";

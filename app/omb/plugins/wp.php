@@ -80,7 +80,7 @@ require('wp-content/language/lang_chooser.php'); //Loads the language-file
   $comments .= '<span class="actions">';
   $comments .= '<a href="'.$ccurl.'">Permalink</a>  | <a rel=\'nofollow\' class=\'comment-reply-link\' href=\''.$ccrurl.'\'>' . $txt['wp_reply'] . '</a>';
   if ( get_profile_id() == $post->profile_id ) { 
-	  $comments .= 	' | <a href="'.get_edit_post_link( $post ).'" class="post-edit-link" rel="'. $post->id.'">'.$txt['wp_edit'].'; ?></a>';
+	  $comments .= 	' | <a href="'.get_edit_post_link( $post ).'" class="post-edit-link" rel="'. $post->id.'">'.$txt['wp_Edit'].'; ?></a>';
 	  $comments .= 	' | <a href="'.get_edit_post_link( $post, 'remove' ).'" class="post-remove-link" rel="'. $post->id.'">'.$txt['wp_remove'].'</a>';
 	}
   $comments .= '</span>';
@@ -787,8 +787,7 @@ function get_usermeta( $user_id, $what ) {
 }
 
 function wp_nonce_field( $var ) {
-require('wp-content/language/lang_chooser.php'); //Loads the language-file
-  echo '<input type="hidden" name="method" value="'.$txt['wp_post'].'" />'."\n";
+  echo '<input type="hidden" name="method" value="post" />'."\n";
 }
 
 function wp_schedule_event( $when, $howoften, $event ) {
@@ -1742,7 +1741,7 @@ require('wp-content/language/lang_chooser.php'); //Loads the language-file
       'resource'  => 'posts',
       'id'        => $the_post->id,
       'action'    => 'edit'
-    ))."\">edit</a>&nbsp;|&nbsp;<a href=\"".$request->url_for(array(
+    ))."\">.$txt['wp_edit'].</a>&nbsp;|&nbsp;<a href=\"".$request->url_for(array(
     'resource'  => 'posts',
     'id'        => $the_post->id,
     'action'    => 'remove'
