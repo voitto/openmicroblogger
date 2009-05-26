@@ -117,7 +117,7 @@ $request->connect(
 
 
 $request->connect(
-  ':resource/forid/:forid/:page',
+  ':resource/for/:forid/:page',
   array(
     'requirements' => array ( '[A-Za-z0-9_.]+', '[0-9]+', '[0-9]+' )
   )
@@ -141,16 +141,20 @@ function omb_filter_posts( &$model, &$db ) {
       );
     
     $model->set_param( 'find_by', $where );
-  } elseif (isset($request->params['byid']) && $request->resource == 'posts' && $model->table == 'posts'){
+  } elseif (isset($request->params['forid']) && $request->resource == 'posts' && $model->table == 'posts'){
     $model->has_many( 'profile_id:subscriptions.subscribed' );
     $model->set_groupby( 'id' );
     $where = array(
       'op'=>'OR',
-      'profile_id'=>$request->params['byid'],
-      'subscriptions.subscriber'=>$request->params['byid']
+      'profile_id'=>$request->params['forid'],
+      'subscriptions.subscriber'=>$request->params['forid']
     );
     $model->set_param( 'find_by', $where );
-  
+  } elseif (isset($request->params['byid']) && $request->resource == 'posts' && $model->table == 'posts'){
+    $where = array(
+      'profile_id'=>$request->params['byid'],
+    );
+    $model->set_param( 'find_by', $where );
   } elseif (environment('threaded') && in_array($request->action, array('index','get')) && $model->table == 'posts' && $request->resource == 'posts' && $request->id == 0) {
     $where = array(
       'parent_id'=>0

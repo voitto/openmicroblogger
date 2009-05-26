@@ -2443,7 +2443,7 @@ function get_nav_links() {
     
     $links["Personal"] = $request->url_for(array(
         "resource"=>"posts",
-        "byid"=>$i->id,
+        "forid"=>$i->id,
         "page"=>1 ));
     
     if (empty($i->post_notice))
@@ -2487,6 +2487,8 @@ function get_app_id() {
   if (!($request->resource == 'identities'))
     if ($request->params['byid'] > 0)
       return $request->params['byid'];
+    if ($request->params['forid'] > 0)
+      return $request->params['forid'];
     elseif (get_profile_id())
       return get_profile_id();
     else

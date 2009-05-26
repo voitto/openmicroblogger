@@ -1587,7 +1587,7 @@ function show_prologue_nav() {
   if ($i && $i->id > 0) {
     $links['Personal'] = $request->url_for(array(
         'resource'=>'posts',
-        'byid'=>$i->id,
+        'forid'=>$i->id,
         'page'=>1 ));
     if (empty($i->post_notice))
       $links['Profile'] = $request->url_for(array('resource'=>$i->nickname));
@@ -1625,6 +1625,9 @@ require('wp-content/language/lang_chooser.php'); //Loads the language-file
     $page = 1;
   
   $mapper = array('resource'=>'posts');
+
+  if (isset($request->params['forid']))
+    $mapper['forid'] = $request->params['forid'];
   
   if (isset($request->params['byid']))
     $mapper['byid'] = $request->params['byid'];
