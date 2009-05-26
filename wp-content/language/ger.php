@@ -200,6 +200,7 @@ $txt['twitter_twitter'] = "Verbindung zu Twitter";
 $txt['identities_friends'] = "Abonnements einsehen / bearbeiten";
 $txt['identities_settings'] = "Profil einsehen / bearbeiten";
 
+
 /////////////////////////////////////
 # /app/omb/views/pages/_entry.html
 /////////////////////////////////////
@@ -360,5 +361,25 @@ $txt['wp_post'] = "Absenden";
 $txt['wp_photo_nick'] = "Foto und Nickname werden ben&ouml;tigt.";
 $txt['wp_older'] = "&Auml;ltere";
 $txt['wp_newer'] = "Neuere";
+
+
+/////////////////////////////////////
+# /db/library/dbscribt/_functions.php
+/////////////////////////////////////
+$txt['functions_few_seconds'] = "vor einigen Sekunden";
+$txt['functions_about_a_minute'] = "vor ungef&auml;hr einer Minute";
+$txt['functions_about_mins_1'] = "vor ungef&auml;hr ";
+$txt['functions_about_mins_2'] = " Minuten";
+$txt['functions_about_an_hour'] = "vor ungef&auml;hr einer Stunde";
+$txt['functions_about_hours_1'] = "vor ungef&auml;hr ";
+$txt['functions_about_hours_2'] = " Stunden";
+$txt['functions_about_a_day'] = "vor ungef&auml;hr einem Tag";
+$txt['functions_about_days_1'] = "vor ungef&auml;hr ";
+$txt['functions_about_days_2'] = " Tagen";
+$txt['functions_about_a_month'] = "vor ungef&auml;hr einem Monat";
+$txt['functions_about_months_1'] = "vor ungef&auml;hr ";
+$txt['functions_about_months_2'] = " Monaten";
+$txt['functions_about_a_year'] = "vor ungef&auml;hr einem Jahr (und l&auml;nger)";
+
 
 ?>

@@ -2153,31 +2153,32 @@ function _t($t) {
 }
 
 function laconica_time($ts) {
-  
+  include 'wp-content/language/lang_chooser.php'; //Loads the language-file
+
   $t = strtotime($ts);
 	$now = time();
 	$diff = $now - $t;
 
 	if ($diff < 60) {
-		return _t('a few seconds ago');
+		return _t($txt['functions_few_seconds']);
 	} else if ($diff < 92) {
-		return _t('about a minute ago');
+		return _t($txt['functions_about_a_minute']);
 	} else if ($diff < 3300) {
-		return _t('about ') . round($diff/60) . _t(' minutes ago');
+		return _t($txt['functions_about_mins_1']) . round($diff/60) . _t($txt['functions_about_mins_2']);
 	} else if ($diff < 5400) {
-		return _t('about an hour ago');
+		return _t($txt['functions_about_an_hour']);
 	} else if ($diff < 22 * 3600) {
-		return _t('about ') . round($diff/3600) . _t(' hours ago');
+		return _t($txt['functions_about_hours_1']) . round($diff/3600) . _t($txt['functions_about_hours_2']);
 	} else if ($diff < 37 * 3600) {
-		return _t('about a day ago');
+		return _t($txt['functions_about_a_day']);
 	} else if ($diff < 24 * 24 * 3600) {
-		return _t('about ') . round($diff/(24*3600)) . _t(' days ago');
+		return _t($txt['functions_about_days_1']) . round($diff/(24*3600)) . _t($txt['functions_about_days_2']);
 	} else if ($diff < 46 * 24 * 3600) {
-		return _t('about a month ago');
+		return _t($txt['functions_about_a_month']);
 	} else if ($diff < 330 * 24 * 3600) {
-		return _t('about ') . round($diff/(30*24*3600)) . _t(' months ago');
+		return _t($txt['functions_about_months_1']) . round($diff/(30*24*3600)) . _t($txt['functions_about_months_2']);
 	} else if ($diff < 480 * 24 * 3600) {
-		return _t('about a year ago');
+		return _t($txt['functions_about_a_year']);
 	}
 }
 
