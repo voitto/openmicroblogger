@@ -156,7 +156,6 @@ $txt['sidebar_greeting_text'] = " is yet another microblogging-website. You can 
 $txt['sidebar_sign_in_register'] = "Log in or register";
 
 
-
 //////////////////////
 # /wp-content/themes/p2/single.php
 //////////////////////
@@ -201,6 +200,7 @@ $txt['twitter_twitter'] = "Connect to Twitter";
 $txt['identities_friends'] = "View / Edit your Friends";
 $txt['identities_settings'] = "Edit your profile";
 
+
 /////////////////////////////////////
 # /app/omb/views/pages/_entry.html
 /////////////////////////////////////
@@ -214,7 +214,6 @@ $txt['pages_entry_button_submit_rating'] = "Submit rating";
 $txt['pages_entry_sign_in'] = "Sign In";
 $txt['pages_entry_to_post_a_reply'] = " to post a reply";
 $txt['pages_entry_members_forum'] = "Members of this forum";
-
 
 
 /////////////////////////////////////
@@ -306,7 +305,6 @@ $txt['editprofile_locality'] = "Locality";
 $txt['editprofile_homepage'] = "Homepage";
 
 
-
 /////////////////////////////////////
 # /app/omb/views/identities/_entry.html
 /////////////////////////////////////
@@ -363,6 +361,25 @@ $txt['wp_post'] = "Post";
 $txt['wp_photo_nick'] = "Photo and Nickname are required.";
 $txt['wp_older'] = "older";
 $txt['wp_newer'] = "newer";
+
+
+/////////////////////////////////////
+# /db/library/dbscribt/_functions.php
+/////////////////////////////////////
+$txt['functions_few_seconds'] = "a few seconds ago";
+$txt['functions_about_a_minute'] = "about a minute ago";
+$txt['functions_about_mins_1'] = "about ";
+$txt['functions_about_mins_2'] = " minutes ago";
+$txt['functions_about_an_hour'] = "about an hour ago";
+$txt['functions_about_hours_1'] = "about ";
+$txt['functions_about_hours_2'] = " hours ago";
+$txt['functions_about_a_day'] = "about a day ago";
+$txt['functions_about_days_1'] = "about ";
+$txt['functions_about_days_2'] = " days ago";
+$txt['functions_about_a_month'] = "about a month ago";
+$txt['functions_about_months_1'] = "about ";
+$txt['functions_about_months_2'] = " months ago";
+$txt['functions_about_a_year'] = "about a year ago";
 
 
 ?>
