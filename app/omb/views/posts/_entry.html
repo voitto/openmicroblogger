@@ -6,11 +6,19 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 
 ?>
 <table align="center" cellpadding="3" cellspacing="0" border="0"><tr><td colspan="2"><br></td></tr>
+<tr>
+  <td align="right"><p></p></td>
+  <td style="padding-bottom: 10px;">
+  <?php $author = get_profile($Member->profile_id); ?>
+  <h3><a href="<?php url_for(array('resource'=>$author->nickname)); ?>"><?php print $author->nickname."</a> ".time_of($Member->created); ?></h3>
+  </td>
+</tr>
 
    <tr>
 <td align="right"><p></p></td>
   <td><h3>
-  <?php print render_notice( $Member->title, $Member, $profile ); ?>
+  <img src="<?php echo $author->avatar; ?>" alt="image" style="float: left; margin-right:5px; margin-left: 1em; width:80px; height:80px;" />
+    <?php print render_notice( $Member->title, $Member, $profile ); ?>
   <br><br></h3></td>
 </tr>
 
@@ -98,24 +106,6 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 <?php endif; ?>
 
 
-<tr>
-  <td align="right"><p></p></td>
-  <td>
-  <?php $author = get_profile($Member->profile_id); ?>
-  <img src="<?php echo $author->avatar; ?>" alt="image" style="margin-top:10px; width:30px; height:30px;" />&nbsp;
-  <a href="<?php url_for(array('resource'=>$author->nickname)); ?>"><?php print $author->nickname."</a> ".time_of($Member->created); ?>
-  </td>
-</tr>
-
-
-<tr>
-  <td align="right"><p></p></td>
-  <td>
-  <BR><BR><BR><BR>
-  </td>
-</tr>
-
-
 
    <tr>
 <td align="right"><p></p></td>
@@ -161,42 +151,20 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 </td></tr>
 
 
-
-
-
 <?php if (signed_in()) : ?>
-
-
-
-
-
-   <tr>
-<td align="right"><p></p></td>
-  <td>
-  <BR><BR><BR><BR>
-  </td>
-</tr>
-
-
 <?php
-  
   $Identity =& $db->get_table('identities');
-  
   $Person =& $db->get_table('people');
-  
   $p = $Person->find(get_person_id());
-  
   if ($p)
     $ident = $p->FirstChild('identities');
   else
     $ident = $Identity->base();
-  
-  
 ?>
 
 
 
-<tr><td colspan="2"><p><?php echo $txt['entry_reply']; ?>:</p>
+<tr><td colspan="2"><h3><?php echo $txt['entry_reply']; ?>:</h3>
 
 <form name="replypost" method="post" action="<?php url_for(array('resource'=>$request->resource)); ?>">
 <input type="hidden" name="method" value="post">
@@ -208,18 +176,13 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 ">
 </form>
 
-
 <br />
 </td></tr>
 
-<tr><td colspan="2"><p><?php echo $txt['entry_rating']; ?>:</p>
 
-
-
-
+<tr><td colspan="2"><h3><?php echo $txt['entry_rating']; ?>:</h3>
 <form name="reviewpost" method="post" action="<?php url_for(array('resource'=>'reviews')); ?>">
 <input type="hidden" name="method" value="post">
-
 
 <?php $i = 0; ?>
 
@@ -234,9 +197,6 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 <?php $i++; ?>
 <?php endwhile; ?>
 
-
-
-
 <input type="hidden" name="review[target_id]" value="<?php print $Entry->id; ?>">
 <input type="hidden" name="review[profile_id]" value="<?php echo get_profile_id(); ?>">
 <input type="hidden" name="review[reviewer]" value="<?php if ($ident) print $ident->nickname; ?>">
@@ -244,29 +204,11 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 </form>
 
 
-
-
 <?php else : ?>
 
-
-
-
-
-<tr>
-  <td align="right"><p></p></td>
-  <td>
-  <BR><BR><BR><BR>
-  </td>
-</tr>
-
 <tr><td colspan="2">
-
-<p><b><a href="<?php url_for( 'email_login' ); ?>"><?php echo $txt['entry_sign_in']; ?></a><?php echo $txt['entry_to_post_a_reply']; ?></b></p>
-
-
+	<p><b><a href="<?php url_for( 'email_login' ); ?>"><?php echo $txt['entry_sign_in']; ?></a><?php echo $txt['entry_to_post_a_reply']; ?></b></p>
 </td></tr>
-
-
 
 
 <?php endif; ?>
@@ -274,12 +216,6 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 
 <?php if (!public_resource()) : ?>
 </td></tr>
-   <tr>
-<td align="right"><p></p></td>
-  <td>
-  <BR><BR><BR><BR>
-  </td>
-</tr>
 
    <tr>
    <td align="right"><p></p></td>
@@ -298,22 +234,17 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 </tr>
 
 <?php endif; ?>
-   <tr>
-<td align="right"><p></p></td>
-  <td>
-  <BR><BR><BR><BR>
-  </td>
-</tr>
-
 
 <tr><td colspan="2">
 
 
 <?php if (public_resource()) : ?>
 
-<br>
-<br>
-<h4>Bookmark this:</h4> 
+<br />
+<br />
+<br />
+<div style="position:relative; bottom:10px;">
+<h3>Bookmark this:</h3> 
 <a href="http://blogmarks.net/my/new.php?mini=1&simple=1&url=<?php print urlencode($request->uri); ?>&title=<?php print urlencode($Member->title); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/blogmarks.gif" border="0" title="Bookmark to Blogmarks!" alt="Bookmark to Blogmarks!"></a>
 <a href="http://del.icio.us/post?url=<?php print urlencode($request->uri); ?>&title=<?php print urlencode($Member->title); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/delicious.gif" border="0" title="Bookmark to Del.icio.us!" alt="Bookmark to Del.icio.us!"></a>
 <a href="http://digg.com/submit?phase=2&url=<?php print urlencode($request->uri); ?>&title=<?php print urlencode($Member->title); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/digg.gif" border="0" title="Bookmark to Digg!" alt="Bookmark to Digg!"></a>
@@ -333,21 +264,11 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 <a href="http://www.google.com/bookmarks/mark?op=edit&bkmk=<?php print urlencode($request->uri); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/googlebookmark.png" border="0" title="Bookmark to Google" alt="Bookmark to Google"></a>
 <a href="http://twitthis.com/twit?url=<?php print urlencode($request->uri); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/twitter.png" border="0" title="Bookmark to Twitthis" alt="Bookmark to Twitthis"></a>
 <a href="http://pownce.com/send/link/?url=<?php print urlencode($request->uri); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/pownce.gif" border="0" title="Bookmark to Pownce" alt="Bookmark to Pownce"></a>
-
+</div>
 <?php endif; ?>
 
 
 
-  </td>
-</tr>
-
-
-
-
-   <tr>
-<td align="right"><p></p></td>
-  <td>
-  <BR><BR><BR><BR>
   </td>
 </tr>
 
