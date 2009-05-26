@@ -2487,7 +2487,7 @@ function get_app_id() {
   if (!($request->resource == 'identities'))
     if ($request->params['byid'] > 0)
       return $request->params['byid'];
-    if ($request->params['forid'] > 0)
+    elseif ($request->params['forid'] > 0)
       return $request->params['forid'];
     elseif (get_profile_id())
       return get_profile_id();
