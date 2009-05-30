@@ -80,7 +80,7 @@ require('wp-content/language/lang_chooser.php'); //Loads the language-file
   $comments .= '<span class="actions">';
   $comments .= '<a href="'.$ccurl.'">Permalink</a>  | <a rel=\'nofollow\' class=\'comment-reply-link\' href=\''.$ccrurl.'\'>' . $txt['wp_reply'] . '</a>';
   if ( get_profile_id() == $post->profile_id ) { 
-	  $comments .= 	' | <a href="'.get_edit_post_link( $post ).'" class="post-edit-link" rel="'. $post->id.'">'.$txt['wp_Edit'].'; ?></a>';
+	  $comments .= 	' | <a href="'.get_edit_post_link( $post ).'" class="post-edit-link" rel="'. $post->id.'">'.$txt['wp_Edit'].'</a>';
 	  $comments .= 	' | <a href="'.get_edit_post_link( $post, 'remove' ).'" class="post-remove-link" rel="'. $post->id.'">'.$txt['wp_remove'].'</a>';
 	}
   $comments .= '</span>';
