@@ -102,12 +102,11 @@ h4, h5, h6 {
 }
 #nav_home, #nav_find, #nav_profile, #nav_settings, #nav_profile, #nav_help, #nav_logout, #nav_login, #nav_reg, #nav_admin {
 display:inline;
-padding:5px;
+padding:2px;
 }
 #nav_home a, #nav_find a, #nav_profile a, #nav_settings a, #nav_profile a, #nav_help a, #nav_logout a, #nav_login a, #nav_reg a, #nav_admin a {
+/* TOP-Navigation Text-Color */
 color:#3478e3;
-display:inline;
-padding:5px;
 }
 #header, #footer {
 	width: 980px;
@@ -153,6 +152,8 @@ padding:5px;
 	padding-right: 18px;
 	padding-bottom: 10px;
 	min-height: 500px;
+	/* Main-Content Background-Color */
+	background-color: #FFFFFF;
 }
 .entry {
 	background: #fff;
@@ -499,9 +500,23 @@ h2 a.rss:hover {
 	position: absolute;
 	top: 0;
 	padding: 6px 18px 18px 18px;
+	/* Sidebar Background-Color */
 	background-color: #f7f7f7;
 	height: 100%;
 	overflow:hidden;
+}
+#sidebar #sidebar-table {
+	border:0;
+	margin-left:-10px;
+}
+#sidebar img.profile {
+	vertical-align:middle;
+	width:32px;
+	height:32px;
+}
+#sidebar a.profile-nick {
+font-size:20px;
+margin-left:8px;
 }
 #sidebar h2 {
 	font-weight: normal;
@@ -512,12 +527,30 @@ h2 a.rss:hover {
 #sidebar li.liname {
 font-weight:bold;
 }
-#sidebar li.other {
+#sidebar li.liother {
 	font-weight:normal;
 	font-size:0.8em;
 }
+#sidebar li.greeting {
+font-weight:bold;
+}
+#sidebar li.greeting-italic {
+font-weight:normal;
+font-size:1.0em;
+font-style:italic
+}
+#sidebar li.greeting-normal {
+font-weight:normal;
+font-size:1.0em;
+}
 #sidebar span.bio {
 	font-style:italic
+}
+#sidebar span.profile-updates {
+	float:right;
+}
+#sidebar a.rss {
+	float:left;
 }
 #sidebar ul li p {
 	line-height: 1.4em;
@@ -612,6 +645,9 @@ margin-bottom: 0px;
 	border: none;
 	margin-bottom: -3px;
 	margin-right: -5px;
+}
+#sidebarclear {
+	clear: both;
 }
 #recent-comments .avatar {
 	height: 32px;

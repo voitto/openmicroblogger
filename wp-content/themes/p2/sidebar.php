@@ -79,11 +79,11 @@
     <?php if (!in_array('settings',$request->activeroute->patterns)) { ?>
   <?php if (!isset($request->params['nickname'])) : ?>
 
-  <li><img width="32" height="32" style="vertical-align:middle;width:32px;height:32px;" src="<?php echo $profile->avatar; ?>" alt="<?php echo $profile->fullname; ?>"><a style="font-size:20px;margin-left:8px;" href="<?php echo $profile->profile_url; ?>"><?php echo $profile->nickname; ?></a></li>
+  <li><img width="32" height="32" class="profile" src="<?php echo $profile->avatar; ?>" alt="<?php echo $profile->fullname; ?>"><a class="profile-nick" href="<?php echo $profile->profile_url; ?>"><?php echo $profile->nickname; ?></a></li>
   <?php endif; ?>
   
   <li>
-    <table style="border:0; margin-left:-10px;">
+    <table id="sidebar-table">
       <tr>
         <td class="sidebar_subscriptions_count"><?php echo $count1; ?></td>
         <td class="sidebar_subscribers_count"><?php echo $count2; ?></td>
@@ -103,7 +103,7 @@
   <?php if (isset($request->params['nickname'])) : ?>
     <li>
       <p class="sidebar_updates_nickname"><?php echo $txt['sidebar_Updates']; ?>
-          <span style="float:right;"><?php echo $count3; ?></span></p>
+          <span class="profile-updates"><?php echo $count3; ?></span></p>
     </li>
   <?php endif; ?>
 <?php } ?>
@@ -144,7 +144,7 @@
   <?php endif; ?>
   <?php } ?>
 <?php if (!in_array('settings',$request->activeroute->patterns)) { ?>
-  <li><a class="rss" style="float:left;" href="<?php bloginfo( 'rss2_url' ); ?>"><?php echo $txt['sidebar_rss']; ?></a></li>
+  <li><a class="rss" href="<?php bloginfo( 'rss2_url' ); ?>"><?php echo $txt['sidebar_rss']; ?></a></li>
 <?php } ?>
 
 
@@ -162,16 +162,16 @@ if( !function_exists('dynamic_sidebar') || !dynamic_sidebar() ) {
 } // if dynamic_sidebar
 ?>
 	</ul>
-<div style="clear: both;"></div>
+<div id="sidebarclear"></div>
 
 <?php endif; ?>
 
 <?php if (!isset($profile)) { ?>
 <ul>
-<li style="font-weight:bold;"><?php echo $txt['sidebar_greeting_headline']; ?><?php bloginfo( 'name' ); ?>!</li>
+<li class="greeting"><?php echo $txt['sidebar_greeting_headline']; ?><?php bloginfo( 'name' ); ?>!</li>
 
-<li style="font-weight:normal; font-size:1.0em; font-style:italic"><?php bloginfo( 'name' ); ?><?php echo $txt['sidebar_greeting_text']; ?></li>
-<li style="font-weight:normal; font-size:1.0em;"><a href="<?php url_for(array('resource'=>'email_login')); ?>" title="Sign in"><?php echo $txt['sidebar_sign_in_register']; ?></a></li>
+<li class="greeting-italic"><?php bloginfo( 'name' ); ?><?php echo $txt['sidebar_greeting_text']; ?></li>
+<li class="greeting-normal"><a href="<?php url_for(array('resource'=>'email_login')); ?>" title="Sign in"><?php echo $txt['sidebar_sign_in_register']; ?></a></li>
 </ul>
 <?php } ?>
 </div> <!-- // sidebar -->
