@@ -100,8 +100,14 @@ h1 {
 h4, h5, h6 {
 	font-weight: 500;
 }
+#nav_home, #nav_find, #nav_profile, #nav_settings, #nav_profile, #nav_help, #nav_logout, #nav_login, #nav_reg, #nav_admin {
+display:inline;
+padding:5px;
+}
 #nav_home a, #nav_find a, #nav_profile a, #nav_settings a, #nav_profile a, #nav_help a, #nav_logout a, #nav_login a, #nav_reg a, #nav_admin a {
 color:#3478e3;
+display:inline;
+padding:5px;
 }
 #header, #footer {
 	width: 980px;
@@ -112,6 +118,9 @@ color:#3478e3;
 	background: #fff;
 	border: 1px solid #fff;
 	margin: 26px auto 0;
+}
+#footerclear {
+	clear: both;
 }
 #footer p {
 	font-size: 1.3em;
@@ -242,8 +251,12 @@ margin: 10px 10px 0px 0;
 	border: 1px solid #ccc;
 }
 
-#respond #submit, input#comment-submit {
+#submit, input#comment-submit {
 	width: auto;
+}
+#respond {
+	width: auto;
+	display:none;
 }
 input#comment-submit {
 	clear: both;
@@ -495,6 +508,16 @@ h2 a.rss:hover {
 	margin-top: 5px;
 	font-size: 1.7em;
 	margin-bottom: 6px;
+}
+#sidebar li.liname {
+font-weight:bold;
+}
+#sidebar li.other {
+	font-weight:normal;
+	font-size:0.8em;
+}
+#sidebar span.bio {
+	font-style:italic
 }
 #sidebar ul li p {
 	line-height: 1.4em;
@@ -781,6 +804,9 @@ form.textedit textarea {
 	padding: 22px 22px 0;
 	width: 176px;
 }
+#wp-temp-form-div {
+	display:none;
+}
 #help, #notify {
 	position: fixed;
 	background: black;
@@ -868,4 +894,15 @@ background: #eee !important;
 .postcontent h3, .commentcontent h3,
 .postcontent h4, .commentcontent h4 {
 margin-bottom: .3em;
+}
+
+.omb_nav {
+	float:right;
+	padding:10px;
+	margin:0;
+	color:#fff;
+	font-size:14px;
+	font-family: arial, helvetica, sans-serif;
+	white-space:nowrap;
+	list-style-type:none
 }

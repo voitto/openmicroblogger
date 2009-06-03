@@ -1,4 +1,4 @@
-<div style="clear: both;"></div>
+<div id="footerclear"></div>
 </div> <!-- // wrapper -->
 
 	<div id="footer">

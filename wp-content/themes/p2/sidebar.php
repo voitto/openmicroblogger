@@ -27,9 +27,9 @@
 
   <ul>
     <?php if (!empty($profile->fullname)) : ?>
-      <li style="font-weight:bold;"><?php echo $txt['sidebar_name']; ?><?php echo $profile->fullname; ?>
+      <li class="liname"><?php echo $txt['sidebar_name']; ?><?php echo $profile->fullname; ?>
     <?php endif; ?>
-    <li style="font-weight:normal; font-size:0.8em;">
+    <li class="liother">
     <?php if (!empty($profile->locality)) : ?>
     <?php echo $txt['sidebar_location']; ?><?php echo $profile->locality; ?><br />
     <?php endif; ?>
@@ -38,10 +38,10 @@
     <?php endif; ?>
     </li>
     <?php if (!empty($profile->homepage)) : ?>
-      <li style="font-weight:normal; font-size:0.8em;"><?php echo $txt['sidebar_web']; ?><br /><a href='<?php echo $profile->homepage; ?>'><?php echo $profile->homepage; ?></a></li>
+      <li class="liother"><?php echo $txt['sidebar_web']; ?><br /><a href='<?php echo $profile->homepage; ?>'><?php echo $profile->homepage; ?></a></li>
     <?php endif; ?>
     <?php if (!empty($profile->bio)) : ?>
-      <li style="font-weight:normal; font-size:0.8em;"><?php echo $txt['sidebar_bio']; ?><span style="font-style:italic";><?php echo $profile->bio; ?></span></li>
+      <li class="liother"><?php echo $txt['sidebar_bio']; ?><span class="bio";><?php echo $profile->bio; ?></span></li>
     <?php endif; ?>
 
   

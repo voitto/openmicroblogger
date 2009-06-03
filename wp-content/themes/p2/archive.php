@@ -52,8 +52,8 @@ if( have_posts( ) ) {
 if( !$formvisible && 'open' == $post->comment_status ) {
 $formvisible=1;
 ?>
-<div id="wp-temp-form-div" style="display:none">
-<div id="respond" style="display:none">
+<div id="wp-temp-form-div">
+<div id="respond">
 
 <h3><?php echo $txt['archive_reply']; ?><small id="cancel-comment-reply"><?php echo cancel_comment_reply_link() ?></small></h3>
 
