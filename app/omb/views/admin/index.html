@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<title>OpenMicroBlogger Admin</title>
-  <link type="text/css" href="<?php base_path(); ?>app/omb/views/tabs.css" rel="stylesheet" />	
+  <link type="text/css" href="<?php base_path(); ?>app/omb/views/tabs.css" rel="stylesheet" />
   	<link rel="stylesheet" href="<?php base_path(); ?>app/omb/views/admin/style.css" type="text/css">
 	<script type="text/javascript" src="<?php base_path(); ?>resource/jquery-1.2.6.min.js"></script>
 	<script type="text/javascript" src="<?php base_path(); ?>resource/jquery.ui/ui/ui.core.js"></script>
@@ -13,26 +13,26 @@
 	<script type="text/javascript">
 	$(function() {
 		$("#tabs").tabs();
-		$("#tabs").click(function() { 
-                     
+		$("#tabs").click(function() {
+
                    var b = $("#tabs").tabs('option', 'selected');
                    if (b == 4) location.href='<?php base_url(); ?>';
-                
+
                 });
 	});
 	</script>
-	
+
 </head>
 <body>
 
 
 
   <div id="tabs">
-    
+
   	<ul>
-  	  
+
   		<li><a href="#tabs-1">Admin</a></li>
-  		
+
   		<li><a href="<?php url_for(array(
   		    'resource'=>'categories',
   		    'action'=>'manage/partial'
@@ -52,8 +52,8 @@
   		<?php endif; ?>
   		<li><a href="JavaScript:top.location.href('<?php base_url(); ?>');">Return To Site</a></li>
   	</ul>
-  	
-  	
+
+
   	<script src="<?php base_path(); ?>resource/jquery.ajaxfileupload.js" type="text/javascript"></script>
 
     <script src="<?php base_path(); ?>resource/jeditable/jquery.jeditable.js" type="text/javascript"></script>
@@ -65,7 +65,7 @@
     // <![CDATA[
 
     $(document).ready(function() {
-      
+
       var submit_to = "<?php url_for(array(
         'resource'=>'settings',
         'id'=>$threadmode->id,
@@ -74,13 +74,13 @@
 
       var submit_to = "<?php echo $threadurl; ?>";
 
-      $(".editable_select_tw_text").mouseover(function() { 
+      $(".editable_select_tw_text").mouseover(function() {
           $(this).highlightFade({end:'#def'});
       });
-      $(".editable_select_tw_text").mouseout(function() { 
+      $(".editable_select_tw_text").mouseout(function() {
           $(this).highlightFade({end:'#fff', speed:200});
       });
-      $(".editable_select_tw_text").editable(submit_to, { 
+      $(".editable_select_tw_text").editable(submit_to, {
           indicator   : "<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>",
              data     : '<?php if (!class_exists("Services_JSON")) lib_include("json"); $json = new Services_JSON(); echo $json->encode( $aktwitter_tw_text_options ); ?>',
           submitdata  : function() {
@@ -98,7 +98,7 @@
             return(value);
           }
       });
-      
+
 
       var submit_to = "<?php url_for(array(
         'resource'=>'settings',
@@ -108,13 +108,13 @@
 
       var submit_to = "<?php echo $caturl; ?>";
 
-      $(".editable_select_cat_text").mouseover(function() { 
+      $(".editable_select_cat_text").mouseover(function() {
           $(this).highlightFade({end:'#def'});
       });
-      $(".editable_select_cat_text").mouseout(function() { 
+      $(".editable_select_cat_text").mouseout(function() {
           $(this).highlightFade({end:'#fff', speed:200});
       });
-      $(".editable_select_cat_text").editable(submit_to, { 
+      $(".editable_select_cat_text").editable(submit_to, {
           indicator   : "<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>",
              data     : '<?php if (!class_exists("Services_JSON")) lib_include("json"); $json = new Services_JSON(); echo $json->encode( $aktwitter_tw_text_options ); ?>',
           submitdata  : function() {
@@ -133,8 +133,8 @@
           }
       });
 
-        
-        
+
+
     });
     // ]]>
     </script>
@@ -142,7 +142,7 @@
 
 
 
-  	
+
   	<div id="tabs-1">
   		<p>
   		  OpenMicroBlogger Administration Tools
@@ -154,7 +154,7 @@
 <h4>Tags:</h4>
 </td>
 <td>
-<div class="editable_select_cat_text" id="editable_select_cat_text"></div>      
+<div class="editable_select_cat_text" id="editable_select_cat_text"></div>
 </td>
 </tr>
 <tr>
@@ -162,7 +162,7 @@
 <h4>Threaded:</h4>
 </td>
 <td>
-<div class="editable_select_tw_text" id="editable_select_tw_text"></div>      
+<div class="editable_select_tw_text" id="editable_select_tw_text"></div>
 </td>
 </tr>
 
@@ -170,12 +170,12 @@
 
 
   		</p>
-  		<ul style="list-style:none;">
-  		  <li style="padding:5px;"><a href="<?php url_for(array('resource'=>'migrate')); ?>">Update Database</a></li>
-  		  <li style="padding:5px;"><a href="<?php url_for(array('resource'=>'groups')); ?>">Rest API Permissions</a></li>
+  		<ul class="admin-settings">
+  		  <li class="admin-settings"><a href="<?php url_for(array('resource'=>'migrate')); ?>">Update Database</a></li>
+  		  <li class="admin-settings"><a href="<?php url_for(array('resource'=>'groups')); ?>">Rest API Permissions</a></li>
 		  </ul>
   	</div>
-  	
+
   </div>
 
 
@@ -186,6 +186,6 @@
 
 
 
-  
+
 
 

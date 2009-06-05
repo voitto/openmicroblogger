@@ -13,18 +13,18 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 <input name="method" type="hidden" value="post" />
 <input name="<?php print $post; ?>[parent_id]" value="0" type="hidden" />
 <input name="<?php print $post; ?>[local]" value="1" type="hidden" />
-<table border="0" style="margin-left:20px;">
+<table id="upload-table">
 
-    <tr><td colspan="2" valign="top"><p>&nbsp;</p></td></tr>
+    <tr><td class="upload-table" colspan="2"><p>&nbsp;</p></td></tr>
 
   <tr>
-    <td align="right" valign="top"><b><?php echo $txt['upload_description']; ?>&nbsp;&nbsp;</b></td>
-    <td valign="top" align="left"><textarea style="margin-left:5px;width:405px;" rows="3" cols="56" id="<?php print $post; ?>_title" name="<?php print $post; ?>[title]" maxlength="<?php echo (140 - $url_length) -1; ?>"><?php print $Member->title; ?></textarea></td>
+    <td class="upload-table2b"><?php echo $txt['upload_description']; ?>&nbsp;&nbsp;</td>
+    <td class="upload-table3"><textarea class="upload" rows="3" cols="56" id="<?php print $post; ?>_title" name="<?php print $post; ?>[title]" maxlength="<?php echo (140 - $url_length) -1; ?>"><?php print $Member->title; ?></textarea></td>
   </tr>
   
 
-  <td align="right" valign="top"><b><?php echo $txt['upload_file']; ?>&nbsp;&nbsp;</b></td>
-    <td valign="top" align="left"><input id="<?php print $post; ?>_attachment" name="<?php print $post; ?>[attachment]" type="file"></td>
+  <td  class="upload-table2b"><?php echo $txt['upload_file']; ?>&nbsp;&nbsp;</td>
+    <td class="upload-table3"><input id="<?php print $post; ?>_attachment" name="<?php print $post; ?>[attachment]" type="file"></td>
   </tr>
 
 
@@ -34,8 +34,8 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 
 
   <tr>
-    <td align="right" valign="top"><b></b></td>
-    <td valign="top" align="left"><br><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="Cancel" type="button">
+    <td class="upload-table2b"></td>
+    <td class="upload-table3"><br><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="Cancel" type="button">
 <input type="hidden" name="<?php print $post; ?>[contributor]" value="<?php print $p->given_name." ".$p->family_name; ?>">
 <input value="Upload" type="submit" name="button_group"></td>
   </tr>

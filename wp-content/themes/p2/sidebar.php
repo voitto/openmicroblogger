@@ -102,8 +102,7 @@
   </li>
   <?php if (isset($request->params['nickname'])) : ?>
     <li>
-      <p class="sidebar_updates_nickname"><?php echo $txt['sidebar_Updates']; ?>
-          <span class="profile-updates"><?php echo $count3; ?></span></p>
+      <p class="sidebar_updates_nickname"><span class="profile-updates"><?php echo $count3; ?></span><?php echo $txt['sidebar_Updates']; ?></p>
     </li>
   <?php endif; ?>
 <?php } ?>

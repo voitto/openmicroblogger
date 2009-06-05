@@ -17,24 +17,23 @@
 </td></tr>
 
   <tr>
-    <td align="right" valign="top"><b>Title</b></td>
-    <td valign="top" align="left"><input size="50" maxlength="255" id="<?php print $post; ?>_title" name="<?php print $post; ?>[title]" type="text" value="<?php print $Member->title; ?>" /></td>
+    <td class="edit-table2b">Title</td>
+    <td class="edit-table"><input size="50" maxlength="255" id="<?php print $post; ?>_title" name="<?php print $post; ?>[title]" type="text" value="<?php print $Member->title; ?>" /></td>
   </tr>
   <tr>
-    <td align="right" valign="top"><b>Body</b></td>
-    <td valign="top" align="left"><textarea rows="4" style="width:350px;" cols="40" wrap="virtual" id="<?php print $post; ?>_body" name="<?php print $post; ?>[body]"><?php print $Member->body; ?></textarea></td>
+    <td class="edit-table2b">Body</td>
+    <td class="edit-table"><textarea class="edit" rows="4" cols="40" wrap="virtual" id="<?php print $post; ?>_body" name="<?php print $post; ?>[body]"><?php print $Member->body; ?></textarea></td>
   </tr>
   <tr>
-    <td align="right" valign="top"><b>Attachment</b></td>
-    <td valign="top" align="left"><input id="<?php print $post; ?>_attachment" name="<?php print $post; ?>[attachment]" type="file" /></td>
+    <td class="edit-table2b">Attachment</td>
+    <td class="edit-table"><input id="<?php print $post; ?>_attachment" name="<?php print $post; ?>[attachment]" type="file" /></td>
   </tr>
   <tr>
-    <td align="right" valign="top"><b></b></td>
-    <td valign="top" align="left"><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="Cancel" type="button" />
+    <td class="edit-table2b"></td>
+    <td class="edit-table"><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="Cancel" type="button" />
 
 <input value="Save" type="submit" name="button_group" /></td>
   </tr>
 </table>
 </div>
 </form>
-

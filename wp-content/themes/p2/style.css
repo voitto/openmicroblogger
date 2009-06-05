@@ -942,3 +942,172 @@ margin-bottom: .3em;
 	white-space:nowrap;
 	list-style-type:none
 }
+
+/********** Edit posting **********/
+/* /app/omb/views/posts/_edit.html */
+/* /app/omb/views/pages/_edit.html */
+
+.edit-content-text {
+	vertical-align:top;
+	text-align:left;
+	font-weight:bold;
+	width:50px;
+}
+.edit-table td {
+	vertical-align:top;
+	text-align:left;
+}
+.edit-table2 td {
+	vertical-align:top;
+	text-align:right;
+}
+.edit-table2b td {
+	vertical-align:top;
+	text-align:right;
+	font-weight: bold;
+}
+.edit textarea {
+	width:350px;
+}
+
+/********** Single-Post-View (Permalink/Answer) **********/
+/* /app/omb/views/posts/_entry.html */
+
+#entry-table {
+	text-align:left;
+	padding:3px;
+	border-spacing:0;
+	border-style:none;
+	vertical-align:top;
+}
+.entry-table td {
+	text-align:right;
+}
+.entry-table2 td {
+	padding-bottom:10px;
+}
+.entry-post {
+	text-align:left;
+	vertical-align:top;
+	padding-top:1em;
+}
+.entry-avatar {
+	float:left;
+	margin-right:0.5em;
+	margin-left:0.5em;
+	width:80px;
+	height:80px;
+	border-width:thin;
+	border-color:#777;
+	border-style:solid;
+}
+#bookmark-this {
+	position:relative;
+	bottom:10px;
+}
+
+/********** New Posting **********/
+/* /app/omb/views/posts/_new.html */
+/* /app/omb/views/pages/_new.html */
+
+#new-table {
+	border-style:none;
+	margin-left:20px;
+	border-spacing:0;
+}
+.new-table td {
+	vertical-align:top;
+}
+.new-table2 td {
+	vertical-align:top;
+	text-align:right;
+}
+.new-table2b td {
+	vertical-align:top;
+	text-align:right;
+	font-weight: bold;
+}
+.new-table3 td {
+	vertical-align:top;
+	text-align:left;
+}
+.new textarea {
+	margin-left:5px;
+	width:405px;
+}
+.new2 textarea {
+	width:350px;
+}
+.new select {
+	margin-left:5px;
+}
+
+/********** Profile **********/
+/* /app/omb/views/posts/_profile.html */
+
+#profile {
+	padding:10px;
+}
+.profile-h3 {
+	margin-left:5px;
+	font-size:18px;
+	font-family: arial, helvetica, sans-serif;
+}
+.profile-img {
+	vertical-align:middle;
+	border-width:thin;
+	border-color:#777;
+	border-style:solid;
+	width:96px;
+	height:96px;
+}
+.profile-subsimg {
+	border-width:thin;
+	border-color:#777;
+	border-style:solid;
+	width:48px;
+	height:48px;
+}
+
+/********** Upload **********/
+/* /app/omb/views/posts/_upload.html */
+
+#upload-table {
+	border-style:none;
+	margin-left:20px;
+	border-spacing:0;
+}
+.upload-table td {
+	vertical-align:top;
+}
+.upload-table2 td {
+	vertical-align:top;
+	text-align:right;
+}
+.upload-table2b td {
+	vertical-align:top;
+	text-align:right;
+	font-weight: bold;
+}
+.upload-table3 td {
+	vertical-align:top;
+	text-align:left;
+}
+.upload textarea {
+	margin-left:5px;
+	width:405px;
+}
+
+/********** OMB **********/
+/* /app/omb/plugins/omp.php */
+.omb-center {
+	text-align:center;
+}
+#omb-desc {
+	text-align:left;
+	width:15em;
+	margin:0 auto;
+}
+.omb-ul {
+	padding:0px;
+}

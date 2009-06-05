@@ -13,24 +13,24 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 <input name="method" type="hidden" value="post" />
 <input name="<?php print $post; ?>[parent_id]" value="0" type="hidden" />
 <input name="<?php print $post; ?>[local]" value="1" type="hidden" />
-<table border="0" style="margin-left:20px;">
+<table id="new-table">
 
-    <tr><td colspan="2" valign="top"><p>&nbsp;</p></td></tr>
+    <tr><td class="new-table" colspan="2"><p>&nbsp;</p></td></tr>
 
   <tr>
-    <td align="right" valign="top"><b><?php echo $txt['new_status']; ?></b></td>
-    <td valign="top" align="left"><textarea style="margin-left:5px;width:405px;" rows="3" cols="56" id="<?php print $post; ?>_title" name="<?php print $post; ?>[title]"><?php print $Member->title; ?></textarea></td>
+    <td class="new-table2"><b><?php echo $txt['new_status']; ?></b></td>
+    <td class="new-table3"><textarea class="new" rows="3" cols="56" id="<?php print $post; ?>_title" name="<?php print $post; ?>[title]"><?php print $Member->title; ?></textarea></td>
   </tr>
   
   <tr>
-    <td align="right" valign="top"><b><?php echo $txt['new_article']; ?></b></td>
-    <td valign="top" align="left">
+    <td class="new-table2b"><?php echo $txt['new_article']; ?></td>
+    <td class="new-table3">
       
       
       
 
 
-      <textarea rows="4" style="width:350px;" cols="40" wrap="virtual" id="markItUp" name="<?php print $post; ?>[body]"><?php print $Member->body; ?></textarea></td>
+      <textarea rows="4" class="new2" cols="40" wrap="virtual" id="markItUp" name="<?php print $post; ?>[body]"><?php print $Member->body; ?></textarea></td>
   </tr>
         <script type="text/javascript">
         <!--
@@ -40,11 +40,11 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
         -->
         </script>
   <tr>
-  <td align="right" valign="top"><b><?php echo $txt['new_choose_file']; ?></b></td>
-    <td valign="top" align="left"><input id="<?php print $post; ?>_attachment" name="<?php print $post; ?>[attachment]" type="file"></td>
+  <td class="new-table2b"><?php echo $txt['new_choose_file']; ?></td>
+    <td class="new-table3"><input id="<?php print $post; ?>_attachment" name="<?php print $post; ?>[attachment]" type="file"></td>
   </tr>
     <tr>
-    <td colspan="2" valign="top"><p><ul><li><i><?php echo $txt['new_image']; ?></i></li><li><i><?php echo $txt['new_movie']; ?></i></li><li><i><?php echo $txt['new_audio']; ?></i></li></ul></p></td>
+    <td colspan="2" class="new-table"><p><ul><li><i><?php echo $txt['new_image']; ?></i></li><li><i><?php echo $txt['new_movie']; ?></i></li><li><i><?php echo $txt['new_audio']; ?></i></li></ul></p></td>
   </tr>
 
 
@@ -57,8 +57,8 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 ?>
 
   <tr>
-    <td align="right" valign="top"><b><?php echo $txt['new_categories']; ?></b></td>
-    <td valign="top" align="left"><select style="margin-left:5px;" size="6" name="category0">
+    <td class="new-table2b"><?php echo $txt['new_categories']; ?></td>
+    <td class="new-table3"><select class="new" size="6" name="category0">
       <?php while ( $c = $Category->MoveNext() ) : ?>
         <option><?php print $c->name; ?></option>
       <?php endwhile; ?>
@@ -69,8 +69,8 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 
 
   <tr>
-    <td align="right" valign="top"><b></b></td>
-    <td valign="top" align="left"><br><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="Cancel" type="button">
+    <td class="new-table2b"></td>
+    <td class="new-table3"><br><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="Cancel" type="button">
 <input type="hidden" name="<?php print $post; ?>[contributor]" value="<?php print $p->given_name." ".$p->family_name; ?>">
 <input value="Submit Post" type="submit" name="button_group"></td>
   </tr>

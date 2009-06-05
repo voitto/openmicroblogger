@@ -824,7 +824,7 @@ function oauth_authorize( &$vars ) {
         header('Location: '.urldecode($_GET['oauth_callback']),true,303);
       } else {
         //get_header();
-        echo '<h2 style="text-align:center;">You chose to cancel authorization.  You may now close this window.</h2>';
+        echo '<h2 class="omb-center">You chose to cancel authorization.  You may now close this window.</h2>';
         //get_footer();
       }//end if-else callback
       exit;
@@ -890,7 +890,7 @@ function oauth_authorize( &$vars ) {
       header('Location: '.urldecode($_GET['oauth_callback']).$profileparams,true,303);
     } else {
       //get_header();
-      echo '<h2 style="text-align:center;">Authorized!  You may now close this window.</h2>';
+      echo '<h2 class="omb-center">Authorized!  You may now close this window.</h2>';
       //get_footer();
     }//end if-else callback
     exit;
@@ -904,11 +904,11 @@ function oauth_authorize( &$vars ) {
     if($description) $description = 'Allow '.$description.' to post notices to your account?';
       else $description = 'Click &quot;allow&quot; to authorize messages from the remote site.';
     ?>
-    <div style="text-align:center;">
+    <div class="omb-center">
       <h2><?php echo $description; ?></h2>
       <form method="post" action=""><div>
-        <div style="text-align:left;width:15em;margin:0 auto;">
-          <ul style="padding:0px;">
+        <div id="omb-desc">
+          <ul class="omb-ul">
         <?php
           $services = get_option('oauth_services');
           //foreach($services as $k => $v)

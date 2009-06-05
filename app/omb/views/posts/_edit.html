@@ -18,22 +18,22 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 </td></tr>
 
   <tr>
-    <td align="right" valign="top"><b><?php echo $txt['edit_title']; ?></b></td>
-    <td valign="top" align="left"><textarea rows="3" style="width:350px;" cols="40" wrap="virtual" id="<?php print $post; ?>_title" name="<?php print $post; ?>[title]"><?php print $Member->title; ?></textarea></td>
+    <td class="edit-content-text"><?php echo $txt['edit_title']; ?></td>
+    <td class="edit-table"><textarea class="edit" rows="3" cols="40" wrap="virtual" id="<?php print $post; ?>_title" name="<?php print $post; ?>[title]"><?php print $Member->title; ?></textarea></td>
   </tr>
   <?php if (!is_microblog_theme()) : ?>
   <tr>
-    <td align="right" valign="top"><b><?php echo $txt['edit_body']; ?></b></td>
-    <td valign="top" align="left"><textarea rows="6" style="width:350px;" cols="40" wrap="virtual" id="<?php print $post; ?>_body" name="<?php print $post; ?>[body]"><?php print $Member->body; ?></textarea></td>
+    <td class="edit-content-text"><?php echo $txt['edit_body']; ?></td>
+    <td class="edit-table"><textarea rows="6" cols="40" wrap="virtual" id="<?php print $post; ?>_body" name="<?php print $post; ?>[body]"><?php print $Member->body; ?></textarea></td>
   </tr>
   <?php endif; ?>
   <tr>
-    <td align="right" valign="top"><b><?php echo $txt['edit_attachment']; ?></b></td>
-    <td valign="top" align="left"><input id="<?php print $post; ?>_attachment" name="<?php print $post; ?>[attachment]" type="file" /></td>
+    <td class="edit-content-text"><?php echo $txt['edit_attachment']; ?></td>
+    <td class="edit-table"><input id="<?php print $post; ?>_attachment" name="<?php print $post; ?>[attachment]" type="file" /></td>
   </tr>
   <tr>
-    <td align="right" valign="top"><b></b></td>
-    <td valign="top" align="left"><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="<?php echo $txt['edit_button_cancel']; ?>" type="button" />
+    <td class="edit-content-text"><b></b></td>
+    <td class="edit-table"><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="<?php echo $txt['edit_button_cancel']; ?>" type="button" />
 
 <input value="<?php echo $txt['edit_button_save']; ?>" type="submit" name="button_group" /></td>
   </tr>

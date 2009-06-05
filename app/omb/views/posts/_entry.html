@@ -5,26 +5,26 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
   $post = strtolower(classify($request->resource));
 
 ?>
-<table align="center" cellpadding="3" cellspacing="0" border="0"><tr><td colspan="2"><br></td></tr>
+<table id="entry-table"><tr><td colspan="2"><br></td></tr>
 <tr>
-  <td align="right"><p></p></td>
-  <td style="padding-bottom: 10px;">
+  <td class="entry-table"><p></p></td>
+  <td class="entry-table2">
   <?php $author = get_profile($Member->profile_id); ?>
   <h3><a href="<?php url_for(array('resource'=>$author->nickname)); ?>"><?php print $author->nickname."</a> ".time_of($Member->created); ?></h3>
   </td>
 </tr>
 
    <tr>
-<td align="right"><p></p></td>
-  <td><h3>
-  <img src="<?php echo $author->avatar; ?>" alt="image" style="float: left; margin-right:5px; margin-left: 1em; width:80px; height:80px;" />
+<td class="entry-table"><p></p></td>
+  <td class="entry-post"><h3>
+  <img class="entry-avatar" src="<?php echo $author->avatar; ?>" alt="image" />
     <?php print render_notice( $Member->title, $Member, $profile ); ?>
   <br><br></h3></td>
 </tr>
 
    <tr>
-<td align="right"></td>
-  <td>
+<td class="entry-table"></td>
+  <td class="entry-post">
   <?php print $Member->body ?>
   </td>
 </tr>
@@ -32,7 +32,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 <?php if ($Member->attachment) : ?>
 
 <tr>
-  <td align="right"><p></p></td>
+  <td class="entry-table"><p></p></td>
   <td>
     
     <?php if (extension_for($Entry->content_type) == 'mp3') : ?>
@@ -243,7 +243,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 <br />
 <br />
 <br />
-<div style="position:relative; bottom:10px;">
+<div id="bookmark-this">
 <h3>Bookmark this:</h3> 
 <a href="http://blogmarks.net/my/new.php?mini=1&simple=1&url=<?php print urlencode($request->uri); ?>&title=<?php print urlencode($Member->title); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/blogmarks.gif" border="0" title="Bookmark to Blogmarks!" alt="Bookmark to Blogmarks!"></a>
 <a href="http://del.icio.us/post?url=<?php print urlencode($request->uri); ?>&title=<?php print urlencode($Member->title); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/delicious.gif" border="0" title="Bookmark to Del.icio.us!" alt="Bookmark to Del.icio.us!"></a>
