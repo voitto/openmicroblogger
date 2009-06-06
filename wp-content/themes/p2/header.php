@@ -44,6 +44,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 			<?php if(get_bloginfo('description')) : ?><small><?php bloginfo( 'description' ); ?></small><?php endif; ?>
 
 	</div>
+<div id="header-round">
 <ul class="omb_nav">
 <li id="nav_home">
 <a href="<?php base_url(); ?>" title="<?php echo $txt['header_home']; ?>"><?php echo $txt['header_home']; ?></a>
@@ -92,8 +93,8 @@ $profile= get_profile();
 <?php endif; ?>
 </ul>
 
+</div><br /><br />
 </div>
-
 
 
 <div id="wrapper">

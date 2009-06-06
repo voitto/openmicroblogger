@@ -11,23 +11,20 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 <div>
 <input name="method" type="hidden" value="delete" />
 <input name="entry[etag]" type="hidden" value="<?php print $Entry->etag; ?>" />
-<table border="0">
 
-<tr><th colspan="2">
-<?php breadcrumbs(); ?>
-</th></tr>
+<?php breadcrumbs(); ?><br /><br />
+<?php $author = get_profile($Member->profile_id); ?>
 
-  <tr>
-    <td align="right" valign="top"><b><BR><BR></b></td>
-    <td valign="top" align="left"><BR><BR><?php print $Member->title; ?><BR><BR></td>
+  <h3><a href="<?php url_for(array('resource'=>$author->nickname)); ?>"><?php print $author->nickname."</a> ".time_of($Member->created); ?></h3>
 
-  <tr>
-    <td align="right" valign="top"><b></b></td>
-    <td valign="top" align="left"><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="<?php echo $txt['remove_button_cancel']; ?>" type="button" />
+<div id="remove-msg">
+  <img class="remove-avatar" src="<?php echo $author->avatar; ?>" alt="image" />
+    <h3><?php print render_notice( $Member->title, $Member, $profile ); ?></h3>
+</div>
+<br /><br />
+    <input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="<?php echo $txt['remove_button_cancel']; ?>" type="button" />
 
-<input value="<?php echo $txt['remove_button_delete']; ?>" type="submit" name="button_group" /></td>
-  </tr>
-</table>
+<input value="<?php echo $txt['remove_button_delete']; ?>" type="submit" name="button_group" />
 </div>
 </form>
 

@@ -219,7 +219,7 @@ $txt['pages_entry_members_forum'] = "Mitglieder dieses Forums";
 /////////////////////////////////////
 # /app/omb/views/posts/_edit.html
 /////////////////////////////////////
-$txt['edit_title'] = "Titel";
+$txt['edit_title'] = "Bearbeite deinen Eintrag";
 $txt['edit_body'] = "Weiterer Text";
 $txt['edit_attachment'] = "Anhang";
 $txt['edit_button_cancel'] = "Abbrechen";

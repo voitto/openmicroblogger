@@ -3,73 +3,44 @@
 
 <?php if (environment('authentication') == 'password') : ?>
 
-
-<table cellpadding="0" cellspacing="0" border="0" width="770" align="center" style="margin-top: 30px;">
-<tr>
-  <td class="content">
-  
+  <div id="register">
   <form name="login" action="<?php url_for('password_register'); ?>" method="post">
 
-  <input name="method" value="password_register" type="hidden" />
+      <input name="method" value="password_register" type="hidden" />
 
-  <input type="hidden" name="url" value="" />
+      <input type="hidden" name="url" value="" />
 
-    <table cellpadding="5" cellspacing="0" border="0" align="center" width="500">
-    <tr>
-      <td height="40" align="center" colspan="2">Create a new username and password:</td>
-    </tr>
-    <tr>
-      <td height="10" colspan="2"></td>
-    </tr>
-    <tr>
-      <td width="170" height="30" align="right">Username:</td>
-      <td><input type="text" maxlength="30" name="nickname" value="" style="width: 180px;" /></td>
-    </tr>
-    <tr>
-      <td width="170" height="30" align="right">Password:</td>
-      <td><input type="password" maxlength="30" name="password" style="width: 180px;" /></td>
-    </tr>
-    <tr>
-      <td width="170" height="30" align="right">Password (again):</td>
-      <td><input type="password" maxlength="30" name="password2" style="width: 180px;" /></td>
-    </tr>
-    <tr height="30" style="display: none;">
-      <td>&nbsp;</td>
-      <td>
-        <input type="checkbox" name="remember" id="remember" value="true" />
-        <label for="remember">
-          Remember Me
-        </label>
-      </td>
-    </tr>
-    <tr height="30">
-      <td>&nbsp;</td>
-      <td><input type="submit" name="submit" value="Register" style="width: 180px; font-size: 10px; text-transform: uppercase; color: #003366; border: 1px solid #336699; background-color: #DDDDDD; padding: 3px;" /></td>
-    </tr>
-    <tr>
-      <td height="10" colspan="2"></td>
-    </tr>
-    </table>
+      <h3>Create a new username and password</h3><br />
+
+      <div id="register-right"><span class="register-b">Username:</span>
+      <input class="register-input" type="text" maxlength="30" name="nickname" value="" /></div>
+      <br /><br />
+
+      <div id="register-right"><span class="register-b">Password:</span>
+      <input class="register-input" type="password" maxlength="30" name="password" /></div>
+      <br /><br />
+      
+      <div id="register-right"><span class="register-b">Password (again):</span>
+      <input class="register-input" type="password" maxlength="30" name="password2" /></div>
+      <br />
+    <div id="register-right2">
+      <input type="checkbox" name="remember" id="remember" value="true" />
+      <label for="remember">Remember Me</label><br />
+      <input type="submit" name="submit" value="Register" />
+    </div>
   </form>
   
-  <center>
      <a href="">Forgot your password?</a>
-  </center>
-
-  </td>
-</tr>
-</table>
-
-
+</div>
 <?php else : ?>
 
 
 <form method="post" action="<?php print $submit_url; ?>">
 
 <?php $key = environment('twitterKey'); if (!empty($key)) : ?>
-    <br><p><a href="<?php url_for('oauth_login'); ?>">Sign in with your Twitter Account...</a></p><br>
+    <br /><p><a href="<?php url_for('oauth_login'); ?>">Sign in with your Twitter Account...</a></p><br />
     <?php endif; ?>
-    <p><a href="<?php url_for('openid_login'); ?>">Sign in with your OpenID...</a></p><br>
+    <p><a href="<?php url_for('openid_login'); ?>">Sign in with your OpenID...</a></p><br />
   <p>Sign in with your E-Mail Address:</p>
 
 

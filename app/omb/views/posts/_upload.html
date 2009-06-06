@@ -13,33 +13,19 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 <input name="method" type="hidden" value="post" />
 <input name="<?php print $post; ?>[parent_id]" value="0" type="hidden" />
 <input name="<?php print $post; ?>[local]" value="1" type="hidden" />
-<table id="upload-table">
 
-    <tr><td class="upload-table" colspan="2"><p>&nbsp;</p></td></tr>
 
-  <tr>
-    <td class="upload-table2b"><?php echo $txt['upload_description']; ?>&nbsp;&nbsp;</td>
-    <td class="upload-table3"><textarea class="upload" rows="3" cols="56" id="<?php print $post; ?>_title" name="<?php print $post; ?>[title]" maxlength="<?php echo (140 - $url_length) -1; ?>"><?php print $Member->title; ?></textarea></td>
-  </tr>
+    <?php echo $txt['upload_description']; ?>&nbsp;&nbsp;
+    <textarea class="upload" rows="3" cols="56" id="<?php print $post; ?>_title" name="<?php print $post; ?>[title]" maxlength="<?php echo (140 - $url_length) -1; ?>"><?php print $Member->title; ?></textarea>
   
 
-  <td  class="upload-table2b"><?php echo $txt['upload_file']; ?>&nbsp;&nbsp;</td>
-    <td class="upload-table3"><input id="<?php print $post; ?>_attachment" name="<?php print $post; ?>[attachment]" type="file"></td>
-  </tr>
+    <?php echo $txt['upload_file']; ?>&nbsp;&nbsp;
+    <input id="<?php print $post; ?>_attachment" name="<?php print $post; ?>[attachment]" type="file">
 
 
-
-
-
-
-
-  <tr>
-    <td class="upload-table2b"></td>
-    <td class="upload-table3"><br><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="Cancel" type="button">
+    <br><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="Cancel" type="button">
 <input type="hidden" name="<?php print $post; ?>[contributor]" value="<?php print $p->given_name." ".$p->family_name; ?>">
-<input value="Upload" type="submit" name="button_group"></td>
-  </tr>
-</table>
+<input value="Upload" type="submit" name="button_group">
 </div>
 </form>
 <br>

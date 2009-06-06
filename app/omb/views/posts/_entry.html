@@ -5,35 +5,20 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
   $post = strtolower(classify($request->resource));
 
 ?>
-<table id="entry-table"><tr><td colspan="2"><br></td></tr>
-<tr>
-  <td class="entry-table"><p></p></td>
-  <td class="entry-table2">
+
   <?php $author = get_profile($Member->profile_id); ?>
   <h3><a href="<?php url_for(array('resource'=>$author->nickname)); ?>"><?php print $author->nickname."</a> ".time_of($Member->created); ?></h3>
-  </td>
-</tr>
 
-   <tr>
-<td class="entry-table"><p></p></td>
-  <td class="entry-post"><h3>
+<div id="entry-msg">
   <img class="entry-avatar" src="<?php echo $author->avatar; ?>" alt="image" />
-    <?php print render_notice( $Member->title, $Member, $profile ); ?>
-  <br><br></h3></td>
-</tr>
+    <h3><?php print render_notice( $Member->title, $Member, $profile ); ?></h3>
+</div>
+  <br><br>
 
-   <tr>
-<td class="entry-table"></td>
-  <td class="entry-post">
   <?php print $Member->body ?>
-  </td>
-</tr>
 
 <?php if ($Member->attachment) : ?>
 
-<tr>
-  <td class="entry-table"><p></p></td>
-  <td>
     
     <?php if (extension_for($Entry->content_type) == 'mp3') : ?>
     
@@ -99,35 +84,25 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
     </OBJECT>
     
     <?php endif; ?>
-    
-    
-  </td>
-</tr>
+
 <?php endif; ?>
 
 
 
-   <tr>
-<td align="right"><p></p></td>
-  <td>
-  <table align="center" cellpadding="3" cellspacing="0" border="0">
   <?php global $request; ?>
   <?php $Post =& $db->model(tableize($request->resource)); $Post->has_one('profile_id:identities'); $Post->find_by('parent_id',$Member->id); ?>
   <?php while ($c = $Post->MoveNext()) : ?>
   <?php $replyauthor = $c->FirstChild('identities'); ?>
-  <tr><td>
+
   <?php
     $current_user_id = get_the_author_ID( );
     echo prologue_get_avatar( $current_user_id, get_the_author_email( ), 48 );
   ?>
-  <?php echo "<p><font size=\"-1\">".'reply by '.$replyauthor->nickname."&nbsp; ".time_of($c->created)."</font></p></td></tr><tr><td><p>".htmlentities($c->title)."</p><br>"; ?>
-  </td></tr>
-  <?php endwhile; ?>
-  </table>
-  </td>
-</tr>
+  <?php echo "<p><font size=\"-1\">".'reply by '.$replyauthor->nickname."&nbsp; ".time_of($c->created)."</font></p><p>".htmlentities($c->title)."</p><br>"; ?>
 
-<tr><td colspan="2">
+  <?php endwhile; ?>
+
+
 <?php $Review =& $db->model('Review'); $Review->has_one('profile_id:identities'); $Review->find_by('target_id',$Entry->id); ?>
 
 <?php while ( $r = $Review->MoveNext()) : ?>
@@ -135,20 +110,19 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 <?php $i = 0; ?>
 
 <?php while ($i < $r->rating) : ?>
-<img src="<?php echo base_path(true).$request->layout_path; ?>reviews/full_star.gif" alt="*">
+<img src="<?php echo base_path(true).$request->layout_path; ?>reviews/full_star.gif" alt="*" />
 <?php $i++; ?>
 <?php endwhile; ?>
 
 <?php while ($i < 5) : ?>
-<img src="<?php echo base_path(true).$request->layout_path; ?>reviews/empty_star.gif" alt="">
+<img src="<?php echo base_path(true).$request->layout_path; ?>reviews/empty_star.gif" alt="" />
 <?php $i++; ?>
 <?php endwhile; ?>
-<?php print "<font size=\"-1\">".$reviewer->nickname." ".time_of($r->created)."</font><br>"; ?>
+<?php print "".$reviewer->nickname." ".time_of($r->created)."<br />"; ?>
 
 <?php endwhile; ?>
 
 <br />
-</td></tr>
 
 
 <?php if (signed_in()) : ?>
@@ -164,7 +138,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 
 
 
-<tr><td colspan="2"><h3><?php echo $txt['entry_reply']; ?>:</h3>
+<h3><?php echo $txt['entry_reply']; ?>:</h3>
 
 <form name="replypost" method="post" action="<?php url_for(array('resource'=>$request->resource)); ?>">
 <input type="hidden" name="method" value="post">
@@ -177,10 +151,9 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 </form>
 
 <br />
-</td></tr>
 
 
-<tr><td colspan="2"><h3><?php echo $txt['entry_rating']; ?>:</h3>
+<h3><?php echo $txt['entry_rating']; ?>:</h3>
 <form name="reviewpost" method="post" action="<?php url_for(array('resource'=>'reviews')); ?>">
 <input type="hidden" name="method" value="post">
 
@@ -190,10 +163,10 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 <input type="radio" name="review[rating]" value="<?php print ($i+1); ?>">
 <?php $j = 0; ?>
 <?php while ($j < $i+1) : ?>
-<img src="<?php echo base_path(true).$request->layout_path; ?>reviews/full_star.gif" alt="*">
+<img src="<?php echo base_path(true).$request->layout_path; ?>reviews/full_star.gif" alt="*" />
 <?php $j++; ?>
 <?php endwhile; ?>
-<BR>
+<br />
 <?php $i++; ?>
 <?php endwhile; ?>
 
@@ -206,36 +179,27 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 
 <?php else : ?>
 
-<tr><td colspan="2">
-	<p><b><a href="<?php url_for( 'email_login' ); ?>"><?php echo $txt['entry_sign_in']; ?></a><?php echo $txt['entry_to_post_a_reply']; ?></b></p>
-</td></tr>
+	<p><a href="<?php url_for( 'email_login' ); ?>"><?php echo $txt['entry_sign_in']; ?></a><?php echo $txt['entry_to_post_a_reply']; ?></p>
 
 
 <?php endif; ?>
 
 
 <?php if (!public_resource()) : ?>
-</td></tr>
 
-   <tr>
-   <td align="right"><p></p></td>
-  <td>
   <?php $arr = resource_group_members(); ?>
   
   <p><?php echo $txt['entry_members_forum']; ?>:</p>
   
   <?php foreach ( $arr as $member_ident ) : ?>
 
-  <p><font size="-1"><?php print $member_ident->given_name." ".$member_ident->url.""; ?></font></p>
+  <p><?php print $member_ident->given_name." ".$member_ident->url.""; ?></p>
   
   <?php endforeach; ?>
   
-  </td>
-</tr>
 
 <?php endif; ?>
 
-<tr><td colspan="2">
 
 
 <?php if (public_resource()) : ?>
@@ -268,10 +232,6 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 <?php endif; ?>
 
 
-
-  </td>
-</tr>
-
  <script type="text/javascript">
     	// <![CDATA[
   
@@ -279,7 +239,3 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
     
     	// ]]>
     </script>
-    
-
-
-</table>

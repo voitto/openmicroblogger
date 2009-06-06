@@ -4,59 +4,36 @@
 <?php if (environment('authentication') == 'password') : ?>
 
 
-<table cellpadding="0" cellspacing="0" border="0" width="770" align="center" style="margin-top: 30px;">
-<tr>
-  <td class="content">
-  
+<div id="email-login">
+
   <form name="login" action="<?php print $submit_url; ?>" method="post">
 
   <input name="method" value="password_submit" type="hidden" />
 
   <input type="hidden" name="url" value="" />
 
-    <table cellpadding="5" cellspacing="0" border="0" align="center" width="500">
-    <tr>
-      <td height="40" align="center" colspan="2">Please enter your username and password below</td>
-    </tr>
-    <tr>
-      <td height="10" colspan="2"></td>
-    </tr>
-    <tr>
-      <td width="170" height="30" align="right">Username:</td>
-      <td><input type="text" maxlength="30" name="nickname" value="" style="width: 180px;" /></td>
-    </tr>
-    <tr>
-      <td width="170" height="30" align="right">Password:</td>
-      <td><input type="password" maxlength="30" name="password" style="width: 180px;" /></td>
-    </tr>
-    <tr height="30" style="display: none;">
-      <td>&nbsp;</td>
-      <td>
+    <h3>Please enter your username and password below</h3>
+      <br />
+
+      <div id="email-login-right"><span class="email-login-b">Username:</span>
+      <input class="email-login-input" type="text" maxlength="30" name="nickname" value="" /></div>
+      <br />
+
+      <div id="email-login-right"><span class="email-login-b">Password:</span>
+      <input class="email-login-input" type="password" maxlength="30" name="password" /></div>
+      <br />
+
+      <div id="email-login-right2">
         <input type="checkbox" name="remember" id="remember" value="true" />
-        <label for="remember">
-          Remember Me
-        </label>
-      </td>
-    </tr>
-    <tr height="30">
-      <td>&nbsp;</td>
-      <td><input type="submit" name="submit" value="Login" style="width: 180px; font-size: 10px; text-transform: uppercase; color: #003366; border: 1px solid #336699; background-color: #DDDDDD; padding: 3px;" /></td>
-    </tr>
-    <tr>
-      <td height="10" colspan="2"></td>
-    </tr>
-    </table>
+          <label for="remember">Remember Me</label>
+
+        <input class="email-login" type="submit" name="submit" value="Login" />
+
   </form>
-  
-  <center>
-    <a href="">Forgot your password?</a>
-
-  </center>
-
-  </td>
-</tr>
-</table>
-
+        <br />
+        <a href="">Forgot your password?</a>
+    </div>
+</div>
 
 <?php else : ?>
 
