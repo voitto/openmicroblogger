@@ -6,7 +6,7 @@
 
 <?php global $request; ?>
 
-<?php if (get_app_id() && !(environment('categories'))) : ?>
+<?php if (get_app_id()) : ?>
 
   <?php
 
@@ -180,8 +180,9 @@
   </p>
 <?php } ?>
 
+<?php endif; ?>
 
-<?php else : ?>
+<?php if (environment('categories')) : ?>
   
 <?php 
 if( !function_exists('dynamic_sidebar') || !dynamic_sidebar() ) { 

@@ -2034,7 +2034,7 @@ function dynamic_sidebar() {
   if (environment('categories') && !empty($blocks) && !$sidebar_done && $request->resource == 'posts') {
     foreach ($blocks as $b) {
       // if it's the prologue theme, don't show PAGES in sidebar
-      if (!($b == 'pages' && environment('theme') == 'prologue-theme')){
+      if (!($b == 'pages' && is_microblog_theme())) {
         //$renderpartial = true;
         if (isset($renderpartial)) {
           // this would be better/faster, but not working yet
