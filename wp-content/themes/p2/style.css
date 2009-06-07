@@ -494,22 +494,21 @@ h2 a.rss:hover {
 	width: auto;
 	background: white;
 }
+
+/********** SIDEBAR **********/
 #sidebar {
 	color: #555;
 	margin-left: 544px;
 	float: right;
-	width: 220px;
+	width: 236px;
 	position: absolute;
 	top: 0;
-	padding: 6px 18px 18px 18px;
+	padding: 10px;
 	/* Sidebar Background-Color */
 	background-color: #f7f7f7;
 	height: 100%;
 	overflow:hidden;
-}
-#sidebar #sidebar-table {
-	border:0;
-	margin-left:-10px;
+	font-size:1.3em;
 }
 #sidebar img.profile {
 	vertical-align:middle;
@@ -517,7 +516,7 @@ h2 a.rss:hover {
 	height:32px;
 }
 #sidebar a.profile-nick {
-font-size:20px;
+font-size:1.7em;
 margin-left:8px;
 }
 #sidebar h2 {
@@ -526,24 +525,27 @@ margin-left:8px;
 	font-size: 1.7em;
 	margin-bottom: 6px;
 }
-#sidebar li.liname {
-font-weight:bold;
+#sidebar p.liname {
+	font-weight:bold;
+	font-size:1.3em;
+	margin: 0em 0em 1.5em 0em;
 }
-#sidebar li.liother {
+#sidebar p.liother {
 	font-weight:normal;
-	font-size:0.8em;
+	margin: 1.5em 0em 1.5em 0em;
 }
-#sidebar li.greeting {
-font-weight:bold;
+#sidebar p.greeting {
+	font-weight:bold;
+	margin: 1em 0em 1.5em 0em;
 }
-#sidebar li.greeting-italic {
-font-weight:normal;
-font-size:1.0em;
-font-style:italic
+#sidebar p.greeting-italic {
+	font-weight:normal;
+	font-style:italic
+	margin: 1.5em 0em 1.5em 0em;
 }
-#sidebar li.greeting-normal {
-font-weight:normal;
-font-size:1.0em;
+#sidebar p.greeting-normal {
+	font-weight:normal;
+	margin: 1.5em 0em 1.5em 0em;
 }
 #sidebar span.bio {
 	font-style:italic
@@ -554,73 +556,54 @@ font-size:1.0em;
 #sidebar a.rss {
 	float:left;
 }
-#sidebar ul li p {
-	line-height: 1.4em;
-	margin-bottom: 1.5em;
-}
-
 #sidebar a:hover {
 	border-bottom: none;
 }
-#sidebar ul {
-	list-style: none;
-	margin-bottom: 22px;
-	color: #888;
-	font-size: 1.3em;
-}
-#sidebar ul ul {
-margin-bottom: 0px;
-}
-#sidebar ul li {
-	clear: both;
-	padding: 4px 0 24px;
-	font-size: 1em;
-}
-#sidebar ul li ul li {
-	padding-bottom: 4px;
-	padding-right: 6px;
-}
-#sidebar ul li ul li ul {
-	margin-left: 10px;
-	font-size: 1em;
-}
-#sidebar td {
-	font-weight:bold;
-	font-size:16px;
-	padding-left:10px
+
+#sidebar #sidebar-posts-stats {
+	margin:0px auto;
+	text-align:center;
 }
 
-#sidebar td.sidebar_subscriptions_count {
-	font-size:1.4em;
-	font-weight:bold;
+#sidebar #sidebar-posts-stats #sidebar-subscribers {
+float:left;
+width:33%;
 }
-#sidebar td.sidebar_subscribers_count {
-	font-weight:bold;
-	font-size:1.4em;
-	padding-left:10px;
+#sidebar .sidebar_subscribers {
+	font-weight:normal;
 }
-#sidebar td.sidebar_updates_count {
+#sidebar .sidebar_subscribers_count {
 	font-weight:bold;
 	font-size:1.4em;
-	padding-left:10px;
 }
-#sidebar td.sidebar_subscribers {
+
+#sidebar #sidebar-posts-stats #sidebar-subscriptions {
+float:left;
+width:33%;
+}
+#sidebar .sidebar_subscriptions {
 	font-weight:normal;
-	font-size:1em;
 }
-#sidebar td.sidebar_subscriptions {
+#sidebar .sidebar_subscriptions_count {
+	font-weight:bold;
+	font-size:1.4em;
+}
+
+#sidebar #sidebar-posts-stats #sidebar-updates {
+float:left;
+width:33%;
+}
+#sidebar .sidebar_updates_count {
+	font-weight:bold;
+	font-size:1.4em;
+}
+#sidebar .sidebar_updates {
 	font-weight:normal;
-	font-size:1em;
-	padding-left:10px;
 }
-#sidebar td.sidebar_updates {
-	font-weight:normal;
-	font-size:1em;
-	padding-left:10px;
-}
+
 #sidebar p.sidebar_updates_nickname {
 	font-weight:bold;
-	font-size:1.1em;
+	margin: 1.5em 0em 1.5em 0em;
 }
 
 #sidebar ul li#authors ul li {
@@ -651,6 +634,9 @@ margin-bottom: 0px;
 #sidebarclear {
 	clear: both;
 }
+/***********/
+
+
 #recent-comments .avatar {
 	height: 32px;
 	width: 32px;
@@ -1141,4 +1127,13 @@ hover:none;
 
 .pass-set-b {
 	font-weight:bold;
+}
+
+
+/********** Sidebar Settings **********/
+/* /app/omb/views/identities/_admin.html */
+
+.liother {
+	font-weight:normal;
+	margin: 1.5em 0em 1.5em 0em;
 }

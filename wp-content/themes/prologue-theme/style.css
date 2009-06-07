@@ -576,3 +576,12 @@ hover:none;
 .pass-set-b {
 	font-weight:bold;
 }
+
+
+/********** Sidebar Settings **********/
+/* /app/omb/views/identities/_admin.html */
+
+.liother {
+	font-weight:normal;
+	margin: 1.5em 0em 1.5em 0em;
+}
