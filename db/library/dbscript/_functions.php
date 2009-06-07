@@ -80,26 +80,26 @@ function dbscript_error( $errno, $errstr, $errfile, $errline ) {
       if (isset($_GET['dbscript_xml_error_continue'])) {
         $xml = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
         $xml .= "<root>\n";
-        $xml .= "  <dbscript_error>Fatal error in line $errline of file $errfile<br>: $errstr</dbscript_error>\n";
+        $xml .= "  <dbscript_error>Fatal error in line $errline of file $errfile<br />: $errstr</dbscript_error>\n";
         $xml .= "</root>\n";
         print $xml;
       } elseif ($req->error) {
         $req->handle_error( $errstr );
-        print "<b>ERROR</b> [$errno] $errstr<br>\n";
-        print "  Fatal error in line $errline of file $errfile<br>\n";
-        print "Aborting...<br>\n";
+        print "<b>ERROR</b> [$errno] $errstr<br />\n";
+        print "  Fatal error in line $errline of file $errfile<br />\n";
+        print "Aborting...<br />\n";
       } else {
         print "<br /><br />$errstr<br /><br />\n";
         print "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<form><input type=\"submit\" value=\"&lt; &lt; Go Back\" onClick=\"JavaScript:document.history.back();\" /></form>";
         if (environment('debug_enabled'))
-          print "  Fatal error in line $errline of file $errfile<br>\n";
+          print "  Fatal error in line $errline of file $errfile<br />\n";
       }
       exit(1);
     case E_USER_WARNING:
-      print "<b>WARNING</b> [$errno] $errstr<br>\n";
+      print "<b>WARNING</b> [$errno] $errstr<br />\n";
       break;
     case E_USER_NOTICE:
-      print "<b>NOTICE</b> [$errno] $errstr<br>\n";
+      print "<b>NOTICE</b> [$errno] $errstr<br />\n";
   }
 }
 
@@ -127,7 +127,7 @@ function trigger_before( $func, &$obj_a, &$obj_b ) {
     $time_end = microtime_float();
     $time = $time_end - $exec_time;
     $diff = substr($time,1,5);
-    echo "$diff seconds <BR>$func ";
+    echo "$diff seconds <br />$func ";
   }
   if ( isset( $GLOBALS['ASPECTS']['before'][$func] ) ) {
     foreach( $GLOBALS['ASPECTS']['before'][$func] as $callback ) {
@@ -594,7 +594,7 @@ function fetch_blob( $value, $return ) {
   
 function template_exists( &$request, $extension, $template ) {
   #if ($template == 'introspection') print 'ye';
-  #print "template_exists $template ".$extension."<br>";
+  #print "template_exists $template ".$extension."<br />";
   
   $view = $request->get_template_path( $extension, $template );
   
@@ -2039,7 +2039,7 @@ function unzip($dir, $file, $verbose = 0) {
                      $name = "$dir_path/$name"; 
                      
                      if ($verbose)
-                       echo "extracting: $name<br>";
+                       echo "extracting: $name<br />";
                        
                    $stream = fopen($name, "w");
                    fwrite($stream, $data);
@@ -2359,7 +2359,7 @@ function migrate() {
     if ($model)
       $model->migrate();
   
-  echo "<BR>The database schema is now synced to the data models. <a href=\"".$request->url_for('admin')."\">Return to Admin</a><BR><BR>";
+  echo "<br />The database schema is now synced to the data models. <a href=\"".$request->url_for('admin')."\">Return to Admin</a><br /><br />";
   exit;
   
 }

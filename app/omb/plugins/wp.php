@@ -259,7 +259,7 @@ class wpdb {
     if ( $this->last_result[$y] ) {
       $values = array_values(get_object_vars($this->last_result[$y]));
     } else {
-      //echo "<BR><BR>QUERY FAILED -- ".$query."<BR><BR>";
+      //echo "<br /><br />QUERY FAILED -- ".$query."<br /><br />";
     }
     return (isset($values[$x]) && $values[$x]!=='') ? $values[$x] : null;
   }

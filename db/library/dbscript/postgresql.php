@@ -493,7 +493,7 @@ class PostgreSQL extends Database {
   function add_field( $table, $field, $data_type ) {
     trigger_before( 'add_field', $this, $this );
     $sql = "ALTER TABLE $this->prefix.$table ADD COLUMN $field $data_type";
-    echo $sql."<BR>";
+    echo $sql."<br />";
     $result = $this->get_result($sql);
   }
   function has_table($t) {

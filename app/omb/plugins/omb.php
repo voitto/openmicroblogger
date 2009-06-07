@@ -628,7 +628,7 @@ function oauth_omb_subscribe( &$vars ) {
   $post_to = $req->get_normalized_http_url();
   $post_data = $req->to_postdata();
   
-  //echo $post_to."<BR>".$post_data."<BR>"; exit;
+  //echo $post_to."<br />".$post_data."<br />"; exit;
   
   $client = Auth_Yadis_Yadis::getHTTPFetcher();
   
@@ -647,7 +647,7 @@ function oauth_omb_subscribe( &$vars ) {
     $rtoken_secret = $return['oauth_token_secret'];
     $rtoken = $return['oauth_token'];
   } else {
-    echo "sorry, you will have to go back and submit the form again. the server \"".$post_to."\" said \"".$result->body."\" when I posted this data: <BR><BR> ".$post_data; exit;
+    echo "sorry, you will have to go back and submit the form again. the server \"".$post_to."\" said \"".$result->body."\" when I posted this data: <br /><br /> ".$post_data; exit;
   }
   $_SESSION['rtoken_secret'] = $rtoken_secret;
   $_SESSION['rtoken'] = $rtoken;

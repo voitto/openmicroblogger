@@ -48,7 +48,7 @@ if ( $rss ) {
 else {
 	echo "An error occured!  " .
 	     "Consider donating more $$$ for restoration of services." .
-		 "<br>Error Message: "	. magpie_error();
+		 "<br />Error Message: "	. magpie_error();
 }
 
 DISCUSSION:

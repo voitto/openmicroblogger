@@ -13,7 +13,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
   <img class="entry-avatar" src="<?php echo $author->avatar; ?>" alt="image" />
     <h3><?php print render_notice( $Member->title, $Member, $profile ); ?></h3>
 </div>
-  <br><br>
+  <br /><br />
 
   <?php print $Member->body ?>
 
@@ -98,7 +98,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
     $current_user_id = get_the_author_ID( );
     echo prologue_get_avatar( $current_user_id, get_the_author_email( ), 48 );
   ?>
-  <?php echo "<p><font size=\"-1\">".'reply by '.$replyauthor->nickname."&nbsp; ".time_of($c->created)."</font></p><p>".htmlentities($c->title)."</p><br>"; ?>
+  <?php echo "<p><font size=\"-1\">".'reply by '.$replyauthor->nickname."&nbsp; ".time_of($c->created)."</font></p><p>".htmlentities($c->title)."</p><br />"; ?>
 
   <?php endwhile; ?>
 
