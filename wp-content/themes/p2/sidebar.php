@@ -6,7 +6,7 @@
 
 <?php global $request; ?>
 
-<?php if (get_app_id() && !(environment('categories'))) : ?>
+<?php if (get_app_id()) : ?>
 
   <?php
 
@@ -146,8 +146,9 @@
   <li><a class="rss" href="<?php bloginfo( 'rss2_url' ); ?>"><?php echo $txt['sidebar_rss']; ?></a></li>
 <?php } ?>
 
+<?php endif; ?>
 
-<?php else : ?>
+<?php if (environment('categories')) : ?>
   
 <?php 
 if( !function_exists('dynamic_sidebar') || !dynamic_sidebar() ) { 
