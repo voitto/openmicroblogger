@@ -3,27 +3,17 @@
 <div>
 <input name="method" type="hidden" value="delete" />
 <input name="entry[etag]" type="hidden" value="<?php print $Entry->etag; ?>" />
-<table border="0">
 
-<tr><th colspan="2">
+  <h3><?php echo $txt['removeprofile_title']; ?></h3><br />
 
-</th></tr>
+    <span class="remove-profile-b"><?php echo $txt['removeprofile_last_name']; ?></span><br />
+    <?php print $Member->family_name; ?><br /><br />
 
-  <tr>
-    <td align="right"><b>Last Name</b></td>
-    <td valign="top" align="left"><?php print $Member->family_name; ?></td>
-  </tr>
-  <tr>
-    <td align="right"><b>First Name</b></td>
-    <td valign="top" align="left"><?php print $Member->given_name; ?></td>
-  </tr>
+    <span class="remove-profile-b"><?php echo $txt['removeprofile_first_name']; ?></span><br />
+    <?php print $Member->given_name; ?><br /><br />
 
-  <tr>
-    <td align="right"><b></b></td>
-    <td valign="top" align="left"><br><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="Cancel" type="button" />
+    <input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="<?php echo $txt['removeprofile_button_cancel']; ?>" type="button" />
+    <input value="<?php echo $txt['removeprofile_button_delete']; ?>" type="submit" name="button_group" />
 
-<input value="Delete This Identity" type="submit" name="button_group" /></td>
-  </tr>
-</table>
 </div>
 </form>

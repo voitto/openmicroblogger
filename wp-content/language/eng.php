@@ -291,6 +291,7 @@ $txt['admin_mobile'] = "Mobile";
 /////////////////////////////////////
 # /app/omb/views/identities/_edit.html
 /////////////////////////////////////
+$txt['editprofile_title'] = "Edit your profile";
 $txt['editprofile_nickname'] = "Nickname";
 $txt['editprofile_full_name'] = "Full name";
 $txt['editprofile_openid'] = "OpenID URL";
@@ -303,6 +304,12 @@ $txt['editprofile_button_save'] = "Save";
 $txt['editprofile_country'] = "Country";
 $txt['editprofile_locality'] = "Locality";
 $txt['editprofile_homepage'] = "Homepage";
+
+
+/////////////////////////////////////
+# /app/omb/views/identities/_subs.html
+/////////////////////////////////////
+$txt['ident_subs_friends'] = "Friends";
 
 
 /////////////////////////////////////
@@ -337,6 +344,7 @@ $txt['newprofile_button_save_identity'] = "Save identity";
 /////////////////////////////////////
 # /app/omb/views/identities/_pass.html
 /////////////////////////////////////
+$txt['pass_set_title'] = "Change your password";
 $txt['pass_set_password'] = "Set Password";
 $txt['pass_button_save'] = "Save";
 
@@ -344,10 +352,29 @@ $txt['pass_button_save'] = "Save";
 /////////////////////////////////////
 # /app/omb/views/identities/_remove.html
 /////////////////////////////////////
+$txt['removeprofile_title'] = "Do you really want to delete this Account?";
 $txt['removeprofile_last_name'] = "Last Name";
 $txt['removeprofile_first_name'] = "First Name";
 $txt['removeprofile_button_cancel'] = "Cancel";
 $txt['removeprofile_button_delete'] = "Delete This Identity";
+
+
+/////////////////////////////////////
+# /app/omb/views/subscriptions/_followers.html
+/////////////////////////////////////
+$txt['followers_subscribers'] = "'s subscribers";
+
+
+/////////////////////////////////////
+# /app/omb/views/subscriptions/_following.html
+/////////////////////////////////////
+$txt['following_subscriptions'] = "'s subscriptions";
+
+
+/////////////////////////////////////
+# /app/omb/views/subscriptions/_remove.html
+/////////////////////////////////////
+$txt['remove_delete_subscription'] = "'Delete this subscription?";
 
 
 /////////////////////////////////////

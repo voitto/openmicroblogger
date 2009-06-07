@@ -1079,9 +1079,66 @@ text-align:right;
 width: 350px;
 }
 #register-right2 {
-text-align:right;
-width: 350px;
+	text-align:right;
+	width: 350px;
 }
 .register-b {
-font-weight:bold;
+	font-weight:bold;
+}
+
+
+/********** Edit User-Profile **********/
+/* /app/omb/views/identities/_edit.html */
+
+.edit-profile-textarea {
+	width:352px;
+}
+.edit-profile-b {
+	font-weight:bold;
+}
+
+
+/********** Profile-Entry **********/
+/* /app/omb/views/identities/_entry.html */
+
+.entry-img {
+	border:none;
+	width:48px;
+	height:48px;
+}
+
+
+/********** New Identity **********/
+/* /app/omb/views/identities/_new.html */
+
+.new-ident-b {
+	font-weight:bold;
+}
+
+
+/********** Profile-Entry/Following/Followers **********/
+/* /app/omb/views/identities/_entry.html */
+/* /app/omb/views/subscriptions/_followers.html */
+/* /app/omb/views/subscriptions/_following.html */
+
+.subs-img {
+	border:none;
+	width:48px;
+	height:48px;
+}
+.subs-img2 {
+	border:none;
+	width:16px;
+	height:16px;
+}
+.subs-astyle {
+hover:none;
+}
+
+
+/********** Change/Set Password **********/
+/* /app/omb/views/identities/_pass.html */
+
+.pass-set-b {
+	font-weight:bold;
 }

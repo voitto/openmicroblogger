@@ -291,10 +291,11 @@ $txt['admin_mobile'] = "Mobil";
 /////////////////////////////////////
 # /app/omb/views/identities/_edit.html
 /////////////////////////////////////
+$txt['editprofile_title'] = "Editiere dein Profil";
 $txt['editprofile_nickname'] = "Nickname";
 $txt['editprofile_full_name'] = "Vollst&auml;ndiger Name";
 $txt['editprofile_openid'] = "OpenID URL";
-$txt['editprofile_bio'] = "Bio";
+$txt['editprofile_bio'] = "Biographie";
 $txt['editprofile_email'] = "E-mail";
 $txt['editprofile_photo'] = "Foto im jpg-Format";
 $txt['editprofile_licence_url'] = "Lizenz URL";
@@ -303,6 +304,12 @@ $txt['editprofile_button_save'] = "Speichern";
 $txt['editprofile_country'] = "Herkunftsland";
 $txt['editprofile_locality'] = "Herkunftsort";
 $txt['editprofile_homepage'] = "Website";
+
+
+/////////////////////////////////////
+# /app/omb/views/identities/_subs.html
+/////////////////////////////////////
+$txt['ident_subs_friends'] = "Deine Freunde";
 
 
 /////////////////////////////////////
@@ -337,6 +344,7 @@ $txt['newprofile_button_save_identity'] = "Identit&auml;t speichern";
 /////////////////////////////////////
 # /app/omb/views/identities/_pass.html
 /////////////////////////////////////
+$txt['pass_set_title'] = "&Auml;ndere dein Passwort";
 $txt['pass_set_password'] = "Passwort festlegen";
 $txt['pass_button_save'] = "Speichern";
 
@@ -344,10 +352,29 @@ $txt['pass_button_save'] = "Speichern";
 /////////////////////////////////////
 # /app/omb/views/identities/_remove.html
 /////////////////////////////////////
+$txt['removeprofile_title'] = "Willst du diesen Account wirklich l&ouml;schen?";
 $txt['removeprofile_last_name'] = "Nachname";
 $txt['removeprofile_first_name'] = "Vorname";
 $txt['removeprofile_button_cancel'] = "Abrechen";
 $txt['removeprofile_button_delete'] = "Diese Identit&auml;t l&ouml;schen";
+
+
+/////////////////////////////////////
+# /app/omb/views/subscriptions/_followers.html
+/////////////////////////////////////
+$txt['followers_subscribers'] = "'s Abonnenten";
+
+
+/////////////////////////////////////
+# /app/omb/views/subscriptions/_following.html
+/////////////////////////////////////
+$txt['following_subscriptions'] = "'s Abonnements";
+
+
+/////////////////////////////////////
+# /app/omb/views/subscriptions/_remove.html
+/////////////////////////////////////
+$txt['remove_delete_subscription'] = "'Dieses Abonnement wirklich l&ouml;schen?";
 
 
 /////////////////////////////////////

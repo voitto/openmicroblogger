@@ -378,3 +378,201 @@ img.alignleft {
   padding: 0 4px 5px;
   margin: 0;
 }
+
+/********** Edit posting **********/
+/* /app/omb/views/posts/_edit.html */
+/* /app/omb/views/pages/_edit.html */
+
+.edit-b {
+	font-weight:bold;
+}
+.edit-textarea {
+	width:350px;
+}
+
+/********** Single-Post-View (Permalink/Answer) **********/
+/* /app/omb/views/posts/_entry.html */
+
+#entry-msg {
+margin:5px;
+}
+.entry-avatar {
+	float:left;
+	margin-right:0.5em;
+	margin-left:0.5em;
+	width:80px;
+	height:80px;
+	border-width:thin;
+	border-color:#777;
+	border-style:solid;
+}
+#bookmark-this {
+	position:relative;
+	bottom:10px;
+}
+
+
+/********** Remove Posting **********/
+/* /app/omb/views/posts/_remove.html */
+
+#remove-msg {
+margin:5px;
+}
+.remove-avatar {
+	float:left;
+	margin-right:0.5em;
+	margin-left:0.5em;
+	width:80px;
+	height:80px;
+	border-width:thin;
+	border-color:#777;
+	border-style:solid;
+}
+
+
+/********** Profile **********/
+/* /app/omb/views/posts/_profile.html */
+
+#profile {
+	padding:10px;
+}
+.profile-h3 {
+	margin-left:5px;
+	font-size:18px;
+	font-family: arial, helvetica, sans-serif;
+}
+.profile-img {
+	vertical-align:middle;
+	border-width:thin;
+	border-color:#777;
+	border-style:solid;
+	width:96px;
+	height:96px;
+}
+.profile-subsimg {
+	border-width:thin;
+	border-color:#777;
+	border-style:solid;
+	width:48px;
+	height:48px;
+}
+
+
+/********** Upload **********/
+/* /app/omb/views/posts/_upload.html */
+
+.upload textarea {
+	margin-left:5px;
+	width:405px;
+}
+
+
+/********** Login-Form **********/
+/* /app/omb/views/_email.html */
+
+#email-login {
+	text-align:left;
+	padding:0px;
+	border-style:none;
+	vertical-align:top;
+	width: 500px;
+	margin-top:30px;
+}
+.email-login-input {
+	width:180px;
+}
+#email-login-right {
+text-align:right;
+width: 300px;
+}
+#email-login-right2 {
+text-align:right;
+width:300px;
+}
+.email-login-b {
+font-weight:bold;
+}
+
+
+/********** Register-Form **********/
+/* /app/omb/views/_register.html */
+
+#register-login {
+	text-align:left;
+	padding:0px;
+	border-style:none;
+	vertical-align:top;
+	width: 500px;
+	margin-top:30px;
+}
+.register-input {
+	width:180px;
+}
+#register-right {
+text-align:right;
+width: 350px;
+}
+#register-right2 {
+	text-align:right;
+	width: 350px;
+}
+.register-b {
+	font-weight:bold;
+}
+
+
+/********** Edit User-Profile **********/
+/* /app/omb/views/identities/_edit.html */
+
+.edit-profile-textarea {
+	width:352px;
+}
+.edit-profile-b {
+	font-weight:bold;
+}
+
+
+/********** Profile-Entry **********/
+/* /app/omb/views/identities/_entry.html */
+
+.entry-img {
+	border:none;
+	width:48px;
+	height:48px;
+}
+
+
+/********** New Identity **********/
+/* /app/omb/views/identities/_new.html */
+
+.new-ident-b {
+	font-weight:bold;
+}
+
+
+/********** Profile-Entry/Following/Followers **********/
+/* /app/omb/views/identities/_entry.html */
+/* /app/omb/views/subscriptions/_followers.html */
+/* /app/omb/views/subscriptions/_following.html */
+
+.subs-img {
+	border:none;
+	width:48px;
+	height:48px;
+}
+.subs-img2 {
+	border:none;
+	width:16px;
+	height:16px;
+}
+.subs-astyle {
+hover:none;
+}
+
+
+/********** Change/Set Password **********/
+/* /app/omb/views/identities/_pass.html */
+
+.pass-set-b {
+	font-weight:bold;
+}
