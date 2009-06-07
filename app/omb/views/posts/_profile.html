@@ -64,6 +64,19 @@ $subscribers = array();
   </a>
 
 <br />
+
+<?php else : ?>
+
+
+<?php $Subscription->find_by('subscribed',$Member->id); ?>
+<?php while ($subscriber = $Subscription->MoveNext()) : ?>
+  <?php if ($subscriber->subscribed == $Member->id) : ?>
+    <?php $subscribers[] = $subscriber->subscriber; ?>
+    <?php endif; ?>
+  <?php endwhile; ?>
+  
+
+
 <?php endif; ?>
 <?php $pro = get_profile(); ?>
 
