@@ -513,7 +513,7 @@ $request->connect( '', array( 'resource'=>$env['goes'], 'action'=>'get' ) );
 
 $request->routematch();
 
-//print_r($request->activeroute); echo '<BR><BR>'; print_r($request->params); exit;
+//print_r($request->activeroute); echo '<br /><br />'; print_r($request->params); exit;
 
 /**
  * attach functions to aspect crosscuts

@@ -10,33 +10,28 @@
 <?php if (count($menuitems > 0)) : ?>
 <?php include 'wp-content/language/lang_chooser.php'; //Loads the language-file ?>
 
-  <li class="pagenav">
+
     <h2><?php echo $txt['admin_profile']; ?></h2>
-      <ul>
+ 
 
 
   <?php foreach( $menuitems as $link=>$item ) : ?>
 
-     <li class="page_item">
+     <p class="liother">
 		<a href="JavaScript:show_page('<?php echo $link; ?>');"><?php echo $item; ?></a>
-	</li>	
+	</p>
 
 	<?php endforeach; ?>
 
   <?php $smskey = environment('awsAccessKey'); ?>
-  
+
   <?php if (!empty($smskey)) : ?>
 
-     <li class="page_item">
+     <p class="liother">
 		<a href="<?php url_for(array('resource'=>'mobile_settings')); ?>"><?php echo $txt['admin_mobile']; ?></a>
-	</li>	
-	
+     </p>
+
 	<?php endif; ?>
-
-
-  </ul>
-</li>
-
 
 
 

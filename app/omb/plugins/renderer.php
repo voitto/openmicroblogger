@@ -239,10 +239,10 @@ function render_static( &$req, &$route ) {
 function catch_params( &$arr, &$route ) {
 
   print "dbscript Debug Output:";
-  print "<BR>--------------------------------";
-  print "<BR><BR> Request Parameters: ";
+  print "<br />--------------------------------";
+  print "<br /><br /> Request Parameters: ";
   print_r($arr)."";
-  print "<BR><BR> Route Patterns: ";
+  print "<br /><br /> Route Patterns: ";
   print_r($route->patterns);
   exit;
   

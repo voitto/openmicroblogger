@@ -817,7 +817,7 @@ class Model {
 
   
   function set_relation( $relstring, $type ) {
-    //echo $this->table . " " .$relstring."<BR>";
+    //echo $this->table . " " .$relstring."<br />";
     if (!(isset($this->table)))
       $this->table = tableize( get_class( $this ));
     global $db;

@@ -1,5 +1,5 @@
 <div id="sidebar">
-<ul>
+
 
 <?php include 'wp-content/language/lang_chooser.php'; //Loads the language-file ?>
 
@@ -25,27 +25,34 @@
 
   <?php if (isset($request->params['nickname'])) : ?>
 
-  <ul>
     <?php if (!empty($profile->fullname)) : ?>
-      <li class="liname"><?php echo $txt['sidebar_name']; ?><?php echo $profile->fullname; ?>
-    <?php endif; ?>
-    <li class="liother">
-    <?php if (!empty($profile->locality)) : ?>
-    <?php echo $txt['sidebar_location']; ?><?php echo $profile->locality; ?><br />
-    <?php endif; ?>
-    <?php if (!empty($profile->country_name)) : ?>
-    <?php echo $txt['sidebar_country']; ?><?php echo $profile->country_name; ?>
-    <?php endif; ?>
-    </li>
-    <?php if (!empty($profile->homepage)) : ?>
-      <li class="liother"><?php echo $txt['sidebar_web']; ?><br /><a href='<?php echo $profile->homepage; ?>'><?php echo $profile->homepage; ?></a></li>
-    <?php endif; ?>
-    <?php if (!empty($profile->bio)) : ?>
-      <li class="liother"><?php echo $txt['sidebar_bio']; ?><span class="bio";><?php echo $profile->bio; ?></span></li>
+      <p class="liname"><?php echo $txt['sidebar_name']; ?><?php echo $profile->fullname; ?></p>
     <?php endif; ?>
 
-  
-  </ul>
+    <?php if (!empty($profile->locality)) : ?>
+    <p class="liother">
+    <?php echo $txt['sidebar_location']; ?><?php echo $profile->locality; ?>
+    </p>
+    <?php endif; ?>
+
+    <?php if (!empty($profile->country_name)) : ?>
+    <p class="liother">
+    <?php echo $txt['sidebar_country']; ?><?php echo $profile->country_name; ?>
+    </p>
+    <?php endif; ?>
+    
+    <?php if (!empty($profile->homepage)) : ?>
+    <p class="liother">
+    <?php echo $txt['sidebar_web']; ?><br /><a href='<?php echo $profile->homepage; ?>'><?php echo $profile->homepage; ?></a>
+    </p>
+    <?php endif; ?>
+
+    <?php if (!empty($profile->bio)) : ?>
+    <p class="liother">
+    <?php echo $txt['sidebar_bio']; ?><span class="bio";><?php echo $profile->bio; ?></span>
+    </p>
+    <br />
+  <?php endif; ?>
 
   <?php endif; ?>
   <?php } ?>
@@ -76,34 +83,42 @@
   }
 
   ?>
-    <?php if (!in_array('settings',$request->activeroute->patterns)) { ?>
+  <?php if (!in_array('settings',$request->activeroute->patterns)) { ?>
   <?php if (!isset($request->params['nickname'])) : ?>
 
-  <li><img width="32" height="32" class="profile" src="<?php echo $profile->avatar; ?>" alt="<?php echo $profile->fullname; ?>"><a class="profile-nick" href="<?php echo $profile->profile_url; ?>"><?php echo $profile->nickname; ?></a></li>
+    <img width="32" height="32" class="profile" src="<?php echo $profile->avatar; ?>" alt="<?php echo $profile->fullname; ?>"><a class="profile-nick" href="<?php echo $profile->profile_url; ?>"><?php echo $profile->nickname; ?></a>
+    <br /><br />
   <?php endif; ?>
   
-  <li>
-    <table id="sidebar-table">
-      <tr>
-        <td class="sidebar_subscriptions_count"><?php echo $count1; ?></td>
-        <td class="sidebar_subscribers_count"><?php echo $count2; ?></td>
+  <div id="sidebar-posts-stats">
+
+        <div id="sidebar-subscribers">
+        <span class="sidebar_subscribers_count"><?php echo $count2; ?></span><br />
+        <span class="sidebar_subscribers"><a href="<?php echo $request->url_for(array("resource"=>$profile->nickname))."/subscribers"; ?>"><?php echo $txt['sidebar_followers']; ?></a></span>
+        </div>
+  
+        <div id="sidebar-subscriptions">
+        <span class="sidebar_subscriptions_count"><?php echo $count1; ?></span>
+        <br />
+        <span class="sidebar_subscriptions"><a href="<?php echo $request->url_for(array("resource"=>$profile->nickname))."/subscriptions"; ?>"><?php echo $txt['sidebar_following']; ?></a></span>
+        </div>
+
   <?php if (!isset($request->params['nickname'])) : ?>
-        <td class="sidebar_updates_count"><?php echo $count3; ?></td>
-      <?php endif; ?>
-      </tr>
-      <tr>
-        <td class="sidebar_subscriptions"><a href="<?php echo $request->url_for(array("resource"=>$profile->nickname))."/subscriptions"; ?>"><?php echo $txt['sidebar_following']; ?></a></td>
-        <td class="sidebar_subscribers"><a href="<?php echo $request->url_for(array("resource"=>$profile->nickname))."/subscribers"; ?>"><?php echo $txt['sidebar_followers']; ?></a></td>
+        <div id="sidebar-updates">
+        <span class="sidebar_updates_count"><?php echo $count3; ?></span><br />
+  <?php endif; ?>
   <?php if (!isset($request->params['nickname'])) : ?>
-        <td  class="sidebar_updates"><?php echo $txt['sidebar_updates']; ?></td>
-      <?php endif; ?>
-      </tr>
-    </table>
-  </li>
+        <span  class="sidebar_updates"><?php echo $txt['sidebar_updates']; ?></span>
+        </div>
+        <br /><br /><br />
+  <?php endif; ?>
+
+  </div>
+    
   <?php if (isset($request->params['nickname'])) : ?>
-    <li>
+    <br /><br />
       <p class="sidebar_updates_nickname"><span class="profile-updates"><?php echo $count3; ?></span><?php echo $txt['sidebar_Updates']; ?></p>
-    </li>
+    
   <?php endif; ?>
 <?php } ?>
   <?php
@@ -119,31 +134,50 @@
   ?>
     
   <?php if (!isset($request->params['nickname'])) : ?>
-  <li>
+
+    <p class="liother">
     <a href="<?php base_url(); ?>"><?php echo $txt['sidebar_home']; ?></a>
-  </li>
-  <li>
+    </p>
+
+    <p class="liother">
     <a href="<?php echo $request->url_for(array("resource"=>$profile->nickname))."/replies"; ?>"><?php echo "@".$profile->nickname; ?></a>
-  </li>
+    </p>
+  
   <?php endif; ?>
   <?php if (!in_array('settings',$request->activeroute->patterns)) { ?>
   <?php if (!signed_in()) : ?>
-  <li><?php echo $txt['sidebar_favorities']; ?></li>
+    <p class="liother">
+    <?php echo $txt['sidebar_favorities']; ?>
+    </p>
   <?php elseif (isset($request->params['nickname'])) : ?>
-  <li><?php echo $txt['sidebar_favorities']; ?></li>
-  <li><?php echo $txt['sidebar_following']; ?></li>
-<?php else : ?>
-    <li><?php echo $txt['sidebar_direct_messages']; ?></li>
-  <li><?php echo $txt['sidebar_favorites']; ?></li>
-  <li><form method="post"><input size="14" value="<?php echo $txt['sidebar_search']; ?>"></form></li>
-
-  <li><?php echo $txt['sidebar_trending_topics']; ?></li>
-  <li><?php echo $txt['sidebar_following']; ?></li>
-
+    <p class="liother">
+    <?php echo $txt['sidebar_favorities']; ?>
+    </p>
+    <p class="liother">
+    <?php echo $txt['sidebar_following']; ?>
+    </p>
+  <?php else : ?>
+    <p class="liother">
+    <?php echo $txt['sidebar_direct_messages']; ?>
+    </p>
+    <p class="liother">
+    <?php echo $txt['sidebar_favorites']; ?>
+    </p>
+    <p class="liother">
+    <form method="post"><input size="14" value="<?php echo $txt['sidebar_search']; ?>"></form>
+    </p>
+    <p class="liother">
+    <?php echo $txt['sidebar_trending_topics']; ?>
+    </p>
+    <p class="liother">
+    <?php echo $txt['sidebar_following']; ?>
+    </p>
   <?php endif; ?>
   <?php } ?>
 <?php if (!in_array('settings',$request->activeroute->patterns)) { ?>
-  <li><a class="rss" href="<?php bloginfo( 'rss2_url' ); ?>"><?php echo $txt['sidebar_rss']; ?></a></li>
+  <p class="liother">
+  <a class="rss" href="<?php bloginfo( 'rss2_url' ); ?>"><?php echo $txt['sidebar_rss']; ?></a>
+  </p>
 <?php } ?>
 
 <?php endif; ?>
@@ -153,25 +187,25 @@
 <?php 
 if( !function_exists('dynamic_sidebar') || !dynamic_sidebar() ) { 
 
-	echo prologue_widget_recent_comments_avatar(array('before_widget' => ' <li id="recent-comments" class="widget widget_recent_comments"> ', 'after_widget' => '</li>', 'before_title' =>'<h2>', 'after_title' => '</h2>'  ));
+	echo prologue_widget_recent_comments_avatar(array('before_widget' => ' <li id="recent-comments" class="widget widget_recent_comments"> ', 'after_widget' => '', 'before_title' =>'<h2>', 'after_title' => '</h2>'  ));
 
-	$before = "<li><h2>".$txt['recent_projects']."</h2>\n";
-	$after = "</li>\n";
+	$before = "<h2>".$txt['recent_projects']."</h2>\n";
+	$after = "\n";
 	$num_to_show = 35;
 	echo prologue_recent_projects( $num_to_show, $before, $after );
 } // if dynamic_sidebar
 ?>
-	</ul>
+	
 <div id="sidebarclear"></div>
 
 <?php endif; ?>
 
 <?php if (!isset($profile)) { ?>
-<ul>
-<li class="greeting"><?php echo $txt['sidebar_greeting_headline']; ?><?php bloginfo( 'name' ); ?>!</li>
 
-<li class="greeting-italic"><?php bloginfo( 'name' ); ?><?php echo $txt['sidebar_greeting_text']; ?></li>
-<li class="greeting-normal"><a href="<?php url_for(array('resource'=>'email_login')); ?>" title="Sign in"><?php echo $txt['sidebar_sign_in_register']; ?></a></li>
-</ul>
+<p class="greeting"><?php echo $txt['sidebar_greeting_headline']; ?><?php bloginfo( 'name' ); ?>!</p>
+
+<p class="greeting-italic"><?php bloginfo( 'name' ); ?><?php echo $txt['sidebar_greeting_text']; ?></p>
+<p class="greeting-normal"><a href="<?php url_for(array('resource'=>'email_login')); ?>" title="Sign in"><?php echo $txt['sidebar_sign_in_register']; ?></a></p>
+
 <?php } ?>
 </div> <!-- // sidebar -->

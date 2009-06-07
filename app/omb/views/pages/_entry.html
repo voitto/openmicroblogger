@@ -5,7 +5,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
   $post = strtolower(classify($request->resource));
 
 ?>
-<table align="center" cellpadding="3" cellspacing="0" border="0"><tr><td colspan="2"><br></td></tr>
+<table align="center" cellpadding="3" cellspacing="0" border="0"><tr><td colspan="2"><br /></td></tr>
 
    <tr>
 <td align="right"><p></p></td>
@@ -102,7 +102,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 <tr>
   <td align="right"><p></p></td>
   <td>
-  <BR><BR><BR><BR>
+  <br /><br /><br /><br />
   </td>
 </tr>
 
@@ -116,7 +116,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
   <?php $Post =& $db->model(tableize($request->resource)); $Post->has_one('profile_id:identities'); $Post->find_by('parent_id',$Member->id); ?>
   <?php while ($c = $Post->MoveNext()) : ?>
   <?php $replyauthor = $c->FirstChild('identities'); ?>
-  <?php echo "<tr><td><p><font size=\"-1\">".'reply by '.$replyauthor->nickname."&nbsp; ".time_of($c->created)."</font></p></td></tr><tr><td><p>".htmlentities($c->title)."</p><br></td></tr>"; ?>
+  <?php echo "<tr><td><p><font size=\"-1\">".'reply by '.$replyauthor->nickname."&nbsp; ".time_of($c->created)."</font></p></td></tr><tr><td><p>".htmlentities($c->title)."</p><br /></td></tr>"; ?>
   <?php endwhile; ?>
   </table>
   </td>
@@ -138,7 +138,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 <img src="<?php echo base_url(true).$request->layout_path; ?>reviews/empty_star.gif" alt="">
 <?php $i++; ?>
 <?php endwhile; ?>
-<?php print "<font size=\"-1\">".$reviewer->nickname." ".time_of($r->created)."</font><br>"; ?>
+<?php print "<font size=\"-1\">".$reviewer->nickname." ".time_of($r->created)."</font><br />"; ?>
 
 <?php endwhile; ?>
 
@@ -158,7 +158,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
    <tr>
 <td align="right"><p></p></td>
   <td>
-  <BR><BR><BR><BR>
+  <br /><br /><br /><br />
   </td>
 </tr>
 
@@ -214,7 +214,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 <img src="<?php echo base_url(true).$request->layout_path; ?>reviews/full_star.gif" alt="*">
 <?php $j++; ?>
 <?php endwhile; ?>
-<BR>
+<br />
 <?php $i++; ?>
 <?php endwhile; ?>
 
@@ -239,7 +239,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 <tr>
   <td align="right"><p></p></td>
   <td>
-  <BR><BR><BR><BR>
+  <br /><br /><br /><br />
   </td>
 </tr>
 
@@ -261,7 +261,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
    <tr>
 <td align="right"><p></p></td>
   <td>
-  <BR><BR><BR><BR>
+  <br /><br /><br /><br />
   </td>
 </tr>
 
@@ -285,7 +285,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
    <tr>
 <td align="right"><p></p></td>
   <td>
-  <BR><BR><BR><BR>
+  <br /><br /><br /><br />
   </td>
 </tr>
 
@@ -295,8 +295,8 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 
 <?php if (public_resource()) : ?>
 
-<br>
-<br>
+<br />
+<br />
 <h4>Bookmark this:</h4> 
 <a href="http://www.blinklist.com/index.php?Action=Blink/addblink.php&Description=&Url=<?php print $request->uri; ?>&Title=<?php print $Member->title; ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/blinklist.gif" border="0" title="Bookmark to Blinklist!" alt="Bookmark to Blinklist!"></a>
 <a href="http://blogmarks.net/my/new.php?mini=1&simple=1&url=<?php print $request->uri; ?>&title=<?php print $Member->title; ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/blogmarks.gif" border="0" title="Bookmark to Blogmarks!" alt="Bookmark to Blogmarks!"></a>
@@ -328,7 +328,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
    <tr>
 <td align="right"><p></p></td>
   <td>
-  <BR><BR><BR><BR>
+  <br /><br /><br /><br />
   </td>
 </tr>
 

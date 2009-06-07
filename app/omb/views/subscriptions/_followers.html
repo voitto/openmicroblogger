@@ -1,4 +1,5 @@
 <?php
+include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 global $request,$db;
 $Subscription =& $db->model('Subscription');
 
@@ -6,7 +7,7 @@ $zeep = environment('zeepKeyWord');
 ?>
 
 
-<h2><?php echo $request->params['nickname']; ?>'s subscribers</h2>
+<h2><?php echo $request->params['nickname']; ?><?php echo $txt['followers_subscribers']; ?></h2>
 
 <br />
 
@@ -27,7 +28,7 @@ $zeep = environment('zeepKeyWord');
   &nbsp;(<?php echo $si->fullname; ?>)
 <?php endif; ?></h3>
 
-<p><a style="hover:none;" href="<?php echo $request->url_for(array('resource'=>$si->nickname)); ?>"><img style="border:none;width:48px;height:48px;" src="<?php echo $si->avatar; ?>"></a>
+<p><a class="subs-astyle" href="<?php echo $request->url_for(array('resource'=>$si->nickname)); ?>"><img class="subs-img" src="<?php echo $si->avatar; ?>"></a>
   </p>
 
 

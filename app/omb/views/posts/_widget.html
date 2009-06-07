@@ -72,7 +72,7 @@ function twitterCallback2(C){
 
 }
 
-var forma = '<form method="post" action="<?php base_url(); ?>posts"><input type="hidden" name="method" value="post"><textarea name="post[title]" cols="15" rows="2"></textarea><br><input type="submit" value="Post comment"></form><p style="font-size:10pt;">(<a style="font-size:10pt;" href="<?php base_url(); ?>oauth_login?forward">sign in w/Twitter</a>)</p>';
+var forma = '<form method="post" action="<?php base_url(); ?>posts"><input type="hidden" name="method" value="post"><textarea name="post[title]" cols="15" rows="2"></textarea><br /><input type="submit" value="Post comment"></form><p style="font-size:10pt;">(<a style="font-size:10pt;" href="<?php base_url(); ?>oauth_login?forward">sign in w/Twitter</a>)</p>';
 
 
 document.getElementById("twitter_update_list").innerHTML=A.join("");

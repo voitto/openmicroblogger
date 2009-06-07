@@ -86,9 +86,9 @@ function send_email_notice( &$model, &$rec ) {
             <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\"> 
             <html> 
             <body> 
-            <br> 
-            <b><u><i>Click on this link:</i></u></b><br> 
-            <br>
+            <br /> 
+            <b><u><i>Click on this link:</i></u></b><br /> 
+            <br />
             <font color="red"><a href="'
             .$addr.
             '">'.$addr.'</a></font> 
