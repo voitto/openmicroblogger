@@ -457,6 +457,21 @@ global $db;
     } else {
       $request->set_param('id',$id);
     }
+  } else {
+    
+    // the nickname did not match a local user
+    // check for the nickname at twitter.com
+    $url = "http://twitter.com/".$nick;
+    require_once(ABSPATH.WPINC.'/class-snoopy.php');
+    $snoop = new Snoopy;
+    $snoop->agent = 'Twitteronia http://twitteronia.org';
+    $snoop->submit($url);
+    if (strpos($snoop->response_code, '200')) {
+      redirect_to($url);
+    } else {
+      trigger_error('sorry the nickname was not found on this site, nor at Twitter.com', E_USER_ERROR );
+    }
+  
   }
 
 }
