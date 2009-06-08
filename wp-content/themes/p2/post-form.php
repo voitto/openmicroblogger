@@ -25,6 +25,14 @@ $first_name		= attribute_escape( $user->first_name );
 			</div>
 			<span class="progress" id="ajaxActivity"><img src="<?php bloginfo('template_directory'); ?>/i/indicator.gif" alt="Loading..." /></span>
 		</div>
-		<div class="clear"></div>
 	</form>
+		<div class="clear"></div>
+		<?php if (environment('use_uploadify')) : ?>
+		<form action="<?php bloginfo( 'url' ); ?>">
+		<div id="fileUpload">You have a problem with your javascript</div>
+
+	</form>
+	<?php else : ?>
+		  <p>Add:&nbsp; <a href="<?php url_for(array('resource'=>'posts','action'=>'upload')); ?>">Photos</a></p>
+  <?php endif; ?>
 </div> <!-- // postbox -->
