@@ -20,6 +20,23 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 <?php endif; ?>
 
 
+<?php if (environment('use_uploadify')) : ?>
+<link rel="stylesheet" href="<?php base_path(); ?>resource/uploadify.css" type="text/css" />
+<script type="text/javascript" src="<?php base_path(); ?>resource/jquery.uploadify.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+		$("#fileUpload").fileUpload({
+		'uploader': '<?php base_path(); ?>resource/uploader.swf',
+		'cancelImg': '<?php base_path(); ?>resource/cancel.png',
+		'script': $("#fileUpload").parents("form").attr("action"),
+		'folder': 'cache',
+		'multi': false,
+		'displayData': 'speed'
+	});
+});
+</script>
+<?php endif; ?>
+
 	</head>
 <body onLoad="JavaScript:setMaxLength();"<?php if(is_single()) echo ' class="single"'; ?>>
 
