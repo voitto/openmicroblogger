@@ -1,8 +1,11 @@
-<?php ob_start(); ?>
+<?php 
+ob_start(); 
+include 'wp-content/language/lang_chooser.php'; //Loads the language-file
+?>
 
-  <li class="categories">
-    <h2>Categories</h2>
-      <ul>
+  <p class="liother-b-cat">
+    <?php echo $txt['categories_categories']; ?>
+  </p>
   <?php while( $Category = $collection->MoveNext() ) : ?>
     
     <?php
@@ -19,16 +22,13 @@
     
     <?php endwhile; ?>
     
-     <li class="cat-item">
+     <p class="liother-cat">
         <a href="<?php url_for( array( 'resource'=>'categories', 'id'=>$Category->id )); ?>"><?php print $Category->name; ?></a><?php if ($count > 0) print " (".$count.")"; ?>
 
-    </li>
+    </p>
     
     
     <?php endwhile; ?>
-    
-  </ul>
-</li>
 
 <?php $content = ereg_replace("'","\'",ereg_replace("\n","",ob_get_contents())); ob_end_clean(); ?>
 

@@ -374,7 +374,13 @@ $txt['following_subscriptions'] = "'s Abonnements";
 /////////////////////////////////////
 # /app/omb/views/subscriptions/_remove.html
 /////////////////////////////////////
-$txt['remove_delete_subscription'] = "'Dieses Abonnement wirklich l&ouml;schen?";
+$txt['remove_delete_subscription'] = "Dieses Abonnement wirklich l&ouml;schen?";
+
+
+/////////////////////////////////////
+# /app/omb/views/categories/_block.js
+/////////////////////////////////////
+$txt['categories_categories'] = "Kategorien";
 
 
 /////////////////////////////////////

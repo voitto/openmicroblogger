@@ -174,11 +174,6 @@
     </p>
   <?php endif; ?>
   <?php } ?>
-<?php if (!in_array('settings',$request->activeroute->patterns)) { ?>
-  <p class="liother">
-  <a class="rss" href="<?php bloginfo( 'rss2_url' ); ?>"><?php echo $txt['sidebar_rss']; ?></a>
-  </p>
-<?php } ?>
 
 <?php endif; ?>
 
@@ -195,7 +190,14 @@ if( !function_exists('dynamic_sidebar') || !dynamic_sidebar() ) {
 	echo prologue_recent_projects( $num_to_show, $before, $after );
 } // if dynamic_sidebar
 ?>
-	
+
+<?php if (!in_array('settings',$request->activeroute->patterns)) { ?>
+  <p class="liother">
+  <a class="rss" href="<?php bloginfo( 'rss2_url' ); ?>"><?php echo $txt['sidebar_rss']; ?></a>
+  </p>
+<?php } ?>
+
+
 <div id="sidebarclear"></div>
 
 <?php endif; ?>

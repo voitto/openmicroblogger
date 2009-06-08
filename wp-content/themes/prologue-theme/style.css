@@ -578,10 +578,24 @@ hover:none;
 }
 
 
-/********** Sidebar Settings **********/
+/********** Sidebar Settings / Sidebar Categories **********/
 /* /app/omb/views/identities/_admin.html */
+/* /app/omb/views/categories/_block.js */
 
 .liother {
 	font-weight:normal;
 	margin: 1.5em 0em 1.5em 0em;
+}
+.liother-b {
+	font-weight:bold;
+	margin: 1.5em 0em 1.5em 0em;
+}
+.liother-b-cat {
+	font-weight:bold;
+	margin: 1.5em 0em 0.5em 0em;
+}
+.liother-cat {
+	font-weight:normal;
+	margin: 0em 0em 0em 0em;
+	padding-left:10px;
 }
