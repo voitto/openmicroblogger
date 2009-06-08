@@ -1138,6 +1138,7 @@ hover:none;
 	font-weight:normal;
 	margin: 1.5em 0em 1.5em 0em;
 }
+<<<<<<< HEAD:wp-content/themes/p2/style.css
 .liother-b {
 	font-weight:bold;
 	margin: 1.5em 0em 1.5em 0em;
@@ -1152,3 +1153,15 @@ hover:none;
 	padding-left:10px;
 }
 
+
+#followgrid {
+  margin: 0px;
+  padding: 0px;
+}
+
+#followgrid img {
+  border: 0px;
+  width: 24px;
+  height: 24px;
+  margin: 2px;
+}
