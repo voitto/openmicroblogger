@@ -532,7 +532,7 @@ margin-left:8px;
 }
 #sidebar p.liother {
 	font-weight:normal;
-	margin: 1.5em 0em 1.5em 0em;
+	margin: 1.5em 0em 0.5em 0em;
 }
 #sidebar p.greeting {
 	font-weight:bold;
@@ -1136,12 +1136,12 @@ hover:none;
 
 .liother {
 	font-weight:normal;
-	margin: 1.5em 0em 1.5em 0em;
+	margin: 1.5em 0em 0em 0em;
 }
 <<<<<<< HEAD:wp-content/themes/p2/style.css
 .liother-b {
 	font-weight:bold;
-	margin: 1.5em 0em 1.5em 0em;
+	margin: 1.5em 0em 0em 0em;
 }
 .liother-b-cat {
 	font-weight:bold;
@@ -1163,5 +1163,5 @@ hover:none;
   border: 0px;
   width: 24px;
   height: 24px;
-  margin: 2px;
+  margin: 0px 2px 2px 2px;
 }

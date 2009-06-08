@@ -155,15 +155,12 @@
     </p>
     <p class="liother">
     <?php echo $txt['sidebar_following']; ?>
-
+    </p>
       <div id="followgrid">
-        <ul>
           <?php followgrid(); ?>
-        </ul>
       </div>
 
 
-    </p>
   <?php else : ?>
     <p class="liother">
     <?php echo $txt['sidebar_direct_messages']; ?>
@@ -179,14 +176,10 @@
     </p>
     <p class="liother">
     <?php echo $txt['sidebar_following']; ?>
-
-      <div id="followgrid">
-        <ul>
-          <?php followgrid(); ?>
-        </ul>
-      </div>
-      
     </p>
+      <div id="followgrid">
+          <?php followgrid(); ?>
+      </div>
   <?php endif; ?>
   <?php } ?>
 
