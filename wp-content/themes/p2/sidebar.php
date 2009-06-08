@@ -155,6 +155,14 @@
     </p>
     <p class="liother">
     <?php echo $txt['sidebar_following']; ?>
+
+      <div id="followgrid">
+        <ul>
+          <?php followgrid(); ?>
+        </ul>
+      </div>
+
+
     </p>
   <?php else : ?>
     <p class="liother">
@@ -171,6 +179,13 @@
     </p>
     <p class="liother">
     <?php echo $txt['sidebar_following']; ?>
+
+      <div id="followgrid">
+        <ul>
+          <?php followgrid(); ?>
+        </ul>
+      </div>
+      
     </p>
   <?php endif; ?>
   <?php } ?>

@@ -75,11 +75,11 @@ $txt['header_go_to_top'] = "go to top";
 $txt['header_cancel'] = "cancel";
 $txt['header_home'] = "Home";
 $txt['header_profile'] = "Profile";
-$txt['header_find_people'] = "Find people";
+$txt['header_find_people'] = "Find People";
 $txt['header_settings'] = "Settings";
 $txt['header_help'] = "Help";
-$txt['header_sign_out'] = "Sign out";
-$txt['header_sign_in'] = "Sign in";
+$txt['header_sign_out'] = "Sign Out";
+$txt['header_sign_in'] = "Sign In";
 $txt['header_register'] = "Register";
 $txt['header_admin'] = "Admin";
 

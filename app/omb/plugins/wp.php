@@ -2092,6 +2092,37 @@ function wp_add_options($prefix,$options) {
 }
 
 
+function followgrid() {
+  
+  global $db;
+
+  $Subscription = $db->model('Subscription');
+  $Identity = $db->model('Identity');
+
+  $Subscription->find_by('subscriber',get_app_id());
+
+  $follist = array();
+  $count = 0;
+
+  while ($subscriber = $Subscription->MoveNext()){
+    $i = $Identity->find($subscriber->subscribed);
+    $follist[] = array('avatar'=>$i->avatar);
+  }
+
+  for ($i=0;$i<6;$i++)  {
+    echo '<li>';
+    for ($j=0;$j<6;$j++)  {
+      if (isset($follist[$count])){
+        echo '<span><img src="'.$follist[$count]['avatar'].'" /></span>';
+        $count++;
+      } else {
+        echo '<span></span>';
+      }
+    }  
+    echo '</li>';
+  }
+  
+}
 
 
 

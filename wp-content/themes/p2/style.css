@@ -1137,3 +1137,15 @@ hover:none;
 	font-weight:normal;
 	margin: 1.5em 0em 1.5em 0em;
 }
+
+#followgrid {
+  margin: 0px;
+  padding: 0px;
+}
+
+#followgrid img {
+  border: 0px;
+  width: 24px;
+  height: 24px;
+  margin: 2px;
+}
