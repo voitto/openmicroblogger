@@ -2098,7 +2098,9 @@ function followgrid() {
 
   $Subscription = $db->model('Subscription');
   $Identity = $db->model('Identity');
-
+  
+  $Subscription->set_limit(36);
+  
   $Subscription->find_by('subscriber',get_app_id());
 
   $follist = array();
