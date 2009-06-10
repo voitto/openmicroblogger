@@ -903,7 +903,7 @@ function wp_head() {
     
     //trigger_before( 'admin_head', $current_user, $current_user );
     
-    echo '<link rel="shortcut icon" href="'.base_path(true).'resource/favicon.ico" >';
+    echo '<link rel="shortcut icon" href="'.base_path(true).'resource/favicon.ico" />';
 
 
     if ($request->resource == "posts" && environment('theme') == 'prologue-theme')
@@ -972,11 +972,11 @@ echo '
 echo '   
     
     <script type="text/javascript">
-
+/*<![CDATA[*/
   
   function show_page(url) {
     
-    $("#main").html("<img src=\"'.base_path(true).'resource/jeditable/indicator.gif\">");
+    $("#main").html(\' <img src="'.base_path(true).'resource/jeditable/indicator.gif" alt="" /> \');
     
     $.get(url, function(str) {
       $("#main").hide();
@@ -1014,7 +1014,7 @@ function checkMaxLength() {
 	// not innerHTML
 }
 
-
+/*]]>*/
     </script>
     
     
@@ -1508,9 +1508,9 @@ function render_notice($title,&$the_post,&$the_author) {
         }
         if (substr($v,0,4) == 'http') {
           if ($request->action == 'entry')
-            $expl[$k] = "<div><a href=\"".$v."\">".$v."</a></div>";
+            $expl[$k] = "<a href=\"".$v."\">".$v."</a>";
           else
-            $expl[$k] = "<div><a class=\"oembed\" href=\"".$v."\">".$v."</a></div>";
+            $expl[$k] = "<a class=\"oembed\" href=\"".$v."\">".$v."</a>";
         }
       }
       $title = implode(" ", $expl);
@@ -1844,7 +1844,7 @@ function add_comment(divid) {
   var submit_to = "'.$userurl.'";
   
   $("#"+divid).editable(submit_to, { 
-      indicator   : "<img src=\"'.base_path(true).'resource/jeditable/indicator.gif\">",
+      indicator   : \'<img src="'.base_path(true).'resource/jeditable/indicator.gif" alt="" />\',
       submitdata  : function() {
         return {
           "entry[etag]"     : "'.$etag.'",
@@ -2106,12 +2106,12 @@ function followgrid() {
 
   while ($subscriber = $Subscription->MoveNext()){
     $i = $Identity->find($subscriber->subscribed);
-    $follist[] = array('avatar'=>$i->avatar, 'profile_url'=>$i->profile_url);
+    $follist[] = array('avatar'=>$i->avatar, 'profile_url'=>$i->profile_url, 'nickname'=>$i->nickname);
   }
 
     for ($j=0;$j<6;$j++)  {
       if (isset($follist[$count])){
-        echo '<a href="'.$follist[$count]['profile_url'].'"><img src="'.$follist[$count]['avatar'].'" /></a>';
+        echo '<a href="'.$follist[$count]['profile_url'].'"><img src="'.$follist[$count]['avatar'].'" alt="'.$follist[$count]['nickname'].'" /></a>';
         $count++;
       } else {
         echo '<p></p>';
@@ -2173,8 +2173,8 @@ $blogdata = array(
   'atom_url'=>base_url(true)."?posts.atom",
   'rss_url'=>base_url(true)."?posts.rss",
   'rss2_url'=>base_url(true)."?posts.rss",
-  'charset'=>'',
-  'html_type'=>'',
+  'charset'=>'utf-8',
+  'html_type'=>'text/html',
   'theme_url'=>theme_path(),
   'stylesheet_url'=>theme_path()."style.css",
   'stylesheet_directory'=>theme_path(),

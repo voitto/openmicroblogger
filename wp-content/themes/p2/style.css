@@ -1165,3 +1165,10 @@ hover:none;
   height: 24px;
   margin: 0px 2px 2px 2px;
 }
+
+/********** Microformats **********/
+/* /db/library/php_microformats.php */
+.fn {
+	font-size:1.4em;
+	font-weight:bold;
+}

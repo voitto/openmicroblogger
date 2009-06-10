@@ -106,7 +106,7 @@ $subscribers = array();
 <?php elseif (isset($pro->id) && $pro->id > 0 && ($pro->id == $Member->id)) : ?>
 <br />
 <br />
-<form>
+<form action="" >
 <p><?php echo $txt['profile_subscribe_people']; ?>:</p>
 <p><?php echo $txt['profile_profile_url']; ?>: <input name="profid" size="40" value="<?php echo $request->url_for(array('resource'=>$pro->nickname)); ?>"/></p>
 </form>

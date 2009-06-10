@@ -4,7 +4,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 ?>
 <div id="postpage">
 <div id="main">
-<ul id="postlist">
+<div id="postlist">
 
 <?php 
 if( have_posts( ) ) { 
@@ -33,7 +33,7 @@ if( have_posts( ) ) {
 } // if have_posts
 ?>
 
-	</ul>
+	</div> <!-- // postlist -->
 </div> <!-- // main -->
 </div>
 <?php

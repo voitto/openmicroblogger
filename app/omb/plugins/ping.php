@@ -49,7 +49,8 @@ function send_ping( &$model, &$rec ) {
       $tweet .= '  </h4>';
       $tweet .= '  <div class="postcontent" id="content-'.$rec->id.'"><p>'.render_notice($rec->title,$rec,$o).'</p></div>';
       $tweet .= '    <div class="bottom_of_entry">&nbsp;</div>';
-      $tweet .= '   <ul id="comments" class="commentlist">';
+      $tweet .= '   <ul class="commentlist">';
+//      $tweet .= '   <ul id="comments" class="commentlist">';
       $tweet .= '  </ul>';
       $tweet .= '</li>';
       $payload['html'] = $tweet;

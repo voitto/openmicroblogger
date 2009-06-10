@@ -49,7 +49,7 @@
 
     <?php if (!empty($profile->bio)) : ?>
     <p class="liother">
-    <?php echo $txt['sidebar_bio']; ?><span class="bio";><?php echo $profile->bio; ?></span>
+    <?php echo $txt['sidebar_bio']; ?><span class="bio"><?php echo $profile->bio; ?></span>
     </p>
     <br />
   <?php endif; ?>
@@ -86,7 +86,7 @@
   <?php if (!in_array('settings',$request->activeroute->patterns)) { ?>
   <?php if (!isset($request->params['nickname'])) : ?>
 
-    <img width="32" height="32" class="profile" src="<?php echo $profile->avatar; ?>" alt="<?php echo $profile->fullname; ?>"><a class="profile-nick" href="<?php echo $profile->profile_url; ?>"><?php echo $profile->nickname; ?></a>
+    <img width="32" height="32" class="profile" src="<?php echo $profile->avatar; ?>" alt="<?php echo $profile->fullname; ?>" /><a class="profile-nick" href="<?php echo $profile->profile_url; ?>"><?php echo $profile->nickname; ?></a>
     <br /><br />
   <?php endif; ?>
   
@@ -168,9 +168,7 @@
     <p class="liother">
     <?php echo $txt['sidebar_favorites']; ?>
     </p>
-    <p class="liother">
-    <form method="post"><input size="14" value="<?php echo $txt['sidebar_search']; ?>"></form>
-    </p>
+    <form class="liother" method="post" action=""><input size="14" value="<?php echo $txt['sidebar_search']; ?>" /></form>
     <p class="liother">
     <?php echo $txt['sidebar_trending_topics']; ?>
     </p>

@@ -599,3 +599,10 @@ hover:none;
 	margin: 0em 0em 0em 0em;
 	padding-left:10px;
 }
+
+/********** Microformats **********/
+/* /db/library/php_microformats.php */
+.fn {
+	font-size:1.4em;
+	font-weight:bold;
+}

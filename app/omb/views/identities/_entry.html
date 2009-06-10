@@ -29,7 +29,7 @@ $subscribers = array();
   <?php if ($subscriber->subscribed == $Member->id) : ?>
     <?php $subscribers[] = $subscriber->subscriber; ?>
     <?php $si = $Identity->find( $subscriber->subscriber ); ?>
-    <a href="<?php if (!empty($si->profile_url)) echo $si->profile_url; else echo $si->profile;  ?>"><img class="entry-img" src="<?php echo $si->avatar; ?>" /></a>
+    <a href="<?php if (!empty($si->profile_url)) echo $si->profile_url; else echo $si->profile;  ?>"><img class="entry-img" alt="<?php echo $si->nickname; ?>" src="<?php echo $si->avatar; ?>" /></a>
   <?php endif; ?>
 <?php endwhile; ?>
 
@@ -42,7 +42,7 @@ $subscribers = array();
 <?php while ($subscriber = $Subscription->MoveNext()) : ?>
 <?php if ($subscriber->subscriber == $Member->id) : ?>
 <?php $si = $Identity->find( $subscriber->subscribed ); ?>
-<a href="<?php if (!empty($si->profile_url)) echo $si->profile_url; else echo $si->profile; ?>"><img class="entry-img" src="<?php echo $si->avatar; ?>" /></a>
+<a href="<?php if (!empty($si->profile_url)) echo $si->profile_url; else echo $si->profile; ?>"><img class="entry-img" alt="<?php echo $si->nickname; ?>" src="<?php echo $si->avatar; ?>" /></a>
 <?php endif; ?>
 <?php endwhile; ?>
 
@@ -77,7 +77,7 @@ $subscribers = array();
 <?php elseif (isset($pro->id) && $pro->id > 0 && ($pro->id == $Member->id)) : ?>
 <br />
 <br />
-<form>
+<form action="">
 <p><?php echo $txt['views-entry_subscribe_people']; ?>:</p>
 <p><?php echo $txt['views-entry_profile_url']; ?>: <input name="profid" size="40" value="<?php echo $request->url_for(array('resource'=>$pro->nickname)); ?>"/></p>
 </form>

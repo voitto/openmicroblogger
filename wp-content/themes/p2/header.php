@@ -38,7 +38,7 @@ $(document).ready(function() {
 <?php endif; ?>
 
 	</head>
-<body onLoad="JavaScript:setMaxLength();"<?php if(is_single()) echo ' class="single"'; ?>>
+<body onload="JavaScript:setMaxLength();"<?php if(is_single()) echo ' class="single"'; ?>>
 
 <div id="notify"></div>
 

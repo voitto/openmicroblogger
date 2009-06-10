@@ -11,9 +11,9 @@ if ( post_password_required() ) { ?>
 
 if ( have_comments ) {
 	
-	echo "<ul id=\"comments\" class=\"commentlist\">\n";
+	echo "<ul class=\"commentlist\"><li>\n";
 	wp_list_comments(array('callback' => 'prologue_comment'));
-	echo "</ul>\n";
+	echo "</li></ul>\n";
 	if ( get_option('page_comments') && (get_query_var('cpage') > 1 || get_query_var('cpage') < get_comment_pages_count() ) ) {
 		?> <div class="navigation"><p> <?php
 		previous_comments_link(); 
