@@ -66,6 +66,7 @@ function wp_list_comments() {
 function render_comment(&$post,&$profile,&$parent) {
 require('wp-content/language/lang_chooser.php'); //Loads the language-file
   global $request;
+  $comments = "";
   $cctime = date( "g:i A" , strtotime($post->created) );
   $ccdate = date( get_settings('date_format'), strtotime($post->created) );
   $ccurl = $request->url_for(array('resource'=>'posts','id'=>$post->id));
