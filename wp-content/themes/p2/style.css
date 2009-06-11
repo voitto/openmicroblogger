@@ -562,7 +562,8 @@ margin-left:8px;
 
 #sidebar #sidebar-posts-stats {
 	margin:0px auto;
-	text-align:center;
+	text-align:left;
+	width:260px;
 }
 
 #sidebar #sidebar-posts-stats #sidebar-subscribers {

@@ -66,12 +66,10 @@ function wp_list_comments() {
 function render_comment(&$post,&$profile,&$parent) {
 require('wp-content/language/lang_chooser.php'); //Loads the language-file
   global $request;
-  $comments = "";
   $cctime = date( "g:i A" , strtotime($post->created) );
   $ccdate = date( get_settings('date_format'), strtotime($post->created) );
   $ccurl = $request->url_for(array('resource'=>'posts','id'=>$post->id));
   $ccrurl = $request->url_for(array('resource'=>'posts','id'=>$parent->id));
-  $comments .= '  <li class="comment byuser comment-author-'.$profile->nickname.' even thread-even depth-1" id="comment-'.$post->id.'">';
   $comments .= '<img alt=\'image\' src=\''.$profile->avatar.'\' class=\'avatar avatar-32\' height=\'32\' width=\'32\' />';
   $comments .= '<h4>';
   $comments .= $profile->nickname;
@@ -80,7 +78,7 @@ require('wp-content/language/lang_chooser.php'); //Loads the language-file
   $comments .= '<span class="actions">';
   $comments .= '<a href="'.$ccurl.'">Permalink</a>  | <a rel=\'nofollow\' class=\'comment-reply-link\' href=\''.$ccrurl.'\'>' . $txt['wp_reply'] . '</a>';
   if ( get_profile_id() == $post->profile_id ) { 
-	  $comments .= 	' | <a href="'.get_edit_post_link( $post ).'" class="post-edit-link" rel="'. $post->id.'">'.$txt['wp_Edit'].'; ?></a>';
+	  $comments .= 	' | <a href="'.get_edit_post_link( $post ).'" class="post-edit-link" rel="'. $post->id.'">'.$txt['wp_Edit'].'</a>';
 	  $comments .= 	' | <a href="'.get_edit_post_link( $post, 'remove' ).'" class="post-remove-link" rel="'. $post->id.'">'.$txt['wp_remove'].'</a>';
 	}
   $comments .= '</span>';
@@ -90,7 +88,7 @@ require('wp-content/language/lang_chooser.php'); //Loads the language-file
   $comments .= '<div class="commentcontent" id="commentcontent-'.$post->id.'">';
   $comments .= '<p>'.render_notice($post->title,$post,$profile).'</p>';
   $comments .= '</div>';
-  $comments .= '</li>';
+  $comments .= '<ul><li></li></ul>';
   return $comments;
 }
 
