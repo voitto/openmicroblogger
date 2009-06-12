@@ -100,25 +100,19 @@ get_header();
 <?php
 if( have_posts( ) ) {
 ?>
-<ul id="postlist">
 <?php
 	$previous_user_id = 0;
 	while( have_posts( ) ) {
 		the_post( );
 ?>
 
-<li id="prologue-<?php the_ID(); ?>" class="user_id_<?php the_author_ID( ); ?>">
-
+<hr />
 <?php
 	$current_user_id = get_the_author_ID( );
-	echo prologue_get_avatar( $current_user_id, get_the_author_email( ), 48 );
 ?>
 
 	<h4>
-		<?php the_author_posts_link( ); ?>
 		<span class="meta">
-			<?php global $the_post; echo laconica_time($the_post->created); ?> |
-			<?php comments_popup_link( __( '0' ), __( '1' ), __( '%' ) ); ?>
 			<span class="actions">
 			<a href="<?php the_permalink( ); ?>" class="thepermalink"><?php echo $txt['index_permalink']; ?></a>
 			<?php if (function_exists('post_reply_link')) 
@@ -127,8 +121,15 @@ if( have_posts( ) ) {
 			|  <a href="<?php echo (get_edit_post_link( get_the_id() ))?>" class="post-edit-link" rel="<?php the_ID(); ?>"><?php echo $txt['index_edit']; ?></a>
 			|  <a href="<?php echo (get_edit_post_link( get_the_id(), 'remove' ))?>" class="post-edit-link" rel="<?php the_ID(); ?>"><?php echo $txt['index_remove']; ?></a>
 			<?php } ?>
+			<br />
 			</span>
 			<br />
+<?php
+	echo prologue_get_avatar( $current_user_id, get_the_author_email( ), 48 );
+?>
+		<?php the_author_posts_link( ); ?>
+			<?php global $the_post; echo laconica_time($the_post->created); ?> |
+			<?php comments_popup_link( __( '0' ), __( '1' ), __( '%' ) ); ?>
 			<?php tags_with_count( '', __( 'Tags:' ), ', ', ' ' ); ?>
 		</span>
 	</h4>
@@ -138,65 +139,10 @@ if( have_posts( ) ) {
 		if( (is_home() or is_front_page()) ) $withcomments = true; 
 		comments_template('/inline-comments.php'); 
 	?>
-<?php
-//Only append comment form to  first post with open comments
-if( !$formvisible && 'open' == $post->comment_status ) {
-$formvisible=1;
-?>
-<div id="wp-temp-form-div">
-<div id="respond">
 
-<h3><?php echo $txt['index_reply']; ?> <small id="cancel-comment-reply"><?php echo cancel_comment_reply_link() ?></small></h3>
-
-<?php
-if ( get_option('comment_registration') && !$user_ID ) {
-?>
-
-<p><?php echo $txt['index_you_must_be']; ?><a href="<?php echo get_option('siteurl'); ?>/wp-login.php?redirect_to=<?php the_permalink(); ?>" title="Log in"><?php echo $txt['index_logged_in']; ?></a><?php echo $txt['index_to_post_a_comment']; ?>.</p>
-
-<?php
-// if option comment_registration and not user_ID
-} else { ?>
-
-<form id="commentform" action="<?php echo get_option( 'siteurl' ); ?>/wp-comments-post.php" method="post">
-	<div class="form"><textarea id="comment" name="comment" cols ="45" rows="3"></textarea></div>
-	<label class="post-error" for="comment" id="commentindex_error"></label>
-	<?php if( $user_ID ) { ?>
-		<p>Logged in as <a href="<?php echo get_option( 'siteurl' ); ?>/wp-admin/profile.php"><?php echo $user_identity; ?></a>.  <a href="<?php echo get_option( 'siteurl' ); ?>/wp-login.php?action=logout" title="Log out"><?php echo $txt['index_logout']; ?> &rarr;</a></p>
-<?php // if user_ID 
-} else { ?>
-<table>
-	<tr>
-		<td>
-			<label for="author">Name <em>(required)</em></label>
-			<div class="form"><input id="author" name="author" type="text" value="<?php echo $comment_author; ?>" /></div>
-		</td>
-		<td>
-			<label for="email">Email <em>(required)</em></label>
-			<div class="form"><input id="email" name="email" type="text" value="<?php echo $comment_author_email; ?>"  /></div>
-		</td>
-		<td class="last-child">
-			<label for="url">Web Site</label>
-			<div class="form"><input id="url" name="url" type="text" value="<?php echo $comment_author_url; ?>"  /></div>
-		</td>
-	</tr>
-</table>
-<?php } // else user_ID ?>
-
-<div><input id="comment-submit" name="submit" type="submit" value="<?php echo $txt['index_post_comment']; ?>"  /><?php comment_id_fields(); ?>&nbsp;<span class="progress"><img src="<?php bloginfo('template_directory'); ?>/i/indicator.gif" alt="Loading..." /></span></div>
-
-</form>
-</div>
-</div>
-<?php
-} // else option comment_registration and not user_ID
-} // if open comment_status
-?>
-</li>
 <?php
 	} // while have_posts
 ?>
-	</ul>
 <?php
 } // if have_posts
 else {

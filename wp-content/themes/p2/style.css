@@ -312,9 +312,10 @@ position: absolute;
 line-height: 3em;
 }
 #main .actions {
-	position: absolute;
-	right: 2px;
-	top: 0;
+	position:absolute;
+	text-align:right;
+	top:0px;
+	right:0px;
 }
 #main .actions, #main .actions a, #main .actions a:link, #main .actions a:visited, #main .actions a:hover, #main .actions a:active, 
 #main .keyselected .actions, #main .keyselected .actions a, #main .keyselected .actions a:link, #main .keyselected .actions a:visited, #main .keyselected .actions a:hover, #main .keyselected .actions a:active,
@@ -341,10 +342,10 @@ h2 img {
 	margin-right: 8px;
 }
 #main h4 {
-	font-size: 1em;
+	font-size: 1.1em;
 	line-height: 1.1em;
 }
-#main h4 a {
+#main h4 span a.nick {
 	font-weight: bold;
 }
 #main h4 span a {
@@ -365,21 +366,14 @@ h2 img {
 #main ul, #main ol {
 	margin-left: 18px;
 }
-#main ul.commentlist {
-	list-style: none;
+#main .commentlist {
 	margin-left: 64px;
 }
-#main ul.commentlist li {
-	list-style: none;
+#main hr {
+	border:solid #bbb 1px;
 }
-#main ul.commentlist .commentcontent li {
-	list-style: none;
-}
-#main ul.commentlist {
-	border-top: 0;
-	margin-top: 0;
-}
-#main ul.commentlist img.avatar {
+
+#main img.avatar {
 	margin-right: 12px;
 }
 #main form {

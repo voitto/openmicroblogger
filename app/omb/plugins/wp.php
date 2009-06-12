@@ -67,15 +67,14 @@ function render_comment(&$post,&$profile,&$parent) {
 require('wp-content/language/lang_chooser.php'); //Loads the language-file
   global $request;
   $comments = "";
-  $cctime = date( "g:i A" , strtotime($post->created) );
-  $ccdate = date( get_settings('date_format'), strtotime($post->created) );
+  $comments .= '<hr />';
+//  $cctime = date( "g:i A" , strtotime($post->created) );
+//  $ccdate = date( get_settings('date_format'), strtotime($post->created) );
   $ccurl = $request->url_for(array('resource'=>'posts','id'=>$post->id));
   $ccrurl = $request->url_for(array('resource'=>'posts','id'=>$parent->id));
-  $comments .= '<img alt=\'image\' src=\''.$profile->avatar.'\' class=\'avatar avatar-32\' height=\'32\' width=\'32\' />';
   $comments .= '<h4>';
-  $comments .= $profile->nickname;
   $comments .= ' <span class="meta">';
-  $comments .= $cctime.' <em>on</em> '.$ccdate;
+//  $comments .= $cctime.' <em>on</em> '.$ccdate;
   $comments .= '<span class="actions">';
   $comments .= '<a href="'.$ccurl.'">Permalink</a>  | <a rel=\'nofollow\' class=\'comment-reply-link\' href=\''.$ccrurl.'\'>' . $txt['wp_reply'] . '</a>';
   if ( get_profile_id() == $post->profile_id ) { 
@@ -84,12 +83,14 @@ require('wp-content/language/lang_chooser.php'); //Loads the language-file
 	}
   $comments .= '</span>';
   $comments .= '<br />';
+  $comments .= '<img alt=\'image\' src=\''.$profile->avatar.'\' class=\'avatar avatar-32\' height=\'32\' width=\'32\' />';
+  $comments .= '<a class="nick" href=\''.base_path(true).''.$profile->nickname.'\'>'.$profile->nickname.'</a>&nbsp;';
+  $comments .= laconica_time($post->created);
   $comments .= '</span>';
   $comments .= '</h4>';
   $comments .= '<div class="commentcontent" id="commentcontent-'.$post->id.'">';
   $comments .= '<p>'.render_notice($post->title,$post,$profile).'</p>';
   $comments .= '</div>';
-  $comments .= '<ul><li></li></ul>';
   return $comments;
 }
 
@@ -1555,7 +1556,7 @@ function get_author_feed_link( $id ) {
 
 function the_author_posts_link( ) {
   global $the_author,$request;
-  echo '<a href="';
+  echo '<a class="nick" href="';
   echo $the_author->profile;
   echo '" title="Posts by '.$the_author->nickname.'">'.$the_author->nickname.'</a>';
 }
