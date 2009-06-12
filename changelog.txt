@@ -2,15 +2,17 @@
 # Openmicroblogger - Changelog #
 ################################
 
-# Cutline
-* Changes
-(+) New file added
-(-) File removed
-(o) File Changed
+################################
+#           Cutline            #
+# * Changes                    #
+# (+) New file added           #
+# (-) File removed             #
+# (o) File Changed             #
+################################
 
-########################
-Current Release: 0.3b75
-########################
+################################
+# Current Release: 0.3b75      #
+################################
 
 
 
