@@ -11,7 +11,7 @@
 ################################
 
 ################################
-# Current Release: 0.3b75      #
+# Current Release: 0.3b76      #
 ################################
 
 
@@ -24,14 +24,28 @@ This has changed in Release:
 * P2-Theme: following added to sidebar
 * W3C-xhtml-conform fixes
 * minor fixes
-* minor language fixes
+* more files added to multilanguage-support
+* updated readme
+* added this changelog so that you can see what has changed since last release
 
+README
 (o) app/omb/plugins/ping.php
 (o) app/omb/plugins/wp.php
+(o) app/omb/views/blogs/_edit.html
+(o) app/omb/views/blogs/_index.html
+(o) app/omb/views/blogs/_mystreams.html
+(o) app/omb/views/blogs/_new.html
+(o) app/omb/views/blogs/_newajax.html
+(o) app/omb/views/blogs/_remove.html
+(o) app/omb/views/categories/_edit.html
+(o) app/omb/views/categories/_manage.html
+(o) app/omb/views/categories/_new.html
+(o) app/omb/views/categories/_remove.html
 (o) app/omb/views/identities/_entry.html
 (o) app/omb/views/posts/_profile.html
 (o) db/library/php_microformats.php
 (o) wp-content/language/eng.php
+(o) wp-content/language/ger.php
 (o) wp-content/themes/p2/comments.php
 (o) wp-content/themes/p2/header.php
 (o) wp-content/themes/p2/index.php
@@ -41,6 +55,7 @@ This has changed in Release:
 (o) wp-content/themes/p2/style.css
 (o) wp-content/themes/prologue-theme/style.css
 
+(+) changelog.txt
 
 
 #0.3b75
