@@ -202,6 +202,56 @@ $txt['identities_settings'] = "Profil einsehen / bearbeiten";
 
 
 /////////////////////////////////////
+# /app/omb/views/blogs/_edit.html
+# /app/omb/views/blogs/_new.html
+# /app/omb/views/blogs/_newajax.html
+/////////////////////////////////////
+$txt['blogs_edit_title'] = "Titel";
+$txt['blogs_edit_cancel'] = "Abbrechen";
+$txt['blogs_edit_save_stream'] = "Stream speichern";
+
+
+/////////////////////////////////////
+# /app/omb/views/blogs/_index.html
+# /app/omb/views/blogs/_mystreams.html
+/////////////////////////////////////
+$txt['blogs_index_streams'] = "Streams";
+$txt['blogs_index_create_new_stream'] = "Einen neuen Stream erstellen...";
+
+
+/////////////////////////////////////
+# /app/omb/views/blogs/_remove.html
+/////////////////////////////////////
+$txt['blogs_remove_title'] = "Titel";
+$txt['blogs_remove_cancel'] = "Abbrechen";
+$txt['blogs_remove_delete_entry'] = "Diesen Eintrag l&ouml;schen";
+
+
+/////////////////////////////////////
+# /app/omb/views/categories/_edit.html
+# /app/omb/views/categories/_manage.html
+# /app/omb/views/categories/_new.html
+/////////////////////////////////////
+$txt['categories_edit_name'] = "Name";
+$txt['categories_edit_term'] = "Bezeichnung";
+$txt['categories_edit_position'] = "Position";
+$txt['categories_edit_cancel'] = "Abbrechen";
+$txt['categories_edit_save_category'] = "Kategorie speichern";
+$txt['categories_edit_remove'] = "l&ouml;schen";
+$txt['categories_edit_edit'] = "editieren";
+$txt['categories_edit_create_new_category'] = "Eine neue Kategorie erstellen...";
+
+
+/////////////////////////////////////
+# /app/omb/views/categories/_delete.html
+/////////////////////////////////////
+$txt['categories_delete_question_1'] = "Bist du dir sicher, dass du die Kategorie ";
+$txt['categories_delete_question_2'] = " l&ouml;schen m&ouml;chtest?";
+$txt['categories_delete_cancel'] = "Abbrechen";
+$txt['categories_delete_delete_category'] = "Kategorie l&ouml;schen";
+
+
+/////////////////////////////////////
 # /app/omb/views/pages/_entry.html
 /////////////////////////////////////
 $txt['pages_entry_ephonic1'] = "Um das ";

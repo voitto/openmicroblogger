@@ -1,4 +1,4 @@
-
+<?php include 'wp-content/language/lang_chooser.php'; //Loads the language-file ?>
 <table align="center" cellpadding="0" cellspacing="20" border="0">
 
   <th colspan="4">
@@ -6,7 +6,7 @@
   </th>
 
   <tr>
-    <td><b>Streams</b></td>
+    <td><b><?php echo $txt['blogs_index_streams']; ?></b></td>
     <td><b></b></td>
   </tr>
 
@@ -27,7 +27,7 @@
   <?php endwhile; ?>
   
   <tr>
-    <td colspan="2"><a href="<?php url_for( array( 'resource'=>'blogs','action'=>'new' )); ?>">Create a new Stream...</a></td>
+    <td colspan="2"><a href="<?php url_for( array( 'resource'=>'blogs','action'=>'new' )); ?>"><?php echo $txt['blogs_index_creat_new_stream']; ?></a></td>
 
   </tr>
 

@@ -1,7 +1,9 @@
+<?php include 'wp-content/language/lang_chooser.php'; //Loads the language-file ?>
+
 <table align="center" cellpadding="3" cellspacing="0" border="0"><th colspan="2"><?php breadcrumbs(); ?></th>
 
    <tr>
-<td align="right"><p>Title:</p></td>
+<td align="right"><p><?php echo $txt['blogs_remove_title']; ?></p></td>
   <td>
   <?php print $Member->title ?>
   </td>
@@ -18,9 +20,9 @@
   </th></tr>
     <tr>
       <td align="right"><b></b></td>
-      <td valign="top" align="left"><br /><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="Cancel" type="button" />
+      <td valign="top" align="left"><br /><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="<?php echo $txt['blogs_remove_cancel']; ?>" type="button" />
   
-  <input value="Delete This Entry" type="submit" name="button_group" /></td>
+  <input value="<?php echo $txt['blogs_remove_delete_entry']; ?>" type="submit" name="button_group" /></td>
     </tr>
   </table>
   </div>

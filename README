@@ -35,22 +35,27 @@ INSTALLATION
 
 
 /////////////////////
-// 5 steps to install
+// 7 steps to install
 /////////////////////
 
 1. obtain OpenMicroBlogger http://dbscript.net/omb.zip
 
 2. make a folder on your desktop and unzip the files in it
-  
-3. edit the the database settings in the file named config.php
 
-      define(       "DB_NAME", ""      ); // name of database
-      define(       "DB_USER", ""      ); // user name
-      define(   "DB_PASSWORD", ""      ); // user password
+3. use a ftp-client to copy the unziped files to your webserver folder
 
-4. copy the files to a folder on your Web server
+4. open your Web browser and run
+      yourdomain.com/install.php
 
-5. open your Web browser and browse to the installation folder
+5. Follow the installation instructions
+
+6. If installation succeeded, open your Web browser and browse to the installation folder
+
+7. set in app/config/config.yml your 
+
+      site_title: Your Site Title
+      site_subtitle: Your Site Subtitle
+      site_description: Your Site Description
 
  [[ that is it! ]]
 

@@ -73,7 +73,6 @@ This has changed in Release:
 * overhaul code: xhtml-conform <br />
 * removed unused files
 
-
 (o) app/auction/views/index.html
 (o) app/identica/views/dents/_edit.html
 (o) app/omb/views/identities/_admin.html
@@ -173,8 +172,6 @@ This has changed in Release:
 (o) wp-content/themes/p2/tag.php
 
 
-
-
 #0.3b72
 
 * P2-Theme: Added sidebar-bg-color in css-file
@@ -185,7 +182,6 @@ This has changed in Release:
 * Design-Update of Reply/Permalink-Page
 * fixed subscriptions list
 * fix pagination, personal tab 
-
 
 (o) app/identica/identica.php
 (o) app/identica/views/dents/_edit.html
@@ -225,7 +221,6 @@ This has changed in Release:
 * P2-Theme: added country, locality, website to sidebar and profile-edit
 * P2-Theme: added sidebar greeting-message if not logged in
 * Settings - Profile headline redesign
-
 
 (o) install.php
 (o) app/omb/controllers/admin.php

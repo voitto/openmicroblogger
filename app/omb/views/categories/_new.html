@@ -1,4 +1,4 @@
-
+<?php include 'wp-content/language/lang_chooser.php'; //Loads the language-file ?>
 
 <form action="<?php url_for( 'categories' ); ?>" method="post" name="categories" id="categories">
 <div>
@@ -11,14 +11,14 @@
 </th></tr>
 
 	<tr>
-		<td align="right" valign="top"><p>Name</p></td>
+		<td align="right" valign="top"><p><?php echo $txt['categories_edit_name']; ?></p></td>
 		<td valign="top" align="left"><input size="50" maxlength="255" id="category_name" name="category[name]" type="text" value="" /></td>
 	</tr>
 	<tr>
 		<td align="right" valign="top"><p></p></td>
-		<td valign="top" align="left"><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="Cancel" type="button" />
+		<td valign="top" align="left"><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="<?php echo $txt['categories_edit_cancel']; ?>" type="button" />
 
-<input value="Save Category" type="submit" name="button_group" /></td>
+<input value="<?php echo $txt['categories_edit_save_category']; ?>" type="submit" name="button_group" /></td>
 	</tr>
 </table>
 </div>

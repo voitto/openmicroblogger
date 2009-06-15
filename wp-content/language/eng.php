@@ -202,6 +202,56 @@ $txt['identities_settings'] = "Edit your profile";
 
 
 /////////////////////////////////////
+# /app/omb/views/blogs/_edit.html
+# /app/omb/views/blogs/_new.html
+# /app/omb/views/blogs/_newajax.html
+/////////////////////////////////////
+$txt['blogs_edit_title'] = "Title";
+$txt['blogs_edit_cancel'] = "Cancel";
+$txt['blogs_edit_save_stream'] = "Save Stream";
+
+
+/////////////////////////////////////
+# /app/omb/views/blogs/_index.html
+# /app/omb/views/blogs/_mystreams.html
+/////////////////////////////////////
+$txt['blogs_index_streams'] = "Streams";
+$txt['blogs_index_create_new_stream'] = "Create a new Stream...";
+
+
+/////////////////////////////////////
+# /app/omb/views/blogs/_remove.html
+/////////////////////////////////////
+$txt['blogs_remove_title'] = "Title";
+$txt['blogs_remove_cancel'] = "Cancel";
+$txt['blogs_remove_delete_entry'] = "Delete This Entry";
+
+
+/////////////////////////////////////
+# /app/omb/views/categories/_edit.html
+# /app/omb/views/categories/_manage.html
+# /app/omb/views/categories/_new.html
+/////////////////////////////////////
+$txt['categories_edit_name'] = "Name";
+$txt['categories_edit_term'] = "Term";
+$txt['categories_edit_position'] = "Position";
+$txt['categories_edit_cancel'] = "Cancel";
+$txt['categories_edit_save_category'] = "Save Category";
+$txt['categories_edit_remove'] = "remove";
+$txt['categories_edit_edit'] = "edit";
+$txt['categories_edit_create_new_category'] = "Create a new Category...";
+
+
+/////////////////////////////////////
+# /app/omb/views/categories/_delete.html
+/////////////////////////////////////
+$txt['categories_delete_question_1'] = "Are you sure you want to delete the ";
+$txt['categories_delete_question_2'] = " category?";
+$txt['categories_delete_cancel'] = "Cancel";
+$txt['categories_delete_delete_category'] = "Delete Category";
+
+
+/////////////////////////////////////
 # /app/omb/views/pages/_entry.html
 /////////////////////////////////////
 $txt['pages_entry_ephonic1'] = "To use the ";

@@ -1,11 +1,12 @@
+<?php include 'wp-content/language/lang_chooser.php'; //Loads the language-file ?>
 
 <table align="center" cellpadding="13" cellspacing="0" border="0">
 
 
 
   <tr>
-    <td><b>Name</b></td>
-    <td><b>Term</b></td>
+    <td><b><?php echo $txt['categories_edit_name']; ?></b></td>
+    <td><b><?php echo $txt['categories_edit_term']; ?></b></td>
     <td><b></b></td>
     <td><p></p></td>
     <td><p></p></td>
@@ -24,12 +25,12 @@
       <td></td>
       <td>
         <a href="<?php url_for( array( 'resource'=>'categories', 'id'=>$Member->id, 'action'=>'remove' )); ?>">
-          remove
+          <?php echo $txt['categories_edit_remove']; ?>
         </a>
       </td>
       <td>
         <a href="<?php url_for( array( 'resource'=>'categories', 'id'=>$Member->id, 'action'=>'edit' )); ?>">
-          edit
+          <?php echo $txt['categories_edit_edit']; ?>
         </a>
       </td>
       <td></td>
@@ -37,7 +38,7 @@
 
   <?php endwhile; ?>
   <tr>
-    <td colspan="2"><a href="<?php url_for( array( 'resource'=>'categories','action'=>'new' )); ?>">Create a new Category...</a></td>
+    <td colspan="2"><a href="<?php url_for( array( 'resource'=>'categories','action'=>'new' )); ?>"><?php echo $txt['categories_edit_create_new_category']; ?></a></td>
 
   </tr>
 
