@@ -93,14 +93,14 @@
   <div id="sidebar-posts-stats">
 
         <div id="sidebar-subscribers">
-        <span class="sidebar_subscribers_count"><?php echo $count2; ?></span><br />
-        <span class="sidebar_subscribers"><a href="<?php echo $request->url_for(array("resource"=>$profile->nickname))."/subscribers"; ?>"><?php echo $txt['sidebar_followers']; ?></a></span>
-        </div>
-  
-        <div id="sidebar-subscriptions">
         <span class="sidebar_subscriptions_count"><?php echo $count1; ?></span>
         <br />
         <span class="sidebar_subscriptions"><a href="<?php echo $request->url_for(array("resource"=>$profile->nickname))."/subscriptions"; ?>"><?php echo $txt['sidebar_following']; ?></a></span>
+        </div>
+  
+        <div id="sidebar-subscriptions">
+        <span class="sidebar_subscribers_count"><?php echo $count2; ?></span><br />
+        <span class="sidebar_subscribers"><a href="<?php echo $request->url_for(array("resource"=>$profile->nickname))."/subscribers"; ?>"><?php echo $txt['sidebar_followers']; ?></a></span>
         </div>
 
   <?php if (!isset($request->params['nickname'])) : ?>

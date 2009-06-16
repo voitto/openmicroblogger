@@ -11,12 +11,19 @@
 ################################
 
 ################################
-# Current Release: 0.3b76      #
+# Current Release: 0.3b77      #
 ################################
 
 
 
 This has changed in Release:
+
+#0.3b77
+
+* P2-Theme: Sidebar: exchanged followers/following
+
+(o) wp-content/themes/p2/sidebar.php
+
 
 #0.3b76
 
@@ -26,9 +33,9 @@ This has changed in Release:
 * minor fixes
 * more files added to multilanguage-support
 * updated readme
-* added this changelog so that you can see what has changed since last release
+* added this changelog so you can see what has changed since last release
 
-README
+(o) README
 (o) app/omb/plugins/ping.php
 (o) app/omb/plugins/wp.php
 (o) app/omb/views/blogs/_edit.html
