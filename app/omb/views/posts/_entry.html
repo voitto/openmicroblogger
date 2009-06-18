@@ -112,6 +112,9 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 
   <?php endwhile; ?>
 
+
+
+
 <?php if (environment('showpostmeta')) : ?>
 
 <?php $Review =& $db->model('Review'); $Review->has_one('profile_id:identities'); $Review->find_by('target_id',$Entry->id); ?>
@@ -133,6 +136,8 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 
 <?php endwhile; ?>
 
+
+<?php endif; ?>
 <br />
 
 
@@ -162,7 +167,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 </form>
 <br />
 
-
+<?php if (environment('showpostmeta')) : ?>
 <h3><?php echo $txt['entry_rating']; ?>:</h3>
 <form name="reviewpost" method="post" action="<?php url_for(array('resource'=>'reviews')); ?>">
 <input type="hidden" name="method" value="post">
@@ -185,7 +190,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 <input type="hidden" name="review[reviewer]" value="<?php if ($ident) print $ident->nickname; ?>">
 <input type="submit" value="<?php echo $txt['entry_button_submit_rating']; ?>">
 </form>
-
+<?php endif; ?>
 
 <?php else : ?>
 
@@ -193,7 +198,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 
 
 <?php endif; ?>
-<?php endif; ?>
+
 
 
 <?php if (!public_resource()) : ?>
