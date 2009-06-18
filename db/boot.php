@@ -345,6 +345,10 @@ if (strpos($request->uri, 'twitter/')) {
   if ( 1 <= preg_match_all( $pattern, $request->uri, $found )) {
     $uri = $request->uri;
     $tags[] = $found;
+    if (!$db->table_exists('blogs')) {
+      $Blog =& $db->model('Blog');
+      $Blog->save();
+    }
     $sql = "SELECT prefix FROM blogs WHERE nickname LIKE '".$db->escape_string($tags[0][2][0])."'";
     $result = $db->get_result( $sql );
     if ( $db->num_rows($result) == 1 ) {
