@@ -394,6 +394,9 @@ while ($s = $Setting->MoveNext()) {
  * overrides from config.php
  */
 
+if (isset($env['max_upload_mb']))
+  $db->max_upload_megabytes($env['max_upload_mb']);
+
 if (INTRANET)
   $env['authentication'] = 'password';
 

@@ -318,6 +318,8 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
   }
   function pre_insert( &$rec, $modified_field, $datatype ) {
     trigger_before( 'pre_insert', $rec, $this );
+
+    
     global $request;
     $req =& $request;
     if (isset($this->models[$rec->table]->field_attrs[$modified_field]['required'])) {
@@ -332,6 +334,12 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
     if ($datatype == 'time' && !(strlen($rec->attributes[$modified_field]) > 0))
       $rec->attributes[$modified_field] = date("Y-m-d H:i:s",strtotime("now"));
     if ($datatype == 'blob' && !(empty($req->params[strtolower(classify($rec->table))][$modified_field]))) {
+      if (environment('max_upload_mb')) {
+        $max = 1048576*environment('max_upload_mb');
+        $size = filesize($rec->attributes[$modified_field]);
+        if ($size >$max)
+          trigger_error('Sorry but that file is too big, the limit is '.environment('max_upload_mb').' megabytes', E_USER_ERROR);
+      }
       $coll = environment('collection_cache');
       if (isset($coll[$request->resource]) && $coll[$request->resource]['location'] == 'aws') {
         $this->file_upload = array($modified_field,$rec->attributes[$modified_field]);
@@ -373,6 +381,12 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
     }
     if ($datatype == 'blob' && !(empty($req->params[strtolower(classify($rec->table))][$modified_field]))) {
       if ( strlen( $rec->attributes[$modified_field] ) > 0 ) {
+        if (environment('max_upload_mb')) {
+          $max = 1048576*environment('max_upload_mb');
+          $size = filesize($rec->attributes[$modified_field]);
+          if ($size >$max)
+            trigger_error('Sorry but that file is too big, the limit is '.environment('max_upload_mb').' megabytes', E_USER_ERROR);
+        }
         $coll = environment('collection_cache');
         if (isset($coll[$request->resource]) && $coll[$request->resource]['location'] == 'aws') {
           $this->file_upload = array($modified_field,$rec->attributes[$modified_field]);
