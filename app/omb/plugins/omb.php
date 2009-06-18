@@ -153,6 +153,7 @@ function omb_filter_posts( &$model, &$db ) {
   } elseif (isset($request->params['byid']) && $request->resource == 'posts' && $model->table == 'posts'){
     $where = array(
       'profile_id'=>$request->params['byid'],
+      'parent_id'=>0
     );
     $model->set_param( 'find_by', $where );
   } elseif (environment('threaded') && in_array($request->action, array('index','get')) && $model->table == 'posts' && $request->resource == 'posts' && $request->id == 0) {
