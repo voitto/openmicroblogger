@@ -183,7 +183,7 @@
 
 <?php endif; ?>
 
-<?php if (environment('categories')) : ?>
+<?php if (signed_in() && environment('categories') && !isset($request->params['byid']) && !in_array('settings',$request->activeroute->patterns)) : ?>
   
 <?php 
 if( !function_exists('dynamic_sidebar') || !dynamic_sidebar() ) { 
