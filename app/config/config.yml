@@ -147,10 +147,10 @@ env:
   collection_cache:
     - posts:
       duration : 0
-      location : cache
+      location : uploads
     - identities:
       duration : 0
-      location : cache
+      location : uploads
   
   content_types:
     - 0:

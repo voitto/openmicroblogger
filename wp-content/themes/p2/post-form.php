@@ -27,6 +27,7 @@ $first_name		= attribute_escape( $user->first_name );
 		</div>
 	</form>
 		<div class="clear"></div>
+	<?php if (environment('uploads')) : ?>	
 		<?php if (environment('use_uploadify')) : ?>
 		<form action="<?php bloginfo( 'url' ); ?>">
 		<div id="fileUpload">You have a problem with your javascript</div>
@@ -34,5 +35,6 @@ $first_name		= attribute_escape( $user->first_name );
 	</form>
 	<?php else : ?>
 		  <p>Add:&nbsp; <a href="<?php url_for(array('resource'=>'posts','action'=>'upload')); ?>">Photos</a></p>
+  <?php endif; ?>
   <?php endif; ?>
 </div> <!-- // postbox -->

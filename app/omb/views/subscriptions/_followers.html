@@ -28,7 +28,7 @@ $zeep = environment('zeepKeyWord');
   &nbsp;(<?php echo $si->fullname; ?>)
 <?php endif; ?></h3>
 
-<p><a class="subs-astyle" href="<?php echo $request->url_for(array('resource'=>$si->nickname)); ?>"><img class="subs-img" src="<?php echo $si->avatar; ?>"></a>
+<p><a class="subs-astyle" href="<?php if (!empty($si->profile_url)) echo $si->profile_url; else echo $si->profile; ?>"><img class="subs-img" src="<?php echo $si->avatar; ?>"></a>
   </p>
 
 

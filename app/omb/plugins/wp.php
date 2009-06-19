@@ -1715,6 +1715,13 @@ function get_edit_post_link( &$post, $action=false ) {
   global $the_post,$request;
   if (!$action)
     $action = 'edit';
+  if (isset($post->id))
+    if ($post->profile_id == get_profile_id() || get_profile_id() == 1)
+      return $request->url_for(array(
+        'resource'  => 'posts',
+        'id'        => $post->id,
+        'action'    => $action
+      ));
   if (!isset($the_post->id))
     return "";
   if ($the_post->profile_id == get_profile_id() || get_profile_id() == 1)
@@ -1723,14 +1730,7 @@ function get_edit_post_link( &$post, $action=false ) {
       'id'        => $the_post->id,
       'action'    => $action
     ));
-  elseif (!empty($post->id))
-    if ($post->profile_id == get_profile_id() || get_profile_id() == 1)
-      return $request->url_for(array(
-        'resource'  => 'posts',
-        'id'        => $post->id,
-        'action'    => $action
-      ));
-  else
+
     return false;
 }
 

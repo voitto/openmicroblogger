@@ -4,8 +4,9 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
   global $request;
   $post = strtolower(classify($request->resource));
 
-?>
 
+?>
+<?php if (!environment('uploads')) return; ?>
 
 <form action="<?php url_for( $request->resource ); ?>" method="post" name="<?php url_for( $request->resource ); ?>" id="<?php url_for( $request->resource ); ?>" enctype="multipart/form-data">
 <div>

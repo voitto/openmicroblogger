@@ -88,9 +88,19 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 <?php endif; ?>
 
 
-
+  <br />
+  <br />
+  <br />
+  
   <?php global $request; ?>
-  <?php $Post =& $db->model(tableize($request->resource)); $Post->has_one('profile_id:identities'); $Post->find_by('parent_id',$Member->id); ?>
+  <?php 
+  
+  $Post =& $db->model(tableize($request->resource)); 
+  $Post->has_one('profile_id:identities');
+  $Post->set_order('asc');
+  $Post->find_by('parent_id',$Member->id); 
+   
+   ?>
   <?php while ($c = $Post->MoveNext()) : ?>
   <?php $replyauthor = $c->FirstChild('identities'); ?>
 
@@ -102,6 +112,10 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 
   <?php endwhile; ?>
 
+
+
+
+<?php if (environment('showpostmeta')) : ?>
 
 <?php $Review =& $db->model('Review'); $Review->has_one('profile_id:identities'); $Review->find_by('target_id',$Entry->id); ?>
 
@@ -122,6 +136,8 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 
 <?php endwhile; ?>
 
+
+<?php endif; ?>
 <br />
 
 
@@ -149,10 +165,9 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 <input type="submit" value="<?php echo $txt['entry_button_submit_reply']; ?>
 ">
 </form>
-
 <br />
 
-
+<?php if (environment('showpostmeta')) : ?>
 <h3><?php echo $txt['entry_rating']; ?>:</h3>
 <form name="reviewpost" method="post" action="<?php url_for(array('resource'=>'reviews')); ?>">
 <input type="hidden" name="method" value="post">
@@ -175,7 +190,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 <input type="hidden" name="review[reviewer]" value="<?php if ($ident) print $ident->nickname; ?>">
 <input type="submit" value="<?php echo $txt['entry_button_submit_rating']; ?>">
 </form>
-
+<?php endif; ?>
 
 <?php else : ?>
 
@@ -183,6 +198,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 
 
 <?php endif; ?>
+
 
 
 <?php if (!public_resource()) : ?>
@@ -205,30 +221,6 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 <?php if (public_resource()) : ?>
 
 <br />
-<br />
-<br />
-<div id="bookmark-this">
-<h3>Bookmark this:</h3> 
-<a href="http://blogmarks.net/my/new.php?mini=1&simple=1&url=<?php print urlencode($request->uri); ?>&title=<?php print urlencode($Member->title); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/blogmarks.gif" border="0" title="Bookmark to Blogmarks!" alt="Bookmark to Blogmarks!"></a>
-<a href="http://del.icio.us/post?url=<?php print urlencode($request->uri); ?>&title=<?php print urlencode($Member->title); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/delicious.gif" border="0" title="Bookmark to Del.icio.us!" alt="Bookmark to Del.icio.us!"></a>
-<a href="http://digg.com/submit?phase=2&url=<?php print urlencode($request->uri); ?>&title=<?php print urlencode($Member->title); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/digg.gif" border="0" title="Bookmark to Digg!" alt="Bookmark to Digg!"></a>
-<a href="http://furl.net/storeIt.jsp?t=<?php print urlencode($Member->title); ?>&u=<?php print urlencode($request->uri); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/furl.gif" border="0" title="Bookmark to Furl!" alt="Bookmark to Furl!"></a>
-<a href="http://ma.gnolia.com/beta/bookmarklet/add?url=<?php print urlencode($request->uri); ?>&title=<?php print urlencode($Member->title); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/magnolia.gif" border="0" title="Bookmark to Ma.gnolia!" alt="Bookmark to Ma.gnolia!"></a>
-<a href="http://www.newsvine.com/_tools/seed&save?u=<?php print urlencode($request->uri); ?>&h=<?php print urlencode($Member->title); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/newsvine.gif" border="0" title="Bookmark to Newsvine!" alt="Bookmark to Newsvine!"></a>
-<a href="http://reddit.com/submit?url=<?php print urlencode($request->uri); ?>&title=<?php print urlencode($Member->title); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/reddit.gif" border="0" title="Bookmark to Reddit!" alt="Bookmark to Reddit!"></a>
-<a href="http://www.spurl.net/spurl.php?title=<?php print urlencode($Member->title); ?>&url=<?php print urlencode($request->uri); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/spurl.gif" border="0" title="Bookmark to Spurl!" alt="Bookmark to Spurl!"></a>
-<a href="http://www.stumbleupon.com/submit?url=<?php print urlencode($request->uri); ?>&title=<?php print urlencode($Member->title); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/stumbleupon.gif" border="0" title="Bookmark to StumbleUpon!" alt="Bookmark to StumbleUpon!"></a>
-<a href="http://technorati.com/faves?add=<?php print urlencode($request->uri); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/technorati.gif" border="0" title="Bookmark to Technorati!" alt="Bookmark to Technorati!"></a>
-<a href="http://myweb2.search.yahoo.com/myresults/bookmarklet?t=<?php print urlencode($Member->title); ?>&u=<?php print urlencode($request->uri); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/yahoomyweb.png" border="0" title="Bookmark to Yahoo! My Web!" alt="Bookmark to Yahoo! My Web!"></a>
-<a href="http://co.mments.com/track?url=<?php print urlencode($request->uri); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/co.mments.gif" border="0" title="Bookmark to co.mments" alt="Bookmark to co.mments"></a>
-<a href="http://www.propeller.com/submit/?U=<?php print urlencode($request->uri); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/propeller.gif" border="0" title="Bookmark to Propeller" alt="Bookmark to Propeller"></a>
-<a href="https://favorites.live.com/quickadd.aspx?marklet=1&url=<?php print urlencode($request->uri); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/live.png" border="0" title="Bookmark to Live" alt="Bookmark to Live"></a>
-<a href="http://www.facebook.com/sharer.php?u=<?php print urlencode($request->uri); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/facebook.png" border="0" title="Bookmark to Facebook" alt="Bookmark to Facebook"></a>
-<a href="http://sphinn.com/submit.php?url=<?php print urlencode($request->uri); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/sphinn.png" border="0" title="Bookmark to Sphinn" alt="Bookmark to Sphinn"></a>
-<a href="http://www.google.com/bookmarks/mark?op=edit&bkmk=<?php print urlencode($request->uri); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/googlebookmark.png" border="0" title="Bookmark to Google" alt="Bookmark to Google"></a>
-<a href="http://twitthis.com/twit?url=<?php print urlencode($request->uri); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/twitter.png" border="0" title="Bookmark to Twitthis" alt="Bookmark to Twitthis"></a>
-<a href="http://pownce.com/send/link/?url=<?php print urlencode($request->uri); ?>" target="_blank"><img src="<?php base_path(); ?>resource/bookmark/pownce.gif" border="0" title="Bookmark to Pownce" alt="Bookmark to Pownce"></a>
-</div>
 <?php endif; ?>
 
 

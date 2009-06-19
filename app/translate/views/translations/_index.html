@@ -63,7 +63,8 @@
       <td>
         <a href="JavaScript:show_page('<?php url_for( array( 'resource'=>'translations', 'id'=>$Member->id,'action'=>'edit' )); ?>/partial');">
           <?php print $Member->name; ?>
-        </a>
+          
+        </a> (<?php print $status[$Member->name]; ?>)
       </td>
       <td><p><?php print $Member->code; ?></p></td>
       <td><p><?php $o = owner_of($Member); ?>@<a href="<?php url_for(array('resource'=>$o->nickname)); ?>"><?php echo $o->nickname ?></a></p></td>
@@ -124,8 +125,13 @@
         
       </td>
       <td><p><?php print $tran['code']; ?></p></td>
-      <td><p>@<a href="http://openmicroblogger.org/discuss/?shen84">Shen84</a></p></td>
-      <td><p></p></td>
+<?php if ($tran['code'] == 'eng') : ?>
+      <td><p>@<a href="http://openmicroblogger.com/brian">Brian</a></p></td>
+<?php else : ?>
+      <td><p>@<a href="http://tiquer.me/johannesschirge">Shen84</a></p></td>
+<?php endif; ?>
+
+      <td><a href="<?php url_for( array('resource'=>'translations','action'=>'export_'.$tran['code'].'.txt') ); ?>">export</a></td>
       <td><p></p></td>
     </tr>
 

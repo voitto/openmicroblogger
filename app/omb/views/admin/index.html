@@ -71,7 +71,12 @@
         'id'=>$threadmode->id,
         'action'=>'put'
       )); ?>";
-
+<?php
+if ($threadmode->value == 1)
+$ph = 'true';
+else
+$ph = 'false';
+?>
       var submit_to = "<?php echo $threadurl; ?>";
 
       $(".editable_select_tw_text").mouseover(function() {
@@ -88,7 +93,7 @@
           },
           name        : "setting[value]",
           type        : "select",
-          placeholder : "<?php echo $threadmode->value; ?>",
+          placeholder : "<?php echo $ph; ?>",
           noappend    : "true",
           submit      : "OK",
           tooltip     : "Click to edit...",
@@ -107,7 +112,12 @@
       )); ?>";
 
       var submit_to = "<?php echo $caturl; ?>";
-
+<?php
+if ($catmode->value == 1)
+$ph = 'true';
+else
+$ph = 'false';
+?>
       $(".editable_select_cat_text").mouseover(function() {
           $(this).highlightFade({end:'#def'});
       });
@@ -122,7 +132,7 @@
           },
           name        : "setting[value]",
           type        : "select",
-          placeholder : "<?php echo $catmode->value; ?>",
+          placeholder : "<?php echo $ph; ?>",
           noappend    : "true",
           submit      : "OK",
           tooltip     : "Click to edit...",
@@ -133,6 +143,47 @@
           }
       });
 
+
+      var submit_to = "<?php url_for(array(
+        'resource'=>'settings',
+        'id'=>$uplmode->id,
+        'action'=>'put'
+      )); ?>";
+
+      var submit_to = "<?php echo $uplurl; ?>";
+<?php
+if ($uplmode->value == 1)
+$ph = 'true';
+else
+$ph = 'false';
+?>
+      $(".editable_select_upl_text").mouseover(function() {
+          $(this).highlightFade({end:'#def'});
+      });
+      $(".editable_select_upl_text").mouseout(function() {
+          $(this).highlightFade({end:'#fff', speed:200});
+      });
+      $(".editable_select_upl_text").editable(submit_to, {
+          indicator   : "<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>",
+             data     : '<?php if (!class_exists("Services_JSON")) lib_include("json"); $json = new Services_JSON(); echo $json->encode( $aktwitter_tw_text_options ); ?>',
+          submitdata  : function() {
+            return {"entry[etag]" : "<?php echo $uplentry->etag; ?>"};
+          },
+          name        : "setting[value]",
+          type        : "select",
+          placeholder : "<?php echo $ph; ?>",
+          noappend    : "true",
+          submit      : "OK",
+          tooltip     : "Click to edit...",
+          cancel      : "Cancel",
+          callback    : function(value, settings) {
+            $(this).html(settings['jsonarr'][value-0]);
+            return(value);
+          }
+      });
+
+
+<?php setting_widget_text_helper('uplmax',$n1mode,$n1url,$n1entry); ?>
 
 
     });
@@ -149,6 +200,7 @@
   		</p>
   		<p>
   		    		    <table cellpadding="10" border="0">
+
 <tr>
   <td>
 <h4>Tags:</h4>
@@ -157,6 +209,7 @@
 <div class="editable_select_cat_text" id="editable_select_cat_text"></div>
 </td>
 </tr>
+
 <tr>
   <td>
 <h4>Threaded:</h4>
@@ -165,6 +218,25 @@
 <div class="editable_select_tw_text" id="editable_select_tw_text"></div>
 </td>
 </tr>
+
+<tr>
+  <td>
+<h4>Uploads:</h4>
+</td>
+<td>
+<div class="editable_select_upl_text" id="editable_select_upl_text"></div>
+</td>
+</tr>
+
+<tr>
+  <td>
+<h4>Max Upload Size (in Megabytes):</h4>
+</td>
+<td>
+<p class="jeditable_uplmax" id="jeditable_uplmax"><?php echo $n1mode->value; ?></p>
+</td>
+</tr>
+
 
 </table>
 

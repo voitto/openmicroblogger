@@ -13,11 +13,11 @@ $first_name    = attribute_escape( $user->first_name );
     
     <label for="posttext">Hi, <?php echo $first_name; ?>. Whatcha up to?</label>
     <textarea name="posttext" id="posttext" rows="3" cols="60" maxlength="140"></textarea>
-    
+    <?php if (environment('uploads')) : ?>
     <label for="postfile">File <span style="font-size: .8em;">(optional)</span></label>
     <input name="MAX_FILE_SIZE" value="65536000" type="hidden" />
     <input name="postfile" id="postfile" type="file" />
-    
+    <?php endif; ?>
     <label for="link">Link <span style="font-size: .8em;">(optional)</span></label>
     <input id="link" name="link[href]" />
     

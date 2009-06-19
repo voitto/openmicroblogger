@@ -307,6 +307,12 @@ class PostgreSQL extends Database {
     if ($datatype == 'time' && !(strlen($rec->attributes[$modified_field]) > 0))
       $rec->attributes[$modified_field] = date("Y-m-d H:i:s",strtotime("now"));
     if ($datatype == 'blob' && strlen($rec->attributes[$modified_field]) > 0) {
+      if (environment('max_upload_mb')) {
+        $max = 1048576*environment('max_upload_mb');
+        $size = filesize($rec->attributes[$modified_field]);
+        if ($size >$max)
+          trigger_error('Sorry but that file is too big, the limit is '.environment('max_upload_mb').' megabytes', E_USER_ERROR);
+      }
       $coll = environment('collection_cache');
       if (isset($coll[$request->resource]) && $coll[$request->resource]['location'] == 'aws') {
         $this->file_upload = array($modified_field,$rec->attributes[$modified_field]);
@@ -343,6 +349,12 @@ class PostgreSQL extends Database {
         trigger_error( "Sorry, that $modified_field has already been taken.", E_USER_ERROR );
     }
     if ($datatype == 'blob' && (strlen( $rec->attributes[$modified_field] ) > 0 )) {
+      if (environment('max_upload_mb')) {
+        $max = 1048576*environment('max_upload_mb');
+        $size = filesize($rec->attributes[$modified_field]);
+        if ($size >$max)
+          trigger_error('Sorry but that file is too big, the limit is '.environment('max_upload_mb').' megabytes', E_USER_ERROR);
+      }
       global $request;
       $coll = environment('collection_cache');
       if (isset($coll[$request->resource]) && $coll[$request->resource]['location'] == 'aws') {

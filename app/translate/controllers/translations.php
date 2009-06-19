@@ -84,7 +84,7 @@ function _index( &$vars ) {
     while (false !== ($file = readdir($handle))) {
       if ($file != '.' && $file != '..' && substr($file,-3) == 'php' && $file != 'lang_chooser.php') {
         $txt = array();
-        require_once $loadpath.$file;
+        include $loadpath.$file;
         $code = substr($file,0,-4);
         $lang = "";
         if ($code == 'eng')
@@ -99,10 +99,30 @@ function _index( &$vars ) {
         );
   }}}
   
+  
   //$tran['id/name/code/data']
+  $fieldcount = count($txt);
+  
+  $status = array();
+  
+  while ($lang = $collection->MoveNext()) {
+    $txt = unserialize($lang->data);
+    $thiscount = 0;
+    foreach($txt as $phrase=>$trans) {
+      if (!empty($trans)) {
+        $thiscount++;
+      }
+    }
+    $count1 = $thiscount/$fieldcount;
+    $count2 = $count1 * 100;
+    $count = number_format($count2, 0);
+    $status[$lang->name] = $count."%";
+  }
+  
+  $collection->rewind();
   
   return vars(
-    array( &$collection, &$profile, &$translation_files ),
+    array( &$collection, &$profile, &$translation_files, &$status ),
     get_defined_vars()
   );
 }
@@ -148,7 +168,7 @@ function _edit( &$vars ) {
         $code = substr($file,0,-4);
         $lang = "";
         $txt = array();
-        require_once $loadpath.$file;
+        include $loadpath.$file;
         if ($code == 'eng')
           $lang = "English";
         if ($code == 'ger')
@@ -167,6 +187,33 @@ function _edit( &$vars ) {
   );
 }
 
+function export_eng( &$vars ) {
+  $file = "eng.php";
+  $loadpath = 'wp-content/language/';
+  $txt = array();
+  include $loadpath.$file;
+  header( 'Content-Type: text/plain' );
+  header( "Content-Disposition: attachment" );
+  echo "\n";
+  echo "English"."\n";
+  echo "eng"."\n";
+  echo serialize($txt)."\n";
+  exit;
+}
+
+function export_ger( &$vars ) {
+  $file = "ger.php";
+  $loadpath = 'wp-content/language/';
+  $txt = array();
+  include $loadpath.$file;
+  header( 'Content-Type: text/plain' );
+  header( "Content-Disposition: attachment" );
+  echo "\n";
+  echo "German"."\n";
+  echo "ger"."\n";
+  echo serialize($txt)."\n";
+  exit;
+}
 
 function _export( &$vars ) {
   extract( $vars );
