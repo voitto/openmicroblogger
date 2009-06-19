@@ -21,8 +21,40 @@ This has changed in Release:
 #0.3b77
 
 * P2-Theme: Sidebar: exchanged followers/following
+* fixed remote-subscription-links
+* fixed threaded-view-issues
+* fixed: Tags are now saved as new categories
+* fixed some language-creator issues
+* added some features to language-creator
+* possibility to disable/enable fileupload in admin menu
+* possibility to set fileupload max-filesize in admin menu
+* fixed: Error viewing first time the personal section
+* added true/false instead of 1/0 in admin menu settings
+* Cleaned up reply/permalink page
 
+
+(o) app/config/config.yml
+(o) app/omb/controllers/admin.php
+(o) app/omb/views/admin/index.html
+(o) app/omb/views/posts/_upload.html
+(o) app/omb/views/posts/_entry.html
+(o) app/omb/views/subscriptions/_followers.html
+(o) app/omb/plugins/omb.php
+(o) app/omb/plugins/wp.php
+(o) app/translate/controllers/translations.php
+(o) app/translate/views/translations/_edit.html
+(o) app/translate/views/translations/_index.html
+(o) app/translate/views/translations/_new.html
+(o) db/boot.php
+(o) db/library/dbscript/model.php
+(o) db/library/dbscript/mysql.php
+(o) db/library/dbscript/postgresql.php
+(o) wp-content/themes/p2/post-form.php
 (o) wp-content/themes/p2/sidebar.php
+(o) wp-content/themes/prologue-theme/post-form.php
+
+(+) app/translate/views/translations/export_eng.txt
+(+) app/translate/views/translations/export_ger.txt
 
 
 #0.3b76
