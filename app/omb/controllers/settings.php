@@ -8,6 +8,11 @@ function put( &$vars ) {
   extract( $vars );
   if (!(get_profile_id()))
     trigger_error( 'Sorry, the setting could not be saved', E_USER_ERROR );
+  $s = $Setting->find($request->id);
+  if (strpos($s->name, 'password') !== false)
+    $request->set_param(array('setting','value'),
+      md5_encrypt($request->params['setting']['value'], $db->dbname)
+    );
   $resource->update_from_post( $request );
   header_status( '201 Created' );
   redirect_to( $request->resource );
@@ -21,6 +26,11 @@ function post( &$vars ) {
     trigger_error( 'Sorry, the setting could not be saved', E_USER_ERROR );
   
   $request->set_param( array( 'setting', 'profile_id' ), get_profile_id() );
+  
+  if (strpos($request->params['setting']['name'], 'password') !== false)
+    $request->set_param(array('setting','value'),
+      md5_encrypt($request->params['setting']['value'], $db->dbname)
+    );
   
   $settingname = $request->params['setting']['name'];
 

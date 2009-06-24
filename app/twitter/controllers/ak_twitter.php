@@ -14,9 +14,10 @@ function get( &$vars ) {
 
 
 function twitter_login_test() {
+  global $db;
   $test = @aktt_login_test(
   	@stripslashes(get_option('aktt_twitter_username')),
-  	@stripslashes(get_option('aktt_twitter_password'))
+  	@md5_decrypt(stripslashes(get_option('aktt_twitter_password')),$db->dbname)
   );
   
   if (strpos($test, 'succeeded'))
