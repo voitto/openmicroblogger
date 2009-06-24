@@ -989,7 +989,7 @@ function openid_login( &$vars ) {
 
     $openid = urldecode($request->params['openid']);
     
-    if (!(substr($openid,0,4)=='http'))
+    if (!strstr($openid,'http'))
       $openid = 'http://' . $openid;
     
     if ("/" == substr($openid,-1))
