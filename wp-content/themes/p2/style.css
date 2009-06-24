@@ -1167,3 +1167,7 @@ hover:none;
 	font-size:1.4em;
 	font-weight:bold;
 }
+img.photo {
+	width:100px;
+	height:100px;
+}
