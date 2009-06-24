@@ -164,10 +164,14 @@ function put( &$vars ) {
     $result = $db->get_result($sql);
     if ($blobval = $db->result_value($result,0,"photo"))
       $rec->set_value( 'avatar',  $request->url_for(array('resource'=>"_".$rec->id)) . ".jpg" );
+    elseif (exists_uploads_blob( 'identities',$rec->id ))
+      $rec->set_value( 'avatar',  $request->url_for(array('resource'=>"_".$rec->id)) . ".jpg" );
     else
       $rec->set_value( 'avatar',  '' );
-    $rec->set_value( 'profile', $request->url_for(array('resource'=>"_".$rec->id)));
-    $rec->set_value( 'profile_url', $request->url_for(array('resource'=>"".$rec->nickname)));
+    if (empty($rec->profile))
+      $rec->set_value( 'profile', $request->url_for(array('resource'=>"_".$rec->id)));
+    if (empty($rec->profile_url))
+      $rec->set_value( 'profile_url', $request->url_for(array('resource'=>"".$rec->nickname)));
     $rec->save_changes();
   }
   

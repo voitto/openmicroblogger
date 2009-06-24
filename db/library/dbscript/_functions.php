@@ -419,6 +419,19 @@ function read_uploads_blob( &$request, $value, $coll, $ext ) {
 }
 
 
+function exists_uploads_blob( $resource,$id ) {
+  $coll = environment('collection_cache');
+  if (isset($coll[$resource])) {
+    if ($coll[$resource]['location'] == 'uploads') {
+      $file = 'uploads' . DIRECTORY_SEPARATOR . $resource . $id;
+      if (file_exists($file))
+        return true;
+    }
+  }
+  return false;
+}
+
+
 function update_uploadsfile( $table, $id, $tmpfile ) {
   $coll = environment('collection_cache');
   if (!(isset($coll[$table])))
