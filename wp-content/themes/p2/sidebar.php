@@ -108,7 +108,7 @@
         <span class="sidebar_updates_count"><?php echo $count3; ?></span><br />
   <?php endif; ?>
   <?php if (!isset($request->params['nickname'])) : ?>
-        <span  class="sidebar_updates"><?php echo $txt['sidebar_updates']; ?></span>
+        <span  class="sidebar_updates"><a href="<?php echo $request->url_for(array("resource"=>$profile->nickname)); ?>"><?php echo $txt['sidebar_updates']; ?></a></span>
         </div>
         <br /><br /><br />
   <?php endif; ?>
