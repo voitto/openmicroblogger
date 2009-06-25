@@ -1,7 +1,7 @@
 <?php echo '<?xml version="1.0" encoding="UTF-8"?>'."\n"; ?>
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://web.resource.org/cc/" xmlns="http://purl.org/rss/1.0/">
   <channel rdf:about="<?php url_for( array( 'resource'=>'posts.rss' )); ?>">
-    <title>Recent Updates</title>
+    <title><?php bloginfo( 'name' ); if(get_bloginfo('description')) { echo " - "; bloginfo ( 'description' ); } ?></title>
     <link><?php base_url(); ?></link>
     <description>All updates for <?php base_url(); ?></description>
     <cc:licence rdf:resource="http://creativecommons.org/licenses/by/3.0/"></cc:licence>
