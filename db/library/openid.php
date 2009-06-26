@@ -342,14 +342,22 @@ class SimpleOpenID{
 			$types = $service_list[0]->getTypes();
 			$servers = $service_list[0]->getURIs();
 			$delegates = $service_list[0]->getElements('openid:Delegate');
+			$yadis = 1;
 		}else{ // Else try HTML discovery
 			$response = $this->CURL_Request($this->openid_url_identity);
 			list($servers, $delegates) = $this->HTML2OpenIDServer($response);
+			$yadis = 0;
 		}
 		if (count($servers) == 0){
 			$this->ErrorStore('OPENID_NOSERVERSFOUND');
 			return false;
 		}
+		if (empty($servers[0])) {
+		  if ($yadis)
+		    trigger_error('Yadis object was found but getURIs() failed for OpenID: '.$this->openid_url_identity.'<br /><br />'.$this->error, E_USER_ERROR);
+		  else
+		    trigger_error('No Yadis object found, CURL_Request failed for OpenID: '.$this->openid_url_identity.' and the response was '.$response.'<br /><br />'.$this->error, E_USER_ERROR);
+	  }
 		if (isset($types[0])
 		  && ($types[0] != "")){
 			$this->SetServiceType($types[0]);
