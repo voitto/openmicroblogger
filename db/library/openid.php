@@ -343,7 +343,9 @@ class SimpleOpenID{
 			$servers = $service_list[0]->getURIs();
 			$delegates = $service_list[0]->getElements('openid:Delegate');
 			$yadis = 1;
-		}else{ // Else try HTML discovery
+		}
+		
+		if (count($servers) == 0){
 			$response = $this->CURL_Request($this->openid_url_identity);
 			list($servers, $delegates) = $this->HTML2OpenIDServer($response);
 			$yadis = 0;
