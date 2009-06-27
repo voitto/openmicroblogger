@@ -194,7 +194,7 @@ function start_simple_openid() {
   $openid->SetOpenIDServer( $server_url );
   
   if ($openid->IsError())
-    trigger_error( 'sorry there was an openid error: '.$openid->GetError(), E_USER_ERROR);
+    trigger_error( 'sorry there was an openid error: '.serialize($openid->GetError()), E_USER_ERROR);
   $url = trim($server_url);
   if (empty($url))
     trigger_error( 'sorry there was an openid error: the server url is not set '.serialize($_SESSION), E_USER_ERROR);
