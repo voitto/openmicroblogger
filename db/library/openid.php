@@ -351,7 +351,7 @@ class SimpleOpenID{
 			$yadis = 0;
 		}
 		if (count($servers) == 0){
-			$this->ErrorStore('OPENID_NOSERVERSFOUND');
+			$this->ErrorStore('OPENID_NOSERVERSFOUND', 'response = '.$response.'<br /><br />openid = '.$this->openid_url_identity.'<br /><br />yadis object = '.serialize($yadis_object).'<br /><br />fetcher = '.serialize($fetcher).'<br /><br />service_list = '.serialize($service_list));
 			return false;
 		}
 		if (empty($servers[0])) {
