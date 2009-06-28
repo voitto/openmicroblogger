@@ -46,20 +46,25 @@ if (file_exists($checkfile)) {
 //                                                              }
 
 	if (!isset($_POST['db_name'])) {
-// Checks if folders config and cache are writable
+// Checks if folders config/cache/uploads are writable
 		echo "<strong>The following folders have to be writable to install openmicroblogger:</strong><br />";
 	if (is_writable ('config')) {
 		echo "<p style='color:green; font-weight:bold'>GOOD: /config/ is <strong>writable</strong></p>";
                              }
 	else echo "<p style='color:orange; font-weight:bold'>BAD: /config/ is <strong>not writable</strong>. Please set CHMOD to 777</p>";
+	if (is_writable ('uploads')) {
+		echo "<p style='color:green; font-weight:bold'>GOOD: /uploads/ is <strong>writable</strong></p>";
+                             }
+	else echo "<p style='color:orange; font-weight:bold'>BAD: /uploads/ is <strong>not writable</strong>. Please set CHMOD to 777</p>";
+
 		if (is_writable ('cache')) {
 			echo "<p style='color:green; font-weight:bold'>GOOD: /cache/ is <strong>writable</strong></p>";
                             }
 			else echo "<p style='color:orange; font-weight:bold'>BAD: /cache/ is <strong>not writable</strong>. Please set CHMOD to 777</p>";
                              }
 
-// only if folder config and cache are writable setup starts
-if ((is_writable ('config')) AND (is_writable ('cache'))) {
+// only if folder config/cache/uploads are writable setup starts
+if ((is_writable ('config')) AND (is_writable ('cache')) AND (is_writable ('uploads'))) {
 
 // if connection to database works and all required fields are filled out config.php will be written to folder
 $db_send_check = @new mysqli(trim($_POST['db_host']), trim($_POST['db_user']), trim($_POST['db_pw']), trim($_POST['db_name']));

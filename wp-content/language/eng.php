@@ -447,6 +447,24 @@ $txt['wp_newer'] = "newer";
 
 
 /////////////////////////////////////
+# /app/twitter/views/ak_twitter/_edit.html
+/////////////////////////////////////
+$txt['twitter_settings_ok'] = "OK";
+$txt['twitter_settings_cancel'] = "Cancel";
+$txt['twitter_settings_click_edit'] = "Click to edit...";
+$txt['twitter_settings_it_works'] = "Yes, it works!";
+$txt['twitter_settings_fail'] = "Fail! Can not connect to Twitter";
+$txt['twitter_settings_post_to_twitter'] = "Post my notices to Twitter";
+$txt['twitter_settings_username'] = "Twitter Username";
+$txt['twitter_settings_password'] = "Twitter Password";
+$txt['twitter_settings_test_settings'] = "Test your Settings";
+$txt['twitter_settings_test_click'] = "click to test username/password";
+$txt['twitter_settings_status'] = "Status";
+
+
+
+
+/////////////////////////////////////
 # /db/library/dbscribt/_functions.php
 /////////////////////////////////////
 $txt['functions_few_seconds'] = "a few seconds ago";

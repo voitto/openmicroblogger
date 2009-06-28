@@ -11,21 +11,39 @@
 ################################
 
 ################################
-# Current Release: 0.3b79      #
+# Current Release: 0.3b80      #
 ################################
 
 
 
 This has changed in Release:
 
+#0.3b80
+
+* rss submits current sitename/-description
+* Fixed: OpenID Login-Bug
+* Security fix: encrypt/decrypt twitter/identi.ca passwords
+
+(o) app/omb/controllers/settings.php
+(o) app/omb/plugins/security.php
+(o) app/omb/views/_index.rss
+(o) app/twitter/controllers/ak_twitter.php
+(o) db/library/dbscript/_functions.php
+(o) wp-content/themes/p2/sidebar.php
+
+
 #0.3b79
+
 * P2-Theme: Sidebar: exchanged followers/following
 * P2-Theme: Minor style.css fix
 * Visual fix: new translation
+* Fixed: Can't save avatars
 
+(o) app/translate/views/translations/_new.html
+(o) app/omb/controllers/identities.php
+(o) db/library/dbscript/_functions.php
 (o) wp-content/themes/p2/sidebar.php
 (o) wp-content/themes/p2/style.css
-(o) app/translate/views/translations/_new.html
 
 
 #0.3b78
