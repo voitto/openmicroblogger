@@ -345,11 +345,31 @@ class SimpleOpenID{
 			$yadis = 1;
 		}
 		
-		if (count($servers) == 0){
+		if ( count($servers) == 0 ){
 			$response = $this->CURL_Request($this->openid_url_identity);
 			list($servers, $delegates) = $this->HTML2OpenIDServer($response);
 			$yadis = 0;
 		}
+		
+		if ( count($servers) == 0 ) {
+		  
+			$curl = curl_init($this->openid_url_identity);
+
+			// workaround CURLOPT_FOLLOWLOCATION not working on some hosts
+			// need to use this elsewhere, OMB remote-subscribe etc XXX
+			
+			// curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+			
+			curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, false );
+			curl_setopt( $curl, CURLOPT_HTTPGET, true );
+			
+			$response = curl_redir_exec( $curl );
+			
+			if (curl_errno($curl) == 0)
+				list($servers, $delegates) = $this->HTML2OpenIDServer($response);
+		  
+	  }
+		
 		if (count($servers) == 0){
 			$this->ErrorStore('OPENID_NOSERVERSFOUND', 'response = '.$response.'<br /><br />openid = '.$this->openid_url_identity.'<br /><br />yadis object = '.serialize($yadis_object).'<br /><br />fetcher = '.serialize($fetcher).'<br /><br />service_list = '.serialize($service_list));
 			return false;
