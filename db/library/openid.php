@@ -335,6 +335,7 @@ class SimpleOpenID{
 		$http_response = array();
 		$fetcher = Services_Yadis_Yadis::getHTTPFetcher();
 		$yadis_object = Services_Yadis_Yadis::discover($this->openid_url_identity, $http_response, $fetcher);
+		$yadis = 0;
 		
 		// Yadis object is returned if discovery is successful
 		if($yadis_object != null){
@@ -348,7 +349,6 @@ class SimpleOpenID{
 		if ( count($servers) == 0 ){
 			$response = $this->CURL_Request($this->openid_url_identity);
 			list($servers, $delegates) = $this->HTML2OpenIDServer($response);
-			$yadis = 0;
 		}
 		
 		if ( count($servers) == 0 ) {
@@ -365,8 +365,7 @@ class SimpleOpenID{
 			
 			$response = curl_redir_exec( $curl );
 			
-			if (curl_errno($curl) == 0)
-				list($servers, $delegates) = $this->HTML2OpenIDServer($response);
+			list($servers, $delegates) = $this->HTML2OpenIDServer($response);
 		  
 	  }
 		
