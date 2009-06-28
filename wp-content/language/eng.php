@@ -313,8 +313,10 @@ $txt['profile_all_subscriptions'] = "All Subscriptions...";
 $txt['profile_back_to_my_profile'] = "Go back to My Profile";
 $txt['profile_subscribe_people'] = "Copy &amp; paste the following URL to subscribe to people on other Web sites";
 $txt['profile_profile_url'] = "Profile URL";
-$txt['profile_usr_notices'] = "'s notices";
 $txt['profile_subscribe_to'] = "Subscribe to ";
+$txt['profile_usr_notices'] = "'s notices";
+$txt['profile_unsubscribe_from'] = "Unsubscribe from ";
+$txt['profile_usr_notices_unsub'] = "'s notices";
 
 
 /////////////////////////////////////
@@ -373,6 +375,8 @@ $txt['views-entry_profile_url'] = "Profile URL";
 $txt['views-entry_notices'] = "'s notices";
 $txt['views-entry_button_subscribe_to'] = "Subscribe to ";
 $txt['views-entry_button_notices'] = "'s notices";
+$txt['views-entry_unsubscribe_from'] = "Unsubscribe from ";
+$txt['views-entry_usr_notices_unsub'] = "'s notices";
 
 
 /////////////////////////////////////

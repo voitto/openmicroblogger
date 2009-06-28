@@ -56,7 +56,7 @@ $subscribers = array();
 <form method="post" action="<?php url_for('local_subscribe'); ?>">
 <input type="hidden" name="listenee_nick" value="<?php echo $Member->nickname; ?>">
 <input type="hidden" name="listenee_id" value="<?php echo $Member->id; ?>">
-<input type="submit" value="Subscribe to <?php echo $Member->nickname; ?>'s notices">
+<input type="submit" value="<?php echo $txt['views-entry_button_subscribe_to']; ?><?php echo $Member->nickname; ?><?php echo $txt['views-entry_button_notices']; ?>">
 </form>
 
 <br />
@@ -68,7 +68,7 @@ $subscribers = array();
 <form method="post" action="<?php url_for('local_unsubscribe'); ?>">
 <input type="hidden" name="listenee_nick" value="<?php echo $Member->nickname; ?>">
 <input type="hidden" name="listenee_id" value="<?php echo $Member->id; ?>">
-<input type="submit" value="Unsubscribe from <?php echo $Member->nickname; ?>'s notices">
+<input type="submit" value="<?php echo $txt['views-entry_unsubscribe_from']; ?><?php echo $Member->nickname; ?><?php echo $txt['views-entry_usr_notices_unsub']; ?>">
 </form>
 
 <br />

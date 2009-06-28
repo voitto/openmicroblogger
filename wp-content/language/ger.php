@@ -313,8 +313,10 @@ $txt['profile_all_subscriptions'] = "S&auml;mtliche Abonnements...";
 $txt['profile_back_to_my_profile'] = "Zur&uuml;ck zu meinem Profil";
 $txt['profile_subscribe_people'] = "Kopier die folgende URL um deinen Account auf anderen Websites zu verlinken.";
 $txt['profile_profile_url'] = "Profil URL";
-$txt['profile_usr_notices'] = "'s Eintr&auml;ge";
 $txt['profile_subscribe_to'] = "Abonniere ";
+$txt['profile_usr_notices'] = "'s Nachrichten";
+$txt['profile_unsubscribe_from'] = "Bestelle ";
+$txt['profile_usr_notices_unsub'] = "'s Nachrichten ab";
 
 
 /////////////////////////////////////
@@ -371,9 +373,10 @@ $txt['views-entry_to_my_profile'] = "Zur&uuml;ck zu meinem Profil";
 $txt['views-entry_subscribe_people'] = "Kopier die folgende URL um deinen Account auf anderen Websites zu verlinken.";
 $txt['views-entry_profile_url'] = "Profil URL";
 $txt['views-entry_notices'] = "'s Nachrichten";
-$txt['views-entry_button_subscribe_to'] = "Subscribe to ";
+$txt['views-entry_button_subscribe_to'] = "Abonniere ";
 $txt['views-entry_button_notices'] = "'s Nachrichten";
-
+$txt['views-entry_unsubscribe_from'] = "Bestelle ";
+$txt['views-entry_usr_notices_unsub'] = "'s Nachrichten ab";
 
 /////////////////////////////////////
 # /app/omb/views/identities/_new.html
