@@ -466,6 +466,20 @@ $txt['twitter_settings_test_click'] = "click to test username/password";
 $txt['twitter_settings_status'] = "Status";
 
 
+/////////////////////////////////////
+# /app/identica/views/dents/_edit.html
+/////////////////////////////////////
+$txt['identica_settings_ok'] = "OK";
+$txt['identica_settings_cancel'] = "Cancel";
+$txt['identica_settings_click_edit'] = "Click to edit...";
+$txt['identica_settings_it_works'] = "Yes, it works!";
+$txt['identica_settings_fail'] = "Fail! Can not connect to Identi.ca";
+$txt['identica_settings_post_to_twitter'] = "Post my notices to Identi.ca";
+$txt['identica_settings_username'] = "Identi.ca Username";
+$txt['identica_settings_password'] = "Identi.ca Password";
+$txt['identica_settings_test_settings'] = "Test your Settings";
+$txt['identica_settings_test_click'] = "click to test username/password";
+$txt['identica_settings_status'] = "Status";
 
 
 /////////////////////////////////////

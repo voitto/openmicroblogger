@@ -22,14 +22,17 @@ This has changed in Release:
 
 * rss submits current sitename/-description
 * installer checks now if uploads-folder is writable
-* Fixed: OpenID Login-Bug
+* Some OpenID-Changes
 * Security fix: encrypt/decrypt twitter/identi.ca passwords
 * some multilanguage improvements
 
 (o) install.php
+(o) app/identica/views/dents/_edit.html
 (o) app/omb/controllers/settings.php
 (o) app/omb/plugins/security.php
 (o) app/omb/views/_index.rss
+(o) app/omb/views/identities/_entry.html
+(o) app/omb/views/posts/_profile.html
 (o) app/twitter/controllers/ak_twitter.php
 (o) app/twitter/views/ak_twitter/_edit.html
 (o) db/library/openid.php
