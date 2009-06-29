@@ -132,7 +132,8 @@ function omb_filter_posts( &$model, &$db ) {
   global $request;
   if (isset($request->params['nickname']) && isset($request->params['byid']) && $request->resource == 'posts' && $model->table == 'posts'){
     $where = array(
-      'profile_id'=>$request->params['byid']
+      'profile_id'=>$request->params['byid'],
+      'parent_id'=>0
     );
     if ($request->action == 'replies')
       $where = array(
