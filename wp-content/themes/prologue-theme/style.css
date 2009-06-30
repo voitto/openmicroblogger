@@ -161,6 +161,11 @@ h3 {
   color: #777;
   font-weight: bold;
 }
+h4 {
+  font-size: 1.2em;
+  color: #777;
+  font-weight: bold;
+}
 #postbox img.avatar {
   float: left;
   margin-top: 19px;
@@ -394,7 +399,15 @@ img.alignleft {
 /* /app/omb/views/posts/_entry.html */
 
 #entry-msg {
-margin:5px;
+	margin:5px;
+}
+.entry-reply-msg {
+	margin:5px;
+}
+.entry-reply-author {
+	float:left;
+	margin-left:2em;
+	margin-bottom:1em;
 }
 .entry-avatar {
 	float:left;
@@ -406,10 +419,21 @@ margin:5px;
 	border-color:#777;
 	border-style:solid;
 }
+.entry-avatar-reply {
+	float:left;
+	margin-right:0.5em;
+	margin-left:0.5em;
+	width:40px;
+	height:40px;
+	border-width:thin;
+	border-color:#777;
+	border-style:solid;
+}
 #bookmark-this {
 	position:relative;
 	bottom:10px;
 }
+
 
 
 /********** Remove Posting **********/

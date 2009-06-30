@@ -21,17 +21,25 @@ This has changed in Release:
 #0.3b80
 
 * rss submits current sitename/-description
-* installer checks now if uploads-folder is writable
+* Fixed: Installer checks now if uploads-folder is writable
 * Some OpenID-Changes
 * Security fix: encrypt/decrypt twitter/identi.ca passwords
 * some multilanguage improvements
+* Fixed: In threaded-view post aren't shown twice anymore
+* Fixed: register with password-mode
+* Fixed: Zeep-Mobile settings are shown if available
 
 (o) install.php
 (o) app/identica/views/dents/_edit.html
+(o) app/omb/controllers/identities.php
 (o) app/omb/controllers/settings.php
+(o) app/omb/plugins/omb.php
 (o) app/omb/plugins/security.php
+(o) app/omb/plugins/sms_notice.php
 (o) app/omb/views/_index.rss
+(o) app/omb/views/identities/_admin.html
 (o) app/omb/views/identities/_entry.html
+(o) app/omb/views/posts/_apps.html
 (o) app/omb/views/posts/_profile.html
 (o) app/twitter/controllers/ak_twitter.php
 (o) app/twitter/views/ak_twitter/_edit.html

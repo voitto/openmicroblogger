@@ -289,7 +289,7 @@ $txt['entry_button_submit_rating'] = "Bewertung absenden";
 $txt['entry_sign_in'] = "Logg dich ein";
 $txt['entry_to_post_a_reply'] = " um eine Antwort zu erstellen";
 $txt['entry_members_forum'] = "Mitglieder dieses Forums";
-
+$txt['entry_reply_by'] = "Antwort von";
 
 /////////////////////////////////////
 # /app/omb/views/posts/_new.html

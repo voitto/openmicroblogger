@@ -13,7 +13,6 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
   <img class="entry-avatar" src="<?php echo $author->avatar; ?>" alt="image" />
     <h3><?php print render_notice( $Member->title, $Member, $profile ); ?></h3>
 </div>
-  <br /><br />
 
   <?php print $Member->body ?>
 
@@ -90,7 +89,6 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 
   <br />
   <br />
-  <br />
   
   <?php global $request; ?>
   <?php 
@@ -108,10 +106,14 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
     $current_user_id = get_the_author_ID( );
     echo prologue_get_avatar( $current_user_id, get_the_author_email( ), 48 );
   ?>
-  <?php echo "<p><font size=\"-1\">".'reply by '.$replyauthor->nickname."&nbsp; ".time_of($c->created)."</font></p><p>".htmlentities($c->title)."</p><br />"; ?>
+  <?php
+  echo "<div class='entry-reply-author'><h4>".$txt['entry_reply_by']." <a href=".$replyauthor->profile.'">'.$replyauthor->nickname."</a>&nbsp;".time_of($c->created)."</h4>";
+  echo "<div class='entry-reply-msg'><img src='".$replyauthor->avatar."' class='entry-avatar-reply' alt='reply-avatar' />";
+  echo "<h4>".render_notice( $c->title, $profile, $profile )."</h4></div></div>"; 
+  ?>
 
   <?php endwhile; ?>
-
+<div style="clear: both;"></div>
 
 
 
@@ -153,19 +155,20 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 ?>
 
 
-
+<div>
+<br />
 <h3><?php echo $txt['entry_reply']; ?>:</h3>
 
 <form name="replypost" method="post" action="<?php url_for(array('resource'=>$request->resource)); ?>">
-<input type="hidden" name="method" value="post">
+<input type="hidden" name="method" value="post" />
 <textarea cols="40" maxlength="140" rows="5" name="<?php echo $post; ?>[title]"><?php if ($author) print "@".$author->nickname." "; ?></textarea>
-<input type="hidden" name="<?php echo $post; ?>[local]" value="1">
-<input type="hidden" name="<?php echo $post; ?>[parent_id]" value="<?php print $Member->id; ?>">
-<input type="hidden" name="<?php echo $post; ?>[profile_id]" value="<?php echo get_profile_id(); ?>">
-<input type="submit" value="<?php echo $txt['entry_button_submit_reply']; ?>
-">
+<input type="hidden" name="<?php echo $post; ?>[local]" value="1" />
+<input type="hidden" name="<?php echo $post; ?>[parent_id]" value="<?php print $Member->id; ?>" />
+<input type="hidden" name="<?php echo $post; ?>[profile_id]" value="<?php echo get_profile_id(); ?>" />
+<input type="submit" value="<?php echo $txt['entry_button_submit_reply']; ?>" />
 </form>
 <br />
+</div>
 
 <?php if (environment('showpostmeta')) : ?>
 <h3><?php echo $txt['entry_rating']; ?>:</h3>

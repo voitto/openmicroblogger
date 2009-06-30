@@ -289,6 +289,7 @@ $txt['entry_button_submit_rating'] = "Submit rating";
 $txt['entry_sign_in'] = "Sign In";
 $txt['entry_to_post_a_reply'] = " to post a reply";
 $txt['entry_members_forum'] = "Members of this forum";
+$txt['entry_reply_by'] = "Reply by";
 
 
 /////////////////////////////////////
