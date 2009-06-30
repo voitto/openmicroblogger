@@ -28,6 +28,9 @@ This has changed in Release:
 * Fixed: In threaded-view post aren't shown twice anymore
 * Fixed: register with password-mode
 * Fixed: Zeep-Mobile settings are shown if available
+* Changed standard BG-Color in P2-Theme
+* Added avatar-borders in P2-Theme
+* Styled Reply-Page
 
 (o) install.php
 (o) app/identica/views/dents/_edit.html
@@ -39,7 +42,9 @@ This has changed in Release:
 (o) app/omb/views/_index.rss
 (o) app/omb/views/identities/_admin.html
 (o) app/omb/views/identities/_entry.html
+(o) app/omb/views/pages/_entry.html
 (o) app/omb/views/posts/_apps.html
+(o) app/omb/views/posts/_entry.html
 (o) app/omb/views/posts/_profile.html
 (o) app/twitter/controllers/ak_twitter.php
 (o) app/twitter/views/ak_twitter/_edit.html
@@ -48,6 +53,8 @@ This has changed in Release:
 (o) wp-content/language/eng.php
 (o) wp-content/language/ger.php
 (o) wp-content/themes/p2/sidebar.php
+(o) wp-content/themes/p2/style.css
+(o) wp-content/themes/prologue-theme/style.css
 
 
 #0.3b79
