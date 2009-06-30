@@ -73,7 +73,7 @@ after_filter( 'broadcast_sms_notice', 'insert_from_post' );
 
 function broadcast_sms_notice( &$model, &$rec ) {
   
-  $smskey = environment('awsAccessKey');
+  $smskey = environment('zeepAccessKey');
   
   if (empty($smskey))
     return;
