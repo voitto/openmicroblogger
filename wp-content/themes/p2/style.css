@@ -638,6 +638,18 @@ width:33%;
 #sidebarclear {
 	clear: both;
 }
+#followgrid {
+  margin: 0px;
+  padding: 0px;
+}
+
+#followgrid img {
+  border: 0px;
+  width: 24px;
+  height: 24px;
+  margin: 0px 2px 2px 2px;
+}
+
 /***********/
 
 
@@ -1114,7 +1126,8 @@ width: 350px;
 /* /app/omb/views/identities/_entry.html */
 
 .entry-img {
-	border:none;
+	border: 3px solid #fff;
+	outline:1px solid #ccc;
 	width:48px;
 	height:48px;
 }
@@ -1164,7 +1177,6 @@ hover:none;
 	font-weight:normal;
 	margin: 1.5em 0em 0em 0em;
 }
-<<<<<<< HEAD:wp-content/themes/p2/style.css
 .liother-b {
 	font-weight:bold;
 	margin: 1.5em 0em 0em 0em;
@@ -1179,19 +1191,6 @@ hover:none;
 	padding-left:10px;
 }
 
-
-#followgrid {
-  margin: 0px;
-  padding: 0px;
-}
-
-#followgrid img {
-  border: 0px;
-  width: 24px;
-  height: 24px;
-  margin: 0px 2px 2px 2px;
-}
-
 /********** Microformats **********/
 /* /db/library/php_microformats.php */
 .fn {
@@ -1199,6 +1198,8 @@ hover:none;
 	font-weight:bold;
 }
 img.photo {
+	border: 3px solid #fff;
+	outline:1px solid #ccc;
 	width:100px;
 	height:100px;
 }
