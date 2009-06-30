@@ -168,7 +168,7 @@
     <p class="liother">
     <?php echo $txt['sidebar_favorites']; ?>
     </p>
-    <form class="liother" method="post" action=""><input size="14" value="<?php echo $txt['sidebar_search']; ?>" /></form>
+    <form class="liother" method="post" action=""><input size="10" value="<?php if (isset($_SESSION['searchterm'])) echo $_SESSION['searchterm']; ?>" name="s" /><input id="searchbutton" type="submit" value="Search" /></form>
     <p class="liother">
     <?php echo $txt['sidebar_trending_topics']; ?>
     </p>

@@ -130,7 +130,22 @@ before_filter( 'omb_filter_posts', 'get_query' );
 
 function omb_filter_posts( &$model, &$db ) {
   global $request;
-  if (isset($request->params['nickname']) && isset($request->params['byid']) && $request->resource == 'posts' && $model->table == 'posts'){
+  if ($model->table != 'posts')
+    return;
+  if (isset($_POST['s']) && !empty($_POST['s'])) {
+    $model->set_limit(1000);
+    $_SESSION['searchterm'] = $_POST['s'];
+    $term = trim($db->escape_string($_POST['s']));
+    $term = '%'.$term.'%';
+    $where = array(
+      'parent_id'=>0,      
+      'eq'=>'like',
+      'title'=>$term,
+      'op'=>'OR',
+      'body'=>$term
+    );
+    $model->set_param( 'find_by', $where );
+  } elseif (isset($request->params['nickname']) && isset($request->params['byid']) && $request->resource == 'posts' && $model->table == 'posts'){
     $where = array(
       'profile_id'=>$request->params['byid'],
       'parent_id'=>0
