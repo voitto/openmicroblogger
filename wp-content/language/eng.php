@@ -279,6 +279,7 @@ $txt['edit_button_save'] = "Save";
 /////////////////////////////////////
 # /app/omb/views/posts/_entry.html
 /////////////////////////////////////
+$txt['entry_entry_by'] = "Entry by ";
 $txt['entry_ephonic1'] = "To use the ";
 $txt['entry_ephonic2'] = "you will need ";
 $txt['entry_ephonic3'] = "or better and a Javascript enabled browser";

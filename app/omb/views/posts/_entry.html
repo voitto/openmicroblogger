@@ -7,11 +7,11 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 ?>
 
   <?php $author = get_profile($Member->profile_id); ?>
-  <h3><a href="<?php url_for(array('resource'=>$author->nickname)); ?>"><?php print $author->nickname."</a> ".time_of($Member->created); ?></h3>
+  <div class='entry-author'><?php echo $txt['entry_entry_by']; ?><a href="<?php url_for(array('resource'=>$author->nickname)); ?>"><?php print $author->nickname."</a> ".time_of($Member->created); ?></div>
 
-<div id="entry-msg">
+<div class="entry-msg">
   <img class="entry-avatar" src="<?php echo $author->avatar; ?>" alt="image" />
-    <h3><?php print render_notice( $Member->title, $Member, $profile ); ?></h3>
+    <?php print render_notice( $Member->title, $Member, $profile ); ?>
 </div>
 
   <?php print $Member->body ?>
@@ -107,13 +107,15 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
     echo prologue_get_avatar( $current_user_id, get_the_author_email( ), 48 );
   ?>
   <?php
-  echo "<div class='entry-reply-author'><h4>".$txt['entry_reply_by']." <a href=".$replyauthor->profile.'">'.$replyauthor->nickname."</a>&nbsp;".time_of($c->created)."</h4>";
-  echo "<div class='entry-reply-msg'><img src='".$replyauthor->avatar."' class='entry-avatar-reply' alt='reply-avatar' />";
-  echo "<h4>".render_notice( $c->title, $profile, $profile )."</h4></div></div>"; 
+  echo "<hr class='entry-hr' /><div class='entry-reply'>";
+  echo "<div class='entry-author'>".$txt['entry_reply_by']." <a href=".$replyauthor->profile.'">'.$replyauthor->nickname."</a>&nbsp;".time_of($c->created)."</div>";
+  echo "<div class='entry-msg'><img src='".$replyauthor->avatar."' class='entry-avatar-reply' alt='reply-avatar' />";
+  echo "".render_notice( $c->title, $profile, $profile )."</div>
+       </div><div class='entry-clear'></div>"; 
   ?>
 
   <?php endwhile; ?>
-<div style="clear: both;"></div>
+<div class="entry-clear"></div>
 
 
 
