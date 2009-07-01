@@ -457,6 +457,7 @@ global $db;
   if (!$id) {
     // check for the nickname in a previous identity
     $Revision =& $db->model('Revision');
+    $Revision->set_limit(1000);
     $Revision->unset_relation('entries');
     $Revision->has_one('target_id:entries.id');
     $where = array(

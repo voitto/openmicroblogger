@@ -629,7 +629,12 @@ class Mapper {
       $pmatches = array();
 //    } elseif ( preg_match( "/\/" . implode( "\/", $regx ) . "/i", "/" .implode( "/", $params ), $pmatches )  ) {
     } elseif ( preg_match( "/\/" . implode( "\/", $regx ) . "/i", "/" .implode( "/", $params ), $pmatches ) && count($r->patterns) == $paramcount ) {
-      $r->match = true;
+      if ($i == 0 && $paramcount == 1) {
+        if (strlen($regx[0]) == strlen($params[0]))
+          $r->match = true;
+      } else {
+        $r->match = true;
+      }
     }
     
     if ($r->match) {
