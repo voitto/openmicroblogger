@@ -1980,6 +1980,7 @@ function apply_filters($tag, $string) {
 }
 
 function current_user_can( $action,$post_id=false ) {
+  if (member_of('administrators')) return true;
   global $request,$the_author;
   if ($action == 'publish_posts' && ($request->resource != 'posts' || $request->action != 'index'))
     return false;

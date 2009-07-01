@@ -1,6 +1,6 @@
 
 
-<form action="<?php url_for( 'translations' ); ?>" method="post" name="translations" id="translations">
+<form action="<?php url_for( 'translations' ); ?>" method="post" name="translations" id="translations" enctype="multipart/form-data">
 <div>
 <input name="method" type="hidden" value="post" />
 <input name="submit_form" type="hidden" value="translations" />
@@ -19,8 +19,8 @@
 		<td valign="top" align="left"><input size="30" maxlength="255" id="translation_code" name="translation[code]" type="text" value="" /></td>
 	</tr>
 <tr>
-		<td align="right" valign="top"><p>(optional) translation data to import</p></td>
-		<td valign="top" align="left"><input size="30" id="translation_data" name="translation[data]" type="text" value="" /></td>
+		<td align="right" valign="top"><p>(optional) translation file to import</p></td>
+		<td valign="top" align="left"><input size="30" id="translation_data" name="translationdata" type="file" value="" /></td>
 	</tr>
 	<tr>
 		<td align="right" valign="top"><b></b></td>

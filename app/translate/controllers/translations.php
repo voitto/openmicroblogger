@@ -16,6 +16,13 @@ function get( &$vars ) {
 function post( &$vars ) {
   extract( $vars );
   
+  if (isset($_FILES['translationdata']['tmp_name'])) {
+    $data = split("\n", file_get_contents($_FILES['translationdata']['tmp_name']));
+    foreach($data as $val)
+      if (substr(trim($val),-1) == '}')
+        $request->set_param(array('translation','data'),trim($val));
+  }
+  
   $resource->insert_from_post( $request );
   header_status( '201 Created' );
   redirect_to( array('resource'=>$request->resource,'id'=>$request->id,'action'=>'edit') );
