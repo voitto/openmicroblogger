@@ -358,6 +358,7 @@ $txt['editprofile_button_save'] = "Save";
 $txt['editprofile_country'] = "Country";
 $txt['editprofile_locality'] = "Locality";
 $txt['editprofile_homepage'] = "Homepage";
+$txt['editprofile_timezone'] = "Timezone";
 
 
 /////////////////////////////////////

@@ -301,8 +301,28 @@ function _edit( &$vars ) {
     'CST',
     'EST'
   );
+  
+  $Setting =& $db->model('Setting');
+  global $timezone_offsets;
+  $n2list = $timezone_offsets;
+  
+  // n2mode = upload max size in MB, default = 4
+  $n2mode = $Setting->find_by(array('name'=>'timezone','profile_id'=>get_profile_id()));
+  if (!$n2mode) {
+    $n2mode = $Setting->base();
+    $n2mode->set_value('profile_id',get_profile_id());
+    $n2mode->set_value('person_id',get_person_id());
+    $n2mode->set_value('name','timezone');
+    $n2mode->set_value('value','-8');
+    $n2mode->save_changes();
+    $n2mode->set_etag();
+    $n2mode = $Setting->find($n2mode->id);
+  }
+  $n2url = $request->url_for(array('resource'=>'settings','id'=>$n2mode->id,'action'=>'put'));
+  $n2entry = $n2mode->FirstChild('entries');
+  
   return vars(
-    array( &$Member, &$Entry, &$profile, &$identity_tz_options ),
+    array( &$Member, &$Entry, &$profile, &$identity_tz_options, &$n2mode,&$n2url,&$n2entry,&$n2list ),
     get_defined_vars()
   );
 }

@@ -138,7 +138,6 @@ function omb_filter_posts( &$model, &$db ) {
     $term = trim($db->escape_string($_POST['s']));
     $term = '%'.$term.'%';
     $where = array(
-      'parent_id'=>0,      
       'eq'=>'like',
       'title'=>$term,
       'op'=>'OR',

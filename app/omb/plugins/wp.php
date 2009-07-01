@@ -44,7 +44,7 @@ function wp_list_comments() {
   
   $comments = "";
   
-  if (is_microblog_theme() && environment('threaded')) {
+  if (is_microblog_theme() && environment('threaded') && !isset($_POST['s'])) {
 
     global $db,$the_post,$prefix,$request;
   

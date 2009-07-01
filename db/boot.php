@@ -408,7 +408,11 @@ if (INTRANET)
 
 // PHP5 only set server timezone
 if (function_exists(timezone_abbreviations_list) && environment('timezone'))
-  set_tz_by_offset(environment('timezone'));
+  if (setting('timezone'))
+    set_tz_by_offset(setting('timezone'));
+  else
+    set_tz_by_offset(environment('timezone'));
+
 
 /**
  * load virtual API methods
