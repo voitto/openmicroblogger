@@ -36,6 +36,7 @@ This has changed in Release:
 * Added message-search feature [#87]
 * P2-Theme: Hiding until now not existing features on sidebar/navigation
 * Changing timezone feature: server (admin) and user-specific (settings) [#26]
+* If user changes nickname @oldnickname redirects to @newnickname [#62]
 
 (o) install.php
 (o) app/identica/controllers/dents.php
@@ -62,6 +63,7 @@ This has changed in Release:
 (o) db/boot.php
 (o) db/library/openid.php
 (o) db/library/dbscript/_functions.php
+(o) db/library/dbscript/model.php
 (o) resource/jeditable/jquery.jeditable.js
 (o) wp-content/language/eng.php
 (o) wp-content/language/ger.php
@@ -70,6 +72,8 @@ This has changed in Release:
 (o) wp-content/themes/p2/sidebar.php
 (o) wp-content/themes/p2/style.css
 (o) wp-content/themes/prologue-theme/style.css
+
+(+) app/omb/models/Revision.php
 
 
 #0.3b79
