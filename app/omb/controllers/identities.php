@@ -130,6 +130,15 @@ function post( &$vars ) {
 function put( &$vars ) {
   extract( $vars );
   
+  // save a revision
+  $rec = $collection->MoveFirst();
+  $Revision =& $db->model('Revision');
+  $r = $Revision->base();
+  $r->set_value( 'data', serialize($rec) );
+  $r->set_value( 'profile_id', get_profile_id() );
+  $r->set_value( 'target_id', $rec->entry_id );
+  $r->save();
+  
   if (isset($request->params['identity']['nickname'])) {
     $nick = strtolower($request->params['identity']['nickname']);
   

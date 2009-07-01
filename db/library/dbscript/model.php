@@ -862,6 +862,12 @@ class Model {
       $this->relations[$table]['tab'] = $table;
     }
   }
+
+  function unset_relation( $table ) {
+    if (isset($this->relations[$table])) {
+      unset($this->relations[$table]);
+    }
+  }
   
   function can_write_fields( $fields ) {
     $return = false;
