@@ -35,8 +35,10 @@ function send_to_identica( &$model, &$rec ) {
   $tweet->tw_text = stripslashes($notice_content);
   
   // send the dent to Identica
+  global $db;
   $aktt->twitter_username = get_option('aktt_identica_username');
-  $aktt->twitter_password = get_option('aktt_identica_password');
+  $aktt->twitter_password = md5_decrypt(stripslashes(get_option('aktt_identica_password')),$db->dbname);
+    
   do_dent( $tweet );
   
 }

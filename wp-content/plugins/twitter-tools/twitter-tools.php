@@ -461,8 +461,10 @@ class twitter_tools {
 			, 'X-Twitter-Client-Version' => $this->version
 			, 'X-Twitter-Client-URL' => 'http://alexking.org/projects/wordpress/twitter-tools.xml'
 		);
+		global $db;
 		$snoop->user = $this->twitter_username;
-		$snoop->pass = $this->twitter_password;
+    $snoop->pass = md5_decrypt(stripslashes(get_option('aktt_twitter_password')),$db->dbname);
+  
 		$snoop->submit(
 			AKTT_API_POST_STATUS
 			, array(

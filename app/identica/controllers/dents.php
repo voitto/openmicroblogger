@@ -117,9 +117,10 @@ function _edit( &$vars ) {
 
 
 function identica_login_test() {
+  global $db;
   $test = @dent_login_test(
   	@stripslashes(get_option('aktt_identica_username')),
-  	@stripslashes(get_option('aktt_identica_password'))
+  	@md5_decrypt(stripslashes(get_option('aktt_identica_password')),$db->dbname)
   );
   if ($test)
   	echo 1;
