@@ -77,9 +77,11 @@ $profile= get_profile();
 <li id="nav_profile">
 <a href="<?php echo $request->url_for(array("resource"=>$profile->nickname)); ?>" title="<?php echo $txt['header_profile']; ?>"><?php echo $txt['header_profile']; ?></a>
 </li>
+<?php if (environment('findpeople')) : ?>
 <li id="nav_find">
 <a href="<?php echo ''; ?>" title="<?php echo $txt['header_find_people']; ?>"><?php echo $txt['header_find_people']; ?></a>
 </li>
+<?php endif; ?>
 <li id="nav_settings">
 <a href="<?php echo $request->url_for(array("resource"=>$profile->nickname))."/settings"; ?>" title="<?php echo $txt['header_settings']; ?>"><?php echo $txt['header_settings']; ?></a>
 </li>

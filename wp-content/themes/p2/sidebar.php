@@ -162,19 +162,28 @@
 
 
   <?php else : ?>
+    <?php if (environment('messages')) : ?>
     <p class="liother">
     <?php echo $txt['sidebar_direct_messages']; ?>
     </p>
+    <?php endif; ?>
+    <?php if (environment('favorites')) : ?>
     <p class="liother">
     <?php echo $txt['sidebar_favorites']; ?>
     </p>
+    <?php endif; ?>
     <form class="liother" method="post" action=""><input size="10" value="<?php if (isset($_SESSION['searchterm'])) echo $_SESSION['searchterm']; ?>" name="s" /><input id="searchbutton" type="submit" value="Search" /></form>
+    
+    <?php if (environment('trending')) : ?>
     <p class="liother">
     <?php echo $txt['sidebar_trending_topics']; ?>
     </p>
+    <?php endif; ?>
+    
     <p class="liother">
     <?php echo $txt['sidebar_following']; ?>
     </p>
+    
       <div id="followgrid">
           <?php followgrid(); ?>
       </div>
