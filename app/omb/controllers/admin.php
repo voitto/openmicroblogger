@@ -123,6 +123,24 @@ function index( &$vars ) {
   }
   $n1url = $request->url_for(array('resource'=>'settings','id'=>$n1mode->id,'action'=>'put'));
   $n1entry = $n1mode->FirstChild('entries');
+
+  global $timezone_offsets;
+  $n2list = $timezone_offsets;
+
+  // n2mode = upload max size in MB, default = 4
+  $n2mode = $Setting->find_by(array('name'=>'config.env.timezone','profile_id'=>get_profile_id()));
+  if (!$n2mode) {
+    $n2mode = $Setting->base();
+    $n2mode->set_value('profile_id',get_profile_id());
+    $n2mode->set_value('person_id',get_person_id());
+    $n2mode->set_value('name','config.env.timezone');
+    $n2mode->set_value('value','-8');
+    $n2mode->save_changes();
+    $n2mode->set_etag();
+    $n2mode = $Setting->find($n2mode->id);
+  }
+  $n2url = $request->url_for(array('resource'=>'settings','id'=>$n2mode->id,'action'=>'put'));
+  $n2entry = $n2mode->FirstChild('entries');
   
   return vars(
     array( 
@@ -140,7 +158,11 @@ function index( &$vars ) {
       &$uplentry,
       &$n1mode,
       &$n1url,
-      &$n1entry
+      &$n1entry,
+      &$n2mode,
+      &$n2url,
+      &$n2entry,
+      &$n2list
     ),
     get_defined_vars()
   );
@@ -197,8 +219,8 @@ function setting_widget_text_helper($nam,$nammode,$namurl,$namentry) {
   
 };
 
-function setting_widget_helper($nam,$nammode,$namurl,$namentry) {
-  
+function setting_widget_helper($nam,$nammode,$namurl,$namentry,$listdata) {
+  if (!class_exists("Services_JSON")) lib_include("json"); $json = new Services_JSON(); 
   echo '
       var submit_to = "'. url_for(array(
         'resource'=>'settings',
@@ -208,17 +230,17 @@ function setting_widget_helper($nam,$nammode,$namurl,$namentry) {
 
       var submit_to = "'. $namurl.'";
 
-      $(".editable_select_'.$nam.'_text").mouseover(function() {
+      $(".jeditable_'.$nam.'").mouseover(function() {
           $(this).highlightFade({end:\'#def\'});
       });
-      $(".editable_select_'.$nam.'_text").mouseout(function() {
+      $(".jeditable_'.$nam.'").mouseout(function() {
           $(this).highlightFade({end:\'#fff\', speed:200});
       });
-      $(".editable_select_'.$nam.'_text").editable(submit_to, {
+      $(".jeditable_'.$nam.'").editable(submit_to, {
           indicator   : "<img src=\''. base_path().'resource/jeditable/indicator.gif\'>",
-             data     : \'';
-     if (!class_exists("Services_JSON")) lib_include("json"); $json = new Services_JSON(); echo $json->encode( $aktwitter_tw_text_options ); 
-     echo '\',
+             data     : \''
+     .$json->encode( $listdata ).
+     '\',
           submitdata  : function() {
             return {"entry[etag]" : "'.$namentry->etag.'"};
           },

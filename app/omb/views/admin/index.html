@@ -185,6 +185,7 @@ $ph = 'false';
 
 <?php setting_widget_text_helper('uplmax',$n1mode,$n1url,$n1entry); ?>
 
+<?php setting_widget_helper('tz',$n2mode,$n2url,$n2entry,$n2list); ?>
 
     });
     // ]]>
@@ -200,6 +201,14 @@ $ph = 'false';
   		</p>
   		<p>
   		    		    <table cellpadding="10" border="0">
+<tr>
+  <td>
+<h4>Timezone:</h4>
+</td>
+<td>
+<div class="jeditable_tz" id="jeditable_tz"></div>
+</td>
+</tr>
 
 <tr>
   <td>
