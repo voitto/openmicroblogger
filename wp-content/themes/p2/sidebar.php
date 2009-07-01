@@ -172,7 +172,7 @@
     <?php echo $txt['sidebar_favorites']; ?>
     </p>
     <?php endif; ?>
-    <form class="liother" method="post" action=""><input size="10" value="<?php if (isset($_SESSION['searchterm'])) echo $_SESSION['searchterm']; ?>" name="s" /><input id="searchbutton" type="submit" value="Search" /></form>
+    <form class="liother" method="post" action=""><input size="10" value="<?php if (isset($_SESSION['searchterm'])) echo $_SESSION['searchterm']; ?>" name="s" /><input id="searchbutton" type="submit" value="<?php echo $txt['sidebar_search']; ?>" /></form>
     
     <?php if (environment('trending')) : ?>
     <p class="liother">

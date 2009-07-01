@@ -146,7 +146,7 @@ $txt['sidebar_updates'] = "Eintr&auml;ge";
 $txt['sidebar_Updates'] = "Eintr&auml;ge";
 $txt['sidebar_home'] = "Start";
 $txt['sidebar_favorites'] = "Favoriten";
-$txt['sidebar_search'] = "Suche";
+$txt['sidebar_search'] = "suchen";
 $txt['sidebar_direct_messages'] = "Direkte Nachrichten";
 $txt['sidebar_trending_topics'] = "Beliebte Themen";
 $txt['sidebar_rss'] = "RSS";
@@ -357,7 +357,7 @@ $txt['editprofile_button_save'] = "Speichern";
 $txt['editprofile_country'] = "Herkunftsland";
 $txt['editprofile_locality'] = "Herkunftsort";
 $txt['editprofile_homepage'] = "Website";
-$txt['editprofile_timezone'] = "Timezone";
+$txt['editprofile_timezone'] = "Zeitzone";
 
 
 /////////////////////////////////////

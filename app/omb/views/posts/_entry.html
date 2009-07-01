@@ -13,6 +13,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
   <img class="entry-avatar" src="<?php echo $author->avatar; ?>" alt="image" />
     <?php print render_notice( $Member->title, $Member, $profile ); ?>
 </div>
+<div class="entry-clear"></div>
 
   <?php print $Member->body ?>
 
@@ -108,7 +109,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
   ?>
   <?php
   echo "<hr class='entry-hr' /><div class='entry-reply'>";
-  echo "<div class='entry-author'>".$txt['entry_reply_by']." <a href=".$replyauthor->profile.'">'.$replyauthor->nickname."</a>&nbsp;".time_of($c->created)."</div>";
+  echo "<div class='entry-author'>".$txt['entry_reply_by']." <a href='".$replyauthor->profile."'>".$replyauthor->nickname."</a>&nbsp;".time_of($c->created)."</div>";
   echo "<div class='entry-msg'><img src='".$replyauthor->avatar."' class='entry-avatar-reply' alt='reply-avatar' />";
   echo "".render_notice( $c->title, $profile, $profile )."</div>
        </div><div class='entry-clear'></div>"; 
