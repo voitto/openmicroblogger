@@ -453,6 +453,23 @@ global $db;
     if ($db->num_rows($result) == 1)
       $id = $db->result_value($result,0,"id");
   }
+
+  if (!$id) {
+    // check for the nickname in a previous identity
+    $Revision =& $db->model('Revision');
+    $Revision->unset_relation('entries');
+    $Revision->has_one('target_id:entries.id');
+    $where = array(
+      'entries.resource'=>'identities'
+    );
+    $Revision->set_param( 'find_by', $where );
+    $Revision->find();
+    while ($r = $Revision->MoveNext()) {
+      $i = unserialize($r->data);
+      if (is_object($i) && $nick == $i->nickname)
+        $id = $i->id;
+    }
+  }
   
   if (substr($nick,0,1) == '_' && $id) {
     $request->set_param('id',$id);
@@ -476,6 +493,7 @@ global $db;
   } else {
     
     // the nickname did not match a local user
+    
     // check for the nickname at twitter.com
     $url = "http://twitter.com/".$nick;
     require_once(ABSPATH.WPINC.'/class-snoopy.php');
