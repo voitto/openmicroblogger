@@ -356,6 +356,7 @@ $txt['editprofile_button_save'] = "Speichern";
 $txt['editprofile_country'] = "Herkunftsland";
 $txt['editprofile_locality'] = "Herkunftsort";
 $txt['editprofile_homepage'] = "Website";
+$txt['editprofile_timezone'] = "Timezone";
 
 
 /////////////////////////////////////

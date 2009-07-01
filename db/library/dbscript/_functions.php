@@ -2804,3 +2804,81 @@ function set_tz_by_offset($offset) {
   return false;
 }
 
+
+function setting_widget_text_helper($nam,$nammode,$namurl,$namentry) {
+    echo '
+      var submit_to = "'. url_for(array(
+        'resource'=>'settings',
+        'id'=>$nammode->id,
+        'action'=>'put'
+      )).'";
+
+      var submit_to = "'. $namurl.'";
+
+      $(".jeditable_'.$nam.'").mouseover(function() {
+          $(this).highlightFade({end:\'#def\'});
+      });
+      $(".jeditable_'.$nam.'").mouseout(function() {
+          $(this).highlightFade({end:\'#fff\', speed:200});
+      });
+      $(".jeditable_'.$nam.'").editable(submit_to, {
+          indicator   : "<img src=\''. base_path().'resource/jeditable/indicator.gif\'>",
+          submitdata  : function() {
+            return {"entry[etag]" : "'.$namentry->etag.'"};
+          },
+          name        : "setting[value]",
+          type        : "textarea",
+          noappend    : "true",
+          submit      : "OK",
+          tooltip     : "Click to edit...",
+          cancel      : "Cancel",
+          callback    : function(value, settings) {
+            return(value);
+          }
+      });  ';
+
+  
+};
+
+function setting_widget_helper($nam,$nammode,$namurl,$namentry,$listdata) {
+  if (!class_exists("Services_JSON")) lib_include("json"); $json = new Services_JSON(); 
+  echo '
+      var submit_to = "'. url_for(array(
+        'resource'=>'settings',
+        'id'=>$nammode->id,
+        'action'=>'put'
+      )).'";
+
+      var submit_to = "'. $namurl.'";
+
+      $(".jeditable_'.$nam.'").mouseover(function() {
+          $(this).highlightFade({end:\'#def\'});
+      });
+      $(".jeditable_'.$nam.'").mouseout(function() {
+          $(this).highlightFade({end:\'#fff\', speed:200});
+      });
+      $(".jeditable_'.$nam.'").editable(submit_to, {
+          indicator   : "<img src=\''. base_path().'resource/jeditable/indicator.gif\'>",
+             data     : \''
+     .$json->encode( $listdata ).
+     '\',
+          submitdata  : function() {
+            return {"entry[etag]" : "'.$namentry->etag.'"};
+          },
+          name        : "setting[value]",
+          type        : "select",
+          placeholder : "'.$nammode->value.'",
+          noappend    : "true",
+          submit      : "OK",
+          tooltip     : "Click to edit...",
+          cancel      : "Cancel",
+          callback    : function(value, settings) {
+            $(this).html(settings[\'jsonarr\'][value-0]);
+            return(value);
+          }
+      });  ';
+  
+}
+
+
+
