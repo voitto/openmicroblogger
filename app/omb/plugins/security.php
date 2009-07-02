@@ -146,7 +146,7 @@ function start_wp_openid() {
   if ( null === $auth_request )
     trigger_error('OpenID server not found at '. htmlentities( $claimed_url ), E_USER_ERROR);
 
-  $return_to = $request->url_for( 'openid_continue' );
+  $return_to = $request->url_for( 'openid_continue' ).'/';
 
   $store =& WordPressOpenID_Logic::getStore();
 
@@ -176,7 +176,7 @@ function start_simple_openid() {
 
   $openid->SetIdentity( $request->openid_url );
 
-  $openid->SetApprovedURL( $request->url_for( 'openid_continue' )); // y'all come back now
+  $openid->SetApprovedURL( $request->url_for( 'openid_continue' ).'/'); // y'all come back now
 
   $openid->SetTrustRoot( $request->protected_url ); // protected site
 
@@ -355,7 +355,7 @@ function _email( &$vars ) {
   
   $submit_url = $request->url_for( environment('authentication').'_submit' );
   
-  $return_url = $request->url_for( 'openid_continue' );
+  $return_url = $request->url_for( 'openid_continue' ).'/';
   if (isset($_SESSION['requested_url']))
     $return_to = $_SESSION['requested_url'];
   else
@@ -397,7 +397,7 @@ function _register( &$vars ) {
   
   $submit_url = $request->url_for( environment('authentication').'_submit' );
   
-  $return_url = $request->url_for( 'openid_continue' );
+  $return_url = $request->url_for( 'openid_continue' ).'/';
   if (isset($_SESSION['requested_url']))
     $return_to = $_SESSION['requested_url'];
   else
@@ -434,7 +434,7 @@ function _register( &$vars ) {
 function _login( &$vars ) {
   extract( $vars );
   $submit_url = $request->url_for( 'openid_submit' );
-  $return_url = $request->url_for( 'openid_continue' );
+  $return_url = $request->url_for( 'openid_continue' ).'/';
   if (isset($_SESSION['requested_url']))
     $return_to = $_SESSION['requested_url'];
   else
@@ -1001,7 +1001,7 @@ function openid_login( &$vars ) {
     if ("/" == substr($openid,-1))
       $openid = substr( $openid, 0, -1 );
     
-    $request->set_param('return_url',$request->url_for( 'openid_continue' ));
+    $request->set_param('return_url',$request->url_for( 'openid_continue' ).'/');
     
     $request->set_param('protected_url',$request->base);
     
@@ -1049,7 +1049,7 @@ function openid_continue( &$vars ) {
       case Auth_OpenID_FAILURE:
         // if we fail OpenID v2 here, we retry once with OpenID v1
         $_SESSION['openid_degrade'] = true;
-        $request->set_param('return_url',$request->url_for( 'openid_continue' ));
+        $request->set_param('return_url',$request->url_for( 'openid_continue' ).'/');
         $request->set_param('protected_url',$request->base);
         $request->set_param('openid_url',$_SESSION['openid_url']);
         authenticate_with_openid();
@@ -1072,7 +1072,7 @@ function openid_continue( &$vars ) {
   
     $openid->SetIdentity( $_SESSION['openid_url'] );
   
-    $openid->SetApprovedURL( $request->url_for( 'openid_continue' ));
+    $openid->SetApprovedURL( $request->url_for( 'openid_continue' ).'/');
   
     $openid->SetTrustRoot( $request->base );
   
