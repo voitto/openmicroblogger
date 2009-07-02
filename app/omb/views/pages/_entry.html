@@ -116,7 +116,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
   <?php $Post =& $db->model(tableize($request->resource)); $Post->has_one('profile_id:identities'); $Post->find_by('parent_id',$Member->id); ?>
   <?php while ($c = $Post->MoveNext()) : ?>
   <?php $replyauthor = $c->FirstChild('identities'); ?>
-  <?php echo "<tr><td><p><font size=\"-1\">".'reply by '.$replyauthor->nickname."&nbsp; ".time_of($c->created)."</font></p></td></tr><tr><td><p>".htmlentities($c->title)."</p><br /></td></tr>"; ?>
+  <?php echo "<tr><td><p><font size=\"-1\">".'Reply by '.$replyauthor->nickname."&nbsp; ".time_of($c->created)."</font></p></td></tr><tr><td><p>".htmlentities($c->title)."</p><br /></td></tr>"; ?>
   <?php endwhile; ?>
   </table>
   </td>

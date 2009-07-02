@@ -33,7 +33,7 @@ html {
 }
 body {
 	font-size: 62.5%;
-	background: #f1f1f1;
+	background: #DBE3F0;
 }
 a, a:visited, h1 a:visited, a:active, #main .selected .actions a, #main .selected .actions a:link, #main .selected .actions a:visited, #help dt {
 	color: #3478e3;
@@ -180,7 +180,8 @@ color:#3478e3;
 }
 #postbox .avatar img {
 	padding: 0;
-	border: 1px solid #ccc;
+	border: 3px solid #fff;
+	outline:1px solid #ccc;
 }
 #postbox .inputarea {
 	padding-left: 66px;
@@ -286,10 +287,16 @@ h3 {
 	color: #777;
 	font-weight: bold;
 }
+h4 {
+	font-size: 1em;
+	color: #777;
+	font-weight: bold;
+}
 #main img.avatar {
 	float: left;
 	margin-right: 15px;
-	border: 1px solid #ccc;
+	border: 3px solid #fff;
+	outline:1px solid #ccc;
 	margin-top: 0;
 	margin-left: 2px;
 }
@@ -508,6 +515,8 @@ h2 a.rss:hover {
 	vertical-align:middle;
 	width:32px;
 	height:32px;
+	border: 3px solid #fff;
+	outline:1px solid #ccc;
 }
 #sidebar a.profile-nick {
 font-size:1.7em;
@@ -629,6 +638,18 @@ width:33%;
 #sidebarclear {
 	clear: both;
 }
+#followgrid {
+  margin: 0px;
+  padding: 0px;
+}
+
+#followgrid img {
+  border: 0px;
+  width: 24px;
+  height: 24px;
+  margin: 0px 2px 2px 2px;
+}
+
 /***********/
 
 
@@ -940,8 +961,17 @@ margin-bottom: .3em;
 /********** Single-Post-View (Permalink/Answer) **********/
 /* /app/omb/views/posts/_entry.html */
 
-#entry-msg {
-margin:5px;
+.entry-reply {
+	float: left;
+	margin-left:2em;
+}
+.entry-author {
+	font-weight: bold;
+	color:#666;
+}
+.entry-msg {
+	margin:5px;
+	color:#555;
 }
 .entry-avatar {
 	float:left;
@@ -949,9 +979,23 @@ margin:5px;
 	margin-left:0.5em;
 	width:80px;
 	height:80px;
-	border-width:thin;
-	border-color:#777;
-	border-style:solid;
+	border: 3px solid #fff;
+	outline:1px solid #ccc;
+}
+.entry-avatar-reply {
+	float:left;
+	margin-right:0.5em;
+	margin-left:0.5em;
+	width:40px;
+	height:40px;
+	border: 3px solid #fff;
+	outline:1px solid #ccc;
+}
+.entry-clear {
+	clear: both;
+}
+.entry-hr {
+	margin-left:2em;
 }
 #bookmark-this {
 	position:relative;
@@ -990,9 +1034,8 @@ margin:5px;
 }
 .profile-img {
 	vertical-align:middle;
-	border-width:thin;
-	border-color:#777;
-	border-style:solid;
+	border: 3px solid #fff;
+	outline:1px solid #ccc;
 	width:96px;
 	height:96px;
 }
@@ -1083,7 +1126,8 @@ width: 350px;
 /* /app/omb/views/identities/_entry.html */
 
 .entry-img {
-	border:none;
+	border: 3px solid #fff;
+	outline:1px solid #ccc;
 	width:48px;
 	height:48px;
 }
@@ -1133,7 +1177,6 @@ hover:none;
 	font-weight:normal;
 	margin: 1.5em 0em 0em 0em;
 }
-<<<<<<< HEAD:wp-content/themes/p2/style.css
 .liother-b {
 	font-weight:bold;
 	margin: 1.5em 0em 0em 0em;
@@ -1148,19 +1191,6 @@ hover:none;
 	padding-left:10px;
 }
 
-
-#followgrid {
-  margin: 0px;
-  padding: 0px;
-}
-
-#followgrid img {
-  border: 0px;
-  width: 24px;
-  height: 24px;
-  margin: 0px 2px 2px 2px;
-}
-
 /********** Microformats **********/
 /* /db/library/php_microformats.php */
 .fn {
@@ -1168,6 +1198,8 @@ hover:none;
 	font-weight:bold;
 }
 img.photo {
+	border: 3px solid #fff;
+	outline:1px solid #ccc;
 	width:100px;
 	height:100px;
 }

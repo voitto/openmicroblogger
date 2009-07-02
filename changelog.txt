@@ -5,9 +5,10 @@
 ################################
 #           Cutline            #
 # * Changes                    #
-# (+) New file added           #
-# (-) File removed             #
-# (o) File Changed             #
+# (+)   New file added         #
+# (-)   File removed           #
+# (o)   File Changed           #
+# [#00] Ticket ID              #
 ################################
 
 ################################
@@ -21,25 +22,58 @@ This has changed in Release:
 #0.3b80
 
 * rss submits current sitename/-description
-* installer checks now if uploads-folder is writable
+* Fixed: Installer checks now if uploads-folder is writable
 * Some OpenID-Changes
-* Security fix: encrypt/decrypt twitter/identi.ca passwords
-* some multilanguage improvements
+* Security fix: encrypt/decrypt twitter/identi.ca passwords [#83]
+* some multilanguage improvements / import-function for exported lang-files [#61] 
+* Fixed: In threaded-view post aren't shown twice anymore [#79]
+* Fixed: register with password-mode [#77]
+* Fixed: Zeep-Mobile settings are shown if available [#85]
+* Fixed: Admin is now able to edit/delete every message [#9]
+* Changed standard BG-Color in P2-Theme
+* Added avatar-borders in P2-Theme
+* Styled Reply-Page
+* Added message-search feature [#87]
+* P2-Theme: Hiding until now not existing features on sidebar/navigation
+* Changing timezone feature: server (admin) and user-specific (settings) [#26]
+* If user changes nickname @oldnickname redirects to @newnickname [#62]
 
 (o) install.php
+(o) app/identica/controllers/dents.php
+(o) app/identica/plugins/identica.php
 (o) app/identica/views/dents/_edit.html
+(o) app/omb/controllers/admin.php
+(o) app/omb/controllers/identities.php
 (o) app/omb/controllers/settings.php
+(o) app/omb/plugins/omb.php
 (o) app/omb/plugins/security.php
+(o) app/omb/plugins/sms_notice.php
+(o) app/omb/plugins/wp.php
 (o) app/omb/views/_index.rss
+(o) app/omb/views/admin/index.html
+(o) app/omb/views/identities/_admin.html
+(o) app/omb/views/identities/_edit.html
 (o) app/omb/views/identities/_entry.html
+(o) app/omb/views/pages/_entry.html
+(o) app/omb/views/posts/_apps.html
+(o) app/omb/views/posts/_entry.html
 (o) app/omb/views/posts/_profile.html
 (o) app/twitter/controllers/ak_twitter.php
 (o) app/twitter/views/ak_twitter/_edit.html
+(o) db/boot.php
 (o) db/library/openid.php
 (o) db/library/dbscript/_functions.php
+(o) db/library/dbscript/model.php
+(o) resource/jeditable/jquery.jeditable.js
 (o) wp-content/language/eng.php
 (o) wp-content/language/ger.php
+(o) wp-content/plugins/twitter-tools/twitter-tools.php
+(o) wp-content/themes/p2/header.php
 (o) wp-content/themes/p2/sidebar.php
+(o) wp-content/themes/p2/style.css
+(o) wp-content/themes/prologue-theme/style.css
+
+(+) app/omb/models/Revision.php
 
 
 #0.3b79

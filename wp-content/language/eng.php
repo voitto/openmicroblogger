@@ -279,6 +279,7 @@ $txt['edit_button_save'] = "Save";
 /////////////////////////////////////
 # /app/omb/views/posts/_entry.html
 /////////////////////////////////////
+$txt['entry_entry_by'] = "Entry by ";
 $txt['entry_ephonic1'] = "To use the ";
 $txt['entry_ephonic2'] = "you will need ";
 $txt['entry_ephonic3'] = "or better and a Javascript enabled browser";
@@ -289,6 +290,7 @@ $txt['entry_button_submit_rating'] = "Submit rating";
 $txt['entry_sign_in'] = "Sign In";
 $txt['entry_to_post_a_reply'] = " to post a reply";
 $txt['entry_members_forum'] = "Members of this forum";
+$txt['entry_reply_by'] = "Reply by";
 
 
 /////////////////////////////////////
