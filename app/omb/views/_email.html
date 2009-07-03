@@ -49,9 +49,7 @@
 
   <p>Sign in or register with Facebook:</p>
   
-    <a href="#" onclick="FB.Connect.requireSession(); return false;" >
-    <img id="fb_login_image" src="http://static.ak.fbcdn.net/images/fbconnect/login-buttons/connect_light_medium_long.gif" alt="Connect"/>
-    </a>
+<fb:login-button onlogin="facebook_onlogin();"></fb:login-button>
 
   <script type="text/javascript">
     FB.init('<?php echo environment('facebookKey') ?>', "resource/xd_receiver.htm");
