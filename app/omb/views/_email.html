@@ -42,7 +42,7 @@
 
 
 
-<?php if (environment('facebook_apikey')) : ?>
+<?php if (environment('facebookKey')) : ?>
   
 <br />
   <script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>
@@ -52,9 +52,8 @@
   <fb:login-button onlogin="facebook_onlogin();"></fb:login-button>
   
   <script type="text/javascript">
-    FB.init(environment('facebook_apikey'), "resource/xd_receiver.htm");
+    FB.init('<?php echo environment('facebookKey') ?>', "resource/xd_receiver.htm");
   </script>
-
   
 <?php endif; ?>
 

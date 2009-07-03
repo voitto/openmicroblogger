@@ -89,6 +89,24 @@ class FacebookStream {
     
   }
   
+  function GetInfo($appid,$sesskey,$userid,$fields) {
+    
+    // http://wiki.developers.facebook.com/index.php/Users.getInfo
+    
+    $params = array(
+      'api_key' => $this->getApiKey(),
+      'call_id' => microtime(true),
+      'sig' =>  md5("app_id=".$appid."session_key=".$sesskey."source_id=".$userid.$this->getApiSecret()),
+      'v' => '1.0',
+      'uids' => $userid,
+      'fields' => $fields,
+      'session_key' => $sesskey
+    );
+    
+    return $this->api->users->callMethod( 'users.getInfo', $params );
+    
+  }
+  
   function VerifyStream($userid) {
     
     $perm = 'read_stream';
@@ -182,7 +200,7 @@ class FacebookStream {
     curl_setopt($ch, CURLOPT_TIMEOUT, 30);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     //////////////////////////////////////////////////
-    ///// Set to 1 to verify Twitter's SSL Cert //////
+    ///// Set to 1 to verify SSL Cert //////
     //////////////////////////////////////////////////
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
     if (isset($post_data)) {

@@ -79,6 +79,7 @@ env:
     - password
     - streams
     - translate
+    - facebook
   
   installed:
     - password
@@ -86,6 +87,7 @@ env:
     - twitter
     - identica
     - translate
+    - facebook
   
   boot: omb
   
@@ -124,6 +126,11 @@ env:
   
   twitterKey: 
   twitterSecret: 
+  
+  facebookKey: 
+  facebookSecret: 
+  facebookAppId: 
+  facebookAppName: 
   
   awsAccessKey: 
   awsSecretKey: 

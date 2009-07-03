@@ -1723,6 +1723,11 @@ function get_person_id() {
     }
   }
   
+  if (isset($_SESSION['fb_person_id'])
+  && $_SESSION['fb_person_id'] >0) {
+    return $_SESSION['fb_person_id'];
+  }
+
   if (isset($_SESSION['oauth_person_id'])
   && $_SESSION['oauth_person_id'] >0) {
     return $_SESSION['oauth_person_id'];

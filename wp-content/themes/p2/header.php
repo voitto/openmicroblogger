@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" <?php language_attributes(); ?><?php if (environment('facebook_apikey') && $request->action == 'email_login') echo ' xmlns:fb="http://www.facebook.com/2008/fbml"'; ?>>
+<html xmlns="http://www.w3.org/1999/xhtml" <?php language_attributes(); ?><?php global $request; if (environment('facebookKey') && $request->action == 'email') echo 'xmlns:fb="http://www.facebook.com/2008/fbml"'; ?>>
 <head profile="http://gmpg.org/xfn/11">
 <meta http-equiv="Content-Type" content="<?php bloginfo('html_type'); ?>; charset=<?php bloginfo('charset'); ?>" />
 <title><?php wp_title(); ?> <?php bloginfo('name'); ?></title>
@@ -8,10 +8,10 @@
 <link rel="stylesheet" href="<?php bloginfo('stylesheet_url'); ?>" type="text/css" media="screen" />
 <link rel="alternate" type="application/rss+xml" title="<?php bloginfo('name'); ?> RSS Feed" href="<?php bloginfo('rss2_url'); ?>" />
 <link rel="pingback" href="<?php bloginfo('pingback_url'); ?>" />
-<?php if (environment('facebook_apikey')) : ?>
+<?php if ($request->action == 'email' && environment('facebookKey')) : ?>
 <script type="text/javascript">
   function facebook_onlogin() {
-    alert('loggedin');
+    window.location='<?php url_for('facebook_login'); ?>';
   }
 </script>
 <?php endif; ?>

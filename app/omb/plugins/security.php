@@ -311,7 +311,10 @@ function complete_openid_authentication( &$request ) {
     } else {
       
       // no person defined yet
-      if ( isset($_SESSION['oauth_person_id'])
+      if ( isset($_SESSION['fb_person_id'])
+      && $_SESSION['fb_person_id'] > 0 ) {
+        
+      } elseif ( isset($_SESSION['oauth_person_id'])
       && $_SESSION['oauth_person_id'] > 0 ) {
         // try to set the cookie
         // set_cookie( $_SESSION['oauth_person_id'] );
@@ -614,12 +617,14 @@ function openid_logout( &$vars ) {
   //unset($_SESSION['openid_email']);
   //unset($_SESSION['openid_url']);
   $_SESSION['oauth_person_id']=0;
+  $_SESSION['fb_person_id']=0;
   unset($_SESSION['oauth_access_token']);
   unset($_SESSION['oauth_access_token_secret']);
   unset($_SESSION['oauth_request_token']);
   unset($_SESSION['oauth_request_token_secret']);  
   unset($_SESSION['oauth_state']);
   unset($_SESSION['oauth_twitter']);
+  unset($_SESSION['fb_person_id']);
   unset($_SESSION['oauth_person_id']);
   unset($_SESSION['requested_url']);
   unset($_SESSION['openid_complete']);
@@ -830,7 +835,14 @@ function _oauth( &$vars ) {
         
         if (!$twuser->profile_id) {
           // a
-          $i = make_identity($user);
+          $i = make_identity(array(
+            $user->screen_name,
+            $user->profile_image_url,
+            $user->name,
+            $user->description,
+            $user->url,
+            $user->location
+          ));
           if (!$i)
             trigger_error('sorry I was unable to create an identity', E_USER_ERROR);
           $twuser->set_value('profile_id',$i->id);
@@ -847,7 +859,14 @@ function _oauth( &$vars ) {
         }
       } else {
         // c
-        $i = make_identity($user);
+        $i = make_identity(array(
+          $user->screen_name,
+          $user->profile_image_url,
+          $user->name,
+          $user->description,
+          $user->url,
+          $user->location
+        ));
         if (!$i)
           trigger_error('sorry I was unable to create an identity', E_USER_ERROR);
         $twuser = make_twuser($user,$i->id,$session_oauth_token,$session_oauth_secret);
@@ -886,9 +905,9 @@ function make_identity( $user ) {
   $p->save();
   $i = $Identity->base();
 
-  $nicker = $db->escape_string($user->screen_name);
+  $nicker = $db->escape_string($user[0]);
   
-  for ( $j=1; $j<5000; $j++ ) {
+  for ( $j=1; $j<50; $j++ ) {
     $sql = "SELECT nickname FROM ".$prefix."identities WHERE nickname LIKE '".$nicker."' AND (post_notice = '' OR post_notice IS NULL)";
     $result = $db->get_result( $sql );
     if ($db->num_rows($result) > 0) {
@@ -899,11 +918,11 @@ function make_identity( $user ) {
   }
 
   $i->set_value( 'nickname', $nicker );
-  $i->set_value( 'avatar', $user->profile_image_url ); 
-  $i->set_value( 'fullname', $user->name );
-  $i->set_value( 'bio', $user->description );
-  $i->set_value( 'homepage', $user->url );
-  $i->set_value( 'locality', $user->location );
+  $i->set_value( 'avatar', $user[1] ); 
+  $i->set_value( 'fullname', $user[2] );
+  $i->set_value( 'bio', $user[3] );
+  $i->set_value( 'homepage', $user[4] );
+  $i->set_value( 'locality', $user[5] );
   $i->set_value( 'label', 'profile 1' );
   $i->set_value( 'person_id', $p->id );
   $i->save_changes();
@@ -924,6 +943,141 @@ function make_identity( $user ) {
   //$i->set_value( 'update_profile', $updateProfile );
   //$i->set_value( 'post_notice', $postNotice );
   return $i;
+}
+
+function facebook_login( &$vars ) {
+  extract($vars);
+  if (!class_exists('Validate')) {
+    class Validate {
+      function Validate() {
+      }
+      function uri() {
+        return true;
+      }
+    }
+  }
+  
+  // ok here we are
+  
+  $app_id = environment('facebookAppId');
+  $consumer_key = environment('facebookKey');
+  $consumer_secret = environment('facebookSecret');
+  $agent = environment('facebookAppName')." (curl)";
+
+  add_include_path('/usr/share/pear/PEAR');
+  
+  lib_include('facebook');
+  
+  //add_include_path(library_path().'facebook-platform/php');
+  add_include_path(library_path().'facebook_stream');
+  
+  require_once "FacebookStream.php";
+  require_once "Services/Facebook.php";
+  
+  $fb = new Facebook($consumer_key, $consumer_secret, true);
+  
+  $_SESSION['fb_session'] = (string)$fb->api_client->session_key;
+  $_SESSION['fb_userid'] = (string)$fb->user;
+
+  $fs = new FacebookStream($consumer_key,$consumer_secret,$agent);
+  
+  $fieldlist = array(
+    'last_name',
+    'first_name',
+    'pic_small',
+    'profile_blurb',
+    'profile_url',
+    'locale',
+    'name',
+    'proxied_email'
+  );
+  
+  $fields = implode(',',$fieldlist);
+  
+  $user = $fs->GetInfo( $app_id, $_SESSION['fb_session'], $_SESSION['fb_userid'], $fields );
+  
+  $values = array();
+  
+  $values[] = str_replace(' ','',strtolower((string)$user->user->name));
+  $values[] = (string)$user->user->pic_small;
+  $values[] = (string)$user->user->name;
+  $values[] = (string)$user->user->profile_blurb;
+  $values[] = (string)$user->user->profile_url;
+  $values[] = (string)$user->user->locale;
+  
+  $Identity =& $db->model('Identity');
+  $Person =& $db->model('Person');
+  $FacebookUser =& $db->model('FacebookUser');
+  
+  $faceuser = $FacebookUser->find_by( 'facebook_id',$_SESSION['fb_userid'] );
+  
+  // a) facebook user exists, does not have a profile_id
+  // b) facebook user exists, HAS a profile_id
+  // c) facebook user does not exist
+  if ($faceuser) {
+    
+    if (!$faceuser->profile_id) {
+      $i = make_identity($values);
+      if (!$i)
+        trigger_error('sorry I was unable to create an identity', E_USER_ERROR);
+      $faceuser->set_value('profile_id',$i->id);
+      $faceuser->save_changes();
+      if (!$faceuser)
+        trigger_error('sorry I was unable to create a facebook user', E_USER_ERROR);
+    } else {
+      // b
+      $i = $Identity->find($faceuser->profile_id);
+      if (!$i)
+        trigger_error('sorry I was unable to find the identity', E_USER_ERROR);
+    }
+  } else {
+    // c
+    $i = make_identity($values);
+    if (!$i)
+      trigger_error('sorry I was unable to create an identity', E_USER_ERROR);
+    $faceuser = make_fb_user($user,$i->id);
+    if (!$faceuser)
+      trigger_error('sorry I was unable to create a facebook user', E_USER_ERROR);
+  }
+  
+  $_SESSION['fb_person_id'] = $i->person_id;
+  
+  redirect_to($request->base);
+  
+  //$fs->setStatus("nerding out with the latest Facebook API tools",$_SESSION['fb_userid']);
+  //$fs->StreamRequest( $app_id, $_SESSION['fb_session'], $_SESSION['fb_userid'] );
+  
+}
+
+function make_fb_user( $user, $profile_id ) {
+  
+  global $db;
+  
+  $Identity =& $db->model('Identity');
+  $Person =& $db->model('Person');
+  $nickname = str_replace(' ','',strtolower((string)$user->user->name));
+  $FacebookUser =& $db->model('FacebookUser');
+  $faceuser = $FacebookUser->find_by( 'facebook_id',(string)$user->user->uid );
+  
+  if ($faceuser)
+    return $faceuser;
+  
+  $faceuser = $FacebookUser->base();
+  
+  $faceuser->set_value('description',       (string)$user->user->profile_blurb);
+  $faceuser->set_value('screen_name',       $nickname);
+  $faceuser->set_value('url',               (string)$user->user->profile_url);
+  $faceuser->set_value('name',              (string)$user->user->name);
+  $faceuser->set_value('protected',         0);
+  $faceuser->set_value('followers_count',   0);
+  $faceuser->set_value('profile_image_url', (string)$user->user->pic_small);
+  $faceuser->set_value('location',          (string)$user->user->locale);
+  $faceuser->set_value('facebook_id',       (string)$user->user->uid);
+  $faceuser->set_value('profile_id',        $profile_id);
+  $faceuser->save_changes();
+  
+  return $faceuser;
+
 }
 
 function make_twuser( $user, $profile_id, $oauthkey, $oauthsecret ) {
@@ -1134,10 +1288,16 @@ function security_init() {
   $request->connect( 'ldap_submit' );
   
   $request->connect( 'oauth_login' );
+
+  $request->connect( 'facebook_login' );
   
   $request->routematch();
   
-  if (isset($_SESSION['oauth_person_id'])
+    if (isset($_SESSION['fb_person_id'])
+  && $_SESSION['fb_person_id'] >0) {
+      $request->openid_complete = true;
+    return $_SESSION['fb_person_id'];
+  } elseif (isset($_SESSION['oauth_person_id'])
   && $_SESSION['oauth_person_id'] >0) {
       $request->openid_complete = true;
     return $_SESSION['oauth_person_id'];
