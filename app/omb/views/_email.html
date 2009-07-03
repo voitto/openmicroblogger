@@ -49,8 +49,10 @@
 
   <p>Sign in or register with Facebook:</p>
   
-  <fb:login-button onlogin="facebook_onlogin();"></fb:login-button>
-  
+    <a href="#" onclick="FB.Connect.requireSession(); return false;" >
+    <img id="fb_login_image" src="http://static.ak.fbcdn.net/images/fbconnect/login-buttons/connect_light_medium_long.gif" alt="Connect"/>
+    </a>
+
   <script type="text/javascript">
     FB.init('<?php echo environment('facebookKey') ?>', "resource/xd_receiver.htm");
   </script>
@@ -63,13 +65,13 @@
     <?php endif; ?>
     <p><a href="<?php url_for('openid_login'); ?>">Sign in with your OpenID...</a></p><br />
   <p>Sign in with your E-Mail Address:</p>
-  <p>E-Mail Address:&nbsp;<input name="email" value="<?php if ($email) print $email; elseif (isset($_SESSION['openid_email'])) print $_SESSION['openid_email']; else print ""; ?>" size="40">  </p>
-  <input name="return_url" value="<?php print $return_url; ?>" type="hidden">
-  <input name="protected_url" value="<?php print $protected_url; ?>" type="hidden">
+  <p>E-Mail Address:&nbsp;<input name="email" value="<?php if ($email) print $email; elseif (isset($_SESSION['openid_email'])) print $_SESSION['openid_email']; else print ""; ?>" size="40" />  </p>
+  <input name="return_url" value="<?php print $return_url; ?>" type="hidden" />
+  <input name="protected_url" value="<?php print $protected_url; ?>" type="hidden" />
 
-  <input name="method" value="email_submit" type="hidden">
+  <input name="method" value="email_submit" type="hidden" />
 
-  <input type="submit" value="Sign In">
+  <input type="submit" value="Sign In" />
 
 </form>
 

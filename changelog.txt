@@ -37,8 +37,11 @@ This has changed in Release:
 * P2-Theme: Hiding until now not existing features on sidebar/navigation
 * Changing timezone feature: server (admin) and user-specific (settings) [#26]
 * If user changes nickname @oldnickname redirects to @newnickname [#62]
+* Fixed: @admin*** nicknames now redirecting to profile instead of admin-menu [#89]
+* Added Facebook-Connect
 
 (o) install.php
+(o) app/config/config.yml
 (o) app/identica/controllers/dents.php
 (o) app/identica/plugins/identica.php
 (o) app/identica/views/dents/_edit.html
@@ -50,6 +53,7 @@ This has changed in Release:
 (o) app/omb/plugins/sms_notice.php
 (o) app/omb/plugins/wp.php
 (o) app/omb/views/_index.rss
+(o) app/omb/views/_email.html
 (o) app/omb/views/admin/index.html
 (o) app/omb/views/identities/_admin.html
 (o) app/omb/views/identities/_edit.html
@@ -73,7 +77,67 @@ This has changed in Release:
 (o) wp-content/themes/p2/style.css
 (o) wp-content/themes/prologue-theme/style.css
 
+(+) app/facebook/models/FacebookUser.php
 (+) app/omb/models/Revision.php
+(+) db/library/facebook-platform/php/facebook.php
+(+) db/library/facebook-platform/php/facebook_desktop.php
+(+) db/library/facebook-platform/php/facebookapi_php5_restlib.php
+(+) db/library/facebook-platform/php/jsonwrapper/JSON/JSON.php
+(+) db/library/facebook-platform/php/jsonwrapper/JSON/LICENSE
+(+) db/library/facebook-platform/php/jsonwrapper/jsonwrapper.php
+(+) db/library/facebook-platform/php/jsonwrapper/jsonwrapper_inner.php
+(+) db/library/facebook_stream/FacebookStream.php
+(+) db/library/facebook_stream/README
+(+) db/library/facebook_stream/Services/Facebook.php
+(+) db/library/facebook_stream/Services/Facebook/Admin.php
+(+) db/library/facebook_stream/Services/Facebook/Application.php
+(+) db/library/facebook_stream/Services/Facebook/Auth.php
+(+) db/library/facebook_stream/Services/Facebook/Batch.php
+(+) db/library/facebook_stream/Services/Facebook/Common.php
+(+) db/library/facebook_stream/Services/Facebook/Connect.php
+(+) db/library/facebook_stream/Services/Facebook/Data.php
+(+) db/library/facebook_stream/Services/Facebook/Events.php
+(+) db/library/facebook_stream/Services/Facebook/Exception.php
+(+) db/library/facebook_stream/Services/Facebook/FBML.php
+(+) db/library/facebook_stream/Services/Facebook/FQL.php
+(+) db/library/facebook_stream/Services/Facebook/Feed.php
+(+) db/library/facebook_stream/Services/Facebook/Friends.php
+(+) db/library/facebook_stream/Services/Facebook/Groups.php
+(+) db/library/facebook_stream/Services/Facebook/MarketPlace.php
+(+) db/library/facebook_stream/Services/Facebook/MarketPlace/Listing.php
+(+) db/library/facebook_stream/Services/Facebook/Notifications.php
+(+) db/library/facebook_stream/Services/Facebook/Pages.php
+(+) db/library/facebook_stream/Services/Facebook/Photos.php
+(+) db/library/facebook_stream/Services/Facebook/Profile.php
+(+) db/library/facebook_stream/Services/Facebook/Share.php
+(+) db/library/facebook_stream/Services/Facebook/Users.php
+(+) db/library/facebook_stream/example/index.php
+(+) resource/xd_receiver.htm
+
+(-) app/facebook/Services/README
+(-) app/facebook/Services/Services/Facebook.php
+(-) app/facebook/Services/Services/Facebook/Admin.php
+(-) app/facebook/Services/Services/Facebook/Application.php
+(-) app/facebook/Services/Services/Facebook/Auth.php
+(-) app/facebook/Services/Services/Facebook/Batch.php
+(-) app/facebook/Services/Services/Facebook/Common.php
+(-) app/facebook/Services/Services/Facebook/Connect.php
+(-) app/facebook/Services/Services/Facebook/Data.php
+(-) app/facebook/Services/Services/Facebook/Events.php
+(-) app/facebook/Services/Services/Facebook/Exception.php
+(-) app/facebook/Services/Services/Facebook/FBML.php
+(-) app/facebook/Services/Services/Facebook/FQL.php
+(-) app/facebook/Services/Services/Facebook/Feed.php
+(-) app/facebook/Services/Services/Facebook/Friends.php
+(-) app/facebook/Services/Services/Facebook/Groups.php
+(-) app/facebook/Services/Services/Facebook/MarketPlace.php
+(-) app/facebook/Services/Services/Facebook/MarketPlace/Listing.php
+(-) app/facebook/Services/Services/Facebook/Notifications.php
+(-) app/facebook/Services/Services/Facebook/Pages.php
+(-) app/facebook/Services/Services/Facebook/Photos.php
+(-) app/facebook/Services/Services/Facebook/Profile.php
+(-) app/facebook/Services/Services/Facebook/Share.php
+(-) app/facebook/Services/Services/Facebook/Users.php
 
 
 #0.3b79
