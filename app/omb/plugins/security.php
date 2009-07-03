@@ -957,20 +957,18 @@ function facebook_login( &$vars ) {
     }
   }
   
-  // ok here we are
-  
   $app_id = environment('facebookAppId');
   $consumer_key = environment('facebookKey');
   $consumer_secret = environment('facebookSecret');
   $agent = environment('facebookAppName')." (curl)";
-
-  add_include_path('/usr/share/pear/PEAR');
   
-  //lib_include('facebook');
+  if (is_dir('/usr/share/pear/PEAR'))
+    add_include_path('/usr/share/pear/PEAR');
   
   add_include_path(library_path().'facebook-platform/php');
   add_include_path(library_path().'facebook_stream');
   
+  require_once "facebook.php";
   require_once "FacebookStream.php";
   require_once "Services/Facebook.php";
   
