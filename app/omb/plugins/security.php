@@ -966,9 +966,9 @@ function facebook_login( &$vars ) {
 
   add_include_path('/usr/share/pear/PEAR');
   
-  lib_include('facebook');
+  //lib_include('facebook');
   
-  //add_include_path(library_path().'facebook-platform/php');
+  add_include_path(library_path().'facebook-platform/php');
   add_include_path(library_path().'facebook_stream');
   
   require_once "FacebookStream.php";
