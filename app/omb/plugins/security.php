@@ -913,7 +913,7 @@ function make_identity( $user ) {
     if ($db->num_rows($result) > 0) {
       $nicker = $nicker.$j;
     } else {
-      continue;
+      break;
     }
   }
 

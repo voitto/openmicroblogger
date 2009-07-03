@@ -42,7 +42,7 @@
 
 
 
-<?php if (environment('facebookKey')) : ?>
+<?php global $prefix; if (empty($prefix) && environment('facebookKey')) : ?>
   
 <br />
   <script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>
