@@ -624,17 +624,23 @@ class Mapper {
       array_shift( $params );
     }
     
+    if ($paramcount == 1) {
+      if (!(strpos($params[0], '&') === false)) {
+        $paramsplit = split("&",$params[0]);
+        $params[0] = $paramsplit[0];
+      }
+      if (!(strpos($params[0], '?') === false)) {
+        $paramsplit = split("?",$params[0]);
+        $params[0] = $paramsplit[0];
+      }
+    }
+    
     if ( count( $r->patterns ) == 0 ) {
       $r->match = true;
       $pmatches = array();
 //    } elseif ( preg_match( "/\/" . implode( "\/", $regx ) . "/i", "/" .implode( "/", $params ), $pmatches )  ) {
     } elseif ( preg_match( "/\/" . implode( "\/", $regx ) . "/i", "/" .implode( "/", $params ), $pmatches ) && count($r->patterns) == $paramcount ) {
-      if ($i == 0 && $paramcount == 1) {
-        if (strlen($regx[0]) == strlen($params[0]))
-          $r->match = true;
-      } else {
-        $r->match = true;
-      }
+      $r->match = true;
     }
     
     if ($r->match) {
@@ -718,4 +724,3 @@ class Mapper {
   
 }
 
-?>
