@@ -962,8 +962,7 @@ function facebook_login( &$vars ) {
   $consumer_secret = environment('facebookSecret');
   $agent = environment('facebookAppName')." (curl)";
   
-  if (is_dir('/usr/share/pear/PEAR'))
-    add_include_path('/usr/share/pear/PEAR');
+  lib_include('Validate');
   
   add_include_path(library_path().'facebook-platform/php');
   add_include_path(library_path().'facebook_stream');
