@@ -953,8 +953,7 @@ function facebook_login( &$vars ) {
   $consumer_secret = environment('facebookSecret');
   $agent = environment('facebookAppName')." (curl)";
   
-  lib_include('Validate');
-  
+  add_include_path(library_path());
   add_include_path(library_path().'facebook-platform/php');
   add_include_path(library_path().'facebook_stream');
   
