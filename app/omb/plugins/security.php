@@ -947,15 +947,6 @@ function make_identity( $user ) {
 
 function facebook_login( &$vars ) {
   extract($vars);
-  if (!class_exists('Validate')) {
-    class Validate {
-      function Validate() {
-      }
-      function uri() {
-        return true;
-      }
-    }
-  }
   
   $app_id = environment('facebookAppId');
   $consumer_key = environment('facebookKey');
