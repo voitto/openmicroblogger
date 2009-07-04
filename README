@@ -12,6 +12,10 @@ merchantability or fitness for a particular purpose.
 
 Author
  Brian Hendrickson - http://brianhendrickson.com
+ 
+Project Manager
+ Johannes Schirge - http://tiquer.me
+
 
 Version 0.1, 1-Sep-2008
  initial release
@@ -19,8 +23,8 @@ Version 0.1, 1-Sep-2008
 Version 0.2, 22-Oct-2008
  sms, app store
  
-Version 0.3, 10-May-2009
- admin, themes, intranet, tweetpass, search
+Version 0.3, 10-July-2009
+ admin, themes, intranet, search
 
 
 REQUIREMENTS
@@ -29,10 +33,7 @@ REQUIREMENTS
    - MySQL or PostgreSQL
 
 
-
-
 INSTALLATION
-
 
 /////////////////////
 // 7 steps to install
@@ -40,16 +41,16 @@ INSTALLATION
 
 1. obtain OpenMicroBlogger http://dbscript.net/omb.zip
 
-2. make a folder on your desktop and unzip the files in it
+2. unzip the files on your computer
 
-3. use a ftp-client to copy the unziped files to your webserver folder
+3. copy the files to your Web server folder
 
 4. open your Web browser and run
       yourdomain.com/install.php
 
-5. Follow the installation instructions
+5. follow the installation instructions
 
-6. If installation succeeded, open your Web browser and browse to the installation folder
+6. if installation succeeded, open your Web browser and browse to the installation folder
 
 7. set in app/config/config.yml your 
 
@@ -60,32 +61,52 @@ INSTALLATION
  [[ that is it! ]]
 
 
+/////////////////////////////
+// use pretty URLs (optional)
+/////////////////////////////
+
+To enable pretty URLs:
+
+1) edit config.php (or config/config.php if you used Web installer)
+
+2) change the 2 lines at the bottom of config.php
+
+    // global $pretty_url_base;
+    // $pretty_url_base = "http://openmicroblogger.com";
+
+  [[ change the 2 lines like this ]]
+
+    global $pretty_url_base;
+    $pretty_url_base = "http://yoursite.com";
+    
+3) copy the file /resource/prettyurls/.htaccess to the top level folder
+
+4) change these 2 lines in .htaccess
+
+  RewriteCond %{HTTP_HOST} ^www.openmicroblogger.com$ [NC]
+  RewriteRule ^(.*)$ http://openmicroblogger.com/$1 [R=301,L]
+  
+  [[ change the 2 lines like this ]]
+
+  RewriteCond %{HTTP_HOST} ^www.yoursite.com$ [NC]
+  RewriteRule ^(.*)$ http://yoursite.com/$1 [R=301,L]
+  
+5) if you need to use [www.]yoursite.com or [blog.]yoursite.com ]]
+  
+  [[ then just use this 1 line in your.htaccess ]]
+  
+  RewriteRule ^(.*)$ http://yoursite.com/$1 [R=301,L]
+
+Notes:
+   "AllowEncodedSlashes On" is required in the VirtualHost (Apache > 2.0.46)
+      todo: add a test for this problem XXX
 
 
 ///////////////////////////////////////
 // (optional) choose a file upload mode
 ///////////////////////////////////////
 
-1) upload as SQL BLOBs (default)
-      
-      maximum upload size is 5MB or so, not that great for big MP3s, but maximizes privacy
-      
-      you must set the /cache folder permissions so the Flash uploader can put files there
-
-2) upload as SQL BLOBs (WITH CACHING)
-
-      first set up your /cache folder as described in option 1
-      
-      then, edit app/config/config.yml
-
-   look for
-
-      collection_cache:
-      - posts:
-        duration : 0        // and change this 0 to the number of seconds to cache
-        location : cache
-
-3) upload FILES to /uploads (do not create BLOBs)
+1) upload FILES to /uploads (do not create BLOBs) (default)
 
       set permissions on the /cache and /uploads folders
       
@@ -98,7 +119,26 @@ INSTALLATION
         duration : 0
         location : cache    // and change 'cache' to 'uploads'
 
-4) upload FILES to Amazon S3 (do not create BLOBs)
+2) upload as SQL BLOBs
+      
+      maximum upload size is 5MB or so, not that great for big MP3s, but maximizes privacy
+      
+      you must set the /cache folder permissions so the Flash uploader can put files there
+
+3) upload as SQL BLOBs (WITH CACHING)
+
+      first set up your /cache folder as described in option 2
+      
+      then, edit app/config/config.yml
+
+   look for
+
+      collection_cache:
+      - posts:
+        duration : 0        // and change this 0 to the number of seconds to cache
+        location : cache
+
+4) upload to Amazon S3 (do not create BLOBs)
 
       set permissions on the /cache folder
       
@@ -118,34 +158,6 @@ INSTALLATION
       awsBucket: 
 
 
-
-
-//////////////////
-// use pretty URLs
-//////////////////
-
-Prety URL Requirements:
-  - root site only (yes -> me.com/ no -> me.com/subfolder/)
-  - two options to address mod_rewrite urlencode() bug
-    1. replace "urlencode(" with "urlencode(urlencode(" yuck
-    2. enable "AllowEncodedSlashes On" in VirtualHost (Apache > 2.0.46)
-      todo: add a test for this problem
-
-To enable pretty URLs:
-
-1) uncomment lines 65 & 66 in /db/boot.php
-
-2) type your own base URL in /db/boot.php
-
-3) copy the file /resource/prettyurls/.htaccess to the top level folder
-
-4) set "RewriteEngine on" in .htaccess
-
-5) type your own base URL in .htaccess
-
-
-
-
 UPDATING
 
 /////////////////////////////
@@ -161,8 +173,6 @@ If you want to customize OpenMicroBlogger with your own theme and plugins:
 3) optionally, add plugins to /wp-content/plugins
 
     note: plugins in this folder override same-name plugins in /app/plugins
-
-
 
 
 ///////////////////////////
