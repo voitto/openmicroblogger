@@ -61,6 +61,37 @@ INSTALLATION
  [[ that is it! ]]
 
 
+/////////////////////////////////
+// Facebook, Twitter, Zeep Mobile
+/////////////////////////////////
+
+Facebook:
+  
+  1. http://www.facebook.com/develope...
+  2. click "Edit Settings"
+  3. click "Connect"
+your connect URL is
+    http://yoursite.com/?email_login   [or]
+    http://yoursite.com/email_login (pretty URLs)
+    
+Twitter:
+  
+  1. http://twitter.com/oauth_clients
+your callback URL is
+    http://yoursite.com/?oauth_login   [or]
+    http://yoursite.com/oauth_login (pretty URLs)
+  
+Zeep Mobile:
+  
+  1. https://secure.zeepmobile.com/account/create_app
+your callback URL is
+    http://yoursite.com/?mobile_event   [or]
+    http://yoursite.com/mobile_event (pretty URLs)
+your website URL is
+    http://yoursite.com/?mobile_settings   [or]
+    http://yoursite.com/mobile_settings (pretty URLs)
+
+
 /////////////////////////////
 // use pretty URLs (optional)
 /////////////////////////////
@@ -91,11 +122,11 @@ To enable pretty URLs:
   RewriteCond %{HTTP_HOST} ^www.yoursite.com$ [NC]
   RewriteRule ^(.*)$ http://yoursite.com/$1 [R=301,L]
   
-5) if you need to use [www.]yoursite.com or [blog.]yoursite.com ]]
+5) if you need to use [www.]yoursite.com or [blog.]yoursite.com
   
-  [[ then just use this 1 line in your.htaccess ]]
+  [[ use this 1 line instead of 2 in your.htaccess ]]
   
-  RewriteRule ^(.*)$ http://yoursite.com/$1 [R=301,L]
+  RewriteRule ^(.*)$ http://blah.yoursite.com/$1 [R=301,L]
 
 Notes:
    "AllowEncodedSlashes On" is required in the VirtualHost (Apache > 2.0.46)
