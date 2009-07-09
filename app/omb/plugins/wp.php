@@ -2110,16 +2110,18 @@ function followgrid() {
   while ($subscriber = $Subscription->MoveNext()){
     $i = $Identity->find($subscriber->subscribed);
     $follist[] = array('avatar'=>$i->avatar, 'profile_url'=>$i->profile_url, 'nickname'=>$i->nickname);
-  }
-
+   }
+   for ($i=0;$i<6;$i++)  {
     for ($j=0;$j<6;$j++)  {
       if (isset($follist[$count])){
         echo '<a href="'.$follist[$count]['profile_url'].'"><img src="'.$follist[$count]['avatar'].'" alt="'.$follist[$count]['nickname'].'" /></a>';
         $count++;
       } else {
         echo '<p></p>';
-      }
+        }
     }
+        echo '<br />';
+   }
 }
 
 
