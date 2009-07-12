@@ -2694,6 +2694,15 @@ function setting($name) {
   return false;
 }
 
+function profile_setting($name) {
+  global $db;
+  $Setting =& $db->model('Setting');
+  $sett = $Setting->find_by(array('name'=>$name,'profile_id'=>get_app_id()));
+  if ($sett)
+    return $sett->value;
+  return false;
+}
+
 function md5_encrypt($plain_text, $password, $iv_len = 16){
   $plain_text .= "\x13";
   $n = strlen($plain_text);

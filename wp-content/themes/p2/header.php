@@ -4,8 +4,15 @@
 <head profile="http://gmpg.org/xfn/11">
 <meta http-equiv="Content-Type" content="<?php bloginfo('html_type'); ?>; charset=<?php bloginfo('charset'); ?>" />
 <title><?php wp_title(); ?> <?php bloginfo('name'); ?></title>
-<meta name="generator" content="WordPress.com" /> 
+<meta name="generator" content="WordPress.com" />
 <link rel="stylesheet" href="<?php bloginfo('stylesheet_url'); ?>" type="text/css" media="screen" />
+<?php if (profile_setting('background_image')) : ?>
+<style type="text/css">
+  body {
+    background: url('<?php echo profile_setting('background_image'); ?>') fixed <?php if (!profile_setting('background_tile')) echo 'no-'; ?>repeat top left;
+  }
+</style>
+<?php endif; ?>
 <link rel="alternate" type="application/rss+xml" title="<?php bloginfo('name'); ?> RSS Feed" href="<?php bloginfo('rss2_url'); ?>" />
 <link rel="pingback" href="<?php bloginfo('pingback_url'); ?>" />
 <?php if ($request->action == 'email' && environment('facebookKey')) : ?>
