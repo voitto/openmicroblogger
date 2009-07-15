@@ -647,10 +647,6 @@ function email_register( &$vars ) {
   render( 'action', 'register' );
 }
 
-function authenticate_with_oauth() {
-  //
-}
-
 function oauth_login( &$vars ) {
   render( 'action', 'oauth' );
 }
@@ -1093,39 +1089,6 @@ function make_twuser( $user, $profile_id, $oauthkey, $oauthsecret ) {
   return $twuser;
 }
 
-function authenticate_with_omb() {
-  //
-}
-
-function authenticate_with_http() {
-  global $db,$request;
-  global $person_id;
-  global $api_methods,$api_method_perms;
-  
-  if (array_key_exists($request->action,$api_method_perms)) {
-    $arr = $api_method_perms[$request->action];
-    if ($db->models[$arr['table']]->can($arr['perm']))
-      return;
-  }
-  
-  if (!isset($_SERVER['PHP_AUTH_USER'])) {
-    header('WWW-Authenticate: Basic realm="your username/password"');
-  } else {
-    $Identity =& $db->get_table( 'identities' );
-    $Person =& $db->get_table( 'people' );
-    $i = $Identity->find_by(array(
-      'nickname'=>$_SERVER['PHP_AUTH_USER'],
-      'password'=>md5($_SERVER['PHP_AUTH_PW'])
-    ),1);
-    $p = $Person->find( $i->person_id );
-    if (!(isset( $p->id ) && $p->id > 0)) {
-      header('HTTP/1.1 401 Unauthorized');
-      echo 'BAD LOGIN';
-      exit;
-    }
-    $person_id = $p->id;
-  }
-}
 
 function openid_login( &$vars ) {
   extract( $vars );
