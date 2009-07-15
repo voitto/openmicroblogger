@@ -154,6 +154,8 @@ $txt['sidebar_recent_projects'] = "neuste Projekte";
 $txt['sidebar_greeting_headline'] = "Willkommen auf ";
 $txt['sidebar_greeting_text'] = " ist eine microblogging-website. Du kannst dich kostenlos registrieren und die Welt wissen lassen, was du gerade tust.";
 $txt['sidebar_sign_in_register'] = "Einloggen oder registrieren";
+$txt['sidebar_rss1'] = "RSS feed of ";
+$txt['sidebar_rss2'] = "'s updates";
 
 
 //////////////////////

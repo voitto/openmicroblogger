@@ -100,6 +100,7 @@ get_header();
 <?php
 if( have_posts( ) ) {
 ?>
+<div id="postlist">
 <?php
 	$previous_user_id = 0;
 	while( have_posts( ) ) {
@@ -137,12 +138,13 @@ if( have_posts( ) ) {
 	<div class="bottom_of_entry">&nbsp;</div>
 	<?php 
 		if( (is_home() or is_front_page()) ) $withcomments = true; 
-		comments_template('/inline-comments.php'); 
+		comments_template('/inline-comments.php');
 	?>
 
 <?php
 	} // while have_posts
 ?>
+</div>
 <?php
 } // if have_posts
 else {

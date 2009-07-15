@@ -1,6 +1,6 @@
 
 
-OpenMicroBlogger -- Standards-based Microblog
+OpenMicroblogger -- Standards-based Microblog
 Copyright (C) 2009 Brian Hendrickson
 
 This application is free software; you can redistribute it and/or
@@ -39,7 +39,7 @@ INSTALLATION
 // 7 steps to install
 /////////////////////
 
-1. obtain OpenMicroBlogger http://dbscript.net/omb.zip
+1. obtain OpenMicroblogger http://dbscript.net/omb.zip
 
 2. unzip the files on your computer
 
@@ -195,7 +195,7 @@ UPDATING
 // use the /wp-content folder
 /////////////////////////////
 
-If you want to customize OpenMicroBlogger with your own theme and plugins:
+If you want to customize OpenMicroblogger with your own theme and plugins:
   
 1) copy /app/config/config.yml to /wp-content/config
 

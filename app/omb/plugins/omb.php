@@ -2,7 +2,7 @@
 
 global $request,$omb_routes,$db,$ombversion;
 
-// OpenMicroBlogger 0.3.0
+// OpenMicroblogger 0.3.0
 $ombversion = "0.3.0";
 
 // Openmicroblogging 0.1

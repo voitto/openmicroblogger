@@ -36,23 +36,46 @@ function send_ping( &$model, &$rec ) {
       
       // push a P2 tweet
       
-      $tweet = '';
-      $tweet .= '<li id="prologue-'.$rec->id.'" class="user_id_'.$o->id.'">';
-      $tweet .= '<img alt=\'\' src=\''.$o->avatar.'\' class=\'avatar avatar-48\' height=\'48\' width=\'48\' />';
-      $tweet .= '<h4>';
-      $tweet .= '<a href="'.$o->profile.'" title="Posts by '.$o->nickname.'">'.$o->nickname.'</a>    <span class="meta">'.date( "g:i A" , strtotime($rec->created) ).'<em>on</em> '.date( get_settings('date_format'), strtotime($rec->created) ).' |';
-      $tweet .= '        <span class="actions">';
-      $tweet .= '    <a href="'.$request->url_for(array('resource'=>$notify_table,'action'=>'entry.html','id'=>$recid)).'" class="thepermalink">Permalink</a>';
-      $tweet .= '                  </span>';
-      $tweet .= '  <br />';
-      $tweet .= '          </span>';
-      $tweet .= '  </h4>';
-      $tweet .= '  <div class="postcontent" id="content-'.$rec->id.'"><p>'.render_notice($rec->title,$rec,$o).'</p></div>';
-      $tweet .= '    <div class="bottom_of_entry">&nbsp;</div>';
-      $tweet .= '   <ul class="commentlist">';
-//      $tweet .= '   <ul id="comments" class="commentlist">';
-      $tweet .= '  </ul>';
-      $tweet .= '</li>';
+      $tweet = '<hr />'."\n";
+      $tweet .= '<h4>'."\n";
+      $tweet .= '<span class="meta"> <span class="actions"> <a href="'.$request->url_for(array('resource'=>$notify_table,'id'=>$recid)).'" class="thepermalink">Permalink</a> | <a href="'.$request->url_for(array('resource'=>$notify_table,'id'=>$recid)).'" class="post-reply-link" rel="'.$recid.'">Reply</a> <br />'."\n";
+      $tweet .= '</span> <br />'."\n";
+      $tweet .= '<img alt="" src="'.$o->avatar.'" class="avatar avatar-48" height="48" width="48" /> <a class="nick" href="'.$o->profile.'" title="Posts by '.$o->nickname.'">'.$o->nickname.'</a> '.laconica_time($rec->created).' | <a href="">0</a> </span>'."\n";
+      $tweet .= '</h4>'."\n";
+      $tweet .= '<div class="postcontent" id="content-<?php echo $recid; ">'."\n";
+      $tweet .= '<p>'."\n";
+      $tweet .= render_notice($rec->title,$rec,$o);
+      $tweet .= '</p>'."\n";
+      $tweet .= '</div>'."\n";
+      $tweet .= '<!-- // postcontent -->'."\n";
+      $tweet .= '<div class="bottom_of_entry">'."\n";
+      $tweet .= '&nbsp;'."\n";
+      $tweet .= '</div>'."\n";
+      $tweet .= '<div class="commentlist">'."\n";
+      $tweet .= '</div>'."\n";
+      
+      $oldstyle = false;
+      
+      if ($oldstyle) {
+        $tweet = '';
+        $tweet .= '<li id="prologue-'.$rec->id.'" class="user_id_'.$o->id.'">';
+        $tweet .= '<img alt=\'\' src=\''.$o->avatar.'\' class=\'avatar avatar-48\' height=\'48\' width=\'48\' />';
+        $tweet .= '<h4>';
+        $tweet .= '<a href="'.$o->profile.'" title="Posts by '.$o->nickname.'">'.$o->nickname.'</a>    <span class="meta">'.date( "g:i A" , strtotime($rec->created) ).'<em>on</em> '.date( get_settings('date_format'), strtotime($rec->created) ).' |';
+        $tweet .= '        <span class="actions">';
+        $tweet .= '    <a href="'.$request->url_for(array('resource'=>$notify_table,'action'=>'entry.html','id'=>$recid)).'" class="thepermalink">Permalink</a>';
+        $tweet .= '                  </span>';
+        $tweet .= '  <br />';
+        $tweet .= '          </span>';
+        $tweet .= '  </h4>';
+        $tweet .= '  <div class="postcontent" id="content-'.$rec->id.'"><p>'.render_notice($rec->title,$rec,$o).'</p></div>';
+        $tweet .= '    <div class="bottom_of_entry">&nbsp;</div>';
+        $tweet .= '   <ul class="commentlist">';
+  //      $tweet .= '   <ul id="comments" class="commentlist">';
+        $tweet .= '  </ul>';
+        $tweet .= '</li>';
+      }
+      
       $payload['html'] = $tweet;
       $payload['in_reply_to'] = 0;
     }
