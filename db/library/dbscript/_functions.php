@@ -1738,7 +1738,7 @@ function get_person_id() {
   if ($p)
     return $p;
   
-  if (isset($_POST['auth']) && $_POST['auth'] == 'http')
+  if (isset($_SERVER['PHP_AUTH_USER'])) 
     authenticate_with_http();
 
   if (isset($_POST['auth']) && $_POST['auth'] == 'omb')
