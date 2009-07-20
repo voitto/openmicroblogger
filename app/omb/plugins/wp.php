@@ -35,7 +35,7 @@ function is_microblog_theme() {
   global $microblog_themes;
   if (in_array(environment('theme'),$microblog_themes))
     return true;
-  if (is_file(theme_path()."post-form.php"))
+  if (is_file(theme_dir()."post-form.php"))
     return true;
   return false;
 }

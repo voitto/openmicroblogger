@@ -1104,6 +1104,12 @@ function theme_path($noslash = false) {
   
 }
 
+function theme_dir(){
+  
+  return $GLOBALS['PATH']['themes'] . environment('theme') . DIRECTORY_SEPARATOR;
+  
+}
+
 
   /**
    * content_for_layout
