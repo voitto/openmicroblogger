@@ -481,13 +481,21 @@ function password_register( &$vars ) {
   if (!($request->password == $request->password2))
     trigger_error( "sorry the passwords do not match", E_USER_ERROR );
   
-  $i = $Identity->find_by(array(
-    'nickname'=>$request->nickname
-  ),1);
+  //$i = $Identity->find_by(array(
+  //  'nickname'=>$request->nickname
+  //),1);
   
-  $p = $Person->find( $i->person_id );
+  //$p = $Person->find( $i->person_id );
   
-  if ( isset( $p->id ) && $p->id != 0) {
+  //if ( isset( $p->id ) && $p->id != 0) {
+    
+  $nick = $request->nickname;
+  
+  $sql = "SELECT id FROM ".$db->prefix."identities WHERE nickname LIKE '".$db->escape_string($nick)."' AND (post_notice = '' OR post_notice IS NULL)";
+  
+  $result = $db->get_result( $sql );
+  
+  if ( $db->num_rows($result) > 0) {
     
     trigger_error( "sorry that username is already taken", E_USER_ERROR );
     

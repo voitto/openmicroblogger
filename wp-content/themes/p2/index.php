@@ -60,7 +60,7 @@ get_header();
   ?>
   
   <script type="text/javascript">
-    // <![CDATA[<script type="text/javascript">
+    // <![CDATA[
     Meteor.hostid = '<?php echo get_profile_id(); ?>';
     Meteor.host = "<?php echo REALTIME_HOST; ?>";
     Meteor.registerEventCallback("process", test);
