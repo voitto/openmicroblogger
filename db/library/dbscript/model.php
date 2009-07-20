@@ -267,8 +267,7 @@ class Model {
             $j->save_changes();
             $added[] = $req->$cname;
           } elseif (!empty($req->$cname)) {
-            $foo = true;
-            if ($foo) {
+            if (isset_admin_email()) {
               $c = $Category->base();
               $c->set_value( 'name', $req->$cname);
               $c->set_value( 'term', strtolower($req->$cname));

@@ -1,5 +1,6 @@
 <?php 
-ob_start(); 
+ob_start();
+$category_limit = 10;
 include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 ?>
 
@@ -27,6 +28,10 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 
     </p>
     
+    <?php if ($collection->_currentRow >= $category_limit) : ?>
+      <a href="<?php url_for('categories'); ?>">more...</a>
+      <?php break; ?>
+    <?php endif; ?>
     
     <?php endwhile; ?>
 
