@@ -933,12 +933,12 @@ function oauth_authorize( &$vars ) {
         'omb_listener_avatar'   => $i->avatar
       );
       
-      $profileparams = "";
+      $profileparams = "?";
   
       foreach($omb_subscriber as $key=>$item)
-        $profileparams .= "&".$key."=".urlencode($item);
+        $profileparams .= $key."=".urlencode($item).'&';
       
-      $profileparams .= "&oauth_token=".$token;
+      $profileparams .= "oauth_token=".$token;
       
       header('Location: '.urldecode($_GET['oauth_callback']).$profileparams,true,303);
     } else {
