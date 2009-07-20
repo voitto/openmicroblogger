@@ -323,9 +323,12 @@ function wp_set_post_fields( &$model, &$rec ) {
   $Category->set_limit(100);
   $Category->find();
   
-  if ($_POST['tags'] == 'Tag it')
-    return;
+  include 'wp-content/language/lang_chooser.php'; //Loads the language-file
   
+  if (strcmp(utf8_decode($_POST['tags']), $txt['postform_tagit'])
+    || ($_POST['tags'] == $txt['postform_tagit']))
+    return;
+
   if (strstr( $_POST['tags'], "," ))
     $tags = split( ',', $_POST['tags'] );
   else

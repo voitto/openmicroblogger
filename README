@@ -214,6 +214,15 @@ you can grab the almost-nightly build from http://dbscript.net/omb.zip
 
 
 
+//////////////////
+
+OTHER DOCUMENTATION
+
+1. changing the maximum number of tags shown in the sidebar
+
+  The /app/omb/views/categories/_block.js file can be edited to change this setting.
+  At the top of this file the $category_count variable is set to 10 by default.
+
 
 
 
