@@ -1,0 +1,24 @@
+
+
+<?php if (isset($collection)) : ?>
+
+  <!-- list of collection members -->
+  <?php while ($Member = $collection->MoveNext()) : ?>
+    <a href="<?php print url_for( array( 'resource'=>'pages', 'id'=>$Member->id ) ); ?>">
+      <?php print $Member->title; ?>
+       <a href="<?php url_for( array( 'resource'=>'pages', 'id'=>$Member->id, 'action'=>'remove' )); ?>">
+        <img src='<?php base_path(); ?>resource/cancel.png'></a>
+      <?php print "<br />"; ?>
+    </a>
+  <?php endwhile; ?>
+  
+  <!-- empty collection message -->
+  <?php if ( count($collection->members) == 0 ) print "no entries found"; ?>
+  <br />
+  <br />
+  <!-- link to New Member page -->
+  <a href="<?php print url_for( array( 'resource'=>$collection->resource, 'action'=>'pagenew' ) ); ?>">
+    New <?php print classify($collection->resource); ?>
+  </a>
+  
+ <?php endif; ?>

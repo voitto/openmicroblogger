@@ -149,6 +149,8 @@ class Mapper {
    * @var string
    */
   var $DbSession;
+  
+  var $templates_resource;
 
   function Mapper() {
     
@@ -170,7 +172,7 @@ class Mapper {
     $this->layout_path = '';
     $this->error = false;
     $this->openid_complete = false;
-    
+    $this->templates_resource = array();
   }
   
   function setup() {
@@ -206,7 +208,12 @@ class Mapper {
       $this->client_wants = $actionsplit[1];
     }
     
-    session_set_cookie_params( 60*60*24*$this->cookiedays, $this->path );
+    $expiry = 60*60*24*$this->cookiedays;
+    
+    if (environment('cookielife'))
+      $expiry  = environment('cookielife');
+    
+    session_set_cookie_params( $expiry, $this->path );
     
     if (strpos($this->base,"twitter\/"))
       $this->path = $this->path.$this->prefix;
@@ -424,6 +431,9 @@ class Mapper {
       $resource = $this->params['resource'] . DIRECTORY_SEPARATOR;
     else
       $resource = "";
+    
+    if (isset($this->templates_resource[$this->params['resource']]))
+      $resource = $this->templates_resource[$this->params['resource']] . DIRECTORY_SEPARATOR;
     
     if ($template == null) {
       $partial = false;
@@ -720,6 +730,10 @@ class Mapper {
       $this->params[$param] = $val;
       $this->$param =& $this->params[$param];
     }
+  }
+  
+  function use_templates_from( $resource, $model ) {
+    $this->templates_resource[$model] = $resource;
   }
   
 }

@@ -1,9 +1,0 @@
-<?php while( $Member = $collection->MoveNext() ) : ?>
-  <entry>
-    <updated><?php print time_3339($Member->created); ?></updated>
-    <id><?php url_for( array( 'resource'=>$collection->resource, 'id'=>$Member->id )); ?></id>
-    <link href="<?php url_for( array( 'resource'=>$collection->resource, 'id'=>$Member->id )); ?>" />
-    <title><?php print $Member->title; ?></title>
-    <content type="html"> <?php print htmlspecialchars("".$Member->body.""); ?></content>
-  </entry>
-<?php endwhile; ?>

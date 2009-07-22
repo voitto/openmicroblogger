@@ -228,8 +228,9 @@ class Model {
   
   function set_metadata(&$rec,$content_type,$table,$pkfield) {
     global $db;
-    $atomentry = $db->models['entries']->base();
-    if ($atomentry) {
+    $atomentry = $db->models['entries']->find($rec->entry_id);
+    if (!$atomentry) {
+      $atomentry = $db->models['entries']->base();
       $atomentry->set_value( 'etag', getEtag( $rec->$pkfield ) );
       $atomentry->set_value( 'resource', $table );
       $atomentry->set_value( 'record_id', $rec->$pkfield );
@@ -244,6 +245,9 @@ class Model {
           $rec->set_value( 'person_id', get_person_id() );
         $rec->save_changes();
       }
+    } else {
+      $atomentry->set_value( 'content_type', $content_type );
+      $aresult = $atomentry->save_changes();
     }
     return $atomentry;
   }
@@ -1222,6 +1226,11 @@ class Model {
   function get_query( $id=NULL, $find_by=NULL ) {
     global $db;
     return $db->get_query( $id, $find_by, $this );
+  }
+  
+  function use_templates_from( $resource ) {
+    global $request;
+    $request->use_templates_from( $resource, $this->table );
   }
   
 }

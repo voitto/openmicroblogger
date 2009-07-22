@@ -409,6 +409,13 @@ function read_aws_blob( &$request, $value, $coll, $ext ) {
 
 
 function read_uploads_blob( &$request, $value, $coll, $ext ) {
+  if (!(isset($coll[$request->resource]))) {
+    // use posts location for metadata blobs
+    global $db;
+    $model =& $db->get_table($request->resource);
+    if (array_key_exists( 'target_id', $model->field_array ))
+      $coll[$request->resource]['location'] = $coll['posts']['location'];
+  }
   if (isset($coll[$request->resource])) {
     if ($coll[$request->resource]['location'] == 'uploads') {
       $file = 'uploads' . DIRECTORY_SEPARATOR . $request->resource . $request->id;
@@ -434,6 +441,13 @@ function exists_uploads_blob( $resource,$id ) {
 
 function update_uploadsfile( $table, $id, $tmpfile ) {
   $coll = environment('collection_cache');
+  if (!(isset($coll[$table]))) {
+    // use posts location for metadata blobs
+    global $db;
+    $model =& $db->get_table($table);
+    if (array_key_exists( 'target_id', $model->field_array ))
+      $coll[$table]['location'] = $coll['posts']['location'];
+  }
   if (!(isset($coll[$table])))
     return;
   $uploadFile = $coll[$table]['location'].DIRECTORY_SEPARATOR.$table.$id;
@@ -730,6 +744,20 @@ function type_of( $file ) {
   
 }
 
+function type_of_image( $file ) {
+  
+  if (is_jpg($file))
+    return 'jpg';
+    
+  if (is_png($file))
+    return 'png';
+    
+  if (is_gif($file))
+    return 'gif';
+  
+  return false;
+  
+}
 
 function extension_for( $type ) {
   
@@ -1141,9 +1169,32 @@ function register_type( $arr ) {
 }
 
 
-function photoCreateCropThumb ($p_thumb_file, $p_photo_file, $p_max_size, $p_quality = 100) {
+function photoCreateCropThumb ($p_thumb_file, $p_photo_file, $p_max_size, $p_quality = 100, $tmpfile = null ) {
   
-  $pic = imagecreatefromjpeg($p_photo_file);
+  if ($tmpfile == null)
+    $ext = 'jpg';
+  else
+    $ext = type_of_image($tmpfile);
+  
+  if ($ext == 'jpg')
+    $pic = imagecreatefromjpeg($p_photo_file);
+  if ($ext == 'gif')
+    $pic = imagecreatefromgif($p_photo_file);
+  if ($ext == 'png'){
+    
+    $image = imagecreatefromstring(file_get_contents($p_photo_file));
+    $width = imagesx($image);
+    $height = imagesy($image);
+    unset($image);
+    $size = getimagesize($p_photo_file);
+    $required_memory = Round($width * $height * $size['bits']) +500000;
+    unset($size);
+    $new_limit=memory_get_usage() + $required_memory;
+    ini_set("memory_limit", $new_limit);
+    
+    $pic = imagecreatefrompng($p_photo_file);
+    
+  }
   
   if ($pic) {
     $thumb = imagecreatetruecolor ($p_max_size, $p_max_size);
@@ -1161,7 +1212,17 @@ function photoCreateCropThumb ($p_thumb_file, $p_photo_file, $p_max_size, $p_qua
       imagecopyresized($thumb, $pic, 0, 0, ($width/2)-($height/2), 0, $twidth, $theight, $width, $height); 
     }
     
-    imagejpeg($thumb, $p_thumb_file, $p_quality);
+    if ($ext == 'jpg')
+      imagejpeg($thumb, $p_thumb_file, $p_quality);
+      
+    if ($ext == 'gif')
+      imagegif($thumb, $p_thumb_file);
+      
+    if ($ext == 'png') {
+      imagepng($thumb, $p_thumb_file);
+      ini_restore("memory_limit");
+    }
+    
   }
   
 }

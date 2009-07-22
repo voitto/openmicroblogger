@@ -144,6 +144,21 @@ function index( &$vars ) {
   }
   $n2url = $request->url_for(array('resource'=>'settings','id'=>$n2mode->id,'action'=>'put'));
   $n2entry = $n2mode->FirstChild('entries');
+
+  // n3mode = image upload thumbnail size 
+  $n3mode = $Setting->find_by(array('name'=>'config.env.max_pixels','profile_id'=>get_profile_id()));
+  if (!$n3mode) {
+    $n3mode = $Setting->base();
+    $n3mode->set_value('profile_id',get_profile_id());
+    $n3mode->set_value('person_id',get_person_id());
+    $n3mode->set_value('name','config.env.max_pixels');
+    $n3mode->set_value('value',200);
+    $n3mode->save_changes();
+    $n3mode->set_etag();
+    $n3mode = $Setting->find($n3mode->id);
+  }
+  $n3url = $request->url_for(array('resource'=>'settings','id'=>$n3mode->id,'action'=>'put'));
+  $n3entry = $n3mode->FirstChild('entries');
   
   return vars(
     array( 
@@ -165,7 +180,10 @@ function index( &$vars ) {
       &$n2mode,
       &$n2url,
       &$n2entry,
-      &$n2list
+      &$n2list,
+      &$n3mode,
+      &$n3url,
+      &$n3entry
     ),
     get_defined_vars()
   );

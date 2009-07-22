@@ -67,6 +67,8 @@ class View {
       $cont = $controller_path . $request->resource . ".php";
       if ( file_exists( $cont )) {
         $this->controller = $request->resource . ".php";
+      } elseif (isset($request->templates_resource[$request->resource]) && file_exists($controller_path . $request->templates_resource[$request->resource] . ".php")) {
+        $this->controller = $request->templates_resource[$request->resource] . ".php";
       } else {
         if (isset($GLOBALS['PATH']['apps'])) {
           foreach($GLOBALS['PATH']['apps'] as $k=>$v) {

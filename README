@@ -223,9 +223,12 @@ OTHER DOCUMENTATION
   The /app/omb/views/categories/_block.js file can be edited to change this setting.
   At the top of this file the $category_count variable is set to 10 by default.
 
+2. login timeout can be set by changing "cookielife" in config.yml
 
+3. creating a Contact Page/Impressum/About page: as an administrator you will have an app called "Pages"
+   use this app to add new pages, links to these will appear in the footer of your P2-themed site
 
-
+4. to change the allowed file-types for uploads, in config.yml is the "upload_types" list
 
 
 

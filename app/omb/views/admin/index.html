@@ -187,6 +187,8 @@ $ph = 'false';
 
 <?php setting_widget_helper('tz',$n2mode,$n2url,$n2entry,$n2list); ?>
 
+<?php setting_widget_text_helper('imgmax',$n3mode,$n3url,$n3entry); ?>
+
     });
     // ]]>
     </script>
@@ -243,6 +245,15 @@ $ph = 'false';
 </td>
 <td>
 <p class="jeditable_uplmax" id="jeditable_uplmax"><?php echo $n1mode->value; ?></p>
+</td>
+</tr>
+
+<tr>
+  <td>
+<h4>Preview Image Size (in pixels):</h4>
+</td>
+<td>
+<p class="jeditable_imgmax" id="jeditable_imgmax"><?php echo $n3mode->value; ?></p>
 </td>
 </tr>
 

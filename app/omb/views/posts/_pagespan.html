@@ -1,0 +1,21 @@
+<?php
+
+	global $db,$request;
+  $Page =& $db->model('Page');
+  $Page->find();
+  if (!($Page->rowcount() > 0))
+    return;
+  
+  echo "<span> | ";
+  
+  $pipe = '';
+  while ($p = $Page->MoveNext()) {
+    echo $pipe;
+    echo '<a href="'.$request->url_for(array('resource'=>'pages','id'=>$p->id)).'">';
+    echo $p->title;
+    echo '</a>';
+    $pipe = ' | ';
+  }
+  echo "</span>";
+
+?>

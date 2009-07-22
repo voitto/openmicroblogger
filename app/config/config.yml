@@ -80,6 +80,7 @@ env:
     - streams
     - translate
     - facebook
+    - pages
   
   installed:
     - password
@@ -88,6 +89,7 @@ env:
     - identica
     - translate
     - facebook
+    - pages
   
   boot: omb
   
@@ -146,7 +148,7 @@ env:
   ldap_user_field: 
   
   ping_server: http://dejafeed.com/?submit
-  
+    
   blocks:
     -pages
     -categories
@@ -158,6 +160,16 @@ env:
     - identities:
       duration : 0
       location : uploads
+  
+  cookielife: 1209600
+  
+  upload_types:
+    -png
+    -gif
+    -jpg
+    -mp3
+    -mov
+    -avi
   
   content_types:
     - 0:

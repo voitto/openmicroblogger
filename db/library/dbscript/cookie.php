@@ -62,6 +62,8 @@ class Cookie {
  
   function Cookie() {
     global $prefix;
+    if (environment('cookielife'))
+      $this->expiration = environment('cookielife');
     $this->cookiename = $prefix.$this->cookiename;
     if (array_key_exists($this->cookiename, $_COOKIE)) {
       $buffer = $this->_unpackage($_COOKIE[$this->cookiename]);

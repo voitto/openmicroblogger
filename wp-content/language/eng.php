@@ -301,10 +301,11 @@ $txt['entry_reply_by'] = "Reply by";
 $txt['new_status'] = "Status";
 $txt['new_article'] = "Article";
 $txt['new_choose_file'] = "Choose File";
-$txt['new_image'] = "jpeg photo";
+$txt['new_image'] = "Picture";
 $txt['new_movie'] = "avi or mov (quicktime) movie";
 $txt['new_audio'] = "mp3 audio";
 $txt['new_categories'] = "Categories";
+$txt['new_page'] = "Page Title";
 
 
 /////////////////////////////////////
@@ -353,7 +354,7 @@ $txt['editprofile_full_name'] = "Full name";
 $txt['editprofile_openid'] = "OpenID URL";
 $txt['editprofile_bio'] = "Bio";
 $txt['editprofile_email'] = "E-mail";
-$txt['editprofile_photo'] = "Jpeg Photo";
+$txt['editprofile_photo'] = "Picture";
 $txt['editprofile_licence_url'] = "Licence URL";
 $txt['editprofile_button_cancel'] = "Cancel";
 $txt['editprofile_button_save'] = "Save";

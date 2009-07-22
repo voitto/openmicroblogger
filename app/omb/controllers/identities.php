@@ -2,32 +2,36 @@
 
 
 
-function validate_identities_photo( $value ) {
+
+
+before_filter('resize_uploaded_image','pre_insert');
+before_filter('resize_uploaded_image','pre_update');
+
+function resize_uploaded_image( &$rec, &$db ) {
+  
+  // this happens before validate_identities_photo
+  
   if (!(is_upload('identities','photo')))
-    return true;
+    return;
+  
   $size = filesize($_FILES['identity']['tmp_name']['photo']);
+  
   if (!$size || $size > 409600) {
     if (file_exists($_FILES['identity']['tmp_name']['photo']))
       unlink($_FILES['identity']['tmp_name']['photo']);
     trigger_error( "That photo is too big. Please find one that is smaller than 400K.", E_USER_ERROR );
   }
-  if (!is_jpg($_FILES['identity']['tmp_name']['photo']))
-    trigger_error( "Sorry for the trouble, but your photo must be a JPG file.", E_USER_ERROR );
-  return true;
-}
-
-
-before_filter('resize_uploaded_jpg','pre_insert');
-before_filter('resize_uploaded_jpg','pre_update');
-
-function resize_uploaded_jpg( &$rec, &$db ) {
   
-  if (!(is_upload('identities','photo')))
-    return;
+  $upl = $_FILES['identity']['tmp_name']['photo'];
   
-  $orig = $rec->attributes['photo'];
-  $newthumb = tempnam( "/tmp", "new".$rec->id.".jpg" );
-  photoCreateCropThumb( $newthumb, $orig, 96 );
+  $ext = '.'.type_of_image($upl);
+  
+  if (!$ext)
+    trigger_error( "Sorry for the trouble, but your photo must be a JPG, PNG or GIF file.", E_USER_ERROR );
+
+  $orig = $_FILES['identity']['tmp_name']['photo'];
+  $newthumb = tempnam( "/tmp", "new".$rec->id.$ext );
+  photoCreateCropThumb( $newthumb, $orig, 96, 100, $upl );
   $rec->attributes['photo'] = $newthumb;
   
 }
@@ -174,17 +178,31 @@ function put( &$vars ) {
   if (is_upload('identities','photo')) {
     $sql = "SELECT photo FROM ".$prefix."identities WHERE id = ".$db->escape_string($request->id);
     $result = $db->get_result($sql);
+
+    $upl = $_FILES['identity']['tmp_name']['photo'];
+  
+    $ext = '.'.type_of_image($upl);
+    
+    if (!$ext)
+      trigger_error( "Sorry for the trouble, but your photo must be a JPG, PNG or GIF file.", E_USER_ERROR );
+  
+    $content_type = type_of($ext);
+  
     if ($blobval = $db->result_value($result,0,"photo"))
-      $rec->set_value( 'avatar',  $request->url_for(array('resource'=>"_".$rec->id)) . ".jpg" );
+      $rec->set_value( 'avatar',  $request->url_for(array('resource'=>"_".$rec->id)) . $ext );
     elseif (exists_uploads_blob( 'identities',$rec->id ))
-      $rec->set_value( 'avatar',  $request->url_for(array('resource'=>"_".$rec->id)) . ".jpg" );
+      $rec->set_value( 'avatar',  $request->url_for(array('resource'=>"_".$rec->id)) . $ext );
     else
       $rec->set_value( 'avatar',  '' );
     if (empty($rec->profile))
       $rec->set_value( 'profile', $request->url_for(array('resource'=>"_".$rec->id)));
     if (empty($rec->profile_url))
       $rec->set_value( 'profile_url', $request->url_for(array('resource'=>"".$rec->nickname)));
+    
     $rec->save_changes();
+    
+    $atomentry = $Identity->set_metadata($rec,$content_type,$rec->table,'id');
+    
   }
   
   broadcast_omb_profile_update();

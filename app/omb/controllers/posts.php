@@ -40,6 +40,17 @@ function post( &$vars ) {
   $atomentry = $Post->set_metadata($rec,$content_type,$table,'id');
   $Post->set_categories($rec,$request,$atomentry);
   if ((is_upload('posts','attachment'))) {
+    
+    $upload_types = environment('upload_types');
+    
+    if (!$upload_types)
+      $upload_types = array('jpg','jpeg','png','gif');
+    
+    $ext = extension_for( type_of($_FILES[strtolower(classify($table))]['name']['attachment']));
+    
+    if (!(in_array($ext,$upload_types)))
+      trigger_error('Sorry, this site only allows the following file types: '.implode(',',$upload_types), E_USER_ERROR);
+    
     $url = $request->url_for(array(
       'resource'=>'posts',
       'id'=>$rec->id
@@ -51,10 +62,27 @@ function post( &$vars ) {
     else
       $rec->set_value('title',$title." ".$url);
     $rec->save_changes();
+    
+    $tmp = $_FILES[strtolower(classify($table))]['tmp_name']['attachment'];
+    
+    if (is_jpg($tmp)) {
+      $thumbsize = environment('max_pixels');
+      $Thumbnail =& $db->model('Thumbnail');
+      $t = $Thumbnail->base();
+      $newthumb = tempnam( "/tmp", "new".$rec->id.".jpg" );
+      resize_jpeg($tmp,$newthumb,$thumbsize);
+      $t->set_value('target_id',$atomentry->id);
+      $t->save_changes();
+      update_uploadsfile( 'thumbnails', $t->id, $newthumb );
+      $t->set_etag();
+    }
+    
   }
+  
   trigger_after( 'insert_from_post', $Post, $rec );
   header_status( '201 Created' );
   redirect_to( $request->base );
+  
 }
 
 
@@ -262,7 +290,7 @@ function _oembed( &$vars ) {
   $url = $request->url_for(array(
     'resource'=>'posts',
     'id'=>$id,
-    'action'=>'attachment.'.extension_for($e->content_type)
+    'action'=>'preview'
   ));
   
   return vars(
@@ -326,6 +354,47 @@ function _apps( &$vars ) {
   }
   return vars(
     array(&$menuitems),
+    get_defined_vars()
+  );
+}
+
+
+function preview( &$vars ) {
+  extract($vars);
+  $p = $Post->find($request->id);
+  $e = $p->FirstChild('entries');
+  $t = $Thumbnail->find_by('target_id',$e->id);
+  if ($t) {
+    $request->set_param('resource','thumbnails');
+    $request->set_param('id',$t->id);
+    render_blob($t->attachment,extension_for($e->content_type));
+  } else {
+    render_blob($p->attachment,extension_for($e->content_type));
+  }
+}
+
+function _pagelist( &$vars ) {
+  extract( $vars );
+  return vars(
+    array( &$collection, &$profile ),
+    get_defined_vars()
+  );
+}
+
+function _pagenew( &$vars ) {
+  extract( $vars );
+  $model =& $db->get_table( $request->resource );
+  $Member = $model->base();
+  return vars(
+    array( &$Member, &$profile ),
+    get_defined_vars()
+  );
+}
+
+function _pagespan( &$vars ) {
+  extract( $vars );
+  return vars(
+    array( &$collection, &$profile ),
     get_defined_vars()
   );
 }

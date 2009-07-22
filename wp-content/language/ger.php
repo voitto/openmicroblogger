@@ -304,6 +304,7 @@ $txt['new_image'] = "Foto im .jpg-Format";
 $txt['new_movie'] = ".avi oder .mov (quicktime) Video";
 $txt['new_audio'] = ".mp3 Audiodatei";
 $txt['new_categories'] = "Kategorien";
+$txt['new_page'] = "Page Title";
 
 
 /////////////////////////////////////

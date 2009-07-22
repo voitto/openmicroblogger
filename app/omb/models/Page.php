@@ -56,6 +56,8 @@ class Page extends Model {
     
     $this->let_access(  'all:administrators' );
     
+    $this->use_templates_from( 'posts' );
+    
   }
   
 }
