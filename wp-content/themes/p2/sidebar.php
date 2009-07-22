@@ -26,7 +26,7 @@
   <?php if (isset($request->params['nickname'])) : ?>
 
     <?php if (!empty($profile->fullname)) : ?>
-      <p class="liname"><?php echo $txt['sidebar_name']; ?><?php echo $profile->fullname; ?></p>
+      <p class="liother"><?php echo $txt['sidebar_name']; ?><?php echo $profile->fullname; ?></p>
     <?php endif; ?>
 
     <?php if (!empty($profile->locality)) : ?>
@@ -43,7 +43,7 @@
     
     <?php if (!empty($profile->homepage)) : ?>
     <p class="liother">
-    <?php echo $txt['sidebar_web']; ?><br /><a href='<?php echo $profile->homepage; ?>'><?php echo $profile->homepage; ?></a>
+    <?php echo $txt['sidebar_web']; ?><a href='<?php echo $profile->homepage; ?>'><?php echo $profile->homepage; ?></a>
     </p>
     <?php endif; ?>
 

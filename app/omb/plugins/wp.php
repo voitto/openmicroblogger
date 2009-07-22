@@ -2130,10 +2130,12 @@ function followgrid() {
     echo '<br />';
   echo '<br />';
   }
-  echo '
-  <p class="liother">
-  <a class="rss" href="'.$request->url_for(array('resource'=>'posts','byid'=>get_app_id(),'page'=>1)).'.rss">'.$txt['sidebar_rss1'].' '.$request->params['nickname'].$txt['sidebar_rss2'].'</a>
-  </p>';
+  if (isset($request->params['nickname'])) {
+    echo '
+    <p class="liother">
+    <a class="rss" href="'.$request->url_for(array('resource'=>'posts','byid'=>get_app_id(),'page'=>1)).'.rss">'.$txt['sidebar_rss1'].' '.$request->params['nickname'].$txt['sidebar_rss2'].'</a>
+    </p>';
+  }
    
 }
 

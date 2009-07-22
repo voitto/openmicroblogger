@@ -135,11 +135,11 @@ $txt['search_more'] = "(More ...)";
 //////////////////////
 # /wp-content/themes/p2/sidebar.php
 //////////////////////
-$txt['sidebar_name'] = "Name: ";
-$txt['sidebar_location'] = "Location: ";
-$txt['sidebar_country'] = "Country: ";
-$txt['sidebar_web'] = "Website: ";
-$txt['sidebar_bio'] = "Biography: ";
+$txt['sidebar_name'] = "Name ";
+$txt['sidebar_location'] = "Location ";
+$txt['sidebar_country'] = "Country ";
+$txt['sidebar_web'] = "Web ";
+$txt['sidebar_bio'] = "Bio ";
 $txt['sidebar_following'] = "Following";
 $txt['sidebar_followers'] = "Followers";
 $txt['sidebar_updates'] = "Updates";
