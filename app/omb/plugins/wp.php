@@ -2095,6 +2095,8 @@ function wp_add_options($prefix,$options) {
 
 function followgrid() {
   
+  require('wp-content/language/lang_chooser.php'); //Loads the language-file
+  
   global $db,$request;
 
   $Subscription = $db->model('Subscription');
@@ -2110,7 +2112,7 @@ function followgrid() {
   while ($subscriber = $Subscription->MoveNext()){
     $i = $Identity->find($subscriber->subscribed);
     $follist[] = array('avatar'=>$i->avatar, 'profile_url'=>$i->profile_url, 'nickname'=>$i->nickname);
-   }
+  }
    for ($i=0;$i<6;$i++)  {
     for ($j=0;$j<6;$j++)  {
       if (isset($follist[$count])){
@@ -2123,11 +2125,14 @@ function followgrid() {
         echo '<br />';
    }
    
-  echo '<a href="'. $request->url_for(array("resource"=>$request->params['nickname']))."/subscriptions".'">View All...</a>';
-  echo '<br /><br />';
+  if (count($follist) == 36) {
+    echo '<a href="'. $request->url_for(array("resource"=>$request->params['nickname']))."/subscriptions".'">View All...</a>';
+    echo '<br />';
+  echo '<br />';
+  }
   echo '
   <p class="liother">
-  <a class="rss" href="'.$request->url_for(array('resource'=>'posts','byid'=>get_app_id(),'page'=>1)).'.rss">RSS Feed of '.$request->params['nickname'].'\'s updates</a>
+  <a class="rss" href="'.$request->url_for(array('resource'=>'posts','byid'=>get_app_id(),'page'=>1)).'.rss">'.$txt['sidebar_rss1'].' '.$request->params['nickname'].$txt['sidebar_rss2'].'</a>
   </p>';
    
 }
