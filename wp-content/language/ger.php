@@ -300,11 +300,11 @@ $txt['entry_reply_by'] = "Antwort von";
 $txt['new_status'] = "Beschreibung";
 $txt['new_article'] = "Artikel";
 $txt['new_choose_file'] = "Datei ausw&auml;hlen";
-$txt['new_image'] = "Foto im .jpg-Format";
+$txt['new_image'] = "Foto";
 $txt['new_movie'] = ".avi oder .mov (quicktime) Video";
 $txt['new_audio'] = ".mp3 Audiodatei";
 $txt['new_categories'] = "Kategorien";
-$txt['new_page'] = "Page Title";
+$txt['new_page'] = "Seitentitel";
 
 
 /////////////////////////////////////
@@ -353,7 +353,7 @@ $txt['editprofile_full_name'] = "Vollst&auml;ndiger Name";
 $txt['editprofile_openid'] = "OpenID URL";
 $txt['editprofile_bio'] = "Biographie";
 $txt['editprofile_email'] = "E-mail";
-$txt['editprofile_photo'] = "Foto im jpg-Format";
+$txt['editprofile_photo'] = "Foto";
 $txt['editprofile_licence_url'] = "Lizenz URL";
 $txt['editprofile_button_cancel'] = "Abbrechen";
 $txt['editprofile_button_save'] = "Speichern";

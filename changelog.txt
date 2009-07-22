@@ -12,12 +12,80 @@
 ################################
 
 ################################
-# Current Release: 0.3b80      #
+# Current Release: 0.3b81      #
 ################################
 
 
 
 This has changed in Release:
+
+#0.3b81
+
+* Readme updated
+* Facebook Connect [#86]
+* 6x6 followers grid on Frontpage P2-Theme
+* http-auth fixes
+* changing the maximum number of tags shown in the sidebar [#99]
+* fixed: standard tag-it textstring is added to tag-list [#97]
+* fixed: links to remote subscriptions on following page [#96]
+* Added a stream delete button [#64]
+* Only admin is able to enter admin-area [#59]
+* fixed: remote-subscription-issue [#60]
+* fixed: if you copy P2-Theme the profile picture was shown twice [#36]
+* Set Photo-size in admin menu [#94]
+* possibility to choose which filetypes can be uploaded [#58]
+* more image-types can be used for profile-picture [#23]
+* upgrade/fixed cookie auth [#69]
+* possibility to add Contact box / impressum [#27]
+* Some smaller fixes
+
+(o) README
+(o) app/config/config.yml
+(o) app/omb/controllers/admin.php
+(o) app/omb/controllers/identities.php
+(o) app/omb/controllers/posts.php
+(o) app/omb/models/Page.php
+(o) app/omb/plugins/omb.php
+(o) app/omb/plugins/ping.php
+(o) app/omb/plugins/security.php
+(o) app/omb/plugins/wp.php
+(o) app/omb/views/_email.html
+(o) app/omb/views/admin/index.html
+(o) app/omb/views/blogs/_mystreams.html
+(o) app/omb/views/blogs/_remove.html
+(o) app/omb/views/categories/_block.js
+(o) app/omb/views/methods/_remove.html
+(o) app/omb/views/subscriptions/_following.html
+(o) db/library/dbscript/_functions.php
+(o) db/library/dbscript/cookie.php
+(o) db/library/dbscript/mapper.php
+(o) db/library/dbscript/model.php
+(o) db/library/dbscript/view.php
+(o) resource/prettyurls/.htaccess
+(o) wp-content/language/eng.php
+(o) wp-content/language/ger.php
+(o) wp-content/themes/p2/footer.php
+(o) wp-content/themes/p2/header.php
+(o) wp-content/themes/p2/index.php
+
+
+(+) app/omb/models/Thumbnail.php
+(+) app/omb/views/posts/_pagelist.html
+(+) app/omb/views/posts/_pagenew.html
+(+) app/omb/views/posts/_pagespan.html
+(+) app/pages/pages.php
+(+) db/library/Validate.php
+
+(-) app/omb/views/pages/_block.js
+(-) app/omb/views/pages/_edit.html
+(-) app/omb/views/pages/_entry.html
+(-) app/omb/views/pages/_entry.wml
+(-) app/omb/views/pages/_index.atom
+(-) app/omb/views/pages/_index.html
+(-) app/omb/views/pages/_index.wml
+(-) app/omb/views/pages/_new.html
+(-) app/omb/views/pages/_remove.html
+
 
 #0.3b80
 
