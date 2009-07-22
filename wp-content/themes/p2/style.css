@@ -44,9 +44,6 @@ a:hover, h1 a:hover, #main .selected .actions a:hover, #main .selected .actions 
 h1 a:hover {
 	border: none;
 }
-a:hover {
-	border-bottom: 1px solid #bbb;
-}
 strong {
 	font-weight: bold;
 }
