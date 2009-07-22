@@ -74,7 +74,7 @@ else
    */
 
 if (MEMCACHED) {
-  include 'db/library/pca/pca/pca.class.php';
+  include 'db/library/pca/pca.class.php';
   $cache = PCA::get_best_backend();
   $_SERVER['FULL_URL'] = 'http://';
   if ( $_SERVER['SERVER_PORT']!='80' ) {
