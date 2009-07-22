@@ -419,8 +419,16 @@ function read_uploads_blob( &$request, $value, $coll, $ext ) {
   if (isset($coll[$request->resource])) {
     if ($coll[$request->resource]['location'] == 'uploads') {
       $file = 'uploads' . DIRECTORY_SEPARATOR . $request->resource . $request->id;
-      if (file_exists($file))
+      if (file_exists($file)) {
+        if (MEMCACHED) {
+          global $response;
+          $timeout = MEMCACHED;
+          $cache = PCA::get_best_backend();
+          $cache->add($request->composite_uri(), file_get_contents( $file ), $timeout);
+          $cache->add($request->composite_uri().'type', type_of($response->pick_template_extension( $request )), $timeout);
+        }
         print file_get_contents( $file );
+      }
     }
   }
 }
@@ -493,6 +501,14 @@ function read_cache_blob( &$request, $value, $coll ) {
         fclose( $fp );
         unset( $fp );
         
+        if (MEMCACHED) {
+          global $response;
+          $timeout = MEMCACHED;
+          $cache = PCA::get_best_backend();
+          $cache->add($request->composite_uri(), file_get_contents( $cacheFile ), $timeout);
+          $cache->add($request->composite_uri().'type', type_of($response->pick_template_extension( $request )), $timeout);
+        }
+
         print file_get_contents( $cacheFile );
         
         exit;

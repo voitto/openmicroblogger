@@ -14,6 +14,7 @@ define(      "INTRANET", "0"     ); // change to 1 for password login
 define(          "PING", "1"     ); // change to 0 for silent operation
 define( "REALTIME_HOST", ""      ); // host for comet push
 define( "REALTIME_PORT", ""      ); // port for comet push
+define(     "MEMCACHED", "0"     ); // memcached cache duration
 
 // more database settings
 

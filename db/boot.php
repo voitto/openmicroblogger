@@ -69,6 +69,47 @@ if (file_exists('config/config.php'))
 else
   require('config.php');
 
+  /**
+   * memcached
+   */
+
+if (MEMCACHED) {
+  include 'db/library/pca/pca/pca.class.php';
+  $cache = PCA::get_best_backend();
+  $_SERVER['FULL_URL'] = 'http://';
+  if ( $_SERVER['SERVER_PORT']!='80' ) {
+    $port = ':' . $_SERVER['SERVER_PORT'];
+  }
+  if ( isset( $_SERVER['REQUEST_URI'] ) ) {
+    $script = $_SERVER['REQUEST_URI'];
+  } else {
+    $script = $_SERVER['PHP_SELF'];
+    if ( $_SERVER['QUERY_STRING']>' ' ) {
+      $script .= '?'.$_SERVER['QUERY_STRING'];
+    }
+  }
+  if ( isset( $_SERVER['HTTP_HOST'] ) ) {
+    $_SERVER['FULL_URL'] .= $_SERVER['HTTP_HOST'] . $port . $script;
+  } else {
+    $_SERVER['FULL_URL'] .= $_SERVER['SERVER_NAME'] . $port . $script;
+  }
+  global $pretty_url_base;
+  if (isset($pretty_url_base) && !empty($pretty_url_base)) {
+    if (!empty($_SERVER['QUERY_STRING']))
+      $url = $pretty_url_base.'/?'.$_SERVER['QUERY_STRING'];
+    else
+      $url = $pretty_url_base.'/';
+  } else {
+    $url = $_SERVER['FULL_URL'];
+  }
+  if($cache->exists($url) && $cache->exists($url.'type')){
+    header( 'Content-Type: '.$cache->get($url.'type') );
+    header( "Content-Disposition: inline" );
+    echo $cache->get($url);
+    exit;
+  }
+}
+
   // set path to db directory
 if (is_dir('db'))
   $app = 'db' . DIRECTORY_SEPARATOR;
