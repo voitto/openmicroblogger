@@ -119,6 +119,17 @@
     <br /><br />
       <p class="sidebar_updates_nickname"><span class="profile-updates"><?php echo $count3; ?></span><?php echo $txt['sidebar_Updates']; ?></p>
     
+    
+        <?php if (!signed_in()) : ?>
+      <p class="liother">
+    <?php echo $txt['sidebar_following']; ?>
+    </p>
+          <div id="followgrid">
+          <?php followgrid(); ?>
+      </div>
+      <?php endif; ?>
+    
+    
   <?php endif; ?>
 <?php } ?>
   <?php
