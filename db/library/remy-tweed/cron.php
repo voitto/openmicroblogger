@@ -1,120 +1,319 @@
 <?php
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// SHOW ERRORS
+ini_set('display_errors','1');
+ini_set('display_startup_errors','1');
+error_reporting (E_ALL & ~E_NOTICE );
+
+
+
+
 $path = pathinfo(__FILE__, PATHINFO_DIRNAME);
+
+
+$ombroot = substr($path,0,-21);
+
 include_once($path . '/lib/spyc.php');
+include_once( $path . '/lib/xml2array.php');
+if( !function_exists('json_decode') )
+    include_once( $path . '/lib/JSON.php');
 
-if( !function_exists('json_decode') ) {
-    include_once($path . '/lib/JSON.php');
+
+
+
+
+
+
+
+
+
+
+
+// dbscript booter
+
+$version = '0.6.0';
+
+global $views,$app,$config,$env,$exec_time,$version,$response;
+global $variants,$request,$loader,$db,$logic;
+
+$app = $ombroot.'db/';
+
+if (file_exists('config/config.php'))
+  require('config/config.php');
+else
+  require('config.php');
+
+
+$GLOBALS['PATH'] = array();
+$GLOBALS['PATH']['app'] = $app;
+$GLOBALS['PATH']['library'] = $app . 'library' . DIRECTORY_SEPARATOR;
+$GLOBALS['PATH']['controllers'] = $app . 'controllers' . DIRECTORY_SEPARATOR;
+$GLOBALS['PATH']['models'] = $app . 'models' . DIRECTORY_SEPARATOR;
+$GLOBALS['PATH']['plugins'] = $app . 'plugins' . DIRECTORY_SEPARATOR;
+$GLOBALS['PATH']['dbscript'] = $GLOBALS['PATH']['library'] . 'dbscript' . DIRECTORY_SEPARATOR;
+foreach( array(
+    '_functions',
+    'bootloader',
+    'mapper',
+    'route',
+    'genericiterator',
+    'collection',
+    'view',
+    'cookie'
+  ) as $module ) {
+  include $GLOBALS['PATH']['dbscript'] . $module . '.php';
 }
-
-function get_from_url($config) {
-    global $debug;
-    
-    // try to get the url
-    $url = 'http://search.twitter.com/search.json?rpp=100&q=' . urlencode($config['twitter']['search']);
-    
-    if (isset($config['twitter']['since_id'])) {
-        $url .= '&since_id=' . $config['twitter']['since_id'];
-    }
-    
-    if ($debug) {
-        echo $url . "\n";
-    }
-
-    if ($debug === true) {
-        return test_data();
-    }
-
-    $json = '';
-    $handle = fopen($url,'r');
-
-    // check to make sure the URL didn't fail for some reason
-    if ($handle) {
-        while (!feof($handle)) {
-            // loop through and build the XML file
-            $json .= fread($handle, 1024);
-        }
-        // clean-up the file pointers
-        fclose($handle);
-    } else {
-        // fopen failed for some reason!!!
-        exit('There was an error fetching the URL');
-    }
-
-    if ($json == ''){
-        // the XML is blank, nothing was pulled from the URL!!!
-        exit('There was an error fetching the XML!');
-    }
-    
-    return $json;
-}
-
-function test_data() {
-    return "{\"results\":[{\"text\":\"@weirdhabit I always eat fucking sandwiches crust first working my way to the centre where the best fillings are. 9 minutes ago\",\"to_user_id\":8681803,\"to_user\":\"weirdhabit\",\"from_user\":\"kemenytest\",\"id\":1471174261,\"from_user_id\":8721360,\"iso_language_code\":\"en\",\"source\":\"&lt;a href=&quot;http:\\\/\\\/twitter.com\\\/&quot;&gt;web&lt;\\\/a&gt;\",\"profile_image_url\":\"http:\\\/\\\/static.twitter.com\\\/images\\\/default_profile_normal.png\",\"created_at\":\"Tue, 07 Apr 2009 18:34:17 +0000\"},{\"text\":\"@weirdhabit scratching my arse\",\"to_user_id\":8681803,\"to_user\":\"weirdhabit\",\"from_user\":\"kemenytest\",\"id\":1396549571,\"from_user_id\":8721360,\"iso_language_code\":\"en\",\"source\":\"&lt;a href=&quot;http:\\\/\\\/twitter.com\\\/&quot;&gt;web&lt;\\\/a&gt;\",\"profile_image_url\":\"http:\\\/\\\/static.twitter.com\\\/images\\\/default_profile_normal.png\",\"created_at\":\"Thu, 26 Mar 2009 20:19:00 +0000\"},{\"text\":\"@weirdhabit i have to have the #handle of a cup facing me on the table\",\"to_user_id\":8681803,\"to_user\":\"weirdhabit\",\"from_user\":\"joshtest\",\"id\":1396434187,\"from_user_id\":8681727,\"iso_language_code\":\"en\",\"source\":\"&lt;a href=&quot;http:\\\/\\\/twitter.com\\\/&quot;&gt;web&lt;\\\/a&gt;\",\"profile_image_url\":\"http:\\\/\\\/static.twitter.com\\\/images\\\/default_profile_normal.png\",\"created_at\":\"Thu, 26 Mar 2009 19:58:37 +0000\"},{\"text\":\"@weirdhabit i pick my nose in public\",\"to_user_id\":8681803,\"to_user\":\"weirdhabit\",\"from_user\":\"joshtest\",\"id\":1394943028,\"from_user_id\":8681727,\"iso_language_code\":\"en\",\"source\":\"&lt;a href=&quot;http:\\\/\\\/twitter.com\\\/&quot;&gt;web&lt;\\\/a&gt;\",\"profile_image_url\":\"http:\\\/\\\/static.twitter.com\\\/images\\\/default_profile_normal.png\",\"created_at\":\"Thu, 26 Mar 2009 15:28:54 +0000\"}],\"since_id\":0,\"max_id\":1472390428,\"refresh_url\":\"?since_id=1472390428&q=%40weirdhabit\",\"results_per_page\":15,\"total\":4,\"completed_in\":0.242095,\"page\":1,\"query\":\"%40weirdhabit\"}";
-}
-
-// localises the timestamp
-function fix_date($data) {
-    $results = $data->results;
-    for ($i = 0; $i < count($results); $i++) {
-        $results[$i]->created_at = strtotime($results[$i]->created_at);
-    }
-    
-    return $results;
-}
-
-function update_config($config, $filename) {
-    
-    if (is_writable($filename)) {
-
-        // In our example we're opening $filename in append mode.
-        // The file pointer is at the bottom of the file hence
-        // that's where $somecontent will go when we fwrite() it.
-        if (!$handle = fopen($filename, 'w')) {
-             echo "Cannot open file ($filename)";
-             exit;
-        }
-
-        $yaml = Spyc::YAMLDump($config,4,60);
-
-        // Write $somecontent to our opened file.
-        if (fwrite($handle, $yaml) === FALSE) {
-            echo "Cannot write to file ($filename)";
-            exit;
-        }
-
-        // echo "Success, wrote ($yaml) to file ($filename)";
-
-        fclose($handle);
-    } else {
-        echo "The file $filename is not writable";
-    }
-}
-
-
-$config_file = $path . '/config.yaml';
-$config = Spyc::YAMLLoad($config_file);
-if ($config['debug']) {
-    $debug = $config['debug'];
-}
-
-$json = fix_date(json_decode(get_from_url($config)));
-
-if (count($json)) {
-    if (isset($config['twitter']['since_id'])) {
-        $config['twitter']['since_id'] = $json[0]->id; // store the latest
-        update_config($config, $config_file);        
-    }
-
-    // go through each plugin specified in the config and apply it if it exists
-    foreach ($config['plugins'] as $plugin) {
-        if (file_exists($path . '/plugins/' . $plugin . '.php')) {
-            // dynamically construct the new object, and pass each tweet to the 'run' method
-            // updating the list of tweets as each plugin is processed.
-            $plugin_fn = create_function('$tweets, $config', 'include("' . $path . '/plugins/' . $plugin . '.php"); $plugin = new ' . $plugin . '($config); $filtered_tweets = array(); foreach ($tweets as $tweet) { $filtered_tweet = $plugin->run($tweet); if ($filtered_tweet !== false) { $filtered_tweets[] = $filtered_tweet; } }; return $filtered_tweets;');
-            $json = $plugin_fn($json, $config);
-        }
-    }   
+lib_include( 'inflector' );
+$request = new Mapper();
+error_reporting( E_ALL & ~E_NOTICE & ~E_WARNING );
+$dbscript_error_handler = set_error_handler( 'dbscript_error' );
+include $GLOBALS['PATH']['library'] . 'yaml.php';
+$loader = new Horde_Yaml();
+if ( file_exists( $app . 'config.yml' ) ) {
+  extract($loader->load(file_get_contents($app.'config.yml')));
+  extract( $$env['enable_db'] );
 } else {
-    // none found
+  $env = array('app_folder'=>'app');
 }
-?>
+if (is_dir( $env['app_folder'] )) {
+  $app = $env['app_folder'] . DIRECTORY_SEPARATOR;
+  $appdir = $app;
+  if ( file_exists( $app . 'config' . DIRECTORY_SEPARATOR . 'config.yml' ) ) {
+    extract($loader->load(file_get_contents($app . 'config' . DIRECTORY_SEPARATOR .'config.yml')));
+    extract( $$env['enable_db'] );
+    if (isset($env['boot']))
+      $appdir = $app.$env['boot'].DIRECTORY_SEPARATOR;
+    else
+      $appdir = $app.'omb'.DIRECTORY_SEPARATOR;
+    $GLOBALS['PATH']['app'] = $app;
+    $app = $appdir;
+    $GLOBALS['PATH']['controllers'] = $appdir . 'controllers' . DIRECTORY_SEPARATOR;
+    $GLOBALS['PATH']['models'] = $appdir . 'models' . DIRECTORY_SEPARATOR;
+  }
+  if (is_dir( $appdir . 'plugins' . DIRECTORY_SEPARATOR ))
+    $GLOBALS['PATH']['plugins'] = $appdir . 'plugins' . DIRECTORY_SEPARATOR;
+}
+if ($env['debug_enabled']) {
+  ini_set('display_errors','1');
+  ini_set('display_startup_errors','1');
+  error_reporting (E_ALL & ~E_NOTICE );
+  global $exec_time;
+  $exec_time = microtime_float();
+}
+db_include( array(
+  'database',
+  'model',
+  'record',
+  'recordset',
+  'resultiterator',
+  $adapter
+));
+if (DB_NAME)
+  $database = DB_NAME;
+if (DB_USER)
+  $username = DB_USER;
+if (DB_PASSWORD)
+  $password = DB_PASSWORD;
+if (DB_HOST)
+  $host = DB_HOST;
+$db = new $adapter(
+  $host,
+  $database,
+  $username,
+  $password
+);
+$loader = new BootLoader();
+$loader->start();
+$Setting =& $db->model('Setting');
+$Setting->find_by(array(
+  'eq'    => 'like',
+  'name'  => 'config%'
+));
+while ($s = $Setting->MoveNext()) {
+  $set = split('\.',$s->name);
+  if (is_array($set) && $set[0] == 'config') {
+    if ($set[1] == 'env') {
+      $env[$set[2]] = $s->value;
+    } elseif ($set[1] == 'perms') {
+      $tab =& $db->models[$set[2]];
+      if ($tab)
+        $tab->permission_mask( $set[3],$s->value,$set[4] );
+    }
+  }
+}
+if ( isset( $env ))
+  while ( list( $key, $plugin ) = each( $env['plugins'] ) )
+    load_plugin( $plugin );
+
+
+
+// end dbscript booter
+
+
+after_filter( 'send_ping', 'insert_tweets_via_cron' );
+
+$follow = array();
+foreach ($env as $key=>$val) {
+  if (substr($key,0,13) == 'importtwitter' && $val == 1) {
+    $optname = 'conf_for_'.$key;
+    $options = unserialize(get_option($optname));
+    if (!$options) {
+      $options = array();
+      $options['busy'] = 0;
+      $options['last_id'] = 0;
+      $options['latest_id'] = 0;
+      add_option($optname,$options);
+    }
+    if (!$options['busy']) {
+      $options['busy'] = 1;
+      //update_option($optname,$options);
+      $tu = split("_",$key);
+      $follow[$tu[1]] = array($optname,$options);
+    }
+  }
+}
+
+foreach ($follow as $tuid=>$options) {
+  
+  // http://abrah.am
+  lib_include('twitteroauth');
+  
+  global $db;
+  $TwitterUser =& $db->model('TwitterUser');
+  $tu = $TwitterUser->find($tuid);
+  if ($tu) {
+    $latest = false;
+    $key = $tu->oauth_key;
+    $secret = $tu->oauth_secret;
+    $consumer_key = environment( 'twitterKey' );
+    $consumer_secret = environment( 'twitterSecret' );    
+    $to = new TwitterOAuth(
+      $consumer_key, 
+      $consumer_secret, 
+      $tu->oauth_key, 
+      $tu->oauth_secret
+    );
+    $timelineurl = 'https://twitter.com/statuses/friends_timeline.atom';
+    if ($options[1]['last_id']) {
+      $timelineurl .= '?since_id='.$options[1]['last_id'].'&count=200';
+      admin_alert('starting from '.$options[1]['last_id']. ' for '.$tu->screen_name);
+    }
+    $data = $to->OAuthRequest($timelineurl, array(), 'GET');
+    $xmlarray = array();
+    $xmlarray = xml2array($data, $get_attributes = 1, $priority = 'value');	
+    if (count($xmlarray)) {
+      $sincespl = split(":",$xmlarray['feed']['entry'][0]['id']['value']);
+      $sincespl2 = split("/",$sincespl[3]);
+      if (isset($sincespl2[5]) && ($sincespl2[5] >0)) {
+        $latest = $sincespl2[5];
+        if (isset($xmlarray['feed']['entry'])) {
+          foreach($xmlarray['feed']['entry'] as $entry) {
+            global $request,$db;
+            $Post =& $db->model('Post');
+            if (isset($entry['title']['value'])) {
+              $u = add_tweet_user( $entry );
+              $title = $entry['title']['value'];
+              $tweeturl = $entry['link'][0]['attr']['href'];
+              $request->set_param(array('post','parent_id'),0);
+              $request->set_param(array('post','uri'),$tweeturl);
+              $request->set_param(array('post','url'),$tweeturl);
+              $request->set_param(array('post','title'),$title);
+              $request->set_param(array('post','profile_id'),$u->profile_id);
+              $table = 'posts';
+              $content_type = 'text/html';
+              $rec = $Post->base();
+              $fields = $Post->fields_from_request($request);
+              $fieldlist = $fields['posts'];
+              foreach ( $fieldlist as $field=>$type )
+                $rec->set_value( $field, $request->params[strtolower(classify($table))][$field] );
+              $Identity =& $db->model('Identity');
+              $id = $Identity->find($u->profile_id);
+              $rec->save_changes();
+              $rec->set_etag($id->person_id);
+              trigger_after( 'insert_tweets_via_cron', $Post, $rec );
+            }
+          }
+        }
+      }
+    }
+  }
+  if ($latest)
+    $options[1]['last_id'] = $latest;
+  $options[1]['busy'] = 0;
+  update_option($options[0],$options[1]);
+}
+
+function add_tweet_user($data) {
+  global $db;
+  $Identity =& $db->model('Identity');
+  $Person =& $db->model('Person');
+  $sincespl = split(":",$data['id']['value']);
+  $sincespl2 = split("/",$sincespl[3]);
+  $nickname = strtolower($sincespl2[3]);
+  $name = $data['author']['name']['value'];
+  $TwitterUser =& $db->model('TwitterUser');
+  $twuser = $TwitterUser->find_by( 'screen_name',$nickname );
+  if ($twuser)
+    return $twuser;
+  global $db,$prefix,$request;
+  $p = $Person->base();
+  $p->save();
+  $i = $Identity->base();
+  for ( $j=1; $j<50; $j++ ) {
+    $sql = "SELECT nickname FROM ".$prefix."identities WHERE nickname LIKE '".$nickname."' AND (post_notice = '' OR post_notice IS NULL)";
+    $result = $db->get_result( $sql );
+    if ($db->num_rows($result) > 0) {
+      $nickname = strtolower($sincespl2[3]).$j;
+    } else {
+      break;
+    }
+  }
+  
+  $i->set_value( 'nickname', $nickname );
+  $i->set_value( 'avatar', $data['link'][1]['attr']['href'] ); 
+  $i->set_value( 'fullname', $name );
+  $i->set_value( 'homepage', $data['author']['uri']['value'] );
+  $i->set_value( 'label', 'profile 1' );
+  $i->set_value( 'person_id', $p->id );
+  $i->save_changes();
+  $i->set_etag($p->id);
+  $i->set_value( 'profile', "http://twitter.com/".$nickname );
+  $i->set_value( 'profile_url', "http://twitter.com/".$nickname );
+  $i->set_value( 'post_notice', 'http://twitter.com' );
+  $i->save_changes();
+  
+  $twuser = $TwitterUser->base();
+  $twuser->set_value('screen_name',strtolower($nickspl1[1]));
+  $twuser->set_value('url',$data['author']['uri']['value']);
+  $twuser->set_value('name',$name);
+  $twuser->set_value('profile_id',$i->id);
+  $twuser->set_value('profile_image_url',$data['link'][1]['attr']['href']);
+  $twuser->save_changes();
+  
+  return $twuser;
+  
+}
+
+
+
+
