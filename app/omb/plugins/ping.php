@@ -35,6 +35,7 @@ function send_ping( &$model, &$rec ) {
     } else {
       
       // push a P2 tweet
+      $o = owner_of($rec);
       
       $tweet = '<hr />'."\n";
       $tweet .= '<h4>'."\n";

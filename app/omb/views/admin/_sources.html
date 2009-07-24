@@ -1,0 +1,37 @@
+
+<script type="text/javascript">
+  // <![CDATA[
+  $(document).ready(function() {
+
+<?php for ($j=1;$j<$i;$j++) : ?>
+<?
+  $modevar = 'n'.$j.'mode';
+  $urlvar = 'n'.$j.'url';
+  $entryvar = 'n'.$j.'entry';
+?>
+
+<?php setting_widget_helper('follow'.$j,$$modevar,$$urlvar,$$entryvar,$listvars); ?>
+
+<?php endfor; ?>
+
+    });
+    // ]]>
+    </script>
+
+
+<div style="width:300px;">
+<?php for ($j=1;$j<$i;$j++) : ?>
+<?
+  $modevar = 'n'.$j.'mode';
+  $urlvar = 'n'.$j.'url';
+  $entryvar = 'n'.$j.'entry';
+  $nickvar = 'n'.$j.'nick';
+?>
+
+<p class="jeditable_<?php echo 'follow'.$j; ?>" id="jeditable_<?php echo 'follow'.$j; ?>"><?php echo $$nickvar; if ($$modevar->value) echo '(following)'; ?></p>
+
+<?php endfor; ?>
+</div>
+
+
+

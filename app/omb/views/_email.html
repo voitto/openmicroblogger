@@ -76,8 +76,6 @@
   
 <br />
   <script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>
-
-  <p>Sign in or register with Facebook:</p>
   
 <fb:login-button onlogin="facebook_onlogin();"></fb:login-button>
 
@@ -89,7 +87,7 @@
 
 
 <?php $key = environment('twitterKey'); if (!empty($key)) : ?>
-    <br /><p><a href="<?php url_for('oauth_login'); ?>">Sign in with your Twitter Account...</a></p><br />
+    <br /><p><a href="<?php url_for('oauth_login'); ?>"><img src='<?php base_path(); ?>resource/Sign-in-with-Twitter-lighter.png'></a></p><br />
     <?php endif; ?>
     <p><a href="<?php url_for('openid_login'); ?>">Sign in with your OpenID...</a></p><br />
   <p>Sign in with your E-Mail Address:</p>

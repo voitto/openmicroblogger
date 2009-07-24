@@ -230,7 +230,12 @@ OTHER DOCUMENTATION
 
 4. to change the allowed file-types for uploads, in config.yml is the "upload_types" list
 
-
+5. configuring twitter-follow feature: in the site Admin panel is a new tab called 'Sources'.
+   in this list, choose "friends_timeline" for the twitter users you want to import automatically
+   here are the steps to set up the automatic twitter feed:
+     1. set up your OMB install as a Twitter OAuth app
+     2. authenticate as the Twitter user whose friends you want to import automatically
+     3. set up a cron job to run "/usr/bin/php /your/omb/web/folder/cron.php" every five or ten minutes
 
 
 

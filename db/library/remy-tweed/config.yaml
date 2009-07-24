@@ -1,0 +1,14 @@
+---
+debug: false
+database: 
+    host: localhost
+    database: test
+    user: root
+    password: 
+twitter: 
+    search: from:rem
+    since_id: 1494481617
+plugins: 
+    - ignore_replies
+    - linkify
+    - db_store

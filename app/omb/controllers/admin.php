@@ -203,6 +203,70 @@ function _index( &$vars ) {
   );
 }
 
+function _sources( &$vars ) {
+extract( $vars );
+  
+  if (!member_of('administrators'))
+    trigger_error('sorry you must be an administrator to do that', E_USER_ERROR);
+  
+  $aktwitter_tw_text_options = array(
+    '0'=>'false',
+    '1'=>'true'
+  );
+  
+  $Setting =& $db->model('Setting');
+  
+  $returnvars = array();
+  
+  $TwitterUser =& $db->model('TwitterUser');
+  $TwitterUser->find_by( array('eq'=>'not like','oauth_key'=>''),1 );
+  $i=1;
+  while ($tu = $TwitterUser->MoveNext()) {
+    
+    $modevar = 'n'.$i.'mode';
+    $urlvar = 'n'.$i.'url';
+    $entryvar = 'n'.$i.'entry';
+    $nickvar = 'n'.$i.'nick';
+    $i++;
+    
+    $$nickvar = $tu->screen_name;
+    $$modevar = $Setting->find_by('name','config.env.importtwitter_'.$tu->id);
+    
+    if (!$$modevar) {
+      $$modevar = $Setting->base();
+      $$modevar->set_value('profile_id',get_profile_id());
+      $$modevar->set_value('person_id',get_person_id());
+      $$modevar->set_value('name','config.env.importtwitter_'.$tu->id);
+      $$modevar->set_value('value',0);
+      $$modevar->save_changes();
+      $$modevar->set_etag();
+      $$modevar = $Setting->find($$modevar->id);
+    }
+    
+    $$urlvar = $request->url_for(array('resource'=>'settings','id'=>$$modevar->id,'action'=>'put'));
+    $$entryvar = $$modevar->FirstChild('entries');
+  
+    $returnvars[] = &$$modevar;
+    $returnvars[] = &$$urlvar;
+    $returnvars[] = &$$entryvar;
+    $returnvars[] = &$$nickvar;
 
+  }
+
+  $returnvars[] = &$collection;
+  $returnvars[] = &$profile;
+  $returnvars[] = &$aktwitter_tw_text_options;
+  
+  $listvars = array(1=>'friends_timeline',0=>'disabled');
+  $returnvars[] = &$listvars;
+  
+  $returnvars[] = &$i;
+
+  return vars(
+    $returnvars,
+    get_defined_vars()
+  );
+  
+}
 
 

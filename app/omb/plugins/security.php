@@ -915,7 +915,7 @@ function make_identity( $user ) {
     $sql = "SELECT nickname FROM ".$prefix."identities WHERE nickname LIKE '".$nicker."' AND (post_notice = '' OR post_notice IS NULL)";
     $result = $db->get_result( $sql );
     if ($db->num_rows($result) > 0) {
-      $nicker = $nicker.$j;
+      $nicker = $db->escape_string($user[0]).$j;
     } else {
       break;
     }

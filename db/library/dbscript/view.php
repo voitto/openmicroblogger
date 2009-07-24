@@ -234,7 +234,7 @@ class View {
       } else {
         
         if (strpos($request->uri, 'robots') === false)
-          admin_alert($request->uri." view $view action $action");
+          admin_alert($request->uri." $view $action ".$_SERVER[REMOTE_HOST]);
         
       }
       
