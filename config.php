@@ -15,6 +15,7 @@ define(          "PING", "1"     ); // change to 0 for silent operation
 define( "REALTIME_HOST", ""      ); // host for comet push
 define( "REALTIME_PORT", ""      ); // port for comet push
 define(     "MEMCACHED", "0"     ); // memcached cache duration
+define(    "TWEET_SIZE", "140"   );
 
 // more database settings
 
