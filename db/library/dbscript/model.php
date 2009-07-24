@@ -273,7 +273,7 @@ class Model {
           } elseif (!empty($req->$cname)) {
             if (isset_admin_email()) {
               $c = $Category->base();
-              $c->set_value( 'name', $req->$cname);
+              $c->set_value( 'name', strtolower($req->$cname));
               $c->set_value( 'term', strtolower($req->$cname));
               $c->save();
               $j->set_value('category_id',$c->id);
