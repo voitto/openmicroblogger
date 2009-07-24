@@ -325,10 +325,12 @@ function wp_set_post_fields( &$model, &$rec ) {
   
   include 'wp-content/language/lang_chooser.php'; //Loads the language-file
   
-  if (strcmp(utf8_decode($_POST['tags']), $txt['postform_tagit'])
-    || ($_POST['tags'] == $txt['postform_tagit']))
+  $t1 = html_entity_decode($txt['postform_tagit']);
+  $t2 = html_entity_decode($_POST['tags']);
+  
+  if (ereg_replace("[^A-Za-z0-9]","",$t1) == ereg_replace("[^A-Za-z0-9]","",$t2))
     return;
-
+  
   if (strstr( $_POST['tags'], "," ))
     $tags = split( ',', $_POST['tags'] );
   else

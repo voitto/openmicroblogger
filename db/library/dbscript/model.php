@@ -271,7 +271,7 @@ class Model {
             $j->save_changes();
             $added[] = $req->$cname;
           } elseif (!empty($req->$cname)) {
-            if (isset_admin_email()) {
+            
               $c = $Category->base();
               $c->set_value( 'name', strtolower($req->$cname));
               $c->set_value( 'term', strtolower($req->$cname));
@@ -280,9 +280,6 @@ class Model {
               $j->save_changes();
               $added[] = $req->$cname;
               admin_alert( "created a new category: ".$req->$cname." at ".$req->base );
-            } else {
-              trigger_error("Sorry, I could not create the new Category because the administrator e-mail address has not been set.", E_USER_ERROR);
-            }
           }
         }
       }
