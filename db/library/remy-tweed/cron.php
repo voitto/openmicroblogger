@@ -58,10 +58,10 @@ global $variants,$request,$loader,$db,$logic;
 
 $app = $ombroot.'db/';
 
-if (file_exists('config/config.php'))
-  require('config/config.php');
+if (file_exists($ombroot.'config/config.php'))
+  require($ombroot.'config/config.php');
 else
-  require('config.php');
+  require($ombroot.'config.php');
 
 
 $GLOBALS['PATH'] = array();
