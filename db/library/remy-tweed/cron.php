@@ -30,8 +30,9 @@ error_reporting (E_ALL & ~E_NOTICE );
 
 $path = pathinfo(__FILE__, PATHINFO_DIRNAME);
 
-
 $ombroot = substr($path,0,-21);
+
+chdir($ombroot);
 
 include_once($path . '/lib/spyc.php');
 include_once( $path . '/lib/xml2array.php');
@@ -95,6 +96,7 @@ if ( file_exists( $app . 'config.yml' ) ) {
 } else {
   $env = array('app_folder'=>'app');
 }
+$env = array('app_folder'=>$ombroot.'app');
 if (is_dir( $env['app_folder'] )) {
   $app = $env['app_folder'] . DIRECTORY_SEPARATOR;
   $appdir = $app;

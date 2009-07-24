@@ -235,7 +235,7 @@ OTHER DOCUMENTATION
    here are the steps to set up the automatic twitter feed:
      1. set up your OMB install as a Twitter OAuth app
      2. authenticate as the Twitter user whose friends you want to import automatically
-     3. set up a cron job to run "/usr/bin/php /your/omb/web/folder/cron.php" every five or ten minutes
-
+     3. set up a cron job to run db/library/remy-tweed/cron.php -- this cron job runs once a minute:
+       0-59 * * * * /usr/bin/php /home/webuser/public_html/db/library/remy-tweed/cron.php 2>&1
 
 
