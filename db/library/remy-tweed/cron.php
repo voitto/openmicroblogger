@@ -272,6 +272,7 @@ function add_tweet_user($data) {
   $sincespl = split(":",$data['id']['value']);
   $sincespl2 = split("/",$sincespl[3]);
   $nickname = strtolower($sincespl2[3]);
+  $inick = $nickname;
   $name = $data['author']['name']['value'];
   $TwitterUser =& $db->model('TwitterUser');
   $twuser = $TwitterUser->find_by( 'screen_name',$nickname );
@@ -282,16 +283,16 @@ function add_tweet_user($data) {
   $p->save();
   $i = $Identity->base();
   for ( $j=1; $j<50; $j++ ) {
-    $sql = "SELECT nickname FROM ".$prefix."identities WHERE nickname LIKE '".$nickname."' AND (post_notice = '' OR post_notice IS NULL)";
+    $sql = "SELECT nickname FROM ".$prefix."identities WHERE nickname LIKE '".$inick."' AND (post_notice = '' OR post_notice IS NULL)";
     $result = $db->get_result( $sql );
     if ($db->num_rows($result) > 0) {
-      $nickname = strtolower($sincespl2[3]).$j;
+      $inick = strtolower($sincespl2[3]).$j;
     } else {
       break;
     }
   }
   
-  $i->set_value( 'nickname', $nickname );
+  $i->set_value( 'nickname', $inick );
   $i->set_value( 'avatar', $data['link'][1]['attr']['href'] ); 
   $i->set_value( 'fullname', $name );
   $i->set_value( 'homepage', $data['author']['uri']['value'] );
@@ -305,7 +306,7 @@ function add_tweet_user($data) {
   $i->save_changes();
   
   $twuser = $TwitterUser->base();
-  $twuser->set_value('screen_name',strtolower($nickspl1[1]));
+  $twuser->set_value('screen_name',strtolower($nickname));
   $twuser->set_value('url',$data['author']['uri']['value']);
   $twuser->set_value('name',$name);
   $twuser->set_value('profile_id',$i->id);
