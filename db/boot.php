@@ -380,21 +380,17 @@ if ((file_exists($wp_theme))) {
  * OMB MU setup
  */
 
-if (strpos($request->uri, 'twitter/')) {
-  global $prefix;
-  $pattern='/(\?)?twitter\/([a-z]+)(\/?)/';
-  if ( 1 <= preg_match_all( $pattern, $request->uri, $found )) {
-    $uri = $request->uri;
-    $tags[] = $found;
-    if (!$db->table_exists('blogs')) {
-      $Blog =& $db->model('Blog');
-      $Blog->save();
-    }
-    $sql = "SELECT prefix FROM blogs WHERE nickname LIKE '".$db->escape_string($tags[0][2][0])."'";
-    $result = $db->get_result( $sql );
-    if ( $db->num_rows($result) == 1 ) {
-      $prefix = $db->result_value( $result, 0, "prefix" )."_";
-      $db->prefix = $prefix;
+if (isset($pretty_url_base) && !empty($pretty_url_base)) {
+  list($subdomain, $rest) = explode('.', $_SERVER['SERVER_NAME'], 2);
+  if (!($subdomain.".".$rest == $pretty_url_base)) {
+    $request->base = 'http://'.$subdomain.".".$rest;
+    $request->domain = $subdomain.".".$rest;
+    $pretty_url_base = $request->base;
+  } elseif (strpos($request->uri, 'twitter/')) {
+    $pattern='/(\?)?twitter\/([a-z]+)(\/?)/';
+    if ( 1 <= preg_match_all( $pattern, $request->uri, $found )) {
+      $uri = $request->uri;
+      $tags[] = $found;
       $repl = 'twitter/'.$tags[0][2][0].$tags[0][3][0];
       $request->uri = str_replace($repl,'',$uri);
       $request->prefix = $repl;
@@ -404,8 +400,21 @@ if (strpos($request->uri, 'twitter/')) {
         $trail = "/";
       $request->base = substr($uri,0,strpos($uri,$tags[0][0][0])+(strlen($repl)+1)).$trail;
     }
+    $subdomain = $tags[0][2][0];
+  }
+  if (!$db->table_exists('blogs')) {
+    $Blog =& $db->model('Blog');
+    $Blog->save();
+  }
+  $sql = "SELECT prefix FROM blogs WHERE nickname LIKE '".$db->escape_string($subdomain)."'";
+  $result = $db->get_result( $sql );
+  if ( $db->num_rows($result) == 1 ) {
+    global $prefix;
+    $prefix = $db->result_value( $result, 0, "prefix" )."_";
+    $db->prefix = $prefix;
   }
 }
+
 
 
 /**

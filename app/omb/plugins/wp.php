@@ -1228,39 +1228,20 @@ function the_post() {
   }else{
     global $db;
     $Identity =& $db->model('Identity');
-    if ($the_post && $the_post->table == 'ak_twitter') {
 
-      $TwitterUser =& $db->model('TwitterUser');
-      $the_author = $TwitterUser->find_by('twitter_id',$the_post->profile_id);
-      if ($the_author) {
-        $the_author->profile_url = $the_author->url;
-        $the_author->profile = $the_author->url;
-        $the_author->nickname = $the_author->screen_name;
-        $the_author->email_value = '';
-
-        $the_author->avatar = $the_author->profile_image_url;
-        $the_author->fullname = $the_author->name;
-        $the_author->id = $the_author->twitter_id;
-
-        $the_post->local = 0;
-        $the_post->parent_id = 0;
-        $the_post->title = $the_post->tw_text;
-      }
-    } else {
-
-      if ($the_post) {
-        $the_entry = $the_post->FirstChild( 'entries' );
-        if ($the_entry && $the_entry->person_id) {
-          $the_author = owner_of($the_post);
-        } else {
-          $the_author = $Identity->base();
-        }
+    if ($the_post) {
+      $the_entry = $the_post->FirstChild( 'entries' );
+      if ($the_entry && $the_entry->person_id) {
+        $the_author = owner_of($the_post);
       } else {
-        $Post =& $db->model('Post');
-        $the_post = $Post->base();
         $the_author = $Identity->base();
       }
+    } else {
+      $Post =& $db->model('Post');
+      $the_post = $Post->base();
+      $the_author = $Identity->base();
     }
+
   }
   
   if (!empty($the_author->profile_url)) $the_author->profile = $the_author->profile_url; 
@@ -1274,7 +1255,8 @@ function the_post() {
   $comment_author_url = $the_author->url;
   
     // show pretty URLs if not a Remote user
-  if (empty($the_author->post_notice)) $the_author->profile = $request->url_for(array('resource'=>$the_author->nickname));
+  if (empty($the_author->post_notice)) 
+    $the_author->profile = $request->url_for(array('resource'=>$the_author->nickname));
   
   return "";
 }
