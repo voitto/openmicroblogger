@@ -1396,9 +1396,8 @@ function get_avatar( $current_user_id, $pixels ) {
     $avatar = profile_get_avatar($the_author);
   } else {
     $p = get_profile();
-    $avatar = profile_get_avatar($p);
-    elseif (!isset($the_post->id) || ($the_author->id == $p->id))
-      $avatar = $p->avatar;
+    if (!isset($the_post->id) || ($the_author->id == $p->id))
+      $avatar = profile_get_avatar($p);
   }
   if (!(is_microblog_theme()))
     return '
