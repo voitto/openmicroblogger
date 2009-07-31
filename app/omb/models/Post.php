@@ -6,7 +6,10 @@ class Post extends Model {
     
     // fields
     
-    $this->char_field( 'title', TWEET_SIZE );
+    if (TWEET_SIZE)
+      $this->char_field( 'title', TWEET_SIZE );
+    else
+      $this->char_field( 'title' );
     
     $this->text_field( 'body' );
     

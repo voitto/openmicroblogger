@@ -380,33 +380,35 @@ if ((file_exists($wp_theme))) {
  * OMB MU setup
  */
 
-if (isset($pretty_url_base) && !empty($pretty_url_base)) {
-  list($subdomain, $rest) = explode('.', $_SERVER['SERVER_NAME'], 2);
-  if (!strpos($request->uri, 'twitter/') && !($subdomain.".".$rest == $pretty_url_base)) {
-    $request->base = 'http://'.$subdomain.".".$rest;
-    $request->domain = $subdomain.".".$rest;
-    $pretty_url_base = $request->base;
-  } elseif (strpos($request->uri, 'twitter/')) {
-    $pattern='/(\?)?twitter\/([a-z]+)(\/?)/';
-    if ( 1 <= preg_match_all( $pattern, $request->uri, $found )) {
-      $uri = $request->uri;
-      $tags[] = $found;
-      $repl = 'twitter/'.$tags[0][2][0].$tags[0][3][0];
-      $request->uri = str_replace($repl,'',$uri);
-      $request->prefix = $repl;
-      $request->setup();
-      $trail = '';
-      if (empty($tags[0][3][0]))
-        $trail = "/";
-      $request->base = substr($uri,0,strpos($uri,$tags[0][0][0])+(strlen($repl)+1)).$trail;
-    }
-    $subdomain = $tags[0][2][0];
+$stream = false;
+list($subdomain, $rest) = explode('.', $_SERVER['SERVER_NAME'], 2);
+if (!strpos($request->uri, 'twitter/') && !('http://'.$subdomain.".".$rest == $pretty_url_base)) {
+  $request->base = 'http://'.$subdomain.".".$rest;
+  $request->domain = $subdomain.".".$rest;
+  $pretty_url_base = $request->base;
+  $stream = $subdomain;
+} elseif (strpos($request->uri, 'twitter/')) {
+  $pattern='/(\?)?twitter\/([a-z]+)(\/?)/';
+  if ( 1 <= preg_match_all( $pattern, $request->uri, $found )) {
+    $uri = $request->uri;
+    $tags[] = $found;
+    $repl = 'twitter/'.$tags[0][2][0].$tags[0][3][0];
+    $request->uri = str_replace($repl,'',$uri);
+    $request->prefix = $repl;
+    $request->setup();
+    $trail = '';
+    if (empty($tags[0][3][0]))
+      $trail = "/";
+    $request->base = substr($uri,0,strpos($uri,$tags[0][0][0])+(strlen($repl)+1)).$trail;
   }
+  $stream = $tags[0][2][0];
+}
+if ($stream) {
   if (!$db->table_exists('blogs')) {
     $Blog =& $db->model('Blog');
     $Blog->save();
   }
-  $sql = "SELECT prefix FROM blogs WHERE nickname LIKE '".$db->escape_string($subdomain)."'";
+  $sql = "SELECT prefix FROM blogs WHERE nickname LIKE '".$db->escape_string($stream)."'";
   $result = $db->get_result( $sql );
   if ( $db->num_rows($result) == 1 ) {
     global $prefix;
