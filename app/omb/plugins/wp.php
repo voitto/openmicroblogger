@@ -1377,6 +1377,15 @@ function the_title() {
   }
 }
 
+function profile_get_avatar(&$profile,$size='normal') {
+  global $db;
+  $TwitterUser =& $db->model('TwitterUser');
+  $tu = $TwitterUser->find_by('profile_id',$profile->id);
+  if ($tu && !empty($tu->screen_name))
+    return 'http://twivatar.org/'.$tu->screen_name.'/'.$size;
+  return $profile->avatar;
+}
+
 function get_avatar( $current_user_id, $pixels ) {
   global $the_author,$request,$the_post;
   $avatar = "";
@@ -1387,12 +1396,14 @@ function get_avatar( $current_user_id, $pixels ) {
     if (!isset($the_post->id) || ($the_author->id == $p->id))
       $avatar = $p->avatar;
   }
-  if (!(environment('theme') == 'P2'))
+  if (!(is_microblog_theme()))
     return '
    
     <img alt=\'\' src=\''.$avatar.'\' 
     class=\'avatar avatar-48\' height=\'48\' width=\'48\' />
     ';
+  if (strpos($the_author->avatar, 'twitter_production') !== false)
+    $avatar = profile_get_avatar($the_author);
   if (!(empty($avatar)))
     return '<a href="'.$the_author->profile.'"><img alt="avatar" src="' . $avatar . '" style="width:'.$pixels.'px;height:'.$pixels.'px;" class="avatar" /></a>';
 }

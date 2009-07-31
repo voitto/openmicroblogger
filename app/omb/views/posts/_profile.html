@@ -9,7 +9,7 @@ $subscribers = array();
 
 <div id="profile">
 
-<h3 class="profile-h3"><img class="profile-img" src="<?php echo $profile->avatar; ?>" alt="<?php echo $profile->fullname; ?>" />
+<h3 class="profile-h3"><img class="profile-img" src="<?php echo profile_get_avatar($profile,'bigger'); ?>" alt="<?php echo $profile->fullname; ?>" />
   <?php echo $profile->nickname; ?>
 </h3>
 <br />
