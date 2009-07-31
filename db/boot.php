@@ -382,7 +382,7 @@ if ((file_exists($wp_theme))) {
 
 if (isset($pretty_url_base) && !empty($pretty_url_base)) {
   list($subdomain, $rest) = explode('.', $_SERVER['SERVER_NAME'], 2);
-  if (!($subdomain.".".$rest == $pretty_url_base)) {
+  if (!strpos($request->uri, 'twitter/') && !($subdomain.".".$rest == $pretty_url_base)) {
     $request->base = 'http://'.$subdomain.".".$rest;
     $request->domain = $subdomain.".".$rest;
     $pretty_url_base = $request->base;

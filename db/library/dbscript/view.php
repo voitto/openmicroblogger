@@ -233,8 +233,9 @@ class View {
         render_blob( $Member->$template, $ext );
       } else {
         
-        if (strpos($request->uri, 'robots') === false)
-          admin_alert($request->uri." $view $action ".$_SERVER[REMOTE_HOST]);
+        if (strpos($request->uri, 'robots') === false
+          || strpos($request->uri, 'crawl') === false)
+            admin_alert($request->uri." $view $action ".$_SERVER[REMOTE_HOST]);
         
       }
       
