@@ -83,7 +83,7 @@ require('wp-content/language/lang_chooser.php'); //Loads the language-file
 	}
   $comments .= '</span>';
   $comments .= '<br />';
-  $comments .= '<img alt=\'image\' src=\''.$profile->avatar.'\' class=\'avatar avatar-32\' height=\'32\' width=\'32\' />';
+  $comments .= '<img alt=\'image\' src=\''.profile_get_avatar($profile).'\' class=\'avatar avatar-32\' height=\'32\' width=\'32\' />';
   $comments .= '<a class="nick" href=\''.base_path(true).''.$profile->nickname.'\'>'.$profile->nickname.'</a>&nbsp;';
   $comments .= laconica_time($post->created);
   $comments .= '</span>';
@@ -1379,6 +1379,8 @@ function the_title() {
 
 function profile_get_avatar(&$profile,$size='normal') {
   global $db;
+  if (!strpos($p->avatar, 'twitter_production') !== false)
+    return $profile->avatar;
   $TwitterUser =& $db->model('TwitterUser');
   $tu = $TwitterUser->find_by('profile_id',$profile->id);
   if ($tu && !empty($tu->screen_name))
@@ -1391,12 +1393,10 @@ function get_avatar( $current_user_id, $pixels ) {
   $avatar = "";
   if (!empty($the_author->avatar)) {
     $avatar = $the_author->avatar;
-    if (strpos($the_author->avatar, 'twitter_production') !== false)
-      $avatar = profile_get_avatar($the_author);
+    $avatar = profile_get_avatar($the_author);
   } else {
     $p = get_profile();
-    if (strpos($p->avatar, 'twitter_production') !== false)
-      $avatar = profile_get_avatar($p);
+    $avatar = profile_get_avatar($p);
     elseif (!isset($the_post->id) || ($the_author->id == $p->id))
       $avatar = $p->avatar;
   }
@@ -2106,7 +2106,7 @@ function followgrid() {
 
   while ($subscriber = $Subscription->MoveNext()){
     $i = $Identity->find($subscriber->subscribed);
-    $follist[] = array('avatar'=>$i->avatar, 'profile_url'=>$i->profile_url, 'nickname'=>$i->nickname);
+    $follist[] = array('avatar'=>profile_get_avatar($i,'small'), 'profile_url'=>$i->profile_url, 'nickname'=>$i->nickname);
   }
    for ($i=0;$i<6;$i++)  {
     for ($j=0;$j<6;$j++)  {
