@@ -1379,7 +1379,7 @@ function the_title() {
 
 function profile_get_avatar(&$profile,$size='normal') {
   global $db;
-  if (!strpos($p->avatar, 'twitter_production') !== false)
+  if (!strpos($profile->avatar, 'twitter_production') !== false)
     return $profile->avatar;
   $TwitterUser =& $db->model('TwitterUser');
   $tu = $TwitterUser->find_by('profile_id',$profile->id);
