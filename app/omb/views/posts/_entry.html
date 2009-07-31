@@ -10,7 +10,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
   <div class='entry-author'><?php echo $txt['entry_entry_by']; ?><a href="<?php url_for(array('resource'=>$author->nickname)); ?>"><?php print $author->nickname."</a> ".time_of($Member->created); ?></div>
 
 <div class="entry-msg">
-  <img class="entry-avatar" src="<?php echo $author->avatar; ?>" alt="image" />
+  <img class="entry-avatar" src="<?php echo profile_get_avatar($author); ?>" alt="image" />
     <?php print render_notice( $Member->title, $Member, $profile ); ?>
 </div>
 <div class="entry-clear"></div>
