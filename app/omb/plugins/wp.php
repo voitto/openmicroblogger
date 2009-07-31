@@ -1391,9 +1391,13 @@ function get_avatar( $current_user_id, $pixels ) {
   $avatar = "";
   if (!empty($the_author->avatar)) {
     $avatar = $the_author->avatar;
+    if (strpos($the_author->avatar, 'twitter_production') !== false)
+      $avatar = profile_get_avatar($the_author);
   } else {
     $p = get_profile();
-    if (!isset($the_post->id) || ($the_author->id == $p->id))
+    if (strpos($p->avatar, 'twitter_production') !== false)
+      $avatar = profile_get_avatar($p);
+    elseif (!isset($the_post->id) || ($the_author->id == $p->id))
       $avatar = $p->avatar;
   }
   if (!(is_microblog_theme()))
@@ -1402,8 +1406,6 @@ function get_avatar( $current_user_id, $pixels ) {
     <img alt=\'\' src=\''.$avatar.'\' 
     class=\'avatar avatar-48\' height=\'48\' width=\'48\' />
     ';
-  if (strpos($the_author->avatar, 'twitter_production') !== false)
-    $avatar = profile_get_avatar($the_author);
   if (!(empty($avatar)))
     return '<a href="'.$the_author->profile.'"><img alt="avatar" src="' . $avatar . '" style="width:'.$pixels.'px;height:'.$pixels.'px;" class="avatar" /></a>';
 }

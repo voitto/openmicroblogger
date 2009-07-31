@@ -8,7 +8,7 @@ global $request;
 $i = array(
   'url'      => $Member->url,
   'name'     => $Member->nickname,
-  'photo'    => $Member->avatar
+  'photo'    => profile_get_avatar($Member,'bigger')
 );
 
 // url, name, email, org() name/title, location() street/town/zip/state/country

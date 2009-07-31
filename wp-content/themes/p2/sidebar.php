@@ -86,7 +86,7 @@
   <?php if (!in_array('settings',$request->activeroute->patterns)) { ?>
   <?php if (!isset($request->params['nickname'])) : ?>
 
-    <img width="32" height="32" class="profile" src="<?php echo $profile->avatar; ?>" alt="<?php echo $profile->fullname; ?>" /><a class="profile-nick" href="<?php echo $profile->profile_url; ?>"><?php echo $profile->nickname; ?></a>
+    <img width="32" height="32" class="profile" src="<?php echo profile_get_avatar($profile); ?>" alt="<?php echo $profile->fullname; ?>" /><a class="profile-nick" href="<?php echo $profile->profile_url; ?>"><?php echo $profile->nickname; ?></a>
     <br /><br />
   <?php endif; ?>
   
