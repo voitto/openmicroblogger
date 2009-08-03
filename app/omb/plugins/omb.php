@@ -477,7 +477,9 @@ global $db;
     }
   }
   
-  if ($id) {
+  if (substr($nick,0,1) == '_' && $id) {
+    $request->set_param('id',$id);
+  } elseif ($id) {
     if (empty($request->client_wants)) {
       if (count($request->activeroute->patterns) == 1 ) {
         $request->set_param('resource','posts');

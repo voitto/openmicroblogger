@@ -202,6 +202,8 @@ function update_my_tweets() {
         $t->save_changes();
       }
       
+      $AkTwitter->has_and_belongs_to_many('identities');
+      
       $join =& $db->get_table($Entry->join_table_for('ak_twitter', 'identities'));
       
       $j = $join->base();

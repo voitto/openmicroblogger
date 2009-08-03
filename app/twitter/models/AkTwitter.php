@@ -22,7 +22,7 @@ class AkTwitter extends Model {
     
     $this->has_one('entry');
     
-    $this->has_and_belongs_to_many('identities');
+    //$this->has_and_belongs_to_many('identities');
     
     // primary key
     $this->set_primary_key( 'id' );
