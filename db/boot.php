@@ -387,7 +387,7 @@ if (!strpos($request->uri, 'twitter/') && !('http://'.$subdomain.".".$rest == $p
   $request->domain = $subdomain.".".$rest;
   $pretty_url_base = $request->base;
   $stream = $subdomain;
-} elseif (strpos($request->uri, 'twitter/')) {
+} elseif (!strpos($request->uri, 'ak_twitter/') && strpos($request->uri, 'twitter/')) {
   $pattern='/(\?)?twitter\/([a-z]+)(\/?)/';
   if ( 1 <= preg_match_all( $pattern, $request->uri, $found )) {
     $uri = $request->uri;
