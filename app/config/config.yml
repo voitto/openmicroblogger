@@ -12,23 +12,23 @@
 # database settings
 
 development:
-  adapter: postgresql
-  database: omb 
-  username: omb 
+  adapter: mysql
+  database: test
+  username: root
   password: 
   host: localhost
 
 test:
-  adapter: postgresql
-  database: omb 
-  username: omb 
+  adapter: mysql
+  database: test
+  username: root
   password: 
   host: localhost
 
 production:
-  adapter: postgresql
-  database: omb 
-  username: omb 
+  adapter: mysql
+  database: test
+  username: root
   password: 
   host: localhost
 
