@@ -491,7 +491,7 @@ class PostgreSQL extends Database {
   function add_table( $table, $field_array ) {
     trigger_before( 'add_table', $this, $this );
     if (!(count($field_array)>0)) trigger_error( "Error creating table. No fields are defined. Use \$model->auto_field and \$model->text_field etc.", E_USER_ERROR );
-    $sql = "CREATE TABLE $this->prefix.$table (";
+    $sql = "CREATE TABLE ". $this->prefix ."$table (";
     $comma = "";
     foreach ( $field_array as $field => $data_type ) {
       $sql .= "$comma $field $data_type";
@@ -504,7 +504,7 @@ class PostgreSQL extends Database {
   }
   function add_field( $table, $field, $data_type ) {
     trigger_before( 'add_field', $this, $this );
-    $sql = "ALTER TABLE $this->prefix.$table ADD COLUMN $field $data_type";
+    $sql = "ALTER TABLE " . $this->prefix ."$table ADD COLUMN $field $data_type";
     echo $sql."<br />";
     $result = $this->get_result($sql);
   }
