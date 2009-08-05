@@ -18,16 +18,17 @@ function get( &$vars ) {
 function post( &$vars ) {
   extract( $vars );
   global $request;
-  trigger_before( 'insert_from_post', $Post, $request );
-  $table = 'posts';
+  $modelvar = classify($request->resource);
+  trigger_before( 'insert_from_post', $$modelvar, $request );
+  $table = $request->resource;
   $content_type = 'text/html';
-  $rec = $Post->base();
-  if (!($Post->can_create( $table )))
+  $rec = $$modelvar->base();
+  if (!($$modelvar->can_create( $table )))
     trigger_error( "Sorry, you do not have permission to " . $request->action . " " . $table, E_USER_ERROR );
-  $fields = $Post->fields_from_request($request);
-  $fieldlist = $fields['posts'];
+  $fields = $$modelvar->fields_from_request($request);
+  $fieldlist = $fields[$table];
   foreach ( $fieldlist as $field=>$type ) {
-    if ($Post->has_metadata && is_blob($table.'.'.$field)) {
+    if ($$modelvar->has_metadata && is_blob($table.'.'.$field)) {
       if (isset($_FILES[strtolower(classify($table))]['name'][$field]))
         $content_type = type_of( $_FILES[strtolower(classify($table))]['name'][$field] );
     }
@@ -37,9 +38,9 @@ function post( &$vars ) {
   $result = $rec->save_changes();
   if ( !$result )
     trigger_error( "The record could not be saved into the database.", E_USER_ERROR );
-  $atomentry = $Post->set_metadata($rec,$content_type,$table,'id');
-  $Post->set_categories($rec,$request,$atomentry);
-  if ((is_upload('posts','attachment'))) {
+  $atomentry = $$modelvar->set_metadata($rec,$content_type,$table,'id');
+  $$modelvar->set_categories($rec,$request,$atomentry);
+  if ((is_upload($table,'attachment'))) {
     
     $upload_types = environment('upload_types');
     
@@ -52,7 +53,7 @@ function post( &$vars ) {
       trigger_error('Sorry, this site only allows the following file types: '.implode(',',$upload_types), E_USER_ERROR);
     
     $url = $request->url_for(array(
-      'resource'=>'posts',
+      'resource'=>$table,
       'id'=>$rec->id
     ));
     $title = substr($rec->title,0,140);
@@ -79,7 +80,7 @@ function post( &$vars ) {
     
   }
   
-  trigger_after( 'insert_from_post', $Post, $rec );
+  trigger_after( 'insert_from_post', $$modelvar, $rec );
   header_status( '201 Created' );
   redirect_to( $request->base );
   
