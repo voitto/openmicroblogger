@@ -74,7 +74,6 @@ if (!mysqli_connect_errno() AND (isset($_POST['db_name'])) AND (isset($_POST['db
 	$db_user = trim($_POST['db_user']);
 	$db_pw = trim($_POST['db_pw']);
 	$db_host = trim($_POST['db_host']);
-	$tweet_size = "140";
 	$db_charset = trim($_POST['db_charset']);
 	$db_collate = trim($_POST['db_collate']);
 	$pretty_urls = trim($_POST['pretty_urls']);
@@ -83,12 +82,15 @@ if (!mysqli_connect_errno() AND (isset($_POST['db_name'])) AND (isset($_POST['db
 	$pretty_urls_sub = trim($_POST['pretty_urls_sub']);
 	if ($pretty_urls_sub == TRUE) { $pretty_urls_sub = "1";} else { $pretty_urls_sub = "0";}
 	$http_host = trim($_POST['http_host']);
+	$memcached = trim($_POST['memcached']);
+	if ($memcached == TRUE) { $memcached = "0";} else { $memcached = "1";}
 	$intranet = trim($_POST['intranet']);
 	if ($intranet == TRUE) { $intranet = "1";} else { $intranet = "0";}
 	$ping = trim($_POST['ping']);
 	if ($ping == FALSE) { $ping = "0";} else { $ping = "1";}
 	$cometpush_host = trim($_POST['cometpush_host']);
 	$cometpush_port = trim($_POST['cometpush_port']);
+	$tweet_size =  trim($_POST['tweet_size']);
 	$standard_lang = trim($_POST['standard_lang']);
 	if ($standard_lang == 'german') { $standard_lang = "ger";} else if ($standard_lang == 'english') { $standard_lang = "eng";}
 
@@ -100,17 +102,17 @@ if (!mysqli_connect_errno() AND (isset($_POST['db_name'])) AND (isset($_POST['db
 
 // database settings \n\n
 
-define(       \"DB_NAME\", \"$db_name\"      ); // name of database \n
-define(       \"DB_USER\", \"$db_user\"      ); // user name \n
-define(   \"DB_PASSWORD\", \"$db_pw\"      ); // user password \n\n\n
+define(  \"DB_NAME\", \"$db_name\"        ); // name of database \n
+define(  \"DB_USER\", \"$db_user\"        ); // user name \n
+define(  \"DB_PASSWORD\", \"$db_pw\"      ); // user password \n\n\n
 
 // options\n\n
-
-define(      \"INTRANET\", \"$intranet\"     ); // change to 1 for password login\n
-define(          \"PING\", \"$ping\"     ); // change to 0 for silent operation\n
-define( \"REALTIME_HOST\", \"$cometpush_host\"      ); // host for comet push\n
-define( \"REALTIME_PORT\", \"$cometpush_port\"      ); // port for comet push\n\n\n
-define(    \"TWEET_SIZE\", \"$tweet_size\"          ); // length of posts.title\n\n\n
+define(  \"MEMCACHED\", \"$memcached\"            ); // change to 1 to enable memcached\n
+define(  \"INTRANET\", \"$intranet\"              ); // change to 1 for password login\n
+define(  \"PING\", \"$ping\"                      ); // change to 0 for silent operation\n
+define(  \"REALTIME_HOST\", \"$cometpush_host\"   ); // host for comet push\n
+define(  \"REALTIME_PORT\", \"$cometpush_port\"   ); // port for comet push\n
+define(  \"TWEET_SIZE\", \"$tweet_size\"          ); // length of posts.title\n\n\n
 
 // more database settings\n\n
 
@@ -209,12 +211,15 @@ else if (((mysqli_connect_errno()) && (isset($_POST['db_name']))) || ((isset($_P
 	$pretty_urls_sub_tmp = trim($_POST['pretty_urls_sub']);
 	if ($pretty_urls_sub_tmp == TRUE) { $pretty_urls_sub = "1"; $pretty_urls_sub_checked = "checked";} else { $pretty_urls_sub = "0"; $pretty_urls_sub_checked = "";}
 	$http_host_tmp = trim($_POST['http_host']);
+	$memcached_tmp = trim($_POST['memcached']);
+	if ($memcached_tmp == TRUE) { $memcached = "1"; $memcached_checked = "checked";} else { $memcached = "0"; $memcached_checked = "";}
 	$intranet_tmp = trim($_POST['intranet']);
 	if ($intranet_tmp == TRUE) { $intranet = "1"; $intranet_checked = "checked";} else { $intranet = "0"; $intranet_checked = "";}
 	$ping_tmp = trim($_POST['ping']);
 	if ($ping_tmp == TRUE) { $ping = "1"; $ping_checked = "checked";} else { $ping = "0"; $ping_checked = "";}
 	$cometpush_host_tmp = trim($_POST['cometpush_host']);
 	$cometpush_port_tmp = trim($_POST['cometpush_port']);
+	$tweet_size_tmp = trim($_POST['tweet_size']);
 	$standard_lang = trim($_POST['standard_lang']);
 	if ($standard_lang == 'german') { $standard_lang = "ger"; $ger_selected = "selected";} else if ($standard_lang == 'english') { $standard_lang = "eng"; $eng_selected = "selected";}
 
@@ -248,10 +253,12 @@ echo "<br /><h2>Please enter your Database Information:</h2>
 
             <strong>Advanced Options (you don't have to edit this unless you want to change standard-settings)</strong><br />
             <ul>
+            <li>Disable memcached? <input type=\"checkbox\" name=\"memcached\" value=\"TRUE\" $memcached_checked></li>
             <li>Do you want to use openmicroblogger on intranet (password protected)? <input type=\"checkbox\" name=\"intranet\" value=\"TRUE\" $intranet_checked></li>
             <li>Ping? Uncheck for silent operation <input type=\"checkbox\" name=\"ping\" value=\"TRUE\" $ping_checked></li>
             <li>Host for comet push <input type=\"text\" size=\"20\" maxlength=\"30\" name=\"cometpush_host\" value=\"$cometpush_host_tmp\" /></li>
             <li>Port for comet push <input type=\"text\" size=\"5\" maxlength=\"5\" name=\"cometpush_port\" value=\"$cometpush_port_tmp\" /></li>
+            <li>Standard message-size <input type=\"text\" size=\"4\" maxlength=\"4\" name=\"tweet_size\" value=\"$tweet_size_tmp\"/></li>
             </ul><br />
             
             <strong>Standard language:</strong><br />
@@ -295,11 +302,19 @@ else if ((!isset($_POST['db_name'])) AND (!isset($_POST['db_user'])) AND (!isset
             </ul><br />
 
             <strong>Advanced Options (you don't have to edit this unless you want to change standard-settings)</strong><br />
-            <ul>
+            <ul>";
+            if( ini_get('safe_mode') == '1' ){
+            echo "
+            <li>Disable memcached? <input type=\"checkbox\" name=\"memcached\" value=\"TRUE\" checked><br />(Setup detected PHP safe-mode is set to 'on' on your server and disabled memcached by default)</li>"; }
+            else {
+            echo "
+            <li>Disable memcached? <input type=\"checkbox\" name=\"memcached\" value=\"TRUE\"><br />(Setup detected PHP safe-mode is set to 'off' on your server and enabled memcached by default)</li>"; }
+            echo "
             <li>Do you want to use openmicroblogger on intranet? <input type=\"checkbox\" name=\"intranet\" value=\"TRUE\"></li>
             <li>Ping? Uncheck for silent operation <input type=\"checkbox\" name=\"ping\" value=\"TRUE\" checked></li>
             <li>Host for comet push <input type=\"text\" size=\"20\" maxlength=\"30\" name=\"cometpush_host\" /></li>
             <li>Port for comet push <input type=\"text\" size=\"5\" maxlength=\"5\" name=\"cometpush_port\" /></li>
+            <li>Standard message-size <input type=\"text\" size=\"4\" maxlength=\"4\" name=\"tweet_size\" value=\"140\"/></li>
             </ul><br />
             
             <strong>Standard language:</strong><br />
