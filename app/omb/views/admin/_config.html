@@ -1,0 +1,122 @@
+
+<?php  include 'wp-content/language/lang_chooser.php'; //Loads the language-file ?>
+
+    <script type="text/javascript">
+    // <![CDATA[
+
+    $(document).ready(function() {
+
+    <?php foreach ($setenv as $n=>$v) : ?>
+<?php
+  $modevar = 'n'.$n.'mode';
+  $urlvar = 'n'.$n.'url';
+  $entryvar = 'n'.$n.'entry';
+?>
+
+<?php if (isset($$urlvar)) : ?>
+<?php setting_widget_text_helper('setenv'.$n,$$modevar,$$urlvar,$$entryvar); ?>
+<?php endif; ?>
+
+    <?php endforeach; ?>
+
+    <?php foreach ($envpost as $n=>$v) : ?>
+<?php if (!isset($setenv[$n]) && isset($txt['config_'.$n])) : ?>
+<?php
+  $urlvar = 'n'.$n.'url';
+
+?>
+
+<?php if (isset($$urlvar)) : ?>
+<?php setting_widget_text_post_helper($n,$$urlvar); ?>
+<?php endif; ?>
+<?php endif; ?>
+    <?php endforeach; ?>
+
+
+    <?php foreach ($envpost2 as $n=>$v) : ?>
+<?php if (!isset($setenv[$n]) && isset($txt['config_'.$n])) : ?>
+<?php
+  $urlvar = 'n'.$n.'url';
+
+?>
+
+<?php if (isset($$urlvar)) : ?>
+<?php setting_widget_text_post_helper($n,$$urlvar); ?>
+<?php endif; ?>
+<?php endif; ?>
+    <?php endforeach; ?>
+
+    });
+    // ]]>
+    </script>
+
+
+
+
+<h1>Configuration</h1>
+<table border="0" cellspacing="10">
+  
+  
+<?php foreach ($envpost as $n=>$v) : ?>
+<?php if (!isset($setenv[$n]) && isset($txt['config_'.$n])) : ?>
+
+
+  <tr><td>
+<p>  <?php echo $txt['config_'.$n]; ?></p>
+</td><td><p class="jeditable_<?php echo $n; ?>" id="jeditable_<?php echo $n; ?>"><?php echo $v; ?></p>
+  </td></tr>
+<?php endif; ?>
+<?php endforeach; ?>
+
+  
+<?php foreach ($setenv as $n=>$v) : ?>
+<?php
+  $modevar = 'n'.$n.'mode';
+?>
+<?php if (isset($$modevar)) : ?>
+<?php if (isset($txt['config_'.$n])) : ?>
+  <tr><td>
+<p>  <?php echo $txt['config_'.$n]; ?></p>
+</td><td><p class="jeditable_setenv<?php echo $n; ?>" id="jeditable_setenv<?php echo $n; ?>"><?php echo $$modevar->value; ?></p>
+  </td></tr>
+<?php endif; ?>
+<?php endif; ?>
+<?php endforeach; ?>
+
+
+
+
+
+
+<?php foreach ($envpost2 as $n=>$v) : ?>
+<?php if (!isset($setenv[$n]) && isset($txt['config_'.$n])) : ?>
+
+
+  <tr><td>
+<p>  <?php echo $txt['config_'.$n]; ?></p>
+</td><td><p class="jeditable_<?php echo $n; ?>" id="jeditable_<?php echo $n; ?>"><?php echo $v; ?></p>
+  </td></tr>
+<?php endif; ?>
+<?php endforeach; ?>
+
+</table>
+
+
+<?php if (count($setother)>0) : ?>
+<h1>Permissions</h1>
+<ul>
+<?php foreach ($setperm as $n=>$v) : ?>
+  <?php echo "<li>".$n." = ".$v."</li>"; ?>
+<?php endforeach; ?>
+</ul>
+<?php endif; ?>
+
+<?php if (count($setother)>0) : ?>
+<h1>Other Settings</h1>
+<ul>
+<?php foreach ($setother as $n=>$v) : ?>
+  <?php echo "<li>".$n." = ".$v."</li>"; ?>
+<?php endforeach; ?>
+</ul>
+<?php endif; ?>
+</div>
