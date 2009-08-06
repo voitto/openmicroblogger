@@ -74,11 +74,6 @@ if (!mysqli_connect_errno() AND (isset($_POST['db_name'])) AND (isset($_POST['db
 	$db_user = trim($_POST['db_user']);
 	$db_pw = trim($_POST['db_pw']);
 	$db_host = trim($_POST['db_host']);
-<<<<<<< HEAD:install.php
-	$tweet_size = "140";
-	$memcached = "0";
-=======
->>>>>>> fa13f93370fa3fb51adca0bae4b14e14cc07f5ef:install.php
 	$db_charset = trim($_POST['db_charset']);
 	$db_collate = trim($_POST['db_collate']);
 	$pretty_urls = trim($_POST['pretty_urls']);
@@ -112,20 +107,12 @@ define(  \"DB_USER\", \"$db_user\"        ); // user name \n
 define(  \"DB_PASSWORD\", \"$db_pw\"      ); // user password \n\n\n
 
 // options\n\n
-<<<<<<< HEAD:install.php
-
-define(      \"INTRANET\", \"$intranet\"     ); // change to 1 for password login\n
-define(          \"PING\", \"$ping\"     ); // change to 0 for silent operation\n
-define( \"REALTIME_HOST\", \"$cometpush_host\"      ); // host for comet push\n
-define( \"REALTIME_PORT\", \"$cometpush_port\"      ); // port for comet push\n\n\n
-=======
 define(  \"MEMCACHED\", \"$memcached\"            ); // change to 1 to enable memcached\n
 define(  \"INTRANET\", \"$intranet\"              ); // change to 1 for password login\n
 define(  \"PING\", \"$ping\"                      ); // change to 0 for silent operation\n
 define(  \"REALTIME_HOST\", \"$cometpush_host\"   ); // host for comet push\n
 define(  \"REALTIME_PORT\", \"$cometpush_port\"   ); // port for comet push\n
 define(  \"TWEET_SIZE\", \"$tweet_size\"          ); // length of posts.title\n\n\n
->>>>>>> fa13f93370fa3fb51adca0bae4b14e14cc07f5ef:install.php
 
 // more database settings\n\n
 
