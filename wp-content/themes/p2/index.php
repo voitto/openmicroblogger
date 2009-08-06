@@ -129,7 +129,7 @@ if( have_posts( ) ) {
 	echo prologue_get_avatar( $current_user_id, get_the_author_email( ), 48 );
 ?>
 		<?php the_author_posts_link( ); ?>
-			<?php global $the_post; echo laconica_time($the_post->created); ?> |
+			<?php global $the_post; echo laconica_time($the_post->created); ?><?php echo in_reply_to($the_post); ?> |
 			<?php comments_popup_link( __( '0' ), __( '1' ), __( '%' ) ); ?>
 			<?php tags_with_count( '', __( 'Tags:' ), ', ', ' ' ); ?>
 		</span>

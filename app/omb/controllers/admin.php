@@ -57,6 +57,102 @@ function _theme( &$vars ) {
   
 }
 
+function _config( &$vars ) {
+  
+  // admin/index() is executing before this code
+  // good for security, !member_of test
+  // but it's slow XXX
+  
+  extract( $vars );
+  $Setting =& $db->model('Setting');
+  
+  $Setting->find_by(array(
+    'eq'    => 'like',
+    'name'  => 'config%'
+  ));
+  
+  $setenv = array();
+  $setperm = array();
+  $setother = array();
+  
+  $returnvars = array();
+  
+  while ($s = $Setting->MoveNext()) {
+    
+    $set = split('\.',$s->name);
+    
+    if (is_array($set) && $set[0] == 'config') {
+      
+      if ($set[1] == 'env') {
+        
+        
+        $modevar = 'n'.$set[2].'mode';
+        $urlvar = 'n'.$set[2].'url';
+        $entryvar = 'n'.$set[2].'entry';
+
+          $$modevar = $s;
+        
+        if ($$modevar->id) {
+          $setenv[$set[2]] = $s->value;
+          $$urlvar = $request->url_for(array('resource'=>'settings','id'=>$$modevar->id,'action'=>'put'));
+          $$entryvar = $$modevar->FirstChild('entries');
+        
+          $returnvars[] = &$$modevar;
+          $returnvars[] = &$$urlvar;
+          $returnvars[] = &$$entryvar;
+        }
+        
+      } elseif ($set[1] == 'perms') {
+        
+        $setperm[$set[2]] = $s->value;
+        //$tab =& $db->models[$set[2]];
+        //if ($tab)
+        //  $tab->permission_mask( $set[3],$s->value,$set[4] );
+        
+      } else {
+        
+        $setother[$set[2]] = $s->value;
+        
+      }
+    }
+  }
+  global $env;
+  
+  $envpost = array();
+  foreach ($env as $k=>$v) {
+    if (!is_array($v) && !isset($setenv[$k]) && substr($k,0,5) =='site_') {
+      $envpost[$k] = $v;
+      $urlvar = 'n'.$k.'url';
+      $$urlvar = $request->url_for(array('resource'=>'settings','action'=>'post'));
+      $returnvars[] = &$$urlvar;
+    }
+  }
+
+  $envpost2 = array();
+  foreach ($env as $k=>$v) {
+    if (!is_array($v) && !isset($setenv[$k]) && substr($k,0,5) !='site_') {
+      $envpost2[$k] = $v;
+      $urlvar = 'n'.$k.'url';
+      $$urlvar = $request->url_for(array('resource'=>'settings','action'=>'post'));
+      $returnvars[] = &$$urlvar;
+    }
+  }
+
+  $returnvars[] = &$envpost;
+  $returnvars[] = &$envpost2;
+  $returnvars[] = &$setenv;
+  $returnvars[] = &$setperm;
+  $returnvars[] = &$setother;
+  $returnvars[] = &$env;
+  
+  return vars(
+    $returnvars,
+    get_defined_vars()
+  );
+    
+}
+
+
 function index( &$vars ) {
   extract( $vars );
   

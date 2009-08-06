@@ -2903,14 +2903,9 @@ function set_tz_by_offset($offset) {
 
 
 function setting_widget_text_helper($nam,$nammode,$namurl,$namentry) {
+  global $request;
     echo '
-      var submit_to = "'. url_for(array(
-        'resource'=>'settings',
-        'id'=>$nammode->id,
-        'action'=>'put'
-      )).'";
-
-      var submit_to = "'. $namurl.'";
+      var submit_to'.$nam.' = "'. $namurl.'";
 
       $(".jeditable_'.$nam.'").mouseover(function() {
           $(this).highlightFade({end:\'#def\'});
@@ -2918,8 +2913,8 @@ function setting_widget_text_helper($nam,$nammode,$namurl,$namentry) {
       $(".jeditable_'.$nam.'").mouseout(function() {
           $(this).highlightFade({end:\'#fff\', speed:200});
       });
-      $(".jeditable_'.$nam.'").editable(submit_to, {
-          indicator   : "<img src=\''. base_path().'resource/jeditable/indicator.gif\'>",
+      $(".jeditable_'.$nam.'").editable(submit_to'.$nam.', {
+          indicator   : "<img src=\''. base_path(true).'resource/jeditable/indicator.gif\'>",
           submitdata  : function() {
             return {"entry[etag]" : "'.$namentry->etag.'"};
           },
@@ -2933,20 +2928,12 @@ function setting_widget_text_helper($nam,$nammode,$namurl,$namentry) {
             return(value);
           }
       });  ';
-
-  
 };
 
-function setting_widget_helper($nam,$nammode,$namurl,$namentry,$listdata) {
-  if (!class_exists("Services_JSON")) lib_include("json"); $json = new Services_JSON(); 
-  echo '
-      var submit_to = "'. url_for(array(
-        'resource'=>'settings',
-        'id'=>$nammode->id,
-        'action'=>'put'
-      )).'";
-
-      var submit_to = "'. $namurl.'";
+function setting_widget_text_post_helper($nam,$namurl) {
+  global $request;
+    echo '
+      var submit_to'.$nam.' = "'. $namurl.'";
 
       $(".jeditable_'.$nam.'").mouseover(function() {
           $(this).highlightFade({end:\'#def\'});
@@ -2954,8 +2941,37 @@ function setting_widget_helper($nam,$nammode,$namurl,$namentry,$listdata) {
       $(".jeditable_'.$nam.'").mouseout(function() {
           $(this).highlightFade({end:\'#fff\', speed:200});
       });
-      $(".jeditable_'.$nam.'").editable(submit_to, {
-          indicator   : "<img src=\''. base_path().'resource/jeditable/indicator.gif\'>",
+      $(".jeditable_'.$nam.'").editable(submit_to'.$nam.', {
+          indicator   : "<img src=\''. base_path(true).'resource/jeditable/indicator.gif\'>",
+          submitdata  : function() {
+            return {"setting[name]" : "'.'config.env.'.$nam.'"};
+          },
+          name        : "setting[value]",
+          type        : "textarea",
+          noappend    : "true",
+          submit      : "OK",
+          tooltip     : "Click to edit...",
+          cancel      : "Cancel",
+          callback    : function(value, settings) {
+            return(value);
+          }
+      });  ';
+};
+
+function setting_widget_helper($nam,$nammode,$namurl,$namentry,$listdata) {
+  if (!class_exists("Services_JSON")) lib_include("json"); $json = new Services_JSON(); 
+  global $request;
+  echo '
+      var submit_to'.$nam.' = "'. $namurl.'";
+
+      $(".jeditable_'.$nam.'").mouseover(function() {
+          $(this).highlightFade({end:\'#def\'});
+      });
+      $(".jeditable_'.$nam.'").mouseout(function() {
+          $(this).highlightFade({end:\'#fff\', speed:200});
+      });
+      $(".jeditable_'.$nam.'").editable(submit_to'.$nam.', {
+          indicator   : "<img src=\''. base_path(true).'resource/jeditable/indicator.gif\'>",
              data     : \''
      .$json->encode( $listdata ).
      '\',
@@ -2964,7 +2980,7 @@ function setting_widget_helper($nam,$nammode,$namurl,$namentry,$listdata) {
           },
           name        : "setting[value]",
           type        : "select",
-          placeholder : "'.$nammode->value.'",
+          placeholder : "'.placeholder_value($nammode,$listdata).'",
           noappend    : "true",
           submit      : "OK",
           tooltip     : "Click to edit...",
@@ -2975,6 +2991,12 @@ function setting_widget_helper($nam,$nammode,$namurl,$namentry,$listdata) {
           }
       });  ';
   
+}
+
+function placeholder_value(&$setting,$listdata) {
+  if ($listdata[0] == 'false' && $listdata[1] == 'true')
+    return $listdata[$setting->value];
+  return $setting->value;
 }
 
 function authenticate_with_omb() {

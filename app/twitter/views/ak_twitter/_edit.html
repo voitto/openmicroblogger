@@ -12,6 +12,9 @@
 
 $(document).ready(function() {
   
+  
+  <?php if ($method == 'password') : ?>
+  
   var submit_to = "<?php echo $userurl; ?>";
   
   $(".editable_twitter_username").mouseover(function() { 
@@ -63,6 +66,36 @@ $(document).ready(function() {
         return(value);
       }
   });
+
+  $("#clicktest").click(function() { 
+    var submit_to = "<?php url_for(array('resource'=>'ak_twitter','action'=>'twitter_login_test')); ?>";
+    $("#clicktest").html("<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>");
+    $.get(submit_to, function(str) {
+    var result = (str - 0);
+    if (result > 0) {
+      $("#clicktest").html('<?php echo $txt["twitter_settings_it_works"]; ?>');
+    } else {
+      $("#clicktest").html('<?php echo $txt["twitter_settings_fail"]; ?>');
+    }
+    });
+  });
+
+<?php else : ?>
+
+  $("#clicktest").click(function() { 
+    var submit_to = "<?php url_for(array('resource'=>'ak_twitter','action'=>'twitter_oauth_login_test')); ?>";
+    $("#clicktest").html("<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>");
+    $.get(submit_to, function(str) {
+    var result = (str - 0);
+    if (result > 0) {
+      $("#clicktest").html('<?php echo $txt["twitter_settings_it_works"]; ?>');
+    } else {
+      $("#clicktest").html('<?php echo $txt["twitter_settings_fail"]; ?>');
+    }
+    });
+  });
+  
+  <?php endif; ?>
   
   var submit_to = "<?php echo $staturl; ?>";
   
@@ -93,18 +126,7 @@ $(document).ready(function() {
       }
   });
   
-  $("#clicktest").click(function() { 
-    var submit_to = "<?php url_for(array('resource'=>'ak_twitter','action'=>'twitter_login_test')); ?>";
-    $("#clicktest").html("<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>");
-    $.get(submit_to, function(str) {
-    var result = (str - 0);
-    if (result > 0) {
-      $("#clicktest").html('<?php echo $txt["twitter_settings_it_works"]; ?>');
-    } else {
-      $("#clicktest").html('<?php echo $txt["twitter_settings_fail"]; ?>');
-    }
-    });
-  });
+  
   
 });
 
@@ -120,11 +142,13 @@ $(document).ready(function() {
 <h3><?php echo $txt['twitter_settings_post_to_twitter']; ?></h3>
 <br />
 <br />
+<?php if ($method == 'password') : ?>
 <h4><?php echo $txt['twitter_settings_username']; ?>:</h4>
 <p class="editable_twitter_username" id="editable_twitter_username"><?php echo $username->value; ?></p>
 <br />
 <h4><?php echo $txt['twitter_settings_password']; ?>:</h4>
 <p class="editable_twitter_password" id="editable_twitter_password"><?php echo $pword; ?></p>
+<?php endif; ?>
 <br />
 <h4><?php echo $txt['twitter_settings_test_settings']; ?></h4>
 <p class="clicktest" id="clicktest"><?php echo $txt['twitter_settings_test_click']; ?></p>

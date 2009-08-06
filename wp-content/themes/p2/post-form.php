@@ -34,7 +34,7 @@ $first_name		= attribute_escape( $user->first_name );
 
 	</form>
 	<?php else : ?>
-		  <p>Add:&nbsp; <a href="<?php url_for(array('resource'=>'posts','action'=>'upload')); ?>">Photos</a></p>
+		  <p>Add:&nbsp; <a href="<?php url_for(array('resource'=>'posts','action'=>'upload')); ?>">File</a></p>
   <?php endif; ?>
   <?php endif; ?>
 </div> <!-- // postbox -->

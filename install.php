@@ -75,6 +75,7 @@ if (!mysqli_connect_errno() AND (isset($_POST['db_name'])) AND (isset($_POST['db
 	$db_pw = trim($_POST['db_pw']);
 	$db_host = trim($_POST['db_host']);
 	$tweet_size = "140";
+	$memcached = "0";
 	$db_charset = trim($_POST['db_charset']);
 	$db_collate = trim($_POST['db_collate']);
 	$pretty_urls = trim($_POST['pretty_urls']);
@@ -111,6 +112,7 @@ define(          \"PING\", \"$ping\"     ); // change to 0 for silent operation\
 define( \"REALTIME_HOST\", \"$cometpush_host\"      ); // host for comet push\n
 define( \"REALTIME_PORT\", \"$cometpush_port\"      ); // port for comet push\n\n\n
 define(    \"TWEET_SIZE\", \"$tweet_size\"          ); // length of posts.title\n\n\n
+define(     \"MEMCACHED\", \"$memcached\"           ); // blob cache duration\n\n\n
 
 // more database settings\n\n
 

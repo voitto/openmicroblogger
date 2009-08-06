@@ -270,13 +270,44 @@ function _oembed( &$vars ) {
 
   $version = '1.0';
   
-  $type = 'photo'; // photo video link rich
-  
   $p = $Post->find($id);
   $e = $p->FirstChild('entries');
   $title = $p->title;
   
   $o = owner_of($p);
+  
+  if (extension_for($e->content_type) == 'mp3') {
+    $type = 'rich'; // photo video link rich
+    $url = $request->url_for(array(
+      'resource'=>'posts',
+      'id'=>$id,
+      'action'=>'attachment.mp3'
+    ));
+  } elseif (extension_for($e->content_type) == 'jpg') {
+    $type = 'photo';
+    $url = $request->url_for(array(
+      'resource'=>'posts',
+      'id'=>$id,
+      'action'=>'preview'
+    ));
+  } elseif (extension_for($e->content_type) == 'mov') {
+    $type = 'video';
+    $url = $request->url_for(array(
+      'resource'=>'posts',
+      'id'=>$id,
+      'action'=>'attachment.mov'
+    ));
+  } elseif (extension_for($e->content_type) == 'avi') {
+    $type = 'video';
+    $url = $request->url_for(array(
+      'resource'=>'posts',
+      'id'=>$id,
+      'action'=>'attachment.avi'
+    ));
+  } else {
+    exit;
+  }
+  
   
   $author_name = $o->nickname;
   $author_url = $o->profile;
@@ -288,11 +319,7 @@ function _oembed( &$vars ) {
   $thumbnail_width = 0;
   $thumbnail_height = 0;
   
-  $url = $request->url_for(array(
-    'resource'=>'posts',
-    'id'=>$id,
-    'action'=>'preview'
-  ));
+
   
   return vars(
     array(

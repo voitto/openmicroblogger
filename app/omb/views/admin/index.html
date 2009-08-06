@@ -16,7 +16,7 @@
 		$("#tabs").click(function() {
 
                    var b = $("#tabs").tabs('option', 'selected');
-                   if (b == 5) location.href='<?php base_url(); ?>';
+                   if (b == 6) location.href='<?php base_url(); ?>';
 
                 });
 	});
@@ -34,13 +34,20 @@
   		<li><a href="#tabs-1">Admin</a></li>
   		<li><a href="<?php url_for(array(
   		    'resource'=>'admin',
+  		    'action'=>'config/partial'
+  		  )); ?>">Config</a></li>
+  		<li><a href="<?php url_for(array(
+  		    'resource'=>'admin',
   		    'action'=>'sources/partial'
   		  )); ?>">Sources</a></li>
+  		<?php if (environment('categories')) : ?>
   		<li><a href="<?php url_for(array(
   		    'resource'=>'categories',
   		    'action'=>'manage/partial'
   		  )); ?>">Categories</a></li>
-
+		  <?php else : ?>
+  		<li><a href="#tabs-3">&nbsp;</a></li>
+		  <?php endif; ?>
   		<li><a href="<?php url_for(array(
   		    'resource'=>'admin',
   		    'action'=>'theme/partial'
@@ -204,7 +211,12 @@ $ph = 'false';
   		<p>
   		  OpenMicroblogger Administration Tools
   		</p>
-  		<p>
+  		
+  		
+  		<ul class="admin-settings">
+  		  <li class="admin-settings"><a href="<?php url_for(array('resource'=>'migrate')); ?>">Update Database</a></li>
+  		  <li class="admin-settings"><a href="<?php url_for(array('resource'=>'groups')); ?>">Rest API Permissions</a></li>
+		  </ul>  		<p>
   		    		    <table cellpadding="10" border="0">
 <tr>
   <td>
@@ -265,10 +277,7 @@ $ph = 'false';
 
 
   		</p>
-  		<ul class="admin-settings">
-  		  <li class="admin-settings"><a href="<?php url_for(array('resource'=>'migrate')); ?>">Update Database</a></li>
-  		  <li class="admin-settings"><a href="<?php url_for(array('resource'=>'groups')); ?>">Rest API Permissions</a></li>
-		  </ul>
+
   	</div>
 
   </div>

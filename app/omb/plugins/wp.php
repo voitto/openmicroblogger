@@ -2133,7 +2133,21 @@ function followgrid() {
    
 }
 
-
+function in_reply_to(&$the_post) {
+  $text = ' ';
+  if ($the_post->parent_id > 0) {
+    global $db,$request;
+    $result = $db->get_result("select profile_id from ".$db->prefix."posts where id = ".$the_post->parent_id);
+    if ($db->num_rows($result) == 1) {
+      $id = $db->result_value($result,0,"profile_id");
+      $profile = get_profile($id);
+      $text .= '<a href="'.$request->url_for(array('resource'=>'posts','id'=>$the_post->parent_id)).'">';
+      $text .= 'in reply to '.$profile->nickname;
+      $text .= '</a>';
+    }
+  }
+  return $text;
+}
 
 
 

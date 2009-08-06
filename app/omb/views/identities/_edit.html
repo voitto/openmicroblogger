@@ -13,6 +13,34 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 
 <?php setting_widget_helper('tz',$n2mode,$n2url,$n2entry,$n2list); ?>
 
+var submit_to = "<?php echo $settingurl; ?>";
+  
+  $(".jeditable_bg").mouseover(function() { 
+      $(this).highlightFade({end:'#def'});
+  });
+  $(".jeditable_bg").mouseout(function() { 
+      $(this).highlightFade({end:'#fff', speed:200});
+  });
+  $(".jeditable_bg").editable(submit_to, { 
+      indicator   : "<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>",
+      submitdata  : function() {
+        return {
+          "entry[etag]"     : "<?php echo $sEntry->etag; ?>",
+        };
+      },
+      name        : "setting[value]",
+      type      : "textarea",
+      submit    : "<?php echo $txt['settings_ok']; ?>",
+      noappend  : true,
+      cancel    : "<?php echo $txt['settings_cancel']; ?>",
+      tooltip   : "<?php echo $txt['settings_edit']; ?>",
+      callback  : function(value, settings) {
+        return(value);
+      }
+  });
+
+<?php setting_widget_helper('tile',$setting_mode,$setting_url,$setting_entry,$setting_list); ?>
+
     });
     // ]]>
     </script>
@@ -63,11 +91,19 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
     <span class="edit-profile-b"><?php echo $txt['editprofile_licence_url']; ?></span><br />
     <input class="edit-profile-input" size="50" maxlength="255" id="identity_license" name="identity[license]" type="text" value="<?php if (!empty($Member->license)) echo $Member->license; else echo 'http://creativecommons.org/licenses/by/3.0/'; ?>" /><br /><br />
 
+    <span class="edit-profile-b"><?php echo $txt['editprofile_background_image']; ?></span><br />
+    <div class="jeditable_bg" id="jeditable_bg"><?php echo $settingvalue->value; ?></div>
+    <br />
+
+    <span class="edit-profile-b"><?php echo $txt['editprofile_background_tile']; ?></span><br />
+    <div class="jeditable_tile" id="jeditable_tile"><?php echo placeholder_value($setting_mode,$setting_list) ?></div>
+    <br />
 
     <input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="<?php echo $txt['editprofile_button_cancel']; ?>" type="button" />
     <input value="<?php echo $txt['editprofile_button_save']; ?>" type="submit" name="button_group" />
 
 </form>
+
 
 <br />
 <br />

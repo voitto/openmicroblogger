@@ -346,6 +346,14 @@ $txt['admin_mobile'] = "Mobile";
 
 
 /////////////////////////////////////
+# /app/omb/views/identities/_background.html
+/////////////////////////////////////
+$txt['settings_ok'] = "OK";
+$txt['settings_cancel'] = "Cancel";
+$txt['settings_edit'] = "Click to edit...";
+
+
+/////////////////////////////////////
 # /app/omb/views/identities/_edit.html
 /////////////////////////////////////
 $txt['editprofile_title'] = "Edit your profile";
@@ -362,6 +370,8 @@ $txt['editprofile_country'] = "Country";
 $txt['editprofile_locality'] = "Locality";
 $txt['editprofile_homepage'] = "Homepage";
 $txt['editprofile_timezone'] = "Timezone";
+$txt['editprofile_background_image'] = "Background Image URL";
+$txt['editprofile_background_tile'] = "Tile Background Image";
 
 
 /////////////////////////////////////
@@ -505,6 +515,56 @@ $txt['functions_about_a_month'] = "about a month ago";
 $txt['functions_about_months_1'] = "about ";
 $txt['functions_about_months_2'] = " months ago";
 $txt['functions_about_a_year'] = "about a year ago";
+
+
+/////////////////////////////////////
+# /app/omb/views/admin/_config.html
+/////////////////////////////////////
+$txt['config_site_title'] = 'Site Title';
+$txt['config_site_subtitle'] = 'Site Subtitle';
+$txt['config_site_description'] = 'Site Description';
+$txt['config_email_from'] = 'E-Mail From Address';
+$txt['config_email_name'] = 'E-Mail From Name';
+$txt['config_email_server'] = 'SMTP Server';
+$txt['config_email_port'] = 'SMTP Port';
+$txt['config_email_user'] = 'SMTP Username';
+$txt['config_email_pass'] = 'SMTP Password';
+$txt['config_remote_sources'] = 'App Install Sources';
+$txt['config_enable_db'] = 'Selected Database';
+$txt['config_goes'] = 'Default Resource';
+$txt['config_authentication'] = 'Authentication Mode';
+$txt['config_debug_enabled'] = 'Debug Mode';
+$txt['config_apps'] = 'Available Apps';
+$txt['config_installed'] = 'Installed By Default';
+$txt['config_boot'] = 'Startup App';
+$txt['config_plugins'] = 'Installed Plugins';
+$txt['config_profile'] = 'OpenID Profile Fields';
+$txt['config_openid_server'] = 'OpenID Server';
+$txt['config_xrds_services'] = 'XRDS Services';
+$txt['config_twitterKey'] = 'Twitter API Key';
+$txt['config_twitterSecret'] = 'Twitter Secret';
+$txt['config_facebookKey'] = 'Facebook API Key';
+$txt['config_facebookSecret'] = 'Facebook Secret';
+$txt['config_facebookAppId'] = 'Facebook App ID';
+$txt['config_facebookAppName'] = 'Facebook App Name';
+$txt['config_awsAccessKey'] = 'Amazon S3 API Key';
+$txt['config_awsSecretKey'] = 'Amazon S3 Secret';
+$txt['config_awsBucket'] = 'Amazon S3 Bucket Name';
+$txt['config_zeepKeyWord'] = 'Zeep Mobile Tweet-word';
+$txt['config_zeepAccessKey'] = 'Zeep Mobile SMS Prefix';
+$txt['config_zeepSecretKey'] = 'Zeep Mobile Secret';
+$txt['config_zeepUrl'] = 'Zeep Mobile URL';
+$txt['config_ldap_server'] = 'LDAP Server';
+$txt['config_ldap_context'] = 'LDAP Context';
+$txt['config_ldap_user_field'] = 'LDAP User Field';
+$txt['config_ping_server'] = 'Search Engine';
+$txt['config_blocks'] = 'Sidebar Blocks';
+$txt['config_collection_cache'] = 'Collection Settings';
+$txt['config_cookielife'] = 'Cookie Duration';
+$txt['config_upload_types'] = 'Allowed Upload File-Types';
+$txt['config_content_types'] = 'Supported Content-Types';
+$txt['config_load_paths'] = 'Load Paths';
+$txt['config_lang'] = 'Language';
 
 
 ?>

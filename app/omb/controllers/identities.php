@@ -347,9 +347,47 @@ function _edit( &$vars ) {
   }
   $n2url = $request->url_for(array('resource'=>'settings','id'=>$n2mode->id,'action'=>'put'));
   $n2entry = $n2mode->FirstChild('entries');
+
+  $settingvalue = $Setting->find_by(array('name'=>'background_image','profile_id'=>get_profile_id()));
   
+  if (!$settingvalue) {
+    $settingvalue = $Setting->base();
+    $settingvalue->set_value('profile_id',get_profile_id());
+    $settingvalue->set_value('person_id',get_person_id());
+    $settingvalue->set_value('name','background_image');
+    $settingvalue->save_changes();
+    $settingvalue->set_etag();
+    $settingvalue = $Setting->find($settingvalue->id);
+  }
+  
+  // get the one-to-one-related child-record from "entries"
+  $sEntry =& $settingvalue->FirstChild('entries');
+  
+  $settingurl = $request->url_for(array('resource'=>'settings','id'=>$settingvalue->id,'action'=>'put'));
+
+  $setting_name = 'background_tile';
+  $boolean_options = array(
+    '0'=>'false',
+    '1'=>'true'
+  );
+  $setting_list = $boolean_options;
+  $setting_mode = $Setting->find_by(array('name'=>$setting_name,'profile_id'=>get_profile_id()));
+  if (!$setting_mode) {
+    $setting_mode = $Setting->base();
+    $setting_mode->set_value('profile_id',get_profile_id());
+    $setting_mode->set_value('person_id',get_person_id());
+    $setting_mode->set_value('name',$setting_name);
+    $setting_mode->set_value('value','0');
+    $setting_mode->save_changes();
+    $setting_mode->set_etag();
+    $setting_mode = $Setting->find($setting_mode->id);
+  }
+  $setting_url = $request->url_for(array('resource'=>'settings','id'=>$setting_mode->id,'action'=>'put'));
+  $setting_entry = $setting_mode->FirstChild('entries');
+
+
   return vars(
-    array( &$Member, &$Entry, &$profile, &$identity_tz_options, &$n2mode,&$n2url,&$n2entry,&$n2list ),
+    array( &$Member, &$Entry, &$profile, &$identity_tz_options, &$n2mode,&$n2url,&$n2entry,&$n2list,&$setting_mode,&$setting_url,&$setting_entry,&$setting_list, &$settingurl, &$settingvalue, &$boolean_options, &$sEntry ),
     get_defined_vars()
   );
 }
@@ -525,3 +563,50 @@ function installed_apps_json( &$vars ) {
   exit;
 }
 
+function _background( &$vars ) {
+  extract( $vars );
+  
+  $settingvalue = $Setting->find_by(array('name'=>'background_image','profile_id'=>get_profile_id()));
+  
+  if (!$settingvalue) {
+    $settingvalue = $Setting->base();
+    $settingvalue->set_value('profile_id',get_profile_id());
+    $settingvalue->set_value('person_id',get_person_id());
+    $settingvalue->set_value('name','background_image');
+    $settingvalue->save_changes();
+    $settingvalue->set_etag();
+    $settingvalue = $Setting->find($settingvalue->id);
+  }
+  
+  // get the one-to-one-related child-record from "entries"
+  $Entry =& $settingvalue->FirstChild('entries');
+  
+  $settingurl = $request->url_for(array('resource'=>'settings','id'=>$settingvalue->id,'action'=>'put'));
+
+  $setting_name = 'background_tile';
+  $boolean_options = array(
+    '0'=>'false',
+    '1'=>'true'
+  );
+  $setting_list = $boolean_options;
+  $setting_mode = $Setting->find_by(array('name'=>$setting_name,'profile_id'=>get_profile_id()));
+  if (!$setting_mode) {
+    $setting_mode = $Setting->base();
+    $setting_mode->set_value('profile_id',get_profile_id());
+    $setting_mode->set_value('person_id',get_person_id());
+    $setting_mode->set_value('name',$setting_name);
+    $setting_mode->set_value('value','0');
+    $setting_mode->save_changes();
+    $setting_mode->set_etag();
+    $setting_mode = $Setting->find($setting_mode->id);
+  }
+  $setting_url = $request->url_for(array('resource'=>'settings','id'=>$setting_mode->id,'action'=>'put'));
+  $setting_entry = $setting_mode->FirstChild('entries');
+
+  
+  return vars(
+    array( &$setting_mode,&$setting_url,&$setting_entry,&$setting_list,&$Member, &$Entry, &$profile, &$settingurl, &$settingvalue, &$boolean_options ),
+    get_defined_vars()
+  );
+
+}

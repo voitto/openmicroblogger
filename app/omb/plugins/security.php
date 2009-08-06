@@ -860,6 +860,11 @@ function _oauth( &$vars ) {
           $i = $Identity->find($twuser->profile_id);
           if (!$i)
             trigger_error('sorry I was unable to find the identity', E_USER_ERROR);
+          if ($session_oauth_token != $twuser->oauth_key) {
+            $twuser->set_value('oauth_key',$session_oauth_token);
+            $twuser->set_value('oauth_secret',$session_oauth_secret);
+            $twuser->save_changes();
+          }
         }
       } else {
         // c

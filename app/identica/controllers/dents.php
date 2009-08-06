@@ -106,8 +106,14 @@ function _edit( &$vars ) {
     'enabled'=>'enabled'
   );
   
+  $RemoteServer =& $db->model('RemoteServer');
+  $RemoteServer->find();
+  $servers = array();
+  while ($r = $RemoteServer->MoveNext())
+    $servers[] = $r;
+  
   return vars(
-    array( &$akidentica_tw_text_options,&$status,&$staturl,&$pword,&$userurl,&$passurl,&$password,&$sEntry,&$username,&$uEntry,&$pEntry, &$profile ),
+    array( &$servers,&$akidentica_tw_text_options,&$status,&$staturl,&$pword,&$userurl,&$passurl,&$password,&$sEntry,&$username,&$uEntry,&$pEntry, &$profile ),
     get_defined_vars()
   );
   
