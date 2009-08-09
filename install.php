@@ -83,7 +83,7 @@ if (!mysqli_connect_errno() AND (isset($_POST['db_name'])) AND (isset($_POST['db
 	if ($pretty_urls_sub == TRUE) { $pretty_urls_sub = "1";} else { $pretty_urls_sub = "0";}
 	$http_host = trim($_POST['http_host']);
 	$memcached = trim($_POST['memcached']);
-	if ($memcached == TRUE) { $memcached = "0";} else { $memcached = "1";}
+	if ($memcached == TRUE) { $memcached = "0";} else { $memcached = "3600";}
 	$intranet = trim($_POST['intranet']);
 	if ($intranet == TRUE) { $intranet = "1";} else { $intranet = "0";}
 	$ping = trim($_POST['ping']);
@@ -107,7 +107,7 @@ define(  \"DB_USER\", \"$db_user\"        ); // user name \n
 define(  \"DB_PASSWORD\", \"$db_pw\"      ); // user password \n\n\n
 
 // options\n\n
-define(  \"MEMCACHED\", \"$memcached\"            ); // change to 1 to enable memcached\n
+define(  \"MEMCACHED\", \"$memcached\"            ); // number of seconds to cache files\n
 define(  \"INTRANET\", \"$intranet\"              ); // change to 1 for password login\n
 define(  \"PING\", \"$ping\"                      ); // change to 0 for silent operation\n
 define(  \"REALTIME_HOST\", \"$cometpush_host\"   ); // host for comet push\n
@@ -212,7 +212,7 @@ else if (((mysqli_connect_errno()) && (isset($_POST['db_name']))) || ((isset($_P
 	if ($pretty_urls_sub_tmp == TRUE) { $pretty_urls_sub = "1"; $pretty_urls_sub_checked = "checked";} else { $pretty_urls_sub = "0"; $pretty_urls_sub_checked = "";}
 	$http_host_tmp = trim($_POST['http_host']);
 	$memcached_tmp = trim($_POST['memcached']);
-	if ($memcached_tmp == TRUE) { $memcached = "1"; $memcached_checked = "checked";} else { $memcached = "0"; $memcached_checked = "";}
+	if ($memcached_tmp == TRUE) { $memcached = "3600"; $memcached_checked = "";} else { $memcached = "0"; $memcached_checked = "checked";}
 	$intranet_tmp = trim($_POST['intranet']);
 	if ($intranet_tmp == TRUE) { $intranet = "1"; $intranet_checked = "checked";} else { $intranet = "0"; $intranet_checked = "";}
 	$ping_tmp = trim($_POST['ping']);
