@@ -1,0 +1,16 @@
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule . ./index.php [L]
+</IfModule>
+
+ErrorDocument 403 /403.php
+ErrorDocument 404 /404.php
+ErrorDocument 410 /410.php
+ErrorDocument 500 /500.php
+<Files 403.shtml>
+order allow,deny
+allow from all
+</Files>
