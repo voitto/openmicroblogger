@@ -22,6 +22,11 @@ class Blog extends Model {
     $this->has_one( 'entry' );
     
     // permissions
+    $this->let_read(    'all:everyone' );
+    
+    $this->let_create(  'all:members' );
+    $this->let_write(   'all:members' );
+    $this->let_delete(  'all:members' );
     
     $this->let_access( 'all:administrators' );
     
