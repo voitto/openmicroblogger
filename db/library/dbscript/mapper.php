@@ -227,6 +227,14 @@ class Mapper {
     
     if (count($urlsplit)>1)
       $paramstr = $urlsplit[0];
+
+    if (isset($this->client_wants) && $qp > $lenbase) {
+      $ext = $this->client_wants;
+      if (!(strpos($paramstr,".".$ext) === false))
+        $paramsplit = split("\.".$ext, $paramstr);
+      if (isset($paramsplit) && count($paramsplit) == 2)
+        $paramstr = $paramsplit[0].".".$ext.str_replace('/','%2F',str_replace(':','%3A',$paramsplit[1]));
+    }
     
     if ($qp > $lenbase)
       $this->params = explode( '/', $paramstr);
