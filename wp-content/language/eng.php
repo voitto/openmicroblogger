@@ -211,6 +211,8 @@ $txt['identities_settings'] = "Edit your profile";
 $txt['blogs_edit_title'] = "Title";
 $txt['blogs_edit_cancel'] = "Cancel";
 $txt['blogs_edit_save_stream'] = "Save Stream";
+$txt['blogs_edit_shortener'] = "New URL Shortener";
+$txt['blogs_edit_save_shortener'] = "Create New URL Shortener";
 
 
 /////////////////////////////////////

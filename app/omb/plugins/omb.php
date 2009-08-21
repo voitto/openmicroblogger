@@ -504,7 +504,7 @@ global $db;
     $url = "http://twitter.com/".$nick;
     require_once(ABSPATH.WPINC.'/class-snoopy.php');
     $snoop = new Snoopy;
-    $snoop->agent = 'Twitteronia http://twitteronia.org';
+    $snoop->agent = 'OpenMicroBlogger http://openmicroblogger.org';
     $snoop->submit($url);
     if (strpos($snoop->response_code, '200')) {
       redirect_to($url);

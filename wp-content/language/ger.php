@@ -211,6 +211,8 @@ $txt['identities_settings'] = "Profil einsehen / bearbeiten";
 $txt['blogs_edit_title'] = "Titel";
 $txt['blogs_edit_cancel'] = "Abbrechen";
 $txt['blogs_edit_save_stream'] = "Stream speichern";
+$txt['blogs_edit_shortener'] = "New URL Shortener";
+$txt['blogs_edit_save_shortener'] = "Create New URL Shortener";
 
 
 /////////////////////////////////////
