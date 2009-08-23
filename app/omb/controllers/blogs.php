@@ -27,7 +27,7 @@ function post( &$vars ) {
   
   for ($i=0;$i<10;$i++) {
     $b = $Blog->find_by('prefix',$prefix);
-    if (!$b && !in_array($prefix."_db_sessions",$db->tables))
+    if (!$b && !in_array($prefix."_db_sessions",$db->tables) && strlen($prefix) > 1)
       continue;
     else
       $prefix = randomstring(2);
