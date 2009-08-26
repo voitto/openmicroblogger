@@ -367,6 +367,10 @@ function wp_set_post_fields_after( &$model, &$rec ) {
     $rec->set_value( 'uri', $request->url_for( array(
       'resource'=>'__'.$rec->id,
     )));
+    if (isset($_POST['parent_id']) && is_numeric($_POST['parent_id']) && is_ajax()) {
+      $rec->set_value( 'parent_id',$_POST['parent_id']);
+      $rec->set_value( 'local',1);
+    }
     $rec->save_changes();
   }
 }

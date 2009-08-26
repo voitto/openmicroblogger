@@ -22,11 +22,8 @@ require('wp-content/language/lang_chooser.php'); //Loads the language-file
   global $the_post,$request;
   if (!isset($the_post->id))
     return;
-    
-	echo 	$arr['before'].'<a href="'.$request->url_for(array(
-      'resource'  => 'posts',
-      'id'        => $post_id,
-    )).'" class="post-reply-link" rel="'. $post_id.'">' . $txt['wp_reply'] . '</a>';
+    $ccrurl = 'JavaScript:inline_comment('.$post_id.','.$post_id.');';
+	echo 	$arr['before'].'<a href="'.$ccrurl.'" class="post-reply-link" rel="'. $post_id.'">' . $txt['wp_reply'] . '</a>';
     
   
 }
@@ -71,12 +68,12 @@ require('wp-content/language/lang_chooser.php'); //Loads the language-file
 //  $cctime = date( "g:i A" , strtotime($post->created) );
 //  $ccdate = date( get_settings('date_format'), strtotime($post->created) );
   $ccurl = $request->url_for(array('resource'=>'posts','id'=>$post->id));
-  $ccrurl = $request->url_for(array('resource'=>'posts','id'=>$parent->id));
+  $ccrurl = 'JavaScript:inline_comment('.$post->id.','.$parent->id.');';
   $comments .= '<h4>';
   $comments .= ' <span class="meta">';
 //  $comments .= $cctime.' <em>on</em> '.$ccdate;
   $comments .= '<span class="actions">';
-  $comments .= '<a href="'.$ccurl.'">Permalink</a>  | <a rel=\'nofollow\' class=\'comment-reply-link\' href=\''.$ccrurl.'\'>' . $txt['wp_reply'] . '</a>';
+  $comments .= '<a href="'.$ccurl.'">Permalink</a>  | <a rel=\'nofollow\' class=\'comment-reply-link\' href="'.$ccrurl.'">' . $txt['wp_reply'] . '</a>';
   if ( get_profile_id() == $post->profile_id ) { 
 	  $comments .= 	' | <a href="'.get_edit_post_link( $post ).'" class="post-edit-link" rel="'. $post->id.'">'.$txt['wp_Edit'].'</a>';
 	  $comments .= 	' | <a href="'.get_edit_post_link( $post, 'remove' ).'" class="post-remove-link" rel="'. $post->id.'">'.$txt['wp_remove'].'</a>';
@@ -1384,7 +1381,7 @@ function profile_get_avatar(&$profile,$size='normal') {
   $TwitterUser =& $db->model('TwitterUser');
   $tu = $TwitterUser->find_by('profile_id',$profile->id);
   if ($tu && !empty($tu->screen_name))
-    return 'http://twivatar.org/'.$tu->screen_name.'/'.$size;
+    return 'http://dbscript.net/twivatar/index.php?size='.$size.'&user='.$tu->screen_name;
   return $profile->avatar;
 }
 

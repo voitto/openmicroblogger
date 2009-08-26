@@ -11,7 +11,7 @@ if ( post_password_required() ) { ?>
 
 if ( have_comments ) {
 	
-	echo "<div class=\"commentlist\">\n";
+	echo "<div id=\"commentcontent-".$the_post->id."\" class=\"commentlist\">\n";
 	wp_list_comments(array('callback' => 'prologue_comment'));
 	echo "</div>\n";
 	if ( get_option('page_comments') && (get_query_var('cpage') > 1 || get_query_var('cpage') < get_comment_pages_count() ) ) {

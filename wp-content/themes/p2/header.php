@@ -50,6 +50,40 @@ $(document).ready(function() {
 </script>
 <?php endif; ?>
 
+<script src="<?php base_path(); ?>resource/jeditable/jquery.jeditable.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    function inline_comment(postid,parentid) {
+      var cdiv = '#commentcontent-'+postid;
+      var submit_to = '<?php echo $request->url_for(array(
+  'resource'  =>  'posts'
+)); ?>';
+      $(cdiv).append('<p class="editable_comment" id="'+cdiv+'editable"></p>');
+      $(".editable_comment").editable(submit_to, { 
+          indicator   : "<img src=\''. base_path(true).'resource/jeditable/indicator.gif\'>",
+          submitdata  : function() {
+            return {"method":"post","parent_id":parentid};
+          },
+          name        : "post[title]",
+          type        : "textarea",
+          noappend    : "true",
+          submit      : "OK",
+          tooltip     : "Click to edit...",
+          cancel      : "Cancel",
+          callback  : function(value, settings) {
+            return(value);
+          }
+      });
+      $(".editable_comment").trigger('click');
+    }
+  </script>
+<style type="text/css">
+  .editable_comment {
+    width:380px;
+    height:40px;
+    padding-bottom:35px;
+  }
+</style>
+
 	</head>
 <body onload="JavaScript:setMaxLength();"<?php if(is_single()) echo ' class="single"'; ?>>
 

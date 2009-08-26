@@ -70,8 +70,8 @@ get_header();
     function test(data) {
       data = data.substring(0,(data.length - 10));
       eval( "data = " + data );
-      if (data['in_reply_to'] > 0) {
-        var selectr = "#prologue-"+data['in_reply_to']+" ul#comments";
+      if (data['in_reply_to']) {
+        var selectr = data['in_reply_to'];
         $(selectr).append(data['html']);
       } else {
         $("#postlist").prepend(data['html']);
