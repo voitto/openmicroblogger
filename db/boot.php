@@ -610,7 +610,6 @@ after_filter( 'send_ping', 'update_from_post' );
 
   // echo value after single-field Ajax PUT call
 after_filter( 'ajax_put_field', 'update_from_post' );
-after_filter( 'ajax_put_field', 'insert_from_post' );
 
 
 // authenticate yourself without OpenID

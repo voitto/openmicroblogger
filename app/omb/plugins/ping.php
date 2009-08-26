@@ -30,8 +30,11 @@ function send_ping( &$model, &$rec ) {
       $par = $db->get_record( 'posts',$rec->parent_id );
       $tweet = render_comment($rec,$o,$par);
       $payload['html'] = $tweet;
-      $payload['in_reply_to'] = $rec->parent_id;
-      
+      if ($par->parent_id > 0)
+        $payload['in_reply_to'] = "#commentcontent-".$rec->parent_id;
+      else
+        $payload['in_reply_to'] = "#content-".$rec->parent_id;
+            
     } else {
       
       // push a P2 tweet
