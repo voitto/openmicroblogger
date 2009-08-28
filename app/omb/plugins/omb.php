@@ -482,6 +482,7 @@ global $db;
   }
   
   if (substr($nick,0,1) == '_' && $id) {
+    $request->set_param('resource','identities');
     $request->set_param('id',$id);
   } elseif ($id) {
     if (empty($request->client_wants)) {
@@ -836,7 +837,7 @@ function oauth_authorize( &$vars ) {
   $Subscription =& $db->model('Subscription');
   
   $prof = urldecode($_GET['omb_listenee']);
-
+  
   $i = $Identity->find_by( 'profile', $prof );
   
   if (!$i) {
@@ -939,7 +940,10 @@ function oauth_authorize( &$vars ) {
         'omb_listener_avatar'   => $i->avatar
       );
       
-      $profileparams = "?";
+      if (!(strpos($_GET['oauth_callback'], '?') === false))
+        $profileparams = "?";
+      else
+        $profileparams = "&";
   
       foreach($omb_subscriber as $key=>$item)
         $profileparams .= $key."=".urlencode($item).'&';
