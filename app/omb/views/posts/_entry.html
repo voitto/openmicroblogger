@@ -5,7 +5,38 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
   $post = strtolower(classify($request->resource));
 
 ?>
-
+<?php if (REALTIME_HOST) : ?>
+  
+  <?php
+    global $db;
+    if (!empty($db->prefix))
+      $chan = $db->prefix;
+    else
+      $chan = "chan";
+  ?>
+  
+  <script type="text/javascript">
+    // <![CDATA[
+    Meteor.hostid = '<?php echo get_profile_id(); ?>';
+    Meteor.host = "<?php echo REALTIME_HOST; ?>";
+    Meteor.registerEventCallback("process", test);
+    Meteor.joinChannel("<?php echo $chan; ?>", 0);
+    Meteor.mode = 'stream';
+    Meteor.connect();
+    function test(data) {
+      data = data.substring(0,(data.length - 10));
+      eval( "data = " + data );
+      if (data['in_reply_to']) {
+        var selectr = data['in_reply_to'];
+        $(selectr).append(data['html']);
+      } else {
+        $("#postlist").prepend(data['html']);
+      }
+      $('a.oembed').oembed();
+    };
+    // ]]>
+  </script>
+<?php endif; ?>
   <?php $author = get_profile($Member->profile_id); ?>
   <div class='entry-author'><?php echo $txt['entry_entry_by']; ?><a href="<?php url_for(array('resource'=>$author->nickname)); ?>"><?php print $author->nickname."</a> ".time_of($Member->created); ?><?php echo in_reply_to($Member); ?></div>
 
@@ -89,6 +120,14 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 
 
   <br />
+  
+  
+  <div id="commentcontent-<?php echo $Member->id; ?>" class="commentlist"></div>
+
+<?php $ccrurl = 'JavaScript:inline_comment('.$Member->id.','.$Member->id.');'; ?>
+
+<a rel=\'nofollow\' class=\'comment-reply-link\' href="<?php echo $ccrurl; ?>">Comment</a>
+
   <br />
   
   <?php global $request; ?>
