@@ -39,6 +39,9 @@ function resize_uploaded_image( &$rec, &$db ) {
 
 function validate_identities_url( $value ) {
   
+  if ($value == 'http://')
+    return true;
+
   if (environment('authentication') == 'password')
     return true;
   
