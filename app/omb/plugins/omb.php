@@ -940,7 +940,7 @@ function oauth_authorize( &$vars ) {
         'omb_listener_avatar'   => $i->avatar
       );
       
-      if (!(strpos($_GET['oauth_callback'], '?') === false))
+      if ((strpos($_GET['oauth_callback'], '?') === false))
         $profileparams = "?";
       else
         $profileparams = "&";
