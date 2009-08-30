@@ -2093,7 +2093,9 @@ function followgrid() {
   require('wp-content/language/lang_chooser.php'); //Loads the language-file
   
   global $db,$request;
-
+  
+  if ($request->action != 'index') return;
+  
   $Subscription = $db->model('Subscription');
   $Identity = $db->model('Identity');
   
