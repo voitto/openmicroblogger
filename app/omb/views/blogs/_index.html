@@ -20,8 +20,9 @@
           <?php print $Member->title; ?>
         </b>
       </td>
-      <td><b><a href="<?php url_for( array( 'resource'=>'twitter/'.$Member->nickname.'/' )); ?>">
-        <?php url_for( array( 'resource'=>'twitter/'.$Member->nickname.'/' )); ?></a></b></td>
+      <!--XXX subdomain upgrade-->
+      <td><b><a href="<?php echo blog_url($Member->nickname); ?>">
+        <?php echo blog_url($Member->nickname); ?></a></b></td>
     </tr>
 
   <?php endwhile; ?>

@@ -679,7 +679,14 @@ function _oauth( &$vars ) {
           $sql = "SELECT data FROM ".$b->prefix."_db_sessions WHERE data LIKE '%".$db->escape_string($_REQUEST['oauth_token'])."%'";
           $result = $db->get_result( $sql );
           if ($db->num_rows($result) == 1) {
-            $auth_url = $request->base."?twitter/".$b->nickname."/oauth_login&oauth_token=".$_REQUEST['oauth_token'];
+            // XXX subdomain upgrade
+            //$auth_url = $request->base."?twitter/".$b->nickname."/oauth_login&oauth_token=".$_REQUEST['oauth_token'];
+            $auth_url = $request->url_for('oauth_login');
+            if (strpos($auth_url, '?') === false)
+              $auth_url .= '?';
+            else
+              $auth_url .= '&';
+            $auth_url .= "oauth_token=".$_REQUEST['oauth_token'];
             $content = '<script type="text/javascript">'."\n";
             $content .= '  // <![CDATA['."\n";
             $content .= "  location.replace('".$auth_url."');"."\n";

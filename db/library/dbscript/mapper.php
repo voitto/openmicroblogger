@@ -215,6 +215,7 @@ class Mapper {
     
     session_set_cookie_params( $expiry, $this->path );
     
+    // XXX subdomain upgrade
     if (strpos($this->base,"twitter\/"))
       $this->path = $this->path.$this->prefix;
     
@@ -286,12 +287,13 @@ class Mapper {
           // a named route was found
           if ($altparams == NULL)
             $params = $r->defaults;
+          // XXX subdomain upgrade
           return $r->build_url( $params, $this->base, $this->prefix );
         }
 //      } elseif ( is_array($params) && count( array_intersect( array_keys($vars), array_keys($params) ) ) == count( $vars ) && count($vars) == count($params) && count($r->patterns) == count($params) ) {
       } elseif ( is_array($params) && count( array_intersect( array_keys($vars), array_keys($params) ) ) == count( $vars ) && count($vars) == count($params)  ) {
         // every pattern in the route exists in the requested params
-
+        // XXX subdomain upgrade
         return $r->build_url( $params, $this->base, $this->prefix );
       } else {
         // eh
@@ -317,7 +319,7 @@ class Mapper {
         }
         
         if ( count( array_intersect( array_keys($vars), array_keys($params) ) ) == count( $vars ) && count($vars) == count($params) ) {
-
+          // XXX subdomain upgrade
           return $r->build_url( $params, $this->base, $this->prefix );
         }
       

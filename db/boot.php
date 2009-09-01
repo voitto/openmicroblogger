@@ -382,16 +382,19 @@ if ((file_exists($wp_theme))) {
 
 $stream = false;
 list($subdomain, $rest) = explode('.', $_SERVER['SERVER_NAME'], 2);
+// XXX subdomain upgrade
 if ($pretty_url_base && !strpos($request->uri, 'twitter/') && !('http://'.$subdomain.".".$rest == $pretty_url_base)) {
   $request->base = 'http://'.$subdomain.".".$rest;
   $request->domain = $subdomain.".".$rest;
   $pretty_url_base = $request->base;
   $stream = $subdomain;
+// XXX subdomain upgrade
 } elseif (!strpos($request->uri, 'ak_twitter/') && strpos($request->uri, 'twitter/')) {
   $pattern='/(\?)?twitter\/([a-z]+)(\/?)/';
   if ( 1 <= preg_match_all( $pattern, $request->uri, $found )) {
     $uri = $request->uri;
     $tags[] = $found;
+    // XXX subdomain upgrade
     $repl = 'twitter/'.$tags[0][2][0].$tags[0][3][0];
     $request->uri = str_replace($repl,'',$uri);
     $request->prefix = $repl;

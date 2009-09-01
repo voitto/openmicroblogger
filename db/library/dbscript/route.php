@@ -69,10 +69,12 @@ class Route {
       }
     }
     global $pretty_url_base,$request;
+    // XXX subdomain upgrade
     if (isset($pretty_url_base) && !empty($pretty_url_base))
       $base = $pretty_url_base."/".$request->prefix;
     if ( !( substr( $base, -1 ) == '/' ))
       $base = $base . "/";
+    // XXX subdomain upgrade
     if (!empty($prefix)) $q = "";
       else $q = "?";
     if (isset($pretty_url_base) && !empty($pretty_url_base))

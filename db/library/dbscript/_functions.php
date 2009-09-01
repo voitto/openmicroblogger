@@ -709,6 +709,7 @@ function base_url($return = false) {
   global $request;
   global $pretty_url_base;
   
+  // XXX subdomain upgrade
   if (isset($pretty_url_base) && !empty($pretty_url_base))
     $base = $pretty_url_base."/".$request->prefix;
   else
@@ -721,6 +722,23 @@ function base_url($return = false) {
     return $base;
     
   echo $base;
+  
+}
+
+// XXX subdomain upgrade
+function blog_url($nickname,$return = false) {
+  
+  global $request;
+  
+  if (pretty_urls() && environment('subdomains'))
+     return 'http://'.$nickname . '.' . $request->domain;
+  
+  $q = '?';
+  
+  if (pretty_urls())
+    $q = '';
+  
+  return base_url(true).$q.'twitter/'.$nickname;
   
 }
 
