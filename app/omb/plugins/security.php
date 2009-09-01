@@ -680,16 +680,16 @@ function _oauth( &$vars ) {
           $result = $db->get_result( $sql );
           if ($db->num_rows($result) == 1) {
             // XXX subdomain upgrade
-            //$auth_url = $request->base."?twitter/".$b->nickname."/oauth_login&oauth_token=".$_REQUEST['oauth_token'];
-            $auth_url = $request->url_for('oauth_login');
-            if (strpos($auth_url, '?') === false)
-              $auth_url .= '?';
+            $redir = blog_url($b->nickname,true);
+            if (strpos($redir, '?') === false)
+              $redir .= '?';
             else
-              $auth_url .= '&';
-            $auth_url .= "oauth_token=".$_REQUEST['oauth_token'];
+              $redir .= '&';
+            $redir .= 'oauth_login';
+            $redir .= "&oauth_token=".$_REQUEST['oauth_token'];
             $content = '<script type="text/javascript">'."\n";
             $content .= '  // <![CDATA['."\n";
-            $content .= "  location.replace('".$auth_url."');"."\n";
+            $content .= "  location.replace('".$redir."');"."\n";
             $content .= '  // ]]>'."\n";
             $content .= '</script>'."\n";
             return vars(
