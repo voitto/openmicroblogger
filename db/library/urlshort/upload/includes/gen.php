@@ -146,7 +146,7 @@ if(!$conn){
 			{
 				$pos = strlen($last_id) - $x;
 
-				if ( $last_id[$pos] != 'z' )
+				if ( $last_id[$pos] != 'Z' )
 				{
 					$next_id = $this->increment_id($last_id, $pos);
 					break; // <- kill the for loop once it finds a character
@@ -201,7 +201,7 @@ if(!$conn){
 	function increment_id($id, $pos)
 	{		
 		$char = $id[$pos];
-		
+
 		// add 1 to numeric values
 		if ( is_numeric($char) )
 		{
@@ -209,14 +209,21 @@ if(!$conn){
 			{
 				$new_char = $char + 1;
 			}
-			else // if we're at 9, it's time to move to the alphabet
+			else // if we're at z, it's time to move to upper case
 			{
 				$new_char = 'a';
 			}
 		}
 		else // move it up the alphabet
 		{
-			$new_char = chr(ord($char) + 1);
+		  if ( $char == 'z' )
+			{
+				$new_char = 'A';
+			}
+			else
+			{
+  			$new_char = chr(ord($char) + 1);
+			}
 		}
 
 		$id[$pos] = $new_char;

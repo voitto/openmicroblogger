@@ -727,19 +727,18 @@ function base_url($return = false) {
 
 // XXX subdomain upgrade
 function blog_url($nickname,$return = false) {
-  
   global $request;
-  
-  if (pretty_urls() && environment('subdomains'))
-     return 'http://'.$nickname . '.' . $request->domain;
-  
-  $q = '?';
-  
-  if (pretty_urls())
-    $q = '';
-  
-  return base_url(true).$q.'twitter/'.$nickname;
-  
+  if (pretty_urls() && environment('subdomains')) {
+    $base = 'http://'.$nickname . '.' . $request->domain;
+  } else {
+    $q = '?';
+    if (pretty_urls())
+      $q = '';
+    $base = base_url(true).$q.'twitter/'.$nickname;
+  }
+  if ( !( substr( $base, -1 ) == '/' ))
+    $base = $base . "/";
+  return $base;
 }
 
   /**

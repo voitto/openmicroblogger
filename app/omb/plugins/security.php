@@ -681,10 +681,6 @@ function _oauth( &$vars ) {
           if ($db->num_rows($result) == 1) {
             // XXX subdomain upgrade
             $redir = blog_url($b->nickname,true);
-            if (strpos($redir, '?') === false)
-              $redir .= '?';
-            else
-              $redir .= '&';
             $redir .= 'oauth_login';
             $redir .= "&oauth_token=".$_REQUEST['oauth_token'];
             $content = '<script type="text/javascript">'."\n";
@@ -1011,6 +1007,13 @@ function facebook_login( &$vars ) {
   $Identity =& $db->model('Identity');
   $Person =& $db->model('Person');
   $FacebookUser =& $db->model('FacebookUser');
+  
+  if (empty($prefix) && in_array('invites',$db->tables)) {
+    $Invite =& $db->model( 'Invite' );
+    $result = $Invite->find_by( 'nickname', (string)$user->user->name );
+    if (!$result)
+      trigger_error('Sorry, you have not been invited yet '.environment('email_from'), E_USER_ERROR);
+  }
   
   $faceuser = $FacebookUser->find_by( 'facebook_id',$_SESSION['fb_userid'] );
   
