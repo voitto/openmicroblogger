@@ -15,7 +15,6 @@ if ( isset($_PERMA[0]) )
 else
 	$id = '';
 if ( $id != '' && $id != basename($_SERVER['PHP_SELF']) ){
-  echo $id; exit;
 	$location = $url->get_url($id);
 	if ( $location != -1 )	{
 	  include 'db/library/pca/pca.class.php';
