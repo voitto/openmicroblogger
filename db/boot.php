@@ -74,6 +74,17 @@ else
    */
 
 if (MEMCACHED) {
+  $perma = parse_url( $_SERVER['REQUEST_URI'] );
+  $_PERMA = explode( "/", $perma['path'] );
+  @array_shift( $_PERMA );
+  if ( isset($_PERMA[0]) && $_PERMA[0] != basename($_SERVER['PHP_SELF']) ){
+    include 'db/library/pca/pca.class.php';
+    $cache = PCA::get_best_backend();
+    if ( $cache->exists( $_SERVER['REQUEST_URI'] )) {
+  		header( 'Location: '.$cache->get( $_SERVER['REQUEST_URI'] ), TRUE, 301 );
+  		exit;
+  	}
+  }
   include 'db/library/pca/pca.class.php';
   $cache = PCA::get_best_backend();
   $_SERVER['FULL_URL'] = 'http://';
@@ -380,6 +391,7 @@ if ((file_exists($wp_theme))) {
  * OMB MU setup
  */
 
+$params = array_merge($_GET,$_POST);
 $stream = false;
 list($subdomain, $rest) = explode('.', $_SERVER['SERVER_NAME'], 2);
 // XXX subdomain upgrade
@@ -405,6 +417,17 @@ if ($pretty_url_base && !strpos($request->uri, 'twitter/') && !('http://'.$subdo
     $request->base = substr($uri,0,strpos($uri,$tags[0][0][0])+(strlen($repl)+1)).$trail;
   }
   $stream = $tags[0][2][0];
+} elseif (isset($params['username']) && isset($params['password'])) {
+   
+  $sql = "SELECT nickname FROM shorteners WHERE nickname LIKE '".$db->escape_string($params['username'])."'";
+  $sql .= " AND password LIKE '".$db->escape_string($params['password'])."'";
+  $result = $db->get_result( $sql );
+  if ( $db->num_rows($result) == 1 ) {
+    $stream = $db->result_value( $result, 0, "nickname" );
+    $request->base = 'http://'.$stream.".".$rest;
+    $request->domain = $stream.".".$rest;
+    $pretty_url_base = $request->base;
+  }
 }
 if ($stream) {
   if (!$db->table_exists('blogs')) {
@@ -420,6 +443,46 @@ if ($stream) {
   }
 }
 
+
+add_include_path(library_path().'urlshort/upload');
+require_once 'includes/config.php'; // settings
+require_once 'includes/gen.php'; // url generation and location
+$perma = parse_url( $_SERVER['REQUEST_URI'] );
+$_PERMA = explode( "/", $perma['path'] );
+@array_shift( $_PERMA );
+$url = new shorturl();
+if ( isset($_PERMA[0]) ) // check GET first
+{
+	$id = mysql_escape_string($_PERMA[0]);
+}
+/*elseif ( REWRITE ) // check the URI if we're using mod_rewrite
+{
+	$explodo = explode('/', $_SERVER['REQUEST_URI']);
+	$id = mysql_escape_string($explodo[count($explodo)-1]);
+}*/
+else // otherwise, just make it empty
+{
+	$id = '';
+}
+// if the id isnt empty and its not this file, redirect to its url
+if ( $id != '' && $id != basename($_SERVER['PHP_SELF']) )
+{
+	$location = $url->get_url($id);
+	if ( $location != -1 )
+	{
+	  include 'db/library/pca/pca.class.php';
+    $cache = PCA::get_best_backend();
+    $timeout = 86400;
+    $cache->add($_SERVER['REQUEST_URI'], $location, $timeout);
+		header('Location: '.$location, TRUE, 301);
+		exit;
+	}
+	else // failure to find url output 404
+	{
+		//echo '<br/><div class=error-display id=error-display style=\"display:block;\" \">That URL does not exist. Try again?</div>';
+		//exit;
+	}
+}
 
 
 /**
