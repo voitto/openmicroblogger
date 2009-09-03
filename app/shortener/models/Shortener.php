@@ -351,7 +351,7 @@ exit;
 
 function do_shorten_redirect(&$model,&$model) {
   global $request;
-  if (!($request->resource == 'settings'))
+  if (!($model->table == 'settings'))
     return;
   $perma = parse_url( $_SERVER['REQUEST_URI'] );
   $_PERMA = explode( "/", $perma['path'] );
