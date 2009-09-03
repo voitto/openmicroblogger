@@ -443,47 +443,6 @@ if ($stream) {
 }
 
 
-add_include_path(library_path().'urlshort/upload');
-require_once 'includes/config.php'; // settings
-require_once 'includes/gen.php'; // url generation and location
-$perma = parse_url( $_SERVER['REQUEST_URI'] );
-$_PERMA = explode( "/", $perma['path'] );
-@array_shift( $_PERMA );
-$url = new shorturl();
-if ( isset($_PERMA[0]) ) // check GET first
-{
-	$id = mysql_escape_string($_PERMA[0]);
-}
-/*elseif ( REWRITE ) // check the URI if we're using mod_rewrite
-{
-	$explodo = explode('/', $_SERVER['REQUEST_URI']);
-	$id = mysql_escape_string($explodo[count($explodo)-1]);
-}*/
-else // otherwise, just make it empty
-{
-	$id = '';
-}
-// if the id isnt empty and its not this file, redirect to its url
-if ( $id != '' && $id != basename($_SERVER['PHP_SELF']) )
-{
-	$location = $url->get_url($id);
-	if ( $location != -1 )
-	{
-	  include 'db/library/pca/pca.class.php';
-    $cache = PCA::get_best_backend();
-    $timeout = 86400;
-    $cache->add($_SERVER['REQUEST_URI'], $location, $timeout);
-		header('Location: '.$location, TRUE, 301);
-		exit;
-	}
-	else // failure to find url output 404
-	{
-		//echo '<br/><div class=error-display id=error-display style=\"display:block;\" \">That URL does not exist. Try again?</div>';
-		//exit;
-	}
-}
-
-
 /**
  * load saved config
  */
