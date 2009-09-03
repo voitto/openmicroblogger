@@ -418,7 +418,6 @@ if ($pretty_url_base && !strpos($request->uri, 'twitter/') && !('http://'.$subdo
   }
   $stream = $tags[0][2][0];
 } elseif (isset($params['username']) && isset($params['password'])) {
-   
   $sql = "SELECT nickname FROM shorteners WHERE nickname LIKE '".$db->escape_string($params['username'])."'";
   $sql .= " AND password LIKE '".$db->escape_string($params['password'])."'";
   $result = $db->get_result( $sql );

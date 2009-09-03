@@ -26,13 +26,17 @@ function set_up_new_shortener( &$model, &$rec ) {
       $profile = get_profile();
 
       global $db;
-      $result = $db->get_result("SELECT apikey FROM installs WHERE apiname like '".$profile->nickname."'");
-      $key = $db->result_value($result,0,'apikey');
-    
+      if ($db->table_exists('installs')) {
+        $result = $db->get_result("SELECT apikey FROM installs WHERE apiname like '".$profile->nickname."'");
+        $key = $db->result_value($result,0,'apikey');
+      } else {
+        $key = false;
+      }
+      
       $Shortener =& $db->model('Shortener');
       if (!$Shortener->exists)
         $Shortener->save();
-    
+      
       $s = $Shortener->base();
       if ($key)
         $s->set_value('apikey',$key);
