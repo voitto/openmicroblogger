@@ -997,7 +997,7 @@ function add_include_path($path,$prepend = false) {
 
 function send_email( $sendto, $subject, $content, $fromemail="", $fromname="", $html=false ) {
   
-  if (!in_array($fromemail,array('','root@localhost')) && $fromname == 'Notifier')
+  if (in_array($fromemail,array('','root@localhost')) || !is_email($fromemail) || empty($fromname))
     return;
   
   require_once(library_path().'xpertmailer'.DIRECTORY_SEPARATOR.'MAIL.php'); 
