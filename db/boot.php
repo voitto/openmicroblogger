@@ -418,7 +418,7 @@ if ($pretty_url_base && !strpos($request->uri, 'twitter/') && !('http://'.$subdo
   }
   $stream = $tags[0][2][0];
 } elseif (isset($params['username']) && isset($params['password'])) {
-  $sql = "SELECT nickname FROM shorteners WHERE nickname LIKE '".$db->escape_string($params['username'])."'";
+  $sql = "SELECT nickname,profile_id FROM shorteners WHERE nickname LIKE '".$db->escape_string($params['username'])."'";
   $sql .= " AND password LIKE '".$db->escape_string($params['password'])."'";
   $result = $db->get_result( $sql );
   if ( $db->num_rows($result) == 1 ) {
@@ -426,6 +426,24 @@ if ($pretty_url_base && !strpos($request->uri, 'twitter/') && !('http://'.$subdo
     $request->base = 'http://'.$stream.".".$rest;
     $request->domain = $stream.".".$rest;
     $pretty_url_base = $request->base;
+    global $db,$request;
+    global $person_id;
+    global $api_methods,$api_method_perms;
+    if (array_key_exists($request->action,$api_method_perms)) {
+      $arr = $api_method_perms[$request->action];
+      if ($db->models[$arr['table']]->can($arr['perm']))
+        return;
+    }
+    $Identity =& $db->get_table( 'identities' );
+    $Person =& $db->get_table( 'people' );
+    $i = $Identity->find($db->result_value( $result, 0, "profile_id" ));
+    $p = $Person->find( $i->person_id );
+    if (!(isset( $p->id ) && $p->id > 0)) {
+      header('HTTP/1.1 401 Unauthorized');
+      echo 'BAD LOGIN';
+      exit;
+    }
+    $person_id = $p->id;
   }
 }
 if ($stream) {
