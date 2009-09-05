@@ -96,6 +96,9 @@ function index( &$vars ) {
 function _edit( &$vars ) {
   extract( $vars );
   
+  if (!(class_exists('Services_JSON')))
+    lib_include('json');
+  
   $TwitterUser =& $db->model('TwitterUser');
   
   $tu = $TwitterUser->find_by( array('profile_id'=>get_profile_id()),1 );
