@@ -1348,6 +1348,11 @@ function wp_plugin_include( $file, $basedir=NULL ) {
       require_once $startfile;
       return;
     }
+    $startfile = $wp_plugins.DIRECTORY_SEPARATOR.'plugin.php';
+    if (is_file($startfile)) {
+      require_once $startfile;
+      return;
+    }
   }
 
   

@@ -37,4 +37,9 @@ $first_name		= attribute_escape( $user->first_name );
 		  <p>Add:&nbsp; <a href="<?php url_for(array('resource'=>'posts','action'=>'upload')); ?>">File</a></p>
   <?php endif; ?>
   <?php endif; ?>
+		  <div id="shorturl"><p>Add:&nbsp; <a href="JavaScript:inline_shorturl();">Link</a></p></div>
 </div> <!-- // postbox -->
+
+
+
+

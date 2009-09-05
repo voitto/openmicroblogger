@@ -669,6 +669,24 @@ function is_admin() {
   return false;
 }
 
+function plugin_basename($file) {
+	$file = trim( $file, '/' );
+	return '';
+}
+
+function settings_fields() {
+  
+}
+
+function checked() {
+  return false;
+}
+
+function selected() {
+  $vars = func_get_args();
+  if (count($vars) == 2 && ($vars[0] == $vars[1])) echo "SELECTED";
+}
+
 function _wp_filter_build_unique_id($tag, $function, $priority = 10){
 	global $wp_filter;
 
@@ -752,14 +770,19 @@ function bloginfo( $attr ) {
 function get_option( $opt ) {
   global $optiondata;
   if (!isset($optiondata[$opt])){
+    
     global $db;
     $Setting =& $db->model('Setting');
     $s = $Setting->find_by(array('name'=>$opt,'profile_id'=>get_profile_id()));
-    if ($s)
+    if ($s) {
+      $un = unserialize($s->value);
+      if (is_array($un))
+        return $un;
+      echo $s->value; exit;
       return $s->value;
+    }
     return "";
   }
-    
   $data = $optiondata[$opt];
   
   if (strstr($data,"http") && "/" == substr($data,-1))
@@ -880,6 +903,9 @@ function wp_print_scripts( $scripts = false ) {
   if (is_array($scripts)) {
     //
   }
+}
+
+function wp_enqueue_style( $file1,$file2=NULL ) {
 }
 
 function wp_enqueue_script( $file1,$file2=NULL ) {

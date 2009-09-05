@@ -81,6 +81,7 @@ env:
     - translate
     - facebook
     - pages
+    - shortener
   
   installed:
     - password
@@ -90,6 +91,7 @@ env:
     - translate
     - facebook
     - pages
+    - shortener
   
   boot: omb
   

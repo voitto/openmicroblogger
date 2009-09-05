@@ -1,5 +1,36 @@
 <?php
 
+if (isset($_POST['ozh_yourls'])) {
+
+  if (!(signed_in()))
+    return;
+  
+  $setting_name = 'ozh_yourls';
+  $setting_value = serialize($_POST['ozh_yourls']);
+  global $db,$request;
+  
+  $Setting =& $db->model('Setting');
+  
+  $sett = $Setting->find_by(array('name'=>$setting_name,'profile_id'=>get_profile_id()));
+  
+  if (!$sett) {
+    $s = $Setting->base();
+    $s->set_value('profile_id',get_profile_id());
+    $s->set_value('person_id',get_person_id());
+    $s->set_value('name',$setting_name);
+    $s->set_value('value',$setting_value);
+    $s->save_changes();
+    $s->set_etag();
+  } else {
+    $sett->set_value('value',$setting_value);
+    $sett->save_changes();
+  }
+  
+  $profile = get_profile();
+  redirect_to($request->url_for(array("resource"=>$profile->nickname))."/settings");
+  
+}
+
 after_filter( 'set_up_new_shortener', 'insert_from_post' );
 
 function set_up_new_shortener( &$model, &$rec ) {
@@ -178,7 +209,25 @@ function set_up_new_shortener( &$model, &$rec ) {
 
 
 function shortener_init() {
+  include 'wp-content/language/lang_chooser.php'; //Loads the language-file  
+  wp_plugin_include( 'yourls-wordpress-to-twitter' );
+
+  global $wp_ozh_yourls;
+  $filedir = "wp-content" . DIRECTORY_SEPARATOR . "plugins" . DIRECTORY_SEPARATOR . 'yourls-wordpress-to-twitter';
+	require_once($filedir.'/inc/core.php');
+	require_once($filedir.'/inc/options.php');
+	
+  if ( !defined('WP_CONTENT_URL') )
+  	define( 'WP_CONTENT_URL', get_option('siteurl') . '/wp-content');
+  if ( !defined('WP_PLUGIN_DIR') )
+  	define( 'WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins' );
+  if ( !defined('WP_PLUGIN_URL') )
+  	define( 'WP_PLUGIN_URL', WP_CONTENT_URL . '/plugins'.'/yourls-wordpress-to-twitter' );
+  if ( !defined('PLUGINDIR') )
+  	define( 'PLUGINDIR', 'wp-content/plugins'.'/yourls-wordpress-to-twitter' );
   
+
+  app_register_init( 'shorteners', 'index.html', 'URL Shortener', 'shortener', 2 );
 }
 
 function shortener_show() {
@@ -212,3 +261,131 @@ function drop_all_blogs() {
     }
   }
 }
+
+
+function wp_ozh_yourls_omb_page() {
+	$plugin_url = WP_PLUGIN_URL.'/'.plugin_basename( dirname(dirname(__FILE__)) );
+	?>
+	<div class="wrap">
+	
+	<?php /** ?>
+	<pre><?php print_r(get_option('ozh_yourls')); ?></pre>
+	<?php /**/ ?>
+
+	<form method="post" action="<?php base_url(); ?>">
+	<?php settings_fields('wp_ozh_yourls_options'); ?>
+	<?php $ozh_yourls = get_option('ozh_yourls'); ?>
+
+	<h3>URL Shortener Settings</h3>
+
+	<table class="form-table">
+
+	<tr valign="top">
+	<th scope="row">URL Shortener Service</th>
+	<td>
+
+	<label for="y_service">You are using:</label>
+	<select name="ozh_yourls[service]" id="y_service" class="y_toggle">
+	<option value="" <?php selected( '', $ozh_yourls['service'] ); ?> >Please select..</option>
+	<option value="yourls" <?php selected( 'yourls', $ozh_yourls['service'] ); ?> >your own YOURLS install</option>
+	<option value="other" <?php selected( 'other', $ozh_yourls['service'] ); ?> >another public service such as TinyURL or tr.im</option>
+	</select>
+	
+	<?php $hidden = ( $ozh_yourls['service'] == 'yourls' ? '' : 'y_hidden' ) ; ?>
+	<div id="y_show_yourls" class="<?php echo $hidden; ?> y_service y_level2">
+		<label for="y_location">Your YOURLS installation is</label>
+		<select name="ozh_yourls[location]" id="y_location" class="y_toggle">
+		<option value="" <?php selected( '', $ozh_yourls['location'] ); ?> >Please select...</option>
+		<option value="local" <?php selected( 'local', $ozh_yourls['location'] ); ?> >local, on the same webserver</option>
+		<option value="remote" <?php selected( 'remote', $ozh_yourls['location'] ); ?> >remote, on another webserver</option>
+		</select>
+		
+		<?php $hidden = ( $ozh_yourls['location'] == 'local' ? '' : 'y_hidden' ) ; ?>
+		<div id="y_show_local" class="<?php echo $hidden; ?> y_location y_level3">
+			<label for="y_path">Path to the YOURLS config file</label> <input type="text" class="y_longfield" id="y_path" name="ozh_yourls[yourls_path]" value="<?php echo $ozh_yourls['yourls_path']; ?>"/> <span id="y_test_path"></span><br/>
+			<em>Example: <tt>/home/you/site.com/yourls/includes/config.php</tt></em>
+		</div>
+		
+		<?php $hidden = ( $ozh_yourls['location'] == 'remote' ? '' : 'y_hidden' ) ; ?>
+		<div id="y_show_remote" class="<?php echo $hidden; ?> y_location y_level3">
+			<label for="y_url">URL to the YOURLS API</label> <input type="text" id="y_url" class="y_longfield" name="ozh_yourls[yourls_url]" value="<?php echo $ozh_yourls['yourls_url']; ?>"/> <span id="y_test_url"></span><br/>
+			<em>Example: <tt>http://site.com/yourls-api.php</tt></em><br/>
+			<label for="y_yourls_login">YOURLS Login</label> <input type="text" id="y_yourls_login" name="ozh_yourls[yourls_login]" value="<?php echo $ozh_yourls['yourls_login']; ?>"/><br/>
+			<label for="y_yourls_passwd">YOURLS Password</label> <input type="password" id="y_yourls_passwd" name="ozh_yourls[yourls_password]" value="<?php echo $ozh_yourls['yourls_password']; ?>"/><br/>
+		</div>
+		
+	</div>
+	
+	<?php $hidden = ( $ozh_yourls['service'] == 'other' ? '' : 'y_hidden' ) ; ?>
+	<div id="y_show_other" class="<?php echo $hidden; ?> y_service y_level2">
+
+		<label for="y_other">Public service</label>
+		<select name="ozh_yourls[other]" id="y_other" class="y_toggle">
+		<option value="" <?php selected( '', $ozh_yourls['other'] ); ?> >Please select...</option>
+		<option value="trim" <?php selected( 'trim', $ozh_yourls['other'] ); ?> >tr.im</option>
+		<option value="rply" <?php selected( 'rply', $ozh_yourls['other'] ); ?> >rp.ly</option>
+		<!--<option value="pingfm" <?php selected( 'pingfm', $ozh_yourls['other'] ); ?> >ping.fm</option>-->
+		<option value="bitly" <?php selected( 'bitly', $ozh_yourls['other'] ); ?> >bit.ly</option>
+		<option value="tinyurl" <?php selected( 'tinyurl', $ozh_yourls['other'] ); ?> >tinyURL</option>
+		<option value="isgd" <?php selected( 'isgd', $ozh_yourls['other'] ); ?> >is.gd</option>
+		</select>
+		
+		<?php $hidden = ( $ozh_yourls['other'] == 'bitly' ? '' : 'y_hidden' ) ; ?>
+		<div id="y_show_bitly" class="<?php echo $hidden; ?> y_other y_level3">
+			<label for="y_api_bitly_login">API Login</label> <input type="text" id="y_api_bitly_login" name="ozh_yourls[bitly_login]" value="<?php echo $ozh_yourls['bitly_login']; ?>"/> (case sensitive!)<br/>
+			<label for="y_api_bitly_pass">API Key</label> <input type="text" id="y_api_bitly_pass" class="y_longfield" name="ozh_yourls[bitly_password]" value="<?php echo $ozh_yourls['bitly_password']; ?>"/><br/>
+			<em>If you have a <a href="http://bit.ly/account/">bit.ly</a> account, entering your credentials will link the short URLs to it</em>
+		</div>
+
+		<?php $hidden = ( $ozh_yourls['other'] == 'trim' ? '' : 'y_hidden' ) ; ?>
+		<div id="y_show_trim" class="<?php echo $hidden; ?> y_other y_level3">
+			<label for="y_api_trim_login">Username</label> <input type="text" id="y_api_trim_login" name="ozh_yourls[trim_login]" value="<?php echo $ozh_yourls['trim_login']; ?>"/><br/>
+			<label for="y_api_trim_pass">Password</label> <input type="password" id="y_api_trim_pass" name="ozh_yourls[trim_password]" value="<?php echo $ozh_yourls['trim_password']; ?>"/><br/>
+			<em>If you have a <a href="http://tr.im/">tr.im</a> account, entering your credentials will link the short URLs to it</em>
+		</div>
+
+		<?php $hidden = ( $ozh_yourls['other'] == 'rply' ? '' : 'y_hidden' ) ; ?>
+		<div id="y_show_rply" class="<?php echo $hidden; ?> y_other y_level3">
+			<label for="y_api_rply_login">Username</label> <input type="text" id="y_api_rply_login" name="ozh_yourls[rply_login]" value="<?php echo $ozh_yourls['rply_login']; ?>"/><br/>
+			<label for="y_api_rply_pass">Password</label> <input type="password" id="y_api_rply_pass" name="ozh_yourls[rply_password]" value="<?php echo $ozh_yourls['rply_password']; ?>"/><br/>
+			<em>If you have a <a href="http://rp.ly/">rp.ly</a> account, entering your credentials will link the short URLs to it</em>
+		</div>
+		
+		<?php $hidden = ( $ozh_yourls['other'] == 'pingfm' ? '' : 'y_hidden' ) ; ?>
+		<div id="y_show_pingfm" class="<?php echo $hidden; ?> y_other y_level3">
+			<label for="y_api_pingfm_user_app_key">Web Key</label> <input type="text" id="y_api_pingfm_user_app_key" name="ozh_yourls[pingfm_user_app_key]" value="<?php echo $ozh_yourls['pingfm_user_app_key']; ?>"/><br/>
+			<em>If you have a <a href="http://ping.fm/">ping.fm</a> account, enter your private <a href="http://ping.fm/key/">Web Key</a></em>
+		</div>
+		
+		<?php $hidden = ( $ozh_yourls['other'] == 'tinyurl' ? '' : 'y_hidden' ) ; ?>
+		<div id="y_show_tinyurl" class="<?php echo $hidden; ?> y_other y_level3">
+			<em>(this service needs no authentication)</em>
+		</div>
+		
+
+		<?php $hidden = ( $ozh_yourls['other'] == 'isgd' ? '' : 'y_hidden' ) ; ?>
+		<div id="y_show_isgd" class="<?php echo $hidden; ?> y_other y_level3">
+			<em>(this service needs no authentication)</em>
+		</div>
+		
+	</div>
+
+	</td>
+	</tr>
+	</table>
+
+	
+
+
+	<p class="submit">
+	<input type="submit" class="button-primary omb_submit" value="<?php _e('Save Changes') ?>" />
+	</p>
+
+	</form>
+
+	</div> <!-- wrap -->
+
+	
+	<?php	
+}
+

@@ -75,8 +75,34 @@ $(document).ready(function() {
       });
       $(".editable_comment").trigger('click');
     }
+    function inline_shorturl() {
+      var submit_to = "http://megapump.com";
+      $("#shorturl").html('<p class="editable_comment" id="shorten"></p>');
+      $("#shorten").editable(submit_to, { 
+          indicator   : "<img src=\''. base_path(true).'resource/jeditable/indicator.gif\'>",
+          submitdata  : function() {
+            return {"method":"post"};
+          },
+          name        : "url",
+          type        : "textarea",
+          noappend    : "true",
+          submit      : "OK",
+          tooltip     : "",
+          cancel      : "Cancel",
+          callback  : function(value, settings) {
+            $("#shorturl").html('<p>Add:&nbsp; <a href="JavaScript:inline_shorturl();">Link</a></p>');
+            return(value);
+          }
+      });
+      $("#shorten").trigger('click');
+    }
   </script>
 <style type="text/css">
+  #shorten {
+    width:380px;
+    height:20px;
+    padding-bottom:35px;
+  }
   .editable_comment {
     width:380px;
     height:40px;
