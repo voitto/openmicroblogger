@@ -141,6 +141,7 @@ function wp_ozh_yourls_do_page() {
 		<div id="y_show_rply" class="<?php echo $hidden; ?> y_other y_level3">
 			<label for="y_api_rply_login">Username</label> <input type="text" id="y_api_rply_login" name="ozh_yourls[rply_login]" value="<?php echo $ozh_yourls['rply_login']; ?>"/><br/>
 			<label for="y_api_rply_pass">Password</label> <input type="password" id="y_api_rply_pass" name="ozh_yourls[rply_password]" value="<?php echo $ozh_yourls['rply_password']; ?>"/><br/>
+			<label for="y_api_twitter_api">Twitter API</label> <input style="width:300px;" type="text" id="y_api_twitter_api" name="ozh_yourls[twitter_api]" value="<?php if (empty($ozh_yourls['twitter_api'])) echo 'http://rp.ly/api/statuses/update.json'; else echo $ozh_yourls['twitter_api']; ?>"/><br/>
 			<em>If you have a <a href="http://rp.ly/">rp.ly</a> account, entering your credentials will link the short URLs to it</em>
 		</div>
 		
@@ -166,6 +167,8 @@ function wp_ozh_yourls_do_page() {
 	</td>
 	</tr>
 	</table>
+  
+	<div id="twitter_settings">
 
 	<h3>Twitter Settings</h3> 
 
@@ -182,7 +185,7 @@ function wp_ozh_yourls_do_page() {
 	</tr>
 	
 	</table>
-	
+  </div>
 	<h3>When to generate a short URL and tweet it</h3> 
 
 	<table class="form-table">

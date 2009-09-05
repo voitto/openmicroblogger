@@ -12,6 +12,11 @@ jQuery(document).ready(function($){
 					$('.'+source).fadeOut(100).find(':checkbox').attr('checked',false);
 				}
 			} else {
+			  if ($(this).val() == 'rply') {
+			    $('#twitter_settings').hide();
+		    } else {
+			    $('#twitter_settings').fadeIn(300);
+	      }
 				var target = $(this).val();
 				$('.'+source).hide();
 				$('#y_show_'+target).fadeIn(300);
