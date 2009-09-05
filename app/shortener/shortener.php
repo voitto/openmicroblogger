@@ -31,6 +31,23 @@ if (isset($_POST['ozh_yourls'])) {
   
 }
 
+if (isset($_POST['ajax_shorten'])) {
+  if (!(signed_in()))
+    return;
+  $url = $_POST['ajax_shorten'];
+  shortener_init();
+  lib_include( 'json' );
+	global $wp_ozh_yourls;
+	if (!$wp_ozh_yourls)
+		wp_ozh_yourls_admin_init();
+	$shorturl = wp_ozh_yourls_api_call( wp_ozh_yourls_service(), $_POST['ajax_shorten']);
+	if ($shorturl)
+	  echo $shorturl;
+	else
+	  echo $shorturl;
+	exit;
+}
+
 after_filter( 'set_up_new_shortener', 'insert_from_post' );
 
 function set_up_new_shortener( &$model, &$rec ) {

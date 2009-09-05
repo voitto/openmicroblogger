@@ -529,6 +529,48 @@ class usermeta {
   
 }
 
+class WP_Http {
+  
+  var $snoop;
+  
+  function WP_Http() {
+  }
+  
+  function request( $url , $parts ) {
+    global $wp_error;
+    $wp_error = false;
+    $method = $parts['method'];
+    $body = $parts['body'];
+    $headers = $parts['headers'];
+    $curl = curl_init($url);
+    $method = $method;
+    $params = array();
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($curl, CURLOPT_HEADER, false);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($curl, CURLOPT_HTTPGET, ($method == "GET"));
+    curl_setopt($curl, CURLOPT_POST, ($method == "POST"));
+    if ($method == "POST") curl_setopt($curl, CURLOPT_POSTFIELDS, $body);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($curl);
+    if ( curl_errno($curl) == 0 ) {
+      if (strstr( $response, "http" )) {
+        return array('body'=>$response);
+      }
+    }
+    $wp_error = true;
+    return false;
+  }
+  
+}
+
+function is_wp_error() {
+  global $wp_error;
+  if ($wp_error)
+    return true;
+  return false;
+}
+
 class WP_User {
 
   var $ID = 0;

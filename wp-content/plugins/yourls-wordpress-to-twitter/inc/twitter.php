@@ -3,7 +3,7 @@
 // Send a message to Twitter. Returns boolean for success or failure.
 function wp_ozh_yourls_tweet_it($username, $password, $message){
 
-    $api_url = 'http://bh.rp.ly/api/statuses/update.json';
+  $api_url = 'http://rp.ly/api/statuses/update.json';
 	
 	$body =    array( 'status'=>$message );
 	$headers = array( 'Authorization' => 'Basic '.base64_encode("$username:$password") );
