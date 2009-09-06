@@ -40,6 +40,7 @@ if (isset($_POST['ajax_shorten'])) {
 	global $wp_ozh_yourls;
 	if (!$wp_ozh_yourls)
 		wp_ozh_yourls_admin_init();
+	$service = wp_ozh_yourls_service();
 	if (empty($service)) {
     add_option('ozh_yourls',array(
       'service'=>'other',
