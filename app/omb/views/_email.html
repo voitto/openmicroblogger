@@ -38,58 +38,34 @@
 <?php else : ?>
 
 
-<?php if (environment('friendfeedKey')) : ?>
-
-<form action="<?php url_for('friendfeedlogin'); ?>" method="post">
-  <table style="border-collapse: collapse; border-spacing: 0; padding: 0; margin: 0; font-family: Arial, sans-serif; border: 4px solid #6797d3; color: #222222">
-    <tr>
-      <td style="background-color: #ecf2fa; padding: 3px; padding-left: 5px; padding-top: 5px; border: 0; border-bottom: 1px solid #6797d3"><a href="http://friendfeed.com/" target="_blank"><img src="http://friendfeed.com/static/images/logo-api.png" width="160" height="34" alt="FriendFeed" style="padding:0; border:0; margin:0"/></a></td>
-      <td style="background-color: #ecf2fa; padding: 3px; padding-right: 20px; border: 0; border-bottom: 1px solid #6797d3; text-align: right; vertical-align: middle; font-size: 16pt; font-weight: bold; color: gray">remote login</td>
-    </tr>
-    <tr>
-      <td style="background-color: white; padding: 15px; border: 0" colspan="2">
-        <table style="border-collapse: collapse; border-spacing: 0; border: 0; padding: 0; margin: 0">
-          <tr>
-            <td style="border: 0; padding: 5px; font-size: 10pt">FriendFeed nickname or email:</td>
-	    <td style="border: 0; padding: 5px; font-size: 10pt"><input type="text" name="friendfeed_nickname" style="width: 10em"/></td>
-	  </tr>
-	  <tr>
-	    <td style="border: 0; padding: 5px; font-size: 10pt">Remote key [ <a href="http://friendfeed.com/remotekey" style="color: #1030cc" target="_blank">find your key</a> ]:</td>
-	    <td style="border: 0; padding: 5px; font-size: 10pt"><input type="password" name="friendfeed_remote_key" style="width: 10em"/></td>
-	  </tr>
-	  <tr>
-	    <td style="border: 0; padding: 0; padding-right: 5px; padding-top: 8px; text-align: right" colspan="2"><input type="submit" value="Authorize" style="font-weight: bold; color: #222222; font-family: Arial, sans-serif; font-size: 10pt"/></td>
-	  </tr>
-	</table>
-      </td>
-    </tr>
-  </table>
-</form>
-
+<?php if (environment('facebookKey')) : ?>
+  <script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>
 <?php endif; ?>
 
 <form name="loginform" method="post" action="<?php print $submit_url; ?>">
 
 
-
-<?php global $prefix; if (empty($prefix) && environment('facebookKey')) : ?>
+<table border="0" cellspacing="20">
+  <tr>
+    
+<?php if (environment('facebookKey')) : ?>
   
-<br />
-  <script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>
-  
-<fb:login-button onlogin="facebook_onlogin();"></fb:login-button>
 
-  <script type="text/javascript">
-    FB.init('<?php echo environment('facebookKey') ?>', "resource/xd_receiver.htm");
-  </script>
+  
+<td><fb:login-button size="medium" onlogin="facebook_onlogin();"></fb:login-button></td>
+
+
   
 <?php endif; ?>
 
 
 <?php $key = environment('twitterKey'); if (!empty($key)) : ?>
-    <br /><p><a href="<?php url_for('oauth_login'); ?>"><img src='<?php base_path(); ?>resource/Sign-in-with-Twitter-lighter.png'></a></p><br />
+    <td><a href="<?php url_for('oauth_login'); ?>"><img src='<?php base_path(); ?>resource/twitter-signin-short.png'></a></td>
     <?php endif; ?>
-    <p><a href="<?php url_for('openid_login'); ?>">Sign in with your OpenID...</a></p><br />
+   <td><a href="<?php url_for('openid_login'); ?>"><img src='<?php base_path(); ?>resource/openid-login-button.png'></a></td>
+  </tr></table>
+  
+<?php if (environment('showemail')) : ?>
   <p>Sign in with your E-Mail Address:</p>
   <p>E-Mail Address:&nbsp;<input name="email" value="<?php if ($email) print $email; elseif (isset($_SESSION['openid_email'])) print $_SESSION['openid_email']; else print ""; ?>" size="40" />  </p>
   <input name="return_url" value="<?php print $return_url; ?>" type="hidden" />
@@ -98,11 +74,18 @@
   <input name="method" value="email_submit" type="hidden" />
 
   <input type="submit" value="Sign In" />
-
+<?php endif; ?>
 </form>
 
 <script language="JavaScript" type="text/javascript">
   document.forms.loginform.email.focus();
 </script>
+
+<?php if (environment('facebookKey')) : ?>
+  <script type="text/javascript">
+    FB.init('<?php echo environment('facebookKey') ?>', "resource/xd_receiver.htm");
+  </script>
+<?php endif; ?>
+
 
 <?php endif; ?>
