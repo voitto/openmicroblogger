@@ -86,7 +86,6 @@ function _index( &$vars ) {
   $translation_files = array();
   
   $loadpath = 'wp-content/language/';
-  
   if (!empty($loadpath) && $handle = opendir($loadpath)) {
     while (false !== ($file = readdir($handle))) {
       if ($file != '.' && $file != '..' && substr($file,-3) == 'php' && $file != 'lang_chooser.php') {
@@ -104,8 +103,29 @@ function _index( &$vars ) {
           'code' => $code,
           'data' => ''
         );
-  }}}
-  
+      }
+    }
+  }
+
+  $loadpath = 'wp-content/language/import/';
+  if (!empty($loadpath) && $handle = opendir($loadpath)) {
+    while (false !== ($file = readdir($handle))) {
+      if ($file != '.' && $file != '..' && substr($file,-3) == 'txt') {
+        $txt = array();
+        $data = split("\n", file_get_contents($loadpath.$file));
+        $code = substr($file,0,-4);
+        $lang = "";
+        if (isset($data[0]))
+          $lang = $data[0];
+        $translation_files[] = array(
+            'id' => 0,
+          'name' => $lang,
+          'code' => $code,
+          'data' => ''
+        );
+      }
+    }
+  }
   
   //$tran['id/name/code/data']
   $fieldcount = count($txt);
