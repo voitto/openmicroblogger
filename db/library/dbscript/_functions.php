@@ -3058,4 +3058,9 @@ function authenticate_with_oauth() {
   //
 }
 
-
+function mu_url() {
+  global $request;
+  if (!strpos($request->uri, 'ak_twitter/') && strpos($request->uri, 'twitter/'))
+    return true;
+  return false;
+}

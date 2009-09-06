@@ -395,13 +395,13 @@ $params = array_merge($_GET,$_POST);
 $stream = false;
 list($subdomain, $rest) = explode('.', $_SERVER['SERVER_NAME'], 2);
 // XXX subdomain upgrade
-if ($pretty_url_base && !strpos($request->uri, 'twitter/') && !('http://'.$subdomain.".".$rest == $pretty_url_base)) {
+if ($pretty_url_base && !mu_url() && !('http://'.$subdomain.".".$rest == $pretty_url_base)) {
   $request->base = 'http://'.$subdomain.".".$rest;
   $request->domain = $subdomain.".".$rest;
   $pretty_url_base = $request->base;
   $stream = $subdomain;
 // XXX subdomain upgrade
-} elseif (!strpos($request->uri, 'ak_twitter/') && strpos($request->uri, 'twitter/')) {
+} elseif (mu_url()) {
   $pattern='/(\?)?twitter\/([a-z]+)(\/?)/';
   if ( 1 <= preg_match_all( $pattern, $request->uri, $found )) {
     $uri = $request->uri;
