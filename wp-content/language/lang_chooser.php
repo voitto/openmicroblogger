@@ -18,7 +18,7 @@ if ( file_exists( $language_file )) {
   $Translation =& $db->model('Translation');
   $lang = $Translation->find_by('code',$language_selected);
   if ($lang)
-    $txt = unserialize($lang->data);
+    $txt = mb_unserialize($lang->data);
   
 }
 

@@ -113,7 +113,7 @@ function _index( &$vars ) {
   $status = array();
   
   while ($lang = $collection->MoveNext()) {
-    $txt = unserialize($lang->data);
+    $txt = mb_unserialize($lang->data);
     $thiscount = 0;
     foreach($txt as $phrase=>$trans) {
       if (!empty($trans)) {

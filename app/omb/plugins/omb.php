@@ -475,7 +475,7 @@ global $db;
     $Revision->set_param( 'find_by', $where );
     $Revision->find();
     while ($r = $Revision->MoveNext()) {
-      $i = unserialize($r->data);
+      $i = mb_unserialize($r->data);
       if (is_object($i) && $nick == $i->nickname)
         $id = $i->id;
     }

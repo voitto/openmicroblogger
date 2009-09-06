@@ -178,7 +178,7 @@ $follow = array();
 foreach ($env as $key=>$val) {
   if (substr($key,0,13) == 'importtwitter' && $val == 1) {
     $optname = 'conf_for_'.$key;
-    $options = unserialize(get_option($optname));
+    $options = get_option($optname);
     if (!$options) {
       $options = array();
       $options['busy'] = 0;

@@ -513,7 +513,7 @@ function app_installer_json( &$vars ) {
     $result = false;
     $result = curl_exec( $curl );
     if ($result) {
-      $data = unserialize($result);
+      $data = mb_unserialize($result);
       foreach($data as $appname=>$appdata) {
         $remote_list[$appname] = $appname;
       }

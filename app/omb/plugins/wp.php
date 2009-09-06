@@ -817,7 +817,7 @@ function get_option( $opt ) {
     $Setting =& $db->model('Setting');
     $s = $Setting->find_by(array('name'=>$opt,'profile_id'=>get_profile_id()));
     if ($s) {
-      $un = @unserialize(base64_decode($s->value));
+      $un = mb_unserialize(base64_decode($s->value));
       if (is_array($un))
         return $un;
       return $s->value;

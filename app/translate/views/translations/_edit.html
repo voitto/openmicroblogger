@@ -30,7 +30,7 @@
   <p><b>spacebefore]</b> and <b>[spaceafter</b> indicate the presence of a space character before or after the string</p>
 </td>
 </tr>
-		  <?php if (!empty($Member->data)) { $arrdata = unserialize($Member->data); } ?>
+		  <?php if (!empty($Member->data)) { $arrdata = mb_unserialize($Member->data); } ?>
 		<?php foreach ($template_fields as $field) : ?>
 		  <tr>
 		    <td><input name="trans_<?php echo $field; ?>" value="<?php if (isset($arrdata[$field])) echo $arrdata[$field]; ?>"></td>
