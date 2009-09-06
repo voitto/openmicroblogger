@@ -183,7 +183,7 @@ function set_up_new_shortener( &$model, &$rec ) {
           $user = $rec->nickname;
           $pass = $passer;
 
-          $data = trim('a:14:{s:7:"service";s:5:"other";s:8:"location";s:0:"";s:11:"yourls_path";s:0:"";s:10:"yourls_url";s:0:"";s:12:"yourls_login";s:0:"";s:15:"yourls_password";s:0:"";s:5:"other";s:4:"rply";s:11:"bitly_login";s:0:"";s:14:"bitly_password";s:0:"";s:10:"trim_login";s:0:"";s:13:"trim_password";s:0:"";s:10:"rply_login";s:3:"'.$user.'";s:13:"rply_password";s:5:"'.$pass.'";s:19:"pingfm_user_app_key";s:0:"";}');
+          $data = base64_encode('a:14:{s:7:"service";s:5:"other";s:8:"location";s:0:"";s:11:"yourls_path";s:0:"";s:10:"yourls_url";s:0:"";s:12:"yourls_login";s:0:"";s:15:"yourls_password";s:0:"";s:5:"other";s:4:"rply";s:11:"bitly_login";s:0:"";s:14:"bitly_password";s:0:"";s:10:"trim_login";s:0:"";s:13:"trim_password";s:0:"";s:10:"rply_login";s:3:"'.$user.'";s:13:"rply_password";s:5:"'.$pass.'";s:19:"pingfm_user_app_key";s:0:"";}');
 
           $s = $Setting->base();
           $s->set_value('profile_id',$twuser->profile_id);
