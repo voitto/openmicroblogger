@@ -53,6 +53,10 @@ if (isset($_POST['ajax_shorten'])) {
       'rply_password'=>'',
       'other'=>'rply'
     ));
+  	global $wp_ozh_yourls;
+  	if (!$wp_ozh_yourls)
+  		wp_ozh_yourls_admin_init();
+  	$service = wp_ozh_yourls_service();
   }
 	$shorturl = wp_ozh_yourls_api_call( wp_ozh_yourls_service(), $_POST['ajax_shorten']);
 	if ($shorturl)
