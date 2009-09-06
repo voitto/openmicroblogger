@@ -49,6 +49,8 @@ if (isset($_POST['ajax_shorten'])) {
       'yourls_url'=>'',
       'yourls_login'=>'',
       'yourls_password'=>'',
+      'rply_login'=>'',
+      'rply_password'=>'',
       'other'=>'rply'
     ));
   }

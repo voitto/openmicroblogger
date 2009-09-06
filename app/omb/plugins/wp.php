@@ -508,7 +508,7 @@ function update_option( $opt, $newval ) {
     $s->set_value('name',$opt);
   }
   if (is_array($newval))
-    $s->set_value('value',serialize(base64_encode($newval)));
+    $s->set_value('value',base64_encode(serialize($newval)));
   else
     $s->set_value('value',$newval);
   $s->save_changes();
