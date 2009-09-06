@@ -110,8 +110,8 @@ function set_up_new_shortener( &$model, &$rec ) {
       
         $mystuff = array();
       
+        $Entry->set_limit(100000);
         $Entry->find_by(array('person_id'=>$user_person->id));
-      
         while ($e = $Entry->MoveNext()) {
           $model =& $db->get_table($e->resource);
           $twuser_rec = $model->find($e->record_id);
