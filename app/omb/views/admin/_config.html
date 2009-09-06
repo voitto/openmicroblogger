@@ -59,12 +59,17 @@
   
 <?php foreach ($envpost as $n=>$v) : ?>
 <?php if (!isset($setenv[$n]) && isset($txt['config_'.$n])) : ?>
-
+<?php
+global $prefix;
+$hide = array('awssecretkey','facebooksecret','zeepsecretkey','twittersecret');
+?>
+<?php if (empty($prefix) || !in_array(strtolower($n),$hide)) : ?>
 
   <tr><td>
 <p>  <?php echo $txt['config_'.$n]; ?></p>
 </td><td><p class="jeditable_<?php echo $n; ?>" id="jeditable_<?php echo $n; ?>"><?php echo $v; ?></p>
   </td></tr>
+<?php endif; ?>
 <?php endif; ?>
 <?php endforeach; ?>
 
@@ -75,10 +80,12 @@
 ?>
 <?php if (isset($$modevar)) : ?>
 <?php if (isset($txt['config_'.$n])) : ?>
+<?php if (empty($prefix) || !in_array(strtolower($n),$hide)) : ?>
   <tr><td>
 <p>  <?php echo $txt['config_'.$n]; ?></p>
 </td><td><p class="jeditable_setenv<?php echo $n; ?>" id="jeditable_setenv<?php echo $n; ?>"><?php echo $$modevar->value; ?></p>
   </td></tr>
+<?php endif; ?>
 <?php endif; ?>
 <?php endif; ?>
 <?php endforeach; ?>
@@ -90,12 +97,14 @@
 
 <?php foreach ($envpost2 as $n=>$v) : ?>
 <?php if (!isset($setenv[$n]) && isset($txt['config_'.$n])) : ?>
+<?php if (empty($prefix) || !in_array(strtolower($n),$hide)) : ?>
 
 
   <tr><td>
 <p>  <?php echo $txt['config_'.$n]; ?></p>
 </td><td><p class="jeditable_<?php echo $n; ?>" id="jeditable_<?php echo $n; ?>"><?php echo $v; ?></p>
   </td></tr>
+<?php endif; ?>
 <?php endif; ?>
 <?php endforeach; ?>
 
