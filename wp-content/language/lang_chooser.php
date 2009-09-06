@@ -13,9 +13,9 @@ if ( file_exists( $language_file )) {
   
   include $language_file;
 
-} elseif ( file_exists( 'wp-content/language/import/'.$language_selected.'.php' )) {
+} elseif ( file_exists( 'wp-content/language/import/'.$language_selected.'.txt' )) {
   
-  $data = split("\n", file_get_contents('wp-content/language/import/'.$language_selected.'.php'));
+  $data = split("\n", file_get_contents('wp-content/language/import/'.$language_selected.'.txt'));
   foreach($data as $val)
     if (substr(trim($val),-1) == '}')
       $data = trim($val);
