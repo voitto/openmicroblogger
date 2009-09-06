@@ -6,7 +6,7 @@ define(       "DB_NAME", ""      ); // name of database
 define(       "DB_USER", ""      ); // user name
 define(   "DB_PASSWORD", ""      ); // user password
 
-define( "STANDARD_LANG", "eng"   ); // ger, eng
+define( "STANDARD_LANG", ""   ); // ger, eng
 
 // options
 
