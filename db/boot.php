@@ -422,10 +422,12 @@ if ($pretty_url_base && !mu_url() && !('http://'.$subdomain.".".$rest == $pretty
   $sql .= " AND password LIKE '".$db->escape_string($params['password'])."'";
   $result = $db->get_result( $sql );
   if ( $db->num_rows($result) == 1 ) {
+    if ($pretty_url_base && !mu_url() && !('http://'.$subdomain.".".$rest == $pretty_url_base)) {
+      $request->base = 'http://'.$subdomain.".".$rest;
+      $request->domain = $subdomain.".".$rest;
+      $pretty_url_base = $request->base;
+    }
     $stream = $db->result_value( $result, 0, "nickname" );
-    $request->base = 'http://'.$stream.".".$rest;
-    $request->domain = $stream.".".$rest;
-    $pretty_url_base = $request->base;
     global $db,$request;
     global $person_id;
     global $api_methods,$api_method_perms;

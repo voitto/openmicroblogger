@@ -51,6 +51,8 @@ env:
   email_user: 
   email_pass: 
   
+  showemail: false
+  
   threaded: false
   
   pretty_urls: false
@@ -81,6 +83,7 @@ env:
     - translate
     - facebook
     - pages
+    - shortener
   
   installed:
     - password
@@ -90,6 +93,7 @@ env:
     - translate
     - facebook
     - pages
+    - shortener
   
   boot: omb
   
