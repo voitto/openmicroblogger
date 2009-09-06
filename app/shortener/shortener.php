@@ -40,11 +40,22 @@ if (isset($_POST['ajax_shorten'])) {
 	global $wp_ozh_yourls;
 	if (!$wp_ozh_yourls)
 		wp_ozh_yourls_admin_init();
+	if (empty($service)) {
+    add_option('ozh_yourls',array(
+      'service'=>'other',
+      'location'=>'',
+      'yourls_path'=>'',
+      'yourls_url'=>'',
+      'yourls_login'=>'',
+      'yourls_password'=>'',
+      'other'=>'rply'
+    ));
+  }
 	$shorturl = wp_ozh_yourls_api_call( wp_ozh_yourls_service(), $_POST['ajax_shorten']);
 	if ($shorturl)
 	  echo $shorturl;
 	else
-	  echo $shorturl;
+	  echo 'error';
 	exit;
 }
 

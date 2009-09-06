@@ -508,7 +508,7 @@ function update_option( $opt, $newval ) {
     $s->set_value('name',$opt);
   }
   if (is_array($newval))
-    $s->set_value('value',serialize($newval));
+    $s->set_value('value',serialize(base64_encode($newval)));
   else
     $s->set_value('value',$newval);
   $s->save_changes();
@@ -818,6 +818,9 @@ function get_option( $opt ) {
     $s = $Setting->find_by(array('name'=>$opt,'profile_id'=>get_profile_id()));
     if ($s) {
       $un = mb_unserialize(base64_decode($s->value));
+      if (is_array($un))
+        return $un;
+      $un = mb_unserialize($s->value);
       if (is_array($un))
         return $un;
       return $s->value;
