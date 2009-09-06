@@ -820,7 +820,6 @@ function get_option( $opt ) {
       $un = unserialize($s->value);
       if (is_array($un))
         return $un;
-      echo $s->value; exit;
       return $s->value;
     }
     return "";
