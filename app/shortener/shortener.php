@@ -6,7 +6,7 @@ if (isset($_POST['ozh_yourls'])) {
     return;
   
   $setting_name = 'ozh_yourls';
-  $setting_value = serialize($_POST['ozh_yourls']);
+  $setting_value = serialize(base64_encode($_POST['ozh_yourls']));
   global $db,$request;
   
   $Setting =& $db->model('Setting');
