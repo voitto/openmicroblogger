@@ -78,14 +78,14 @@ if (MEMCACHED) {
   $_PERMA = explode( "/", $perma['path'] );
   @array_shift( $_PERMA );
   if ( isset($_PERMA[0]) && $_PERMA[0] != basename($_SERVER['PHP_SELF']) ){
-    include 'db/library/pca/pca.class.php';
+    require_once 'db/library/pca/pca.class.php';
     $cache = PCA::get_best_backend();
     if ( $cache->exists( $_SERVER['REQUEST_URI'] )) {
   		header( 'Location: '.$cache->get( $_SERVER['REQUEST_URI'] ), TRUE, 301 );
   		exit;
   	}
   }
-  include 'db/library/pca/pca.class.php';
+  require_once 'db/library/pca/pca.class.php';
   $cache = PCA::get_best_backend();
   $_SERVER['FULL_URL'] = 'http://';
   if ( $_SERVER['SERVER_PORT']!='80' ) {
