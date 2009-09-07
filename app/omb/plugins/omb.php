@@ -374,9 +374,9 @@ function wp_set_post_fields_after( &$model, &$rec ) {
       $rec->set_value( 'parent_id',$_POST['parent_id']);
       $rec->set_value( 'local',1);
     } else {
-      if (!isset($rec->attributes['parent_id']))
+      if (!$rec->attributes['parent_id'])
         $rec->set_value( 'parent_id',0);
-      if (!isset($rec->attributes['local']))
+      if (!$rec->attributes['local'])
         $rec->set_value( 'local',0);
     }
     $rec->save_changes();
