@@ -54,6 +54,25 @@ function put( &$vars ) {
 
 function delete( &$vars ) {
   extract( $vars );
+  $b = $collection->MoveFirst();
+  if (!empty($b->prefix)) {
+    $tabresult = $db->get_result("SHOW tables");
+    $tables = array();
+    for($i=0;$tables[$i]=mysql_fetch_assoc($tabresult);$i++) {
+      $key = $tables[$i]['Tables_in_'.$db->dbname];
+      if (substr($key,0,3) == $b->prefix.'_' && !in_array($key,array('categories_entries','aggregates_entries','twitter_users','db_sessions'))) {
+        $Shortener =& $db->model('Shortener');
+        $short = $Shortener->find_by('nickname',$b->nickname);
+        if ($short)
+          echo "DELETE shortener ".$b->nickname;
+        echo "DROP $key <BR>";
+        //  $sql = "DROP TABLE ".$key;
+        //  $result = $db->get_result( $sql );
+      } else {
+      }
+    }
+  }
+  exit;
   $resource->delete_from_post( $request );
   header_status( '200 OK' );
   redirect_to( $request->resource );
