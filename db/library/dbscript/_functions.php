@@ -940,14 +940,11 @@ function member_of( $group ) {
     $memberships = array();
 
     global $request;
-  
-
-  
     global $db;
   
     $Person =& $db->model('Person');
     $Group =& $db->model('Group');
-  
+    
     $p = $Person->find( get_person_id() );
   
     while ( $m = $p->NextChild( 'memberships' )) {
