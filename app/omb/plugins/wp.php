@@ -2234,7 +2234,9 @@ function body_class() {
 function is_sticky() {
   return false;
 }
-
+function have_comments() {
+  return false;
+}
 
 
 
