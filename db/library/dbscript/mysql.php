@@ -687,6 +687,8 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
         $field = $table.".".$model->find_by;
       else
         $field = $model->find_by;
+      if (strpos($field,".") === false)
+        $field = "$table.$field";
       $sql .= " WHERE $field = '".$model->id."' ";
     }
     
@@ -709,7 +711,10 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
     if (isset($model->groupby))
       $sql .= " GROUP BY " . $model->groupby . " ";
     
-    $sql .= " ORDER BY " . $model->orderby . " ";
+    if (strpos($model->orderby,".") === false)
+      $model->orderby = "$table.".$model->orderby;
+      
+    $sql .= " ORDER BY " . $this->prefix.$model->orderby . " ";
     
     $sql .= $model->order . $this->query_limit($model->limit,$model->offset);
     
