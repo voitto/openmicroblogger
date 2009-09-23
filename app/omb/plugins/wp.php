@@ -1878,13 +1878,14 @@ if ($result)
 else
   return;
 
-
-    echo "<a href=\"";
+if ($commentcount > 0) {
+    echo " | <a href=\"";
     echo $request->url_for(array(
       'resource'  => 'posts',
       'id'        => $the_post->id
     ));
     echo "\">$commentcount</a>";
+}
     if (!(environment('threaded')))
       return;
   }
@@ -2222,21 +2223,7 @@ function in_reply_to(&$the_post) {
   return $text;
 }
 
-function automatic_feed_links() {
-  
-}
-function is_singular() {
-  return true;
-}
-function body_class() {
-  
-}
-function is_sticky() {
-  return false;
-}
-function have_comments() {
-  return false;
-}
+
 
 
 

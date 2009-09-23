@@ -177,8 +177,8 @@ color:#3478e3;
 }
 #postbox .avatar img {
 	padding: 0;
-	border: 3px solid #fff;
-	outline:1px solid #ccc;
+	#border: 3px solid #fff;
+	#outline:1px solid #ccc;
 }
 #postbox .inputarea {
 	padding-left: 66px;
@@ -292,8 +292,8 @@ h4 {
 #main img.avatar {
 	float: left;
 	margin-right: 15px;
-	border: 3px solid #fff;
-	outline:1px solid #ccc;
+	#border: 3px solid #fff;
+	#outline:1px solid #ccc;
 	margin-top: 0;
 	margin-left: 2px;
 }
@@ -374,7 +374,7 @@ h2 img {
 	margin-left: 64px;
 }
 #main hr {
-	border:solid #bbb 1px;
+	border:dashed #ddd 1px;
 }
 
 #main img.avatar {
@@ -512,8 +512,8 @@ h2 a.rss:hover {
 	vertical-align:middle;
 	width:32px;
 	height:32px;
-	border: 3px solid #fff;
-	outline:1px solid #ccc;
+	#border: 3px solid #fff;
+	#outline:1px solid #ccc;
 }
 #sidebar a.profile-nick {
 font-size:1.7em;
@@ -977,8 +977,8 @@ margin-bottom: .3em;
 	margin-left:0.5em;
 	width:80px;
 	height:80px;
-	border: 3px solid #fff;
-	outline:1px solid #ccc;
+	#border: 3px solid #fff;
+	#outline:1px solid #ccc;
 }
 .entry-avatar-reply {
 	float:left;
@@ -986,8 +986,8 @@ margin-bottom: .3em;
 	margin-left:0.5em;
 	width:40px;
 	height:40px;
-	border: 3px solid #fff;
-	outline:1px solid #ccc;
+	#border: 3px solid #fff;
+	#outline:1px solid #ccc;
 }
 .entry-clear {
 	clear: both;

@@ -110,36 +110,42 @@ if( have_posts( ) ) {
 <hr />
 <?php
 	$current_user_id = get_the_author_ID( );
+	global $the_author;
+	global $the_post;
 ?>
 
-	<h4>
-		<span class="meta">
-			<span class="actions">
-			<a href="<?php the_permalink( ); ?>" class="thepermalink"><?php echo $txt['index_permalink']; ?></a>
-			<?php if (function_exists('post_reply_link')) 
-				echo post_reply_link(array('before' => ' | ', 'reply_text' => $txt['index_reply'], 'add_below' => 'prologue'), get_the_id()); ?>
-			<?php if (current_user_can('edit_post', get_the_id())) { ?>
-			|  <a href="<?php echo (get_edit_post_link( get_the_id() ))?>" class="post-edit-link" rel="<?php the_ID(); ?>"><?php echo $txt['index_edit']; ?></a>
-			|  <a href="<?php echo (get_edit_post_link( get_the_id(), 'remove' ))?>" class="post-edit-link" rel="<?php the_ID(); ?>"><?php echo $txt['index_remove']; ?></a>
-			<?php } ?>
-			<br />
-			</span>
-			<br />
-<?php
-	echo prologue_get_avatar( $current_user_id, get_the_author_email( ), 48 );
-?>
-		<?php the_author_posts_link( ); ?>
-			<?php global $the_post; echo laconica_time($the_post->created); ?><?php echo in_reply_to($the_post); ?> |
-			<?php comments_popup_link( __( '0' ), __( '1' ), __( '%' ) ); ?>
-			<?php tags_with_count( '', __( 'Tags:' ), ', ', ' ' ); ?>
+
+
+<span>
+	<a href="<?php echo $the_author->profile_url; ?>">
+	  <img src="<?php echo $the_author->avatar; ?>" height="48" width="48" border="0">
+	</a>
+</span>
+<span>
+	<strong>
+		<a href="<?php echo $the_author->profile_url; ?>" title="<?php echo $the_author->name; ?>"><?php echo $the_author->nickname; ?></a>
+	</strong>
+	<span>
+		<?php the_content( __( '(More ...)' ) ); ?>
+	</span>
+	<span>
+		<a href="<?php echo $the_post->url; ?>">
+			<span><?php echo laconica_time($the_post->created); ?></span>
+		</a>
+		<span>from 
+			<a href="http://www.tweetdeck.com/">Source</a>
 		</span>
-	</h4>
-	<div class="postcontent<?php if (current_user_can( 'edit_post', get_the_id() )) {?> editarea<?php }?>" id="content-<?php the_ID(); ?>"><?php the_content( __( '(More ...)' ) ); ?></div> <!-- // postcontent -->
-	<div class="bottom_of_entry">&nbsp;</div>
-	<?php 
-		if( (is_home() or is_front_page()) ) $withcomments = true; 
-		comments_template('/inline-comments.php');
-	?>
+	</span>
+</span>
+<span class="actions">
+	<div>
+		<a id="favorite" title="favorite this tweet">&nbsp;&nbsp;</a>
+		<?php echo in_reply_to($the_post); ?>
+	</div>
+</span>
+
+
+
 
 <?php
 	} // while have_posts
