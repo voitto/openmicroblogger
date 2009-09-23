@@ -96,7 +96,9 @@ get_header();
 ?>
 <div id="main">
 		<?php global $paged;?>
-	<h2><?php echo $txt['index_recent_updates']; ?><?php if ($paged>1) echo('(Page '.$paged.') '); ?><a class="rss" href="<?php bloginfo( 'rss2_url' ); ?>"><?php echo $txt['index_rss']; ?></a> <span class="controls"></span></h2>
+<?php if (!isset($request->params['byid'])) : ?>	
+	<h3><?php echo $txt['index_recent_updates']; ?></h3>
+<?php endif; ?>
 <?php
 if( have_posts( ) ) {
 ?>
@@ -115,15 +117,19 @@ if( have_posts( ) ) {
 
 
 
+<?php if (!isset($request->params['byid'])) : ?>	
 <span>
 	<a href="<?php echo $the_author->profile_url; ?>">
 	  <img src="<?php echo $the_author->avatar; ?>" height="48" width="48" border="0">
 	</a>
 </span>
+<?php endif; ?>
 <span>
+	<?php if (!isset($request->params['byid'])) : ?>	
 	<strong>
 		<a href="<?php echo $the_author->profile_url; ?>" title="<?php echo $the_author->name; ?>"><?php echo $the_author->nickname; ?></a>
 	</strong>
+	<?php endif; ?>
 	<span>
 		<?php the_content( __( '(More ...)' ) ); ?>
 	</span>
@@ -132,7 +138,7 @@ if( have_posts( ) ) {
 			<span><?php echo laconica_time($the_post->created); ?></span>
 		</a>
 		<span>from 
-			<a href="http://www.tweetdeck.com/">Source</a>
+			<a href="">web</a>
 		</span>
 	</span>
 </span>
@@ -144,8 +150,8 @@ if( have_posts( ) ) {
 </span>
 
 
-<hr />
 
+<hr />
 
 <?php
 	} // while have_posts
