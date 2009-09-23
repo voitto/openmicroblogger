@@ -946,16 +946,18 @@ function member_of( $group ) {
     $Group =& $db->model('Group');
     
     $p = $Person->find( get_person_id() );
-  
-    while ( $m = $p->NextChild( 'memberships' )) {
-      $g = $Group->find( $m->group_id );
-      $memberships[] = $g->name;
+    if ($p)
+      while ( $m = $p->NextChild( 'memberships' )) {
+        $g = $Group->find( $m->group_id );
+        $memberships[] = $g->name;
     
-      if (!$g)
-        trigger_error( "the Group with id ".$m->group_id." does not exist", E_USER_ERROR );
-      if ( $g->name == $group )
-        return true;
-    }
+        if (!$g)
+          trigger_error( "the Group with id ".$m->group_id." does not exist", E_USER_ERROR );
+        if ( $g->name == $group )
+          return true;
+      }
+    else
+      return false;
   
   } else {
     
