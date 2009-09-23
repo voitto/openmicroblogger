@@ -96,7 +96,9 @@ get_header();
 ?>
 <div id="main">
 		<?php global $paged;?>
+<?php if (!isset($request->params['byid'])) : ?>	
 	<h3><?php echo $txt['index_recent_updates']; ?></h3>
+<?php endif; ?>
 <?php
 if( have_posts( ) ) {
 ?>
@@ -107,7 +109,6 @@ if( have_posts( ) ) {
 		the_post( );
 ?>
 
-<hr />
 <?php
 	$current_user_id = get_the_author_ID( );
 	global $the_author;
@@ -116,15 +117,19 @@ if( have_posts( ) ) {
 
 
 
+<?php if (!isset($request->params['byid'])) : ?>	
 <span>
 	<a href="<?php echo $the_author->profile_url; ?>">
 	  <img src="<?php echo $the_author->avatar; ?>" height="48" width="48" border="0">
 	</a>
 </span>
+<?php endif; ?>
 <span>
+	<?php if (!isset($request->params['byid'])) : ?>	
 	<strong>
 		<a href="<?php echo $the_author->profile_url; ?>" title="<?php echo $the_author->name; ?>"><?php echo $the_author->nickname; ?></a>
 	</strong>
+	<?php endif; ?>
 	<span>
 		<?php the_content( __( '(More ...)' ) ); ?>
 	</span>
@@ -146,6 +151,7 @@ if( have_posts( ) ) {
 
 
 
+<hr />
 
 <?php
 	} // while have_posts
