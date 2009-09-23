@@ -90,7 +90,7 @@ $txt['header_admin'] = "Admin";
 $txt['index_video_post'] = "Video Post";
 $txt['index_image_post'] = "Image Post";
 $txt['index_no_title'] = "No Title";
-$txt['index_recent_updates'] = "Recent Updates ";
+$txt['index_recent_updates'] = "Home ";
 $txt['index_rss'] = "RSS";
 $txt['index_permalink'] = "Permalink";
 $txt['index_edit'] = "Edit";
@@ -118,8 +118,8 @@ $txt['page_pages'] = "Pages:";
 //////////////////////
 # /wp-content/themes/p2/post-form.php
 //////////////////////
-$txt['postform_greeting'] = "Hi";
-$txt['postform_whatsup'] = "Whatcha up to?";
+$txt['postform_greeting'] = "Hello";
+$txt['postform_whatsup'] = "What are you doing?";
 $txt['postform_tagit'] = "Tag it";
 $txt['postform_postit'] = "Post it";
 
@@ -503,20 +503,20 @@ $txt['identica_settings_status'] = "Status";
 /////////////////////////////////////
 # /db/library/dbscribt/_functions.php
 /////////////////////////////////////
-$txt['functions_few_seconds'] = "a few seconds ago";
-$txt['functions_about_a_minute'] = "about a minute ago";
-$txt['functions_about_mins_1'] = "about ";
+$txt['functions_few_seconds'] = "less than a minute ago";
+$txt['functions_about_a_minute'] = " 1 minute ago";
+$txt['functions_about_mins_1'] = " ";
 $txt['functions_about_mins_2'] = " minutes ago";
-$txt['functions_about_an_hour'] = "about an hour ago";
-$txt['functions_about_hours_1'] = "about ";
+$txt['functions_about_an_hour'] = " an hour ago";
+$txt['functions_about_hours_1'] = " ";
 $txt['functions_about_hours_2'] = " hours ago";
-$txt['functions_about_a_day'] = "about a day ago";
-$txt['functions_about_days_1'] = "about ";
+$txt['functions_about_a_day'] = " a day ago";
+$txt['functions_about_days_1'] = " ";
 $txt['functions_about_days_2'] = " days ago";
-$txt['functions_about_a_month'] = "about a month ago";
-$txt['functions_about_months_1'] = "about ";
+$txt['functions_about_a_month'] = " a month ago";
+$txt['functions_about_months_1'] = " ";
 $txt['functions_about_months_2'] = " months ago";
-$txt['functions_about_a_year'] = "about a year ago";
+$txt['functions_about_a_year'] = " a year ago";
 
 
 /////////////////////////////////////

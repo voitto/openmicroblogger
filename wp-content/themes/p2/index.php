@@ -96,7 +96,7 @@ get_header();
 ?>
 <div id="main">
 		<?php global $paged;?>
-	<h2><?php echo $txt['index_recent_updates']; ?><?php if ($paged>1) echo('(Page '.$paged.') '); ?><a class="rss" href="<?php bloginfo( 'rss2_url' ); ?>"><?php echo $txt['index_rss']; ?></a> <span class="controls"></span></h2>
+	<h3><?php echo $txt['index_recent_updates']; ?></h3>
 <?php
 if( have_posts( ) ) {
 ?>
