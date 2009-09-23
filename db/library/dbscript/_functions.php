@@ -1843,7 +1843,7 @@ function get_person_id() {
     return $p;
   
   if (isset($_SERVER['PHP_AUTH_USER'])) 
-    authenticate_with_http();
+    return $_SERVER['PHP_AUTH_USER'];
 
   if (isset($_POST['auth']) && $_POST['auth'] == 'omb')
     authenticate_with_omb();

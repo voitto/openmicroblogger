@@ -2121,6 +2121,20 @@ function dynamic_sidebar() {
   return true;
 }
 
+function automatic_feed_links() {
+}
+function is_singular() {
+  return true;
+}
+function body_class() {
+}
+function is_sticky() {
+  return false;
+}
+function have_comments() {
+  return false;
+}
+
 function single_tag_title( ) {
   echo "";
 }

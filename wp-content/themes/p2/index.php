@@ -133,7 +133,7 @@ if( have_posts( ) ) {
 			<span><?php echo laconica_time($the_post->created); ?></span>
 		</a>
 		<span>from 
-			<a href="http://www.tweetdeck.com/">Source</a>
+			<a href="">web</a>
 		</span>
 	</span>
 </span>
