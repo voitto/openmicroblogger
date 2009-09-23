@@ -109,6 +109,7 @@ if( have_posts( ) ) {
 		the_post( );
 ?>
 
+<hr />
 <?php
 	$current_user_id = get_the_author_ID( );
 	global $the_author;
@@ -151,7 +152,6 @@ if( have_posts( ) ) {
 
 
 
-<hr />
 
 <?php
 	} // while have_posts
