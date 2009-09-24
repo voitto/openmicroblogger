@@ -118,13 +118,13 @@ if( have_posts( ) ) {
 
 
 <?php if (!isset($request->params['byid'])) : ?>	
-<span>
+<span class="tweet_avatar">
 	<a href="<?php echo $the_author->profile_url; ?>">
 	  <img src="<?php echo $the_author->avatar; ?>" height="48" width="48" border="0">
 	</a>
 </span>
 <?php endif; ?>
-<span>
+<span class="tweet_content">
 	<?php if (!isset($request->params['byid'])) : ?>	
 	<strong>
 		<a href="<?php echo $the_author->profile_url; ?>" title="<?php echo $the_author->name; ?>"><?php echo $the_author->nickname; ?></a>

@@ -375,6 +375,7 @@ h2 img {
 }
 #main hr {
 	border:dashed #ddd 1px;
+    clear:both;
 }
 
 #main img.avatar {
@@ -1200,4 +1201,15 @@ img.photo {
 	outline:1px solid #ccc;
 	width:100px;
 	height:100px;
+}
+.tweet_avatar img{
+	float:left;
+	position:relative;
+	margin-right:5px;
+	margin-bottom:5px;
+}
+.tweet_content span p {
+	margin:0;
+	padding:0;
+	display:inline;
 }
