@@ -115,6 +115,7 @@ if( have_posts( ) ) {
 	global $the_post;
 ?>
 
+<hr />
 
 
 <?php if (!isset($request->params['byid'])) : ?>	
@@ -133,7 +134,7 @@ if( have_posts( ) ) {
 	<span>
 		<?php the_content( __( '(More ...)' ) ); ?>
 	</span>
-	<span>
+	<span class="tweet_info">
 		<a href="<?php echo $the_post->url; ?>">
 			<span><?php echo laconica_time($the_post->created); ?></span>
 		</a>
@@ -151,7 +152,6 @@ if( have_posts( ) ) {
 
 
 
-<hr />
 
 <?php
 	} // while have_posts

@@ -110,6 +110,13 @@ color:#3478e3;
 	margin: 0 auto;
 }
 #header-round {
+	display:inline-block;
+	float:right;
+	margin-top:65px;
+	border: 0;
+	box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+	-webkit-box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+	-moz-box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
 }
 #footer {
 	clear: both;
@@ -1205,11 +1212,18 @@ img.photo {
 .tweet_avatar img{
 	float:left;
 	position:relative;
-	margin-right:5px;
-	margin-bottom:5px;
+	margin:8px;
+	margin-top:5px;
 }
 .tweet_content span p {
 	margin:0;
 	padding:0;
 	display:inline;
+}
+.tweet_info {
+	font-size:.9em;
+	display:block;
+}
+.tweet_info span,.tweet_info a {
+	color:#aaa;
 }

@@ -186,7 +186,7 @@ $profile= get_profile();
 <?php endif; ?>
 </ul>
 
-</div><br /><br />
+</div>
 </div>
 
 
