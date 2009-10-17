@@ -417,7 +417,7 @@ if ($pretty_url_base && !mu_url() && !('http://'.$subdomain.".".$rest == $pretty
     $request->base = substr($uri,0,strpos($uri,$tags[0][0][0])+(strlen($repl)+1)).$trail;
   }
   $stream = $tags[0][2][0];
-} elseif (isset($params['username']) && isset($params['password'])) {
+} elseif (isset($params['username']) && isset($params['password']) && !isset($_FILES['media'])) {
   $sql = "SELECT nickname,profile_id FROM shorteners WHERE nickname LIKE '".$db->escape_string($params['username'])."'";
   $sql .= " AND password LIKE '".$db->escape_string($params['password'])."'";
   $result = $db->get_result( $sql );
@@ -525,11 +525,22 @@ $Method->find_by(array(
 while ($m = $Method->MoveNext()) {
   $api_method_perms[$m->function] = array('table'=>$m->resource,'perm'=>$m->permission);
   $api_methods[$m->function] = $m->code;
+  $patterns = explode( '/', $m->route );
+  $requirements = array();
+  foreach ( $patterns as $pos => $str ) {
+    if ( substr( $str, 0, 1 ) == ':' ) {
+		  $requirements[] = '[A-Za-z0-9_.]+';
+    }
+  }
+	$routesetup = array(
+	  'action'=>$m->function,
+	  'resource'=>$m->resource
+	);
+	if (count($requirements) > 0)
+		$routesetup['requirements'] = $requirements;
   $request->connect(
     $m->route,
-    array(
-      'action'=>$m->function
-    )
+    $routesetup
   );
   if ($m->omb)
     before_filter( 'authenticate_with_omb', $m->function );
@@ -549,9 +560,9 @@ if ( isset( $env ))
     load_plugin( $plugin );
 
 
-  /**
-   * connect more Routes to the Mapper
-   */
+/**
+ * connect more Routes to the Mapper
+ */
 
 $request->connect(
   ':resource/:id/email/:ident',

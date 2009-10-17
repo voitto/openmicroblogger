@@ -911,10 +911,18 @@ function _oauth( &$vars ) {
 
 function make_identity( $user ) {
   global $db,$prefix,$request;
-  $Identity =& $db->model('Identity');
   $Person =& $db->model('Person');
-  $p = $Person->base();
-  $p->save();
+  if (get_person_id()) {
+	  // make a new identity for the Person
+	  $p = $Person->find(get_person_id());
+  } else {
+	  $p = $Person->base();
+	  $p->save();
+  }
+	if (!(get_class($p) == 'Record'))
+  	trigger_error('there was an error creating the child-identity',E_USER_ERROR);
+
+  $Identity =& $db->model('Identity');
   $i = $Identity->base();
 
   $nicker = $db->escape_string($user[0]);

@@ -13,6 +13,12 @@ function put( &$vars ) {
     $request->set_param(array('setting','value'),
       md5_encrypt($request->params['setting']['value'], $db->dbname)
     );
+  $event = $s->name."_enabled";
+  if (('enabled' == $request->params['setting']['value'])&&function_exists($event))
+    $event();
+  $event = $s->name."_disabled";
+  if (('disabled' == $request->params['setting']['value'])&&function_exists($event))
+    $event();
   $resource->update_from_post( $request );
   header_status( '201 Created' );
   redirect_to( $request->resource );
@@ -73,6 +79,12 @@ function post( &$vars ) {
       trigger_error( 'Sorry, you are not authorized to install '.$app, E_USER_ERROR );
     
   }
+  $event = $settingname."_enabled";
+  if (('enabled' == $request->params['setting']['value'])&&function_exists($event))
+    $event();
+  $event = $settingname."_disabled";
+  if (('disabled' == $request->params['setting']['value'])&&function_exists($event))
+    $event();
   $resource->insert_from_post( $request );
   header_status( '201 Created' );
   redirect_to( $request->resource );

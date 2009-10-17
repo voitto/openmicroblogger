@@ -195,6 +195,11 @@ $txt['password_password'] = "Change your Password";
 //////////////////////
 $txt['twitter_twitter'] = "Connect to Twitter";
 
+//////////////////////
+# /app/facebook/facebook.php
+//////////////////////
+$txt['facebook_facebook'] = "Connect to Facebook";
+
 
 /////////////////////////////////////
 # /app/omb/controllers/identities.php
@@ -482,6 +487,32 @@ $txt['twitter_settings_password'] = "Twitter Password";
 $txt['twitter_settings_test_settings'] = "Test your Settings";
 $txt['twitter_settings_test_click'] = "click to test username/password";
 $txt['twitter_settings_status'] = "Status";
+
+
+/////////////////////////////////////
+# /app/flickr/views/flickr_users/_edit.html
+/////////////////////////////////////
+$txt['flickr_settings_ok'] = "OK";
+$txt['flickr_settings_cancel'] = "Cancel";
+$txt['flickr_settings_click_edit'] = "Click to edit...";
+$txt['flickr_settings_it_works'] = "Yes, it works!";
+$txt['flickr_settings_fail'] = "Fail! Can not connect to flickr";
+$txt['flickr_settings_post_to_flickr'] = "Post my photos to flickr";
+$txt['flickr_settings_test_settings'] = "Test your Settings";
+$txt['flickr_settings_status'] = "Status";
+
+
+/////////////////////////////////////
+# /app/facebook/views/facebook_users/_edit.html
+/////////////////////////////////////
+$txt['facebook_settings_ok'] = "OK";
+$txt['facebook_settings_cancel'] = "Cancel";
+$txt['facebook_settings_click_edit'] = "Click to edit...";
+$txt['facebook_settings_it_works'] = "Yes, it works!";
+$txt['facebook_settings_fail'] = "Fail! Can not connect to Facebook";
+$txt['facebook_settings_post_to_facebook'] = "Post my notices to Facebook";
+$txt['facebook_settings_test_settings'] = "Test your Settings";
+$txt['facebook_settings_status'] = "Status";
 
 
 /////////////////////////////////////

@@ -81,6 +81,7 @@ env:
     - translate
     - facebook
     - pages
+    - flickr
   
   installed:
     - password
@@ -90,6 +91,7 @@ env:
     - translate
     - facebook
     - pages
+    - flickr
   
   boot: omb
   
@@ -128,6 +130,9 @@ env:
   
   twitterKey: 
   twitterSecret: 
+  
+  flickrKey: 
+  flickrSecret: 
   
   facebookKey: 
   facebookSecret: 

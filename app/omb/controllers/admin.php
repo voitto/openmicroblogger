@@ -365,4 +365,17 @@ extract( $vars );
   
 }
 
+function _cloud( &$vars ) {
+  
+  extract( $vars );
+  
+  admin_display_cloud_options();
+
+  return vars(
+    array( 
+    ),
+    get_defined_vars()
+  );
+  
+}
 

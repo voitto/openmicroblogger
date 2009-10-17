@@ -196,7 +196,7 @@ function &get_post(&$post, $output = OBJECT, $filter = 'raw') {
 
 function do_action($tag, $arg = '') {
   global $db;
-  trigger_before('wp_head',$db,$db);
+  trigger_before($tag,$db,$db);
 }
 
 function merge_filters($tag) {
@@ -694,11 +694,11 @@ function nocache_headers() {
 }
 
 function register_activation_hook() {
-  
+  return false;
 }
 
 function register_deactivation_hook() {
-  
+  return false;  
 }
 
 function is_feed () {
@@ -809,13 +809,16 @@ function bloginfo( $attr ) {
   echo get_bloginfo($attr);
 }
 
-function get_option( $opt ) {
+function get_option( $opt, $profile_id = false ) {
   global $optiondata;
   if (!isset($optiondata[$opt])){
     
     global $db;
     $Setting =& $db->model('Setting');
-    $s = $Setting->find_by(array('name'=>$opt,'profile_id'=>get_profile_id()));
+    if ($profile_id)
+	    $s = $Setting->find_by(array('name'=>$opt,'profile_id'=>$profile_id));
+  	else
+      $s = $Setting->find_by(array('name'=>$opt,'profile_id'=>get_profile_id()));
     if ($s) {
       $un = mb_unserialize(base64_decode($s->value));
       if (is_array($un))
@@ -2215,7 +2218,7 @@ function followgrid() {
   if (isset($request->params['nickname'])) {
     echo '
     <p class="liother">
-    <a class="rss" href="'.$request->url_for(array('resource'=>'posts','byid'=>get_app_id(),'page'=>1)).'.rss">'.$txt['sidebar_rss1'].' '.$request->params['nickname'].$txt['sidebar_rss2'].'</a>
+    <a class="rss" href="'.$request->url_for(array('resource'=>'api/statuses/user_timeline/')).get_app_id().'.rss">'.$txt['sidebar_rss1'].' '.$request->params['nickname'].$txt['sidebar_rss2'].'</a>
     </p>';
   }
    

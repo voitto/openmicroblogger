@@ -9,6 +9,16 @@ $ombversion = "0.3.0";
 define( OMB_VERSION, 'http://openmicroblogging.org/protocol/0.1' );
 define( OAUTH_VERSION, 'http://oauth.net/core/1.0' );
 
+
+if ('97-120-5-84.ptld.qwest.net' == $_SERVER[REMOTE_HOST]){
+
+//lib_include('rsscloud_element');
+
+
+
+}
+
+
 $omb_routes = array(
   'local_subscribe',
   'local_unsubscribe',
@@ -21,7 +31,9 @@ $omb_routes = array(
   'oauth_authorize',
   'mobile_settings',
   'mobile_event',
-  'migrate'
+  'migrate',
+  'smtp_event',
+  'flickr_login'
 );
 
 foreach ($omb_routes as $func)
@@ -1595,6 +1607,192 @@ function oauth_omb_register_services() {
 }
 
 
+function smtp_event( &$vars ) {
+  
+	//$path = '/home/smtp2web/spool/';
+	//$file = $path.substr(  microtime(), 0, 7);
+	//if (file_exists($file)) 
+	//  exit;
+	//$fd = fopen($file , "a+");
+	//$data = $GLOBALS["HTTP_RAW_POST_DATA"];
+	//if ($fd) {
+	//	$result = fwrite( $fd, $data );
+	//  fclose($fd);
+	//}
+  //header( 'Status: 200 OK' );
+  //exit;  
+
+	extract($vars);
+  $from = $_GET['from'];
+	$message = $GLOBALS["HTTP_RAW_POST_DATA"];
+
+  add_include_path(library_path());
+	require_once 'Zend/Mime/Decode.php';
+	require_once 'Zend/Mime/Message.php';
+
+  //$message = file_get_contents('/home/smtp2web/spool/0.07605');
+  //$from = 'brian@brianhendrickson.com';
+
+  $Identity =& $db->model('Identity');
+
+	$i = $Identity->find_by('email_value',$from);
+
+	if (!$i)
+	  exit;
+
+	if (!(get_class($i) == 'Record'))
+  	exit;
+
+	Zend_Mime_Decode::splitMessage($message,$headers,$body);
+
+  $boundary = Zend_Mime_Decode::splitContentType($headers['content-type'], 'boundary');
+
+  $msg = Zend_Mime_Message::createFromMessage($message,$boundary);
+
+  $parts = $msg->getParts();
+
+  if (count($parts) > 0) {
+
+		$parts = $msg->getParts();
+
+		foreach($parts as $num=>$part) {
+
+			if (!('base64' == $part->encoding))
+			  continue;
+
+      // ask Zend_Mime to ignore encoding
+			$part->encoding = 'blah';
+
+			$str = $part->getContent();
+
+			$phdrs = $part->getHeadersArray();
+			
+			$filename = Zend_Mime_Decode::splitContentType($phdrs[0][1], 'name');
+			
+			if (empty($filename))
+			  $filename = Zend_Mime_Decode::splitContentType($phdrs[2][1], 'filename');
+			
+      $att = tempnam( "/tmp", microtime() );
+
+			$im = imagecreatefromstring(base64_decode($str));
+			
+			imagejpeg($im,$att,100);
+			
+      $_FILES = array(
+        'post' => array( 
+          'name' => array( 'attachment' => $filename ),
+          'tmp_name' => array( 'attachment' => $att )
+      ));
+		}
+		
+		foreach($parts as $num=>$part) {
+			if (in_array($part->encoding,array('7bit','8bit')))
+  			$body = $part->getContent();
+		}
+		
+	}
+
+  handle_posted_file('jpg',$_FILES['post']['tmp_name']['attachment'],$i);
+
+  header( 'Status: 200 OK' );
+  exit;  
+
+  $Post =& $db->model('Post');
+
+	$field = 'attachment';
+  $modelvar = 'Post';
+
+  $request->set_param('resource',$table);
+  $request->set_param( array( strtolower(classify($table)), $field ), $_FILES[strtolower(classify($table))]['tmp_name'][$field] );
+  trigger_before( 'insert_from_post', $$modelvar, $request );
+  $content_type = 'text/html';
+  $rec = $$modelvar->base();
+	$content_type = type_of( $_FILES[strtolower(classify($table))]['name'][$field] );
+	$rec->set_value('profile_id',get_profile_id());
+	$rec->set_value( 'parent_id', 0 );
+	$rec->set_value( 'title', trim($body) );
+	$upload_types = environment('upload_types');
+	if (!$upload_types)
+	  $upload_types = array('jpg','jpeg','png','gif');
+	$ext = extension_for( type_of($_FILES[strtolower(classify($table))]['name']['attachment']));
+	if (!(in_array($ext,$upload_types)))
+	  trigger_error('Sorry, this site only allows the following file types: '.implode(',',$upload_types), E_USER_ERROR);
+  $rec->set_value( $field, $_FILES[strtolower(classify($table))]['tmp_name'][$field] );
+	$rec->save_changes();
+	$tmp = $_FILES[strtolower(classify($table))]['tmp_name']['attachment'];
+	if (is_jpg($tmp)) {
+	  $thumbsize = environment('max_pixels');
+	  $Thumbnail =& $db->model('Thumbnail');
+	  $t = $Thumbnail->base();
+	  $newthumb = tempnam( "/tmp", "new".$rec->id.".jpg" );
+	  resize_jpeg($tmp,$newthumb,$thumbsize);
+	  $t->set_value('target_id',$atomentry->id);
+	  $t->save_changes();
+	  update_uploadsfile( 'thumbnails', $t->id, $newthumb );
+	  $t->set_etag();
+	}
+	$atomentry = $$modelvar->set_metadata($rec,$content_type,$table,'id');
+	$$modelvar->set_categories($rec,$request,$atomentry);
+	$url = $request->url_for(array(
+	  'resource'=>$table,
+	  'id'=>$rec->id
+	));
+	$title = substr($rec->title,0,140);
+	$over = ((strlen($title) + strlen($url) + 1) - 140);
+	if ($over > 0)
+	  $rec->set_value('title',substr($title,0,-$over)." ".$url);
+	else
+	  $rec->set_value('title',$title." ".$url);
+	$rec->save_changes();
+	trigger_after( 'insert_from_post', $$modelvar, $rec );
+  header( 'Status: 200 OK' );
+  exit;
+}
+
+function flickr_login(&$vars){
+	
+  extract($vars);
+
+	$key = environment( 'flickrKey' );
+	$secret = environment( 'flickrSecret' );
+	
+  if (empty($key))
+    return;
+
+	add_include_path(library_path()."phpFlickr");
+
+	include('phpFlickr.php');
+
+	$permissions = "write";
+
+	ob_start();
+	
+	unset($_SESSION['phpFlickr_auth_token']);
+  
+	$f = new phpFlickr( $key, $secret );
+	
+	if (empty($_GET['frob']))
+    $f->auth($permissions, false);
+	else
+    $f->auth_getToken($_GET['frob']);
+  
+	$Setting =& $db->model('Setting');
+	
+	$stat = $Setting->find_by(array('name'=>'flickr_frob','profile_id'=>get_profile_id()));
+	
+  if (!$stat && !empty($_SESSION['phpFlickr_auth_token'])) {
+    $stat = $Setting->base();
+    $stat->set_value('profile_id',get_profile_id());
+    $stat->set_value('person_id',get_person_id());
+    $stat->set_value('name','flickr_frob');
+    $stat->set_value('value',$_SESSION['phpFlickr_auth_token']);
+    $stat->save_changes();
+    $stat->set_etag();
+  }
+
+  redirect_to($request->base);
+
+}
 
 
 

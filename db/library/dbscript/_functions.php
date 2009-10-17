@@ -1056,11 +1056,8 @@ function render_partial( $template ) {
   $response->render_partial( $request, $template );
   
 }
+
 function add_filter($tag, $function_to_add, $priority = 10, $accepted_args = 1) {
-	global $wp_filter, $merged_filters;
-	$idx = _wp_filter_build_unique_id($tag, $function_to_add, $priority);
-  $wp_filter[$tag][$priority][$idx] = array('function' => $function_to_add, 'accepted_args' => $accepted_args);
-	unset( $merged_filters[ $tag ] );
 	return true;
 }
 
@@ -2606,16 +2603,26 @@ function get_app_id() {
   global $db;
   
   global $request;
-  
-  if (!($request->resource == 'identities'))
+
+  $id = false;
+
+  if (!($request->resource == 'identities')) {
+	
     if ($request->params['byid'] > 0)
-      return $request->params['byid'];
+      $id = $request->params['byid'];
     elseif ($request->params['forid'] > 0)
-      return $request->params['forid'];
+      $id = $request->params['forid'];
     elseif (get_profile_id())
-      return get_profile_id();
-    else
-      return false;
+      $id = get_profile_id();
+    
+    if ($id && !(strpos($id,".") === false )) {
+			$parts = split('\.',$id);
+			$id = $parts[0];	    
+    }
+    
+    return $id;
+
+  }
   
   // looking some profile page
   // load its apps
@@ -3067,4 +3074,85 @@ function mu_url() {
 function mb_unserialize($serial_str) {
   $out = preg_replace('!s:(\d+):"(.*?)";!se', "'s:'.strlen('$2').':\"$2\";'", $serial_str );
   return unserialize($out);    
+}
+
+
+
+function handle_posted_file($filename="",$att,$profile) {
+
+  global $db,$request,$response;
+
+	$response->set_var('profile',$profile);
+	
+	load_apps();
+
+	$_FILES = array(
+	  'post' => array( 
+	    'name' => array( 'attachment' => $filename ),
+	    'tmp_name' => array( 'attachment' => $att )
+	));
+
+	$Post =& $db->model( 'Post' );
+	$table = 'posts';
+	$field = 'attachment';
+  $modelvar = 'Post';
+
+  $request->set_param('resource',$table);
+
+	$request->set_param( array( strtolower(classify($table)), $field ), 
+	  $att );
+
+	trigger_before( 'insert_from_post', $$modelvar, $request );
+
+	$content_type = 'text/html';
+	$rec = $$modelvar->base();
+	$content_type = type_of( $filename );
+	$rec->set_value('profile_id',get_profile_id());
+	$rec->set_value( 'parent_id', 0 );
+	$rec->set_value( 'title', '' );
+	$upload_types = environment('upload_types');
+	if (!$upload_types)
+	  $upload_types = array('jpg','jpeg','png','gif');
+	$ext = extension_for( type_of($filename));
+	if (!(in_array($ext,$upload_types)))
+	  trigger_error('Sorry, this site only allows the following file types: '.implode(',',$upload_types), E_USER_ERROR);
+	   $rec->set_value( $field, $att );
+	$rec->save_changes();
+	$tmp = $att;
+	if (is_jpg($tmp)) {
+	  $thumbsize = environment('max_pixels');
+	  $Thumbnail =& $db->model('Thumbnail');
+	  $t = $Thumbnail->base();
+	  $newthumb = tempnam( "/tmp", "new".$rec->id.".jpg" );
+	  resize_jpeg($tmp,$newthumb,$thumbsize);
+	  $t->set_value('target_id',$atomentry->id);
+	  $t->save_changes();
+	  update_uploadsfile( 'thumbnails', $t->id, $newthumb );
+	  $t->set_etag();
+	}
+	
+	$atomentry = $$modelvar->set_metadata($rec,$content_type,$table,'id');
+	
+	$$modelvar->set_categories($rec,$request,$atomentry);
+	
+	$url = $request->url_for(array(
+	  'resource'=>$table,
+	  'id'=>$rec->id
+	));
+	
+	$title = substr($rec->title,0,140);
+	
+	$over = ((strlen($title) + strlen($url) + 1) - 140);
+	
+	if ($over > 0)
+	  $rec->set_value('title',substr($title,0,-$over)." ".$url);
+	else
+	  $rec->set_value('title',$title." ".$url);
+	
+	$rec->save_changes();
+	
+	trigger_after( 'insert_from_post', $$modelvar, $rec );
+	
+	return true;
+	
 }

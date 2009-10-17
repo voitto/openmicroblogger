@@ -162,10 +162,37 @@ class FacebookStream {
     }
     
   }
+
+  function VerifyPerm($userid,$perm) {
+    
+    $params = array(
+      'ext_perm' => $perm,
+      'uid' => $userid
+    );
+    
+    // optional URL-encoded GET parameters 
+    //  next
+    //  next_cancel
+    
+    $response = $this->api->users->callMethod('users.hasAppPermission', $params);
+    
+    if (!strpos($response->asXML(),"1</users_hasAppPermission")) {
+      $url = 'http://www.facebook.com/authorize.php';
+      $url .= '?api_key=';
+      $url .= $this->getApiKey();
+      $url .= '&v=1.0';
+      $url .= '&ext_perm=';
+      $url .= $perm;
+      header('Location:'.$url);
+      exit;
+    }
+    
+  }
   
   function setStatus($status,$userid) {
     
     $this->VerifyUpdate($userid);
+    $this->VerifyPerm($userid,'photo_upload');
     
     $params = array(
       'uid' => $userid,
@@ -186,6 +213,35 @@ class FacebookStream {
     return (intval((string)$res) == 1);
     
   }
+
+  function PhotoUpload( $file, $aid=0, $caption='',$userid ) {
+    
+    $this->VerifyUpdate($userid);
+    
+    $this->VerifyPerm($userid,'photo_upload');
+	  
+	  $params = array(
+	    'method' => 'photos.upload',
+	    'v' => '1.0',
+	    'api_key' => $this->getApiKey(),
+	    'call_id' => microtime(true),
+	    'format' => 'XML',
+	    'uid' => $userid
+	  );
+	
+		if ($aid > 0)
+		    $params['aid'] = $aid;
+		
+		if (strlen($caption))
+		    $params['caption'] = $caption;
+		
+		$params = $this->signRequest($params);
+		$params[basename($file)] = '@' . realpath($file);
+		$url = $this->api->photos->getAPI() . '?method=photos.upload';
+		
+    return $this->http($url,$params);
+
+  }
   
   /**
    * Make an HTTP request
@@ -196,8 +252,9 @@ class FacebookStream {
     $ch = curl_init();
     if (defined("CURL_CA_BUNDLE_PATH")) curl_setopt($ch, CURLOPT_CAINFO, CURL_CA_BUNDLE_PATH);
     curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+		curl_setopt($ch, CURLOPT_HEADER, false);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     //////////////////////////////////////////////////
     ///// Set to 1 to verify SSL Cert //////
@@ -215,4 +272,16 @@ class FacebookStream {
     return $response;
   }
 
+  function signRequest($params) {
+		if (isset($params['sig']))
+		  unset($params['sig']);
+		ksort($params);
+		$sig = '';
+		foreach ($params as $k => $v)
+		  $sig .= $k .'=' . $v;
+		$sig  .= $this->getApiSecret();
+		$params['sig'] = md5($sig);
+		return $params;
+  }	
+	
 }
