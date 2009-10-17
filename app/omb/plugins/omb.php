@@ -10,13 +10,9 @@ define( OMB_VERSION, 'http://openmicroblogging.org/protocol/0.1' );
 define( OAUTH_VERSION, 'http://oauth.net/core/1.0' );
 
 
-if ('97-120-5-84.ptld.qwest.net' == $_SERVER[REMOTE_HOST]){
 
 //lib_include('rsscloud_element');
 
-
-
-}
 
 
 $omb_routes = array(
