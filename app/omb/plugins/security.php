@@ -1053,7 +1053,21 @@ function facebook_login( &$vars ) {
     if (!$faceuser)
       trigger_error('sorry I was unable to create a facebook user', E_USER_ERROR);
   }
-  
+
+  $fb_can_tweet = profile_setting('fb_can_tweet');
+
+  if (!$fb_can_tweet) {
+	  $result = $fs->VerifyUpdate($_SESSION['fb_userid']);
+	  update_option('fb_can_tweet',true);
+  }
+
+  $fb_can_upload = profile_setting('fb_can_upload');
+
+  if (!$fb_can_upload) {
+  	$fs->VerifyPerm($_SESSION['fb_userid'],'photo_upload');
+	  update_option('fb_can_upload',true);
+  }
+
   $_SESSION['fb_person_id'] = $i->person_id;
   
   redirect_to($request->base);
