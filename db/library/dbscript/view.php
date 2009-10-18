@@ -48,7 +48,7 @@ class View {
     $this->named_vars['request'] =& $request;
     $this->named_vars['collection'] =& $this->collection;
     $this->named_vars['response'] =& $this;
-    if (check_cookie())
+    if (get_profile_id())
       $this->named_vars['profile'] =& get_profile();
     else
       $this->named_vars['profile'] = false;
