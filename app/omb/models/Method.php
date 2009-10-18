@@ -146,13 +146,13 @@ if (isset($_FILES[\'media\'])) {
   $mediaurl = $request->url_for(array(
 \'resource\'=>\'__\'.$request->id.".jpg"));
   echo \'<rsp stat="ok">
-  <mediaid>\'.$mediaid.\'</mediaid>
-  <mediaurl>\'.$mediaurl.\'</mediaurl>
+ <mediaid>\'.$mediaid.\'</mediaid>
+ <mediaurl>\'.$mediaurl.\'</mediaurl>
 </rsp>
 \';
 } else {
   echo \'<rsp stat="fail">
-  <err code="1001" msg="Invalid twitter username or password" />
+    <err code="1001" msg="Invalid twitter username or password" />
 </rsp>
 \';
 }
@@ -172,22 +172,6 @@ exit;
     $m->save_changes();
     $m->set_etag(1);
   
-  }
-
-
-
-
-	  $m->set_value( 'function', 'api_statuses_update_json' );
-    $m->set_value( 'route', 'api/statuses/update.json' );
-    $m->set_value( 'resource', 'posts' );
-    $m->set_value( 'permission', 'write' );
-    $m->set_value( 'enabled', true );
-    $m->set_value( 'omb', 1 );
-    $m->set_value( 'oauth', 1 );
-    $m->set_value( 'http', 1 );
-
-    $m->save_changes();
-    $m->set_etag(1);
 
     $m = $this->base();
     $m->set_value( 'code', '
