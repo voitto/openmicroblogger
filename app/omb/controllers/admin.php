@@ -315,6 +315,7 @@ extract( $vars );
   $returnvars = array();
   
   $TwitterUser =& $db->model('TwitterUser');
+  $TwitterUser->set_limit(1000);
   $TwitterUser->find_by( array('eq'=>'not like','oauth_key'=>''),1 );
   $i=1;
   while ($tu = $TwitterUser->MoveNext()) {

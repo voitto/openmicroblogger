@@ -18,7 +18,8 @@ function load_my_cloud_element() {
 
 function rsscloud_init(){
 
-  lib_include( 'rsscloud/rsscloud' );
+	if ( '' == get_option( 'cloud_domain' ) )
+    set_default_omb_cloud_options();
 
 	add_action('rss2_head','load_my_cloud_element');
 
@@ -31,9 +32,25 @@ function rsscloud_init(){
     update_cloud_options();
   
   elseif ( '' == get_option( 'cloud_domain' ) )
-    set_default_cloud_options();
+    set_default_omb_cloud_options();
 
-  app_register_init( 'admin', 'cloud.html', 'rssCloud Options', 'rsscloud', 2 );
+  app_register_init( 'feeds', 'index.html', 'Feeds', 'rsscloud', 2 );
 
 }
   
+function set_default_omb_cloud_options(){
+	global $request;
+	$cloud_path = '/api/rsscloud/pleaseNotify';
+	$cloud_ping = '/api/rsscloud/ping';
+	if (strlen($request->path)>1) {
+		$cloud_path = '/'.$request->path.$cloud_path;
+		$cloud_ping = '/'.$request->path.$cloud_ping;
+	}
+  add_option('cloud_domain',$request->domain,'Cloud Domain');
+  add_option('cloud_port','80','Cloud Port');
+  add_option('cloud_path',$cloud_path,'Cloud Path');
+  add_option('cloud_function','','Cloud Function');
+  add_option('cloud_protocol','http-post','Cloud Protocol');
+  add_option('cloud_ping',$cloud_ping,'Cloud Ping Path');
+}
+

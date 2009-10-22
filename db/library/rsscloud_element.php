@@ -56,7 +56,7 @@ function add_cloud_element(){
    $cloud_function = get_option('cloud_function');
    $cloud_protocol = get_option('cloud_protocol');
 
-   echo "<cloud domain=\"" . $cloud_domain . "\" port=\"" . $current_port . "\" path=\"" . $cloud_path . "\" registerProcedure=\"" . $cloud_function . "\" protocol=\"" . $cloud_protocol . "\" />";
+   echo "<cloud domain=\"" . $cloud_domain . "\" port=\"" . $cloud_port . "\" path=\"" . $cloud_path . "\" registerProcedure=\"" . $cloud_function . "\" protocol=\"" . $cloud_protocol . "\" />";
 }
 
 function set_default_cloud_options(){
@@ -190,7 +190,7 @@ function rss_cloud_ping(){
    $ping_path = get_option('cloud_ping');
       if (empty($ping_path)) $ping_path="/rsscloud/ping";
 
-   $ping_url="http://" . $current_domain . ":" . $current_port . "/" . $ping_path . "";
+   $ping_url="http://" . $current_domain . ":" . $current_port . "" . $ping_path . "";
    /*
       If in doubt about your settings, uncomment the next line:
    */

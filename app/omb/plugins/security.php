@@ -909,10 +909,13 @@ function _oauth( &$vars ) {
 );
 }
 
-function make_identity( $user ) {
+function make_identity( $user, $newperson=false ) {
   global $db,$prefix,$request;
   $Person =& $db->model('Person');
-  if (get_person_id()) {
+  if ($newperson) {
+	  $p = $Person->base();
+	  $p->save();
+  } elseif (get_person_id()) {
 	  // make a new identity for the Person
 	  $p = $Person->find(get_person_id());
   } else {

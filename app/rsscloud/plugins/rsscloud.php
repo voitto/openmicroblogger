@@ -1,5 +1,5 @@
 <?php
-return;
+
 function set_up_cloud_ping(){
 	$pid = get_profile_id();
 	global $optiondata,$request,$blogdata;

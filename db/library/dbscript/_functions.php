@@ -3156,3 +3156,57 @@ function handle_posted_file($filename="",$att,$profile) {
 	return true;
 	
 }
+
+function ent2ncr($text) {
+  return $text;
+}
+
+function esc_html($text) {
+	return $text;
+}
+
+function wp_remote_post( $url, $paramarr ){
+
+  $method = $paramarr['method'];
+  $timeout = $paramarr['timeout'];
+  $agent = $paramarr['user-agent'];
+  $port = $paramarr['port'];
+
+  foreach($paramarr['body'] as $url) {
+    // test the callback	
+  }
+
+	//  	'method' => 'POST', 
+	//	  'timeout' => RSSCLOUD_HTTP_TIMEOUT, 
+	//	  'user-agent' => RSSCLOUD_USER_AGENT, 
+	//	  'port' => $port, 
+	//	  'body' => array( 
+	//		'url' => $_POST['url1']
+	
+  $result = array();
+  $result['response'] = array('code'=>200);
+  return $result;
+
+}
+
+
+function readUrl($url){
+	$timeout = 10;
+  $ch = curl_init();
+  curl_setopt( $ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; rv:1.7.3) Gecko/20041001 Firefox/0.10.1" );
+  curl_setopt( $ch, CURLOPT_URL, $url );
+  curl_setopt( $ch, CURLOPT_ENCODING, "" );
+  curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+  curl_setopt( $ch, CURLOPT_AUTOREFERER, true );
+  curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, $timeout );
+  curl_setopt( $ch, CURLOPT_TIMEOUT, $timeout );
+  curl_setopt( $ch, CURLOPT_MAXREDIRS, 10 );
+  $content = curl_exec( $ch );
+  $response = curl_getinfo( $ch );
+  curl_close ( $ch );
+  if($response['http_code'] == 200)
+  {
+      return $content;
+  }
+  return false;
+}

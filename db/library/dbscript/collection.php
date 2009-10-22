@@ -118,6 +118,7 @@ class Collection extends GenericIterator {
     
     if ($table->rowcount() > 0) {
       $first = true;
+      $this->updated = timestamp();
       while ( $Member = $table->MoveNext() ) {
         if ( isset( $db->models['entries'] )) {
           $Entry = $Member->FirstChild( 'entries' );
@@ -127,14 +128,13 @@ class Collection extends GenericIterator {
           }
         }
         $this->members[$Member->$uri_key] = $Entry->last_modified;
-        $this->updated = timestamp();
-        if (isset($Member->modified) && !empty($Member->modified))
-          $this->updated = $Member->modified;
         if ($first) {
-          if ( isset( $db->models['entries'] )) {
-            if (!empty($Entry->last_modified))
-              $this->updated = $Entry->last_modified;
-          }
+          if (isset($Member->created) && !empty($Member->created))
+            $this->updated = $Member->created;
+          elseif (isset($Member->modified) && !empty($Member->modified))
+            $this->updated = $Member->modified;
+          elseif (!empty($Entry->last_modified))
+            $this->updated = $Entry->last_modified;
         }
         $first = false;
       }
