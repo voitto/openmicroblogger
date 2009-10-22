@@ -1,0 +1,32 @@
+
+<table align="center" cellpadding="3" cellspacing="0" border="0">
+
+  <tr>
+    <td><b>Feed</b></td>
+    <td><b>Type</b></td>
+    <td><p></p></td>
+  </tr>
+
+  <?php while( $Member = $collection->MoveNext() ) : ?>
+
+  <?php $Entry = $Member->FirstChild('entries'); ?>
+
+    <tr>
+      <td>
+        <a href="<?php print $Member->href; ?>">
+          <?php print $Member->title; ?>
+        </a>
+      </td>
+      <td><p><?php print $Member->type; ?></p></td>
+      <td>
+      </td>
+    </tr>
+
+  <?php endwhile; ?>
+
+</table>
+<a href="<?php url_for( array( 'resource'=>'feeds', 'action'=>'import' )); ?>">
+   <h2> Import Feeds...</h2>
+  </a>
+
+

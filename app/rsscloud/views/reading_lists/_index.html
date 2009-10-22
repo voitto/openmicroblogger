@@ -1,0 +1,64 @@
+
+<table align="center" cellpadding="3" cellspacing="0" border="0">
+
+  <tr>
+    <td colspan="3"><h2>Reading Lists</h2></td>
+  </tr>
+  <tr>
+    <td colspan="3"><b>&nbsp;</b></td>
+  </tr>
+
+  <?php while( $Member = $collection->MoveNext() ) : ?>
+
+  <?php $Entry = $Member->FirstChild('entries'); ?>
+
+    <tr>
+      <td>
+ <h3>         <?php print $Member->title; ?></h3>
+      </td>
+      <td></td>
+      <td>
+      </td>
+    </tr>
+	  <tr>
+	    <td colspan="3"><p><?php print $Member->description; ?></p></td>
+	  </tr>
+
+
+	  <tr>
+	    <td colspan="3"><?php 
+	
+	global $db;
+	$Feed =& $db->model('Feed');
+	$Feed->find_by('reading_list_id',$Member->id);
+
+	
+	?>
+	<?php while( $f = $Feed->MoveNext() ) : ?>
+
+ <?php $o = get_profile($f->profile_id); ?>
+    <tr>
+      <td>
+        <a href="<?php print $o->profile_url; ?>">
+          <?php print $f->title; ?>
+        </a>
+      </td>
+      <td><p><?php print $f->type; ?></p></td>
+      <td>
+      </td>
+    </tr>
+
+  <?php endwhile; ?>
+  
+	
+	</td>
+	  </tr>
+
+  <?php endwhile; ?>
+
+</table>
+<a href="<?php url_for( array( 'resource'=>'feeds', 'action'=>'import' )); ?>">
+   <h2> Import a Reading List...</h2>
+  </a>
+
+

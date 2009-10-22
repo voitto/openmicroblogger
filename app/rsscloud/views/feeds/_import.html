@@ -1,0 +1,5 @@
+<form action="<?php url_for( array('resource'=>'feeds') ); ?>" method="post" enctype="multipart/form-data">
+<input name="method" type="hidden" value="post" />
+<input type="file" name="opmlfile">
+<input type="submit" value="Import OPML File">
+</form>
