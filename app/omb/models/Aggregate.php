@@ -26,18 +26,6 @@ class Aggregate extends Model {
   
   function init() {
     
-    $Cat = $this->base();
-    $Cat->set_value( 'name', 'Posts' );
-    $Cat->set_value( 'term', 'posts' );
-    $Cat->set_value( 'scheme', 'minifeed' );
-    $Cat->save_changes();
-
-    $Cat = $this->base();
-    $Cat->set_value( 'name', 'Tweets' );
-    $Cat->set_value( 'term', 'tweets' );
-    $Cat->set_value( 'scheme', 'minifeed' );
-    $Cat->save_changes();
-    
   }
   
 }

@@ -30,17 +30,26 @@ class Group extends Model {
   
   function init() {
     
+    $this->set_limit(100);
+    $this->find();
+    $found = array();
+    while ($rec = $this->MoveNext())
+	    $found[] = $rec->name;
+
     $Grp = $this->base();
     $Grp->set_value( 'name', 'everyone' );
-    $Grp->save_changes();
+    if (!(in_array($Grp->attributes['name'],$found)))
+      $Grp->save_changes();
         
     $Grp = $this->base();
     $Grp->set_value( 'name', 'administrators' );
-    $Grp->save_changes();
+    if (!(in_array($Grp->attributes['name'],$found)))
+      $Grp->save_changes();
     
     $Grp = $this->base();
     $Grp->set_value( 'name', 'members' );
-    $Grp->save_changes();
+    if (!(in_array($Grp->attributes['name'],$found)))
+      $Grp->save_changes();
     
   }
   

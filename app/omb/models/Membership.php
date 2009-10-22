@@ -32,11 +32,18 @@ class Membership extends Model {
   }
   
   function init() {
-    
+
+    $this->set_limit(100);
+    $this->find();
+    $found = array();
+    while ($rec = $this->MoveNext())
+	    $found[] = $rec->group_id;
+
     $M = $this->base();
     $M->set_value( 'group_id', 2 );
     $M->set_value( 'person_id', 1 );
-    $M->save_changes();
+    if (!(in_array($M->attributes['group_id'],$found)))
+      $M->save_changes();
     
   }
   

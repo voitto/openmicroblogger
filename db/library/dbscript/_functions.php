@@ -2475,8 +2475,11 @@ function migrate() {
   $db->just_get_objects();
   
   foreach($db->models as $model)
-    if ($model)
+    if ($model){
       $model->migrate();
+	    if (method_exists( $model, 'init' ))
+	      $model->init();
+    }
   
   echo "<br />The database schema is now synced to the data models. <a href=\"".$request->url_for('admin')."\">Return to Admin</a><br /><br />";
   exit;
