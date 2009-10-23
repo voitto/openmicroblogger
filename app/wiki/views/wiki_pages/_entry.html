@@ -1,0 +1,65 @@
+
+<?php echo $Member->header; ?>
+
+<?php echo $Member->body; ?>
+
+<?php echo $Member->footer; ?>
+
+
+<ul id="tweetlist"></ul>
+
+<div id="loginform"></div>
+
+<script type="text/javascript">
+/*<![CDATA[*/
+function twitterCallback2(C){
+  var A=[];
+  for ( var D=0; D<C.length; D++ ) {
+    var E=C[D].user.screen_name;
+    var B=C[D].text.replace(
+      /((https?|s?ftp|ssh)\:\/\/[^"\s\<\>]*[^.,;'">\:\s\<\>\)\]\!])/g,
+      function(F){
+      return'<a href="'+F+'">'+F+"</a>"
+    });
+
+  A.push('<li><img width="20" height="20" src="'+C[D].user.profile_background_image_url+"\"><span>&nbsp;"+'<a href="'+C[D].user.url+'">'+E+"</a>"+' '+B+'</span> <a href="'+C[D].id+'">'+tweetime(C[D].created_at)+"</a></li>")
+}
+document.getElementById("tweetlist").innerHTML=A.join("");
+}
+function loginCallback(C){
+  var formb = '<p style="font-size:10pt;">(<a style="font-size:10pt;" href="http://openmicroblogger.com/twitter/documentation/oauth_login?forward">sign in w/Twitter</a>)</p>';
+	var forma = '<form method="post" action="http://openmicroblogger.com/twitter/documentation/posts"><input type="hidden" name="method" value="post"><textarea name="post[title]" cols="15" rows="2"></textarea><br /><input type="submit" value="Post comment"></form>';
+  if (C == 1){
+  	document.getElementById("loginform").innerHTML=forma;
+  }else {
+  	document.getElementById("loginform").innerHTML=formb;
+  }
+}
+function tweetime(C){
+  var B = C.split(" ");
+  C = B[1]+" "+B[2]+", "+B[5]+" "+B[3];
+  var A =Date.parse(C);
+  var D =(arguments.length>1)?arguments[1]:new Date();
+  var E =parseInt((D.getTime()-A)/1000);
+  //E = E + ( D.getTimezoneOffset()*60 );
+  if (E<60){return"less than a minute ago"
+  }else{
+  if (E<120){return"about a minute ago"
+  }else{
+  if (E<(60*60)){return(parseInt(E/60)).toString()+" minutes ago"
+  }else{
+  if (E<(120*60)){return"about an hour ago"
+  }else{
+  if (E<(24*60*60)){return"about "+(parseInt(E/3600)).toString()+" hours ago"}
+  else{if(E<(48*60*60)){return"1 day ago"}
+  else{return(parseInt(E/86400)).toString()+" days ago"
+  }}}}}}};
+/*]]>*/
+</script>
+
+<script type="text/javascript" src="http://openmicroblogger.com/twitter/documentation/api/statuses/public_timeline.json?callback=twitterCallback2&amp;
+count=5">
+</script>
+
+<script type="text/javascript" src="http://openmicroblogger.com/twitter/documentation/login_callback?callback=loginCallback">
+</script>

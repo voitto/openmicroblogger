@@ -600,4 +600,13 @@ $txt['config_load_paths'] = 'Load Paths';
 $txt['config_lang'] = 'Language';
 
 
-?>
+/////////////////////////////////////
+# /app/wiki/views/wikis/_new.html
+/////////////////////////////////////
+$txt['wikis_edit_title'] = "Title";
+$txt['wikis_edit_cancel'] = "Cancel";
+$txt['wikis_edit_save_stream'] = "Save Wiki";
+$txt['wikis_index'] = "Wikis";
+$txt['wikis_index_create_new_wiki'] = "Create a Wiki";
+
+

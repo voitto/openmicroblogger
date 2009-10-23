@@ -3,7 +3,10 @@
 after_filter( 'broadcast_omb_notice', 'insert_from_post' );
 
 function broadcast_omb_notice( &$model, &$rec ) {
-  
+
+  if (!($rec->table == 'posts'))
+    return;
+
   if (!(isset($rec->title)) || !(isset($rec->uri)))
     return;
   
@@ -15,6 +18,9 @@ function broadcast_omb_notice( &$model, &$rec ) {
     )));
     $rec->save_changes();
   }
+
+  if (!$request->resource == 'posts')
+    return;
   
   wp_plugin_include(array(
     'wp-oauth'

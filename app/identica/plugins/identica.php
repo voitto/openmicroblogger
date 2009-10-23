@@ -6,6 +6,9 @@ after_filter( 'send_to_identica', 'insert_from_post' );
 // the "hook" function itself
 function send_to_identica( &$model, &$rec ) {
   
+  if (!($rec->table == 'posts'))
+    return;
+
   if (!get_profile_id())
     return;
 

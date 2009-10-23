@@ -641,9 +641,9 @@ $request->routematch();
  */
 
   // load data model if these model methods are triggered
-before_filter( 'load_model', 'delete_from_request' );
-before_filter( 'load_model', 'insert_from_request' );
-before_filter( 'load_model', 'update_from_request' );
+before_filter( 'load_model', 'delete_from_post' );
+before_filter( 'load_model', 'insert_from_post' );
+before_filter( 'load_model', 'update_from_post' );
 before_filter( 'load_model', 'fields_from_request' );
 before_filter( 'load_model', 'MoveFirst' );
 before_filter( 'load_model', 'MoveNext' );
@@ -687,4 +687,3 @@ $response = new View();
 
 render( 'action', $request->action );
 
-?>

@@ -408,6 +408,8 @@ class Model {
     if ($this->has_metadata) {
       $atomentry = $db->models['entries']->find_by( 'etag', $req->params['entry']['etag'] );
       $recid = $atomentry->attributes['record_id'];
+      if (!$req->id)
+        $req->set_param('id',$recid);
     } else {
       $recid = $req->id;
     }

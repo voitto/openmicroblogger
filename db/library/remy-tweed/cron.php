@@ -211,31 +211,18 @@ while ($f = $Feed->MoveNext()) {
 		$params = array(
 			'notifyProcedure'=>get_option('cloud_function'),
 			'port'=>get_option('cloud_port'),
-			'path'=>get_option('cloud_path'),
+			'path'=>'/api/rsscloud/callback',
 			'protocol'=>get_option('cloud_protocol'),
 			'url1'=>$f->xref,
-			'domain'=>get_option('cloud_domain')
+//			'domain'=>get_option('cloud_domain')
 		);
-	  $ch = curl_init();
-	  if (defined("CURL_CA_BUNDLE_PATH")) curl_setopt($ch, CURLOPT_CAINFO, CURL_CA_BUNDLE_PATH);
-	  curl_setopt($ch, CURLOPT_URL, $subscribe_url);
-	  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
-		curl_setopt($ch, CURLOPT_HEADER, false);
-	  curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-	  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-	  if (isset($params)) {
-	    curl_setopt($ch, CURLOPT_POST, 1);
-	    curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
-	  }
-	  if ($f->cloud_port == 80){
-	    $response = curl_exec($ch);
-	    $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-	    curl_close ($ch);
-			admin_alert("rssCloud renew: " . $f->title);
-  	}else{
-			admin_alert("rssCloud skip renew: " . $f->title.implode(" ",$params));
-    }
+    require_once(ABSPATH.WPINC.'/class-snoopy.php');
+		$snoop = new Snoopy;
+			$snoop->submit(
+				$subscribe_url,
+				$params
+			);
+		admin_alert("rssCloud renew: " . $f->title);
 	}
 }
 

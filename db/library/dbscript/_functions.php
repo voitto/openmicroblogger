@@ -1397,7 +1397,9 @@ function lib_include( $file ) {
 
 
 function load_plugin( $plugin ) {
-  
+	
+	global $request,$db;
+  trigger_before('load_plugin',$db,$request);
   $plugin_paths = array();
   
   if (isset($GLOBALS['PATH']['app_plugins']))

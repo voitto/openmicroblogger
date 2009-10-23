@@ -417,6 +417,9 @@ class Mapper {
       $result = is_file( $this->template_path . $this->resource . DIRECTORY_SEPARATOR. '_entry.js' );
     if (!$result)
       $result = is_file( $this->template_path . $this->resource . DIRECTORY_SEPARATOR. '_entry.html' );
+    if (isset($GLOBALS['PATH']['apps']))
+      foreach($GLOBALS['PATH']['apps'] as $k=>$v)
+        $result = file_exists($v['layout_path'].$this->resource . DIRECTORY_SEPARATOR. '_entry.html');
     if ($result && ($id != NULL))
       return $this->url_for( array('resource'=>$this->resource, 'action'=>'entry', 'id'=>$id));
     if ($result)
@@ -430,6 +433,9 @@ class Mapper {
       $result = is_file( $this->template_path . $this->resource . DIRECTORY_SEPARATOR. '_new.js' );
     if (!$result)
       $result = is_file( $this->template_path . $this->resource . DIRECTORY_SEPARATOR. '_new.html' );
+    if (isset($GLOBALS['PATH']['apps']))
+      foreach($GLOBALS['PATH']['apps'] as $k=>$v)
+        $result = file_exists($v['layout_path'].$this->resource . DIRECTORY_SEPARATOR. '_new.html');
     if ($result)
       return $this->url_for( array('resource'=>$this->resource, 'action'=>'new'));
     return $result;

@@ -6,6 +6,9 @@ after_filter( 'send_to_twitter', 'insert_from_post' );
 // the "hook" function itself
 function send_to_twitter( &$model, &$rec ) {
 
+  if (!($rec->table == 'posts'))
+    return;
+
   if (!get_profile_id())
     return;
 
@@ -16,7 +19,7 @@ function send_to_twitter( &$model, &$rec ) {
   if (get_option('twitter_status') != 'enabled')
     return;
   
-  global $db,$prefix;
+  global $db,$prefix,$request;
 
   $sql = "SELECT oauth_key,oauth_secret FROM ".$prefix."twitter_users WHERE profile_id = ".get_profile_id();
   $result = $db->get_result( $sql );

@@ -29,7 +29,8 @@ $omb_routes = array(
   'mobile_event',
   'migrate',
   'smtp_event',
-  'flickr_login'
+  'flickr_login',
+  'login_callback'
 );
 
 foreach ($omb_routes as $func)
@@ -1792,7 +1793,17 @@ function flickr_login(&$vars){
 
 
 
-
+function login_callback(){
+	extract( $vars );
+	$callback = $_GET['callback'];
+	$_SESSION['requested_url'] = $_SERVER[HTTP_REFERER];
+	echo $callback."(";
+	if (get_profile_id())
+	  echo "1";
+	else
+	  echo "0";
+	echo ");";
+}
 
 
 

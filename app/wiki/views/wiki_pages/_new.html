@@ -1,0 +1,53 @@
+<?php 
+include 'wp-content/language/lang_chooser.php'; //Loads the language-file
+
+  global $request;
+  $post = strtolower(classify($request->resource));
+
+?>
+
+    <script type="text/javascript" src="<?php echo base_path(true); ?>resource/markitup/jquery.markitup.pack.js"></script>
+    <script type="text/javascript" src="<?php echo base_path(true); ?>resource/markitup/sets/default/set.js"></script>
+    <link rel="stylesheet" type="text/css" href="<?php echo base_path(true); ?>resource/markitup/skins/markitup/style.css" />
+    <link rel="stylesheet" type="text/css" href="<?php echo base_path(true); ?>resource/markitup/sets/default/style.css" />
+
+<form action="<?php url_for( $request->resource ); ?>" method="post" name="<?php url_for( $request->resource ); ?>" id="<?php url_for( $request->resource ); ?>" enctype="multipart/form-data">
+<div>
+<input name="MAX_FILE_SIZE" type="hidden" value="6000000" />
+<input name="method" type="hidden" value="post" />
+<input name="<?php print $post; ?>[parent_id]" value="0" type="hidden" />
+<input name="<?php print $post; ?>[local]" value="1" type="hidden" />
+
+
+    <?php echo $txt['new_page']; ?>
+    <textarea class="new" rows="3" cols="56" id="<?php print $post; ?>_title" name="<?php print $post; ?>[title]"><?php print $Member->title; ?></textarea>
+
+
+      <textarea rows="4" class="new2" cols="40" wrap="virtual" id="markItUp" name="<?php print $post; ?>[body]"><?php print $Member->body; ?></textarea>
+
+        <script type="text/javascript">
+        <!--
+        $(document).ready(function()	{
+        	$('#markItUp').markItUp(mySettings);
+        });
+        -->
+        </script>
+
+  
+
+
+
+    <br /><input onclick="JavaScript:history.back();" name="button_group[Cancel]" value="Cancel" type="button">
+<input type="hidden" name="<?php print $post; ?>[contributor]" value="<?php print $p->given_name." ".$p->family_name; ?>">
+<input value="Save Page" type="submit" name="button_group">
+
+</div>
+</form>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
