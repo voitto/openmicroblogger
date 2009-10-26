@@ -1,7 +1,7 @@
 <?php
 
 function send_ping( &$model, &$rec ) {
-  
+
   if (!PING)
     return;
 
@@ -93,6 +93,7 @@ function send_ping( &$model, &$rec ) {
     $payload['nickname'] = $o->nickname;
     $payload['created'] = date( "g:i A" , strtotime($rec->created) );
     $payload['id'] = $rec->id;
+    $payload['callback'] = '';
 
     if ($rec->parent_id)
 	    $payload['comment'] = 1;

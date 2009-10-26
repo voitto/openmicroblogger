@@ -3259,3 +3259,37 @@ function readUrl($url){
   }
   return false;
 }
+
+function realtime($callback,$payload){
+
+  if (!PING)
+    return;
+
+  if (!REALTIME_HOST)
+    return;
+
+  global $db;
+  
+  if (!empty($db->prefix))
+    $chan = $db->prefix;
+  else
+    $chan = "chan";
+  
+	if (!(class_exists('Services_JSON')))
+	  lib_include( 'json' );
+
+	$json = new Services_JSON();
+  
+  $payload['callback'] = $callback;
+
+	$load = $json->encode($payload);
+
+	$curl = curl_init( "http://".REALTIME_HOST.":".REALTIME_PORT );
+
+	curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );
+	curl_setopt( $curl, CURLOPT_TIMEOUT, 1);
+	curl_setopt( $curl, CURLOPT_CUSTOMREQUEST, 'ADDMESSAGE '.$chan.' '.addslashes($load) );
+
+	curl_exec($curl);
+
+}
