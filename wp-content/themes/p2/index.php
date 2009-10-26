@@ -1,6 +1,10 @@
 <?php
 include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 
+add_include_path(library_path());
+include('remy-tweed/plugins/linkify.php');
+
+
 if( 'POST' == $_SERVER['REQUEST_METHOD'] && !empty( $_POST['action'] ) && $_POST['action'] == 'post' ) {
 	if ( ! is_user_logged_in() )
 		auth_redirect();

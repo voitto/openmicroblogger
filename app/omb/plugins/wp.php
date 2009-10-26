@@ -1533,9 +1533,24 @@ function the_content( $linklabel ) {
   echo "<p>".$title."</p>";
   
 }
-
+class text_of_tweet{
+	
+	var $text;
+	
+}
 function render_notice($title,&$the_post,&$the_author) {
   global $request;
+  ini_set('display_errors','1');
+  ini_set('display_startup_errors','1');
+  error_reporting (E_ALL & ~E_NOTICE );
+  $title = str_replace("\n"," ",$title);
+  $t = new text_of_tweet;
+  $t->text = $title;
+  $l = new linkify;
+	$obj = $l->run($t);
+	return $obj->text;
+
+
   if (strpos($title, 'http') !== false || strpos($title, '@') !== false) {
     $title = str_replace("\n"," ",$title);
     $expl = explode( " ", $title );
