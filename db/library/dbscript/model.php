@@ -289,7 +289,7 @@ class Model {
     }
   }
   
-  function update_from_post( &$req ) {
+  function update_from_post( &$req, $revision=false ) {
     
     trigger_before( 'update_from_post', $this, $req );
     
@@ -348,6 +348,16 @@ class Model {
     }
     
     $rec = $this->find( $recid );
+
+    if ($revision){
+		  // save a revision
+		  $Revision =& $db->model('Revision');
+		  $r = $Revision->base();
+		  $r->set_value( 'data', serialize($rec) );
+		  $r->set_value( 'profile_id', get_profile_id() );
+		  $r->set_value( 'target_id', $rec->entry_id );
+		  $r->save();
+  	}
     
     foreach ( $fieldsarr as $field=>$type ) {
       if ($this->has_metadata && is_blob($rec->table.'.'.$field)) {
@@ -394,7 +404,7 @@ class Model {
     
   }
   
-  function delete_from_post( &$req ) {
+  function delete_from_post( &$req, $revision=false ) {
     
     trigger_before( 'delete_from_post', $this, $req );
     
@@ -415,6 +425,16 @@ class Model {
     }
     
     $rec = $this->find( $recid );
+
+    if ($revision){
+		  // save a revision
+		  $Revision =& $db->model('Revision');
+		  $r = $Revision->base();
+		  $r->set_value( 'data', serialize($rec) );
+		  $r->set_value( 'profile_id', get_profile_id() );
+		  $r->set_value( 'target_id', $rec->entry_id );
+		  $r->save();
+  	}
     
     if ($this->has_metadata) {
       $Person =& $db->model('Person');

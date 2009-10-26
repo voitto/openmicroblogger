@@ -1,12 +1,8 @@
 <html>
 <head>
 <script type="text/javascript" src="<?php base_path(); ?>resource/jquery-1.2.6.min.js"></script>
-<script type="text/javascript" src="<?php base_path(); ?>tinymce/jscripts/tiny_mce/tiny_mce_src.js"></script>
-<script src="<?php base_path(); ?>resource/jeditable/jquery.jeditable.js" type="text/javascript"></script>
-
-
-
-
+<script type="text/javascript" src="<?php base_path(); ?>resource/tinymce/jscripts/tiny_mce/tiny_mce_src.js"></script>
+<script type="text/javascript" src="<?php base_path(); ?>resource/jeditable/jquery.jeditable.js"></script>
 
 <script type="text/javascript">
 
@@ -22,7 +18,7 @@ function initMCE(){
       theme_advanced_toolbar_location : "top",
       theme_advanced_toolbar_align : "left",
       theme_advanced_statusbar_location : "bottom",
-      theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,bullist,numlist,undo,redo,link,unlink",
+      theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,bullist,numlist,undo,redo,link,unlink,code",
       theme_advanced_buttons2 : "",
       theme_advanced_buttons3 : "",
       theme_advanced_resizing : true});
@@ -68,9 +64,9 @@ $.editable.addInputType('mce', {
 </head>
 <body>
 
-<p class="edit_header" id="edit_header"><?php echo $Member->header; ?></p>
-<p class="edit_body" id="edit_body"><?php echo $Member->body; ?></p>
-<p class="edit_footer" id="edit_footer"><?php echo $Member->footer; ?></p>
+<div class="jeditable_header" id="jeditable_header"><?php echo $Member->header; ?></div>
+<div class="jeditable_body" id="jeditable_body"><?php echo $Member->body; ?></div>
+<div class="jeditable_footer" id="jeditable_footer"><?php echo $Member->footer; ?></div>
 
 
 <?php $stream = 'http://openmicroblogger.com/twitter/documentation/'; ?>
@@ -88,7 +84,7 @@ $.editable.addInputType('mce', {
 <div id="loginform"></div>
 
 <script type="text/javascript">
-/*<![CDATA[*/
+// <![CDATA[
 function twitterCallback2(C){
   var A=[];
   for ( var D=0; D<C.length; D++ ) {
@@ -131,11 +127,10 @@ function tweetime(C){
   else{if(E<(48*60*60)){return"1 day ago"}
   else{return(parseInt(E/86400)).toString()+" days ago"
   }}}}}}};
-/*]]>*/
+// ]]>
 </script>
 
-<script type="text/javascript" src="<?php echo $timeline_callback; ?>&amp;
-count=5">
+<script type="text/javascript" src="<?php echo $timeline_callback; ?>&count=5">
 </script>
 
 <script type="text/javascript" src="<?php echo $login_callback; ?>">
@@ -144,49 +139,30 @@ count=5">
 <script type="text/javascript">
 $(function(){
    
-   $("#edit_header").editable(function(value, settings){
-      console.log(this, value, settings);
-      return value;
-   
-   }, { 
-      type : 'mce',
-      submit : 'OK',
-      indicator : "Saving...",
-      tooltip : 'Click to edit...',
-      width : '500px',
-      height : '100px'
-   });
+	<?php 
+$field='header';
+$nam="header";
+$post='wikipage';
+$namurl='http://openmicroblogger.com/wiki_pages';
+	tinymce_widget_text_post_helper($nam,$namurl,$post,$field,$Entry);
 
+	$field='body';
+	$nam="body";
+	$post='wikipage';
+	$namurl='http://openmicroblogger.com/wiki_pages';
+		tinymce_widget_text_post_helper($nam,$namurl,$post,$field,$Entry);
 
-   $("#edit_body").editable(function(value, settings){
-      console.log(this, value, settings);
-      return value;
-   
-   }, { 
-      type : 'mce',
-      submit : 'OK',
-      indicator : "Saving...",
-      tooltip : 'Click to edit...',
-      width : '500px',
-      height : '100px'
-   });
+		$field='footer';
+		$nam="footer";
+		$post='wikipage';
+		$namurl='http://openmicroblogger.com/wiki_pages';
+			tinymce_widget_text_post_helper($nam,$namurl,$post,$field,$Entry);
+	
+	?>
 
-
-   $("#edit_footer").editable(function(value, settings){
-      console.log(this, value, settings);
-      return value;
-   
-   }, { 
-      type : 'mce',
-      submit : 'OK',
-      indicator : "Saving...",
-      tooltip : 'Click to edit...',
-      width : '500px',
-      height : '100px'
-   });
 });
-
 </script>
-
+<p>Page revisions:</p>
+<?php render_partial('revisions'); ?>
 </body>
 </html>

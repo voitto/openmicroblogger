@@ -72,11 +72,15 @@ get_header();
       eval( "data = " + data );
       if (data['in_reply_to']) {
         var selectr = data['in_reply_to'];
-        $(selectr).append(data['html']);
+        $(selectr).append(render_a_tweet(data));
+        //$(selectr).append(data['html']);
       } else {
-        $("#postlist").prepend(data['html']);
+        $("#postlist").prepend(render_a_tweet(data));
+        //$("#postlist").prepend(data['html']);
       }
+      <?php if (environment('oembed')) : ?>
       $('a.oembed').oembed();
+      <?php endif; ?>
     };
     // ]]>
   </script>
@@ -117,7 +121,8 @@ if( have_posts( ) ) {
 
 <hr />
 
-
+<?php render_p2_tweet($the_post,$the_author); ?>
+<?php continue; ?>
 <?php if (!isset($request->params['byid'])) : ?>	
 <span class="tweet_avatar">
 	<a href="<?php echo $the_author->profile_url; ?>">
@@ -139,7 +144,9 @@ if( have_posts( ) ) {
 			<span><?php echo laconica_time($the_post->created); ?></span>
 		</a>
 		<span>from 
-			<a href="">web</a>
+			<a href="">web</a> <?php $ccrurl = 'JavaScript:inline_comment('.$the_post->id.','.$the_post->id.');';
+			echo 	'<a id="reply" title="reply to this tweet" href="'.$ccrurl.'" rel="'. $post_id.'">' . $txt['wp_reply'] . '</a>';
+		  ?>
 		</span>
 	</span>
 </span>
@@ -149,8 +156,10 @@ if( have_posts( ) ) {
 		<?php echo in_reply_to($the_post); ?>
 	</div>
 </span>
-
-
+<span class="comments">
+	<div id="commentcontent-<?php echo $the_post->id; ?>" class="commentlist">
+</div>
+</span>
 
 
 <?php
@@ -168,6 +177,74 @@ else {
 	<div class="navigation"><p><?php posts_nav_link(' | ','&larr;&nbsp;' . $txt['index_newer'] . '&nbsp;' . $txt['index_posts'] . '','' . $txt['index_older'] . '&nbsp;' . $txt['index_posts'] . '&nbsp;&rarr;'); ?></p></div>
 </div> <!-- // main -->
 </div> <!-- // sleeve -->
+
+<?php function render_p2_tweet(&$post,&$profile,&$parent=null) { ?>
+	<?php
+	$avsize = 48;
+	$comment = false;
+	if (!($parent == null))
+    $comment = true;
+	global $the_author;
+	global $the_post;
+	global $request;
+	$the_author = $profile;
+	$the_post = $post;
+	?>
+	
+<?php if ($comment) : ?>
+<?php $avsize=32; ?>
+<li style="clear:both;margin-left:40px;padding:0px;">
+<?php endif; ?>
+<div>
+<?php if (!isset($request->params['byid'])) : ?>	
+<div class="tweet_avatar">
+	<a href="<?php echo $the_author->profile_url; ?>">
+	  <img src="<?php echo $the_author->avatar; ?>" height="<?php echo $avsize; ?>" width="<?php echo $avsize; ?>" border="0">
+	</a>
+</div>
+<?php endif; ?>
+<div class="tweet_content">
+	<?php if (!isset($request->params['byid'])) : ?>	
+
+		<a href="<?php echo $the_author->profile_url; ?>" title="<?php echo $the_author->name; ?>"><?php echo $the_author->nickname; ?></a>
+
+
+	<?php endif; ?>
+	<span>
+		<?php the_content( __( '(More ...)' ) ); ?>
+	</span>
+	<div class="tweet_info">
+		<a href="<?php echo $the_post->url; ?>">
+			<span><?php echo laconica_time($the_post->created); ?></span>
+		</a>
+		<span>from 
+			<a href="">web</a> <?php $ccrurl = 'JavaScript:inline_comment('.$the_post->id.','.$the_post->id.');';
+			echo 	'<a id="reply" title="reply to this tweet" href="'.$ccrurl.'">' . $txt['wp_reply'] . '</a>';
+		  ?>
+		</span>
+	</div>
+</div>
+<div class="tweet_actions">
+	<div>
+		<a id="favorite" title="favorite this tweet">&nbsp;&nbsp;</a>
+		<?php if ($comment) echo in_reply_to($parent); ?>
+	<?php echo post_reply_link(array('before' => '', 'reply_text' => $txt['index_reply']), get_the_id()); ?>
+	</div>
+</div>
+</div>
+<?php if ($comment) : ?>
+</li>
+<?php else : ?>
+<div id="commentcontent-<?php echo $the_post->id; ?>" class="commentlist">
+<ul style="list-style:none;">
+
+<?php wp_list_comments(); ?>
+
+</ul>
+</div>
+<?php endif; ?>
+<?php } ?>
+
 
 <?php
 get_footer( );

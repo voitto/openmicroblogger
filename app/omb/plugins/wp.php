@@ -50,7 +50,8 @@ function wp_list_comments() {
     while ( $row = $db->fetch_array( $result ) ) {
       $pp = $db->get_record('posts',$row['id']);
       $cc = owner_of($pp);
-      $comments .= render_comment($pp,$cc,$the_post);
+      render_p2_tweet($pp,$cc,$the_post);
+      //$comments .= render_comment($pp,$cc,$the_post);
     }
   }
   
@@ -981,6 +982,7 @@ function wp_head() {
     else
       echo '<script type="text/javascript" src="'.base_path(true).'resource/jquery-1.2.6.min.js"></script>';
 
+if (environment('longurl'))
 echo '
 <script type="text/javascript" src="'.base_path(true).'resource/jquery.longurl.js"></script>  
 
@@ -1002,13 +1004,14 @@ echo '
       $oembedsuffix = 'oembed.json';
     else
       $oembedsuffix = '?oembed.json';
-    
-    echo '<script type="text/javascript" src="'.base_path(true).'resource/jquery.oembed.js"></script>'."\n".
+
+		if (environment('longurl') && environment('oembed'))
+    echo '<script type="text/javascript" src="'.base_path(true).'resource/jquery.oembed.js"></script>'."\n";
       '  <script type="text/javascript">'."\n".
       '    $(document).ready(function() {'."\n".
       ' var p="'.$oembedbase.'"; 
           $("a.oembed").oembed(null,{},"myphotos",p,"http://"+p+"'.$oembedsuffix.'");'."\n".
-      '  $("a.oembed").longurl();'."\n".' 
+        '  $("a.oembed").longurl();'."\n".' 
       
          });'."\n".
       '  </script>'."\n";
@@ -1042,7 +1045,7 @@ echo '
 echo '   
     
     <script type="text/javascript">
-/*<![CDATA[*/
+// <![CDATA[
   
   function show_page(url) {
     
@@ -1056,35 +1059,7 @@ echo '
     
   }
 
-function setMaxLength() {
-	var x = document.getElementsByTagName("textarea");
-	var counter = document.createElement("div");
-	counter.className = "counter";
-	for (var i=0;i<x.length;i++) {
-		if (x[i].getAttribute("maxlength")) {
-			var counterClone = counter.cloneNode(true);
-			counterClone.relatedElement = x[i];
-			counterClone.innerHTML = "<span>0</span>/"+x[i].getAttribute("maxlength");
-			x[i].parentNode.insertBefore(counterClone,x[i].nextSibling);
-			x[i].relatedElement = counterClone.getElementsByTagName("span")[0];
-			x[i].onkeyup = x[i].onchange = checkMaxLength;
-			x[i].onkeyup();
-		}
-	}
-}
-
-function checkMaxLength() {
-	var maxLength = this.getAttribute("maxlength");
-	var currentLength = this.value.length;
-	if (currentLength > maxLength)
-		this.relatedElement.className = "toomuch";
-	else
-		this.relatedElement.className = "";
-	this.relatedElement.firstChild.nodeValue = currentLength;
-	// not innerHTML
-}
-
-/*]]>*/
+// ]]>
     </script>
     
     

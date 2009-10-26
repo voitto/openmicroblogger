@@ -1224,6 +1224,10 @@ img.photo {
 	font-size:.9em;
 	display:block;
 }
+.tweet_actions {
+	font-size:.9em;
+	display:block;
+}
 .tweet_info span,.tweet_info a {
 	color:#aaa;
 }

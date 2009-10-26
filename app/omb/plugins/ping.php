@@ -83,8 +83,25 @@ function send_ping( &$model, &$rec ) {
       $payload['html'] = $tweet;
       $payload['in_reply_to'] = 0;
     }
+
+    $payload['avatar'] = $o->avatar;
+    $payload['profile_url'] = $o->profile_url;
+    $payload['profile_id'] = $o->id;
+    $payload['link'] = $request->url_for(array('resource'=>$notify_table,'action'=>'entry.html','id'=>$recid));
+    $payload['tweet'] = render_notice($rec->title,$rec,$o);
+    $payload['name'] = $o->fullname;
+    $payload['nickname'] = $o->nickname;
+    $payload['created'] = date( "g:i A" , strtotime($rec->created) );
+    $payload['id'] = $rec->id;
+
+    if ($rec->parent_id)
+	    $payload['comment'] = 1;
+		else
+		  $payload['comment'] = 0;
+		
     if (!(class_exists('Services_JSON')))
       lib_include( 'json' );
+
     $json = new Services_JSON();
     $load = $json->encode($payload);
     

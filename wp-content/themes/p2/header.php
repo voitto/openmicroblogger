@@ -52,13 +52,59 @@ $(document).ready(function() {
 
 <script src="<?php base_path(); ?>resource/jeditable/jquery.jeditable.js" type="text/javascript"></script>
   <script type="text/javascript">
+
+	function render_a_tweet(data){
+		var tweet = '';
+		var avsize="48";
+		if (data['comment'] == 1){
+			avsize="32";
+			tweet = tweet + '	<li style="clear:both;margin-left:40px;padding:0px;">';
+		}
+		tweet = tweet + '	<div>';
+		tweet = tweet + '	<div class="tweet_avatar">';
+		tweet = tweet + '		<a href="'+data['profile_url']+'">';
+		tweet = tweet + '		  <img src="'+data['avatar']+'" height="'+avsize+'" width="'+avsize+'" border="0">';
+		tweet = tweet + '		</a>';
+		tweet = tweet + '	</div>';
+
+		tweet = tweet + '	<div class="tweet_content">';
+		tweet = tweet + '	<a href="'+data['profile_url']+'" title="'+data['name']+'">'+data['nickname']+'</a>';
+		tweet = tweet + '	<span>';
+		tweet = tweet + '		'+data['tweet'];
+		tweet = tweet + '	</span>';
+		tweet = tweet + '	<div class="tweet_info">';
+		tweet = tweet + '		<a href="'+data['link']+'">';
+		tweet = tweet + '			<span>'+data['created']+'</span>';
+		tweet = tweet + '		</a>';
+		tweet = tweet + '		<span>from ';
+		tweet = tweet + '			<a href="">web</a>';
+		tweet = tweet + '		</span>';
+		tweet = tweet + '	</div>';
+		tweet = tweet + '</div>';
+		tweet = tweet + '<div class="tweet_actions">';
+		tweet = tweet + '	<div>';
+		tweet = tweet + '		<a id="favorite" title="favorite this tweet">&nbsp;&nbsp;</a>';
+		//tweet = tweet + '		'; in reply to
+		tweet = tweet + '</div>';
+		tweet = tweet + '</div>';
+		if (data['comment'] == 1) {
+			tweet = tweet + '</li>';
+		} else {
+
+			tweet = tweet + '<ul id="commentcontent-'+data['id']+'" style="list-style:none;">';
+			tweet = tweet + '</ul>';
+
+		}
+		return tweet;
+	}
+
     function inline_comment(postid,parentid) {
       var cdiv = '#commentcontent-'+postid;
       var submit_to = '<?php echo $request->url_for(array(
   'resource'  =>  'posts'
 )); ?>';
-      $(cdiv).append('<p class="editable_comment" id="'+cdiv+'editable"></p>');
-      $(".editable_comment").editable(submit_to, { 
+      $(cdiv).append('<p class="editable_comment" id="'+postid+'editable"></p>');
+      $('#'+postid+'editable').editable(submit_to, { 
           indicator   : "<img src=\''. base_path(true).'resource/jeditable/indicator.gif\'>",
           submitdata  : function() {
             return {"method":"post","parent_id":parentid};
@@ -73,7 +119,7 @@ $(document).ready(function() {
             return(value);
           }
       });
-      $(".editable_comment").trigger('click');
+      $('#'+postid+'editable').trigger('click');
     }
     function inline_shorturl() {
       var submit_to = '<?php echo $request->base; ?>';
@@ -112,22 +158,9 @@ $(document).ready(function() {
 </style>
 
 	</head>
-<body onload="JavaScript:setMaxLength();"<?php if(is_single()) echo ' class="single"'; ?>>
+<body<?php if(is_single()) echo ' class="single"'; ?>>
 
 <div id="notify"></div>
-
-<div id="help">
-	<dl class="directions">
-		<dt>c</dt><dd><?php echo $txt['header_compose_new_post']; ?></dd>
-		<dt>j</dt><dd><?php echo $txt['header_next_post_comment']; ?></dd>
-		<dt>k</dt> <dd><?php echo $txt['header_previous_post_comment']; ?></dd>
-		<dt>r</dt> <dd><?php echo $txt['header_reply']; ?></dd>
-		<dt>e</dt> <dd><?php echo $txt['header_edit']; ?></dd>
-		<dt>o</dt> <dd><?php echo $txt['header_show_hide_comments']; ?></dd>
-		<dt>t</dt> <dd><?php echo $txt['header_go_to_top']; ?></dd>
-		<dt>esc</dt> <dd><?php echo $txt['header_cancel']; ?></dd>
-	</dl>
-</div>
 
 <div id="header">
 	<div class="sleeve">

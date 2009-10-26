@@ -2991,6 +2991,50 @@ function setting_widget_text_post_helper($nam,$namurl) {
       });  ';
 };
 
+function tinymce_widget_text_post_helper($nam,$namurl,$post,$field,$namentry) {
+echo '
+var submit_to'.$nam.' = "'. $namurl.'";
+$(".jeditable_'.$nam.'").editable(submit_to'.$nam.', { 
+  indicator   : "<img src=\''. base_path(true).'resource/jeditable/indicator.gif\'>",
+  submitdata  : function() {
+    return {"method":"put","entry[etag]" : "'.$namentry->etag.'"};
+  },
+  name        : "'.$post.'['.$field.']",
+  type        : "mce",
+  noappend    : "true",
+	width 			: "500px",
+	height 			: "100px",
+  submit      : "OK",
+  tooltip     : "Click to edit...",
+  cancel      : "Cancel",
+  callback    : function(value, settings) {
+    return(value);
+  }
+});
+';
+return;
+    echo '
+      var submit_to'.$nam.' = "'. $namurl.'";
+
+      $(".jeditable_'.$nam.'").editable(submit_to'.$nam.', {
+          indicator   : "<img src=\''. base_path(true).'resource/jeditable/indicator.gif\'>",
+          submitdata  : function() {
+            return {"method":"put","entry[etag]" : "'.$namentry->etag.'"};
+          },
+          name        : "'.$post.'['.$field.']",
+          type        : "mce",
+          noappend    : "true",
+					width 			: "500px",
+					height 			: "100px",
+          submit      : "OK",
+          tooltip     : "Click to edit...",
+          cancel      : "Cancel",
+          callback    : function(value, settings) {
+            return(value);
+          }
+      });  ';
+};
+
 function setting_widget_helper($nam,$nammode,$namurl,$namentry,$listdata) {
   if (!class_exists("Services_JSON")) lib_include("json"); $json = new Services_JSON(); 
   global $request;

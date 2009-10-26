@@ -15,6 +15,9 @@ function get( &$vars ) {
 
 function post( &$vars ) {
   extract( $vars );
+  $request->set_param( array( 'wikipage', 'header' ), 'click to edit header...' );
+  $request->set_param( array( 'wikipage', 'body' ), 'click to edit body...' );
+  $request->set_param( array( 'wikipage', 'footer' ), 'click to edit footer...' );
   $resource->insert_from_post( $request );
   header_status( '201 Created' );
   redirect_to( array('resource'=>'wikis','id'=>$request->params['wikipage']['parent_id']) );
@@ -23,7 +26,7 @@ function post( &$vars ) {
 
 function put( &$vars ) {
   extract( $vars );
-  $resource->update_from_post( $request );
+  $resource->update_from_post( $request, true );
   header_status( '200 OK' );
   redirect_to( array('resource'=>'wikis','id'=>$request->params['id']) );
 }
@@ -31,7 +34,7 @@ function put( &$vars ) {
 
 function delete( &$vars ) {
   extract( $vars );
-  $resource->delete_from_post( $request );
+  $resource->delete_from_post( $request, true );
   header_status( '200 OK' );
   redirect_to( 'wikis' );
 }
@@ -64,6 +67,40 @@ function index( &$vars ) {
 function _index( &$vars ) {
   // index controller returns
   // a Collection of recent entries
+  extract( $vars );
+  return vars(
+    array( &$collection, &$profile ),
+    get_defined_vars()
+  );
+}
+
+function _revisions( &$vars ) {
+  extract($vars);
+
+  $Member = $collection->MoveFirst();
+  $Entry = $Member->FirstChild( 'entries' );
+
+  $Revision =& $db->model('Revision');
+  $Revision->set_limit(1000);
+  $Revision->unset_relation('entries');
+  $Revision->has_one('target_id:entries.id');
+  $where = array(
+    'entries.resource'=>'wiki_pages'
+  );
+  $Revision->set_param( 'find_by', $where );
+  $Revision->find();
+
+  while ($r = $Revision->MoveNext()) {
+    $wp = mb_unserialize($r->data);
+    if (is_object($wp)){
+	    if ($wp->id == $Member->id) {
+        $revisor = get_profile($r->profile_id);
+echo '<img width="20" height="20" src="'.$revisor->avatar.'"><span>&nbsp;<a href="'.$revisor->profile_url.'">'.$revisor->fullname.'</a> </span>
+<a style="font-size:85%" href=""></a><BR>';
+    	}
+    }
+  }
+
   extract( $vars );
   return vars(
     array( &$collection, &$profile ),

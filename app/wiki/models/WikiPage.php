@@ -53,13 +53,10 @@ class WikiPage extends Model {
     
     // permissions
     
-    $this->let_read(    'all:everyone' );
-    
-    $this->let_create(  'all:members' );
-    $this->let_write(   'all:everyone' );
-    $this->let_delete(  'all:members' );
-    
-    $this->let_access( 'all:administrators' );
+    $this->let_read( 'all:everyone' );
+    $this->let_create( 'all:members' );
+    $this->let_modify( 'all:members' );
+    $this->let_superuser( 'all:members' );
     
   }
   
