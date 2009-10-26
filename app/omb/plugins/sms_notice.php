@@ -4,8 +4,8 @@ global $request;
 
 function mobile_event( &$vars ) {
   
-  if (!($_SERVER['REMOTE_ADDR'] == '204.244.102.2'))
-    trigger_error('Sorry but your IP address is unlike the Zeep server',E_USER_ERROR);
+ // if (!($_SERVER['REMOTE_ADDR'] == '204.244.102.2'))
+ //   trigger_error('Sorry but your IP address is unlike the Zeep server',E_USER_ERROR);
   
   extract($vars);
   
@@ -33,21 +33,16 @@ function mobile_event( &$vars ) {
     $response = "";
     
   } else {
-    $response = "Welcome to ".environment('site_title');  
+    $response = "Welcome ".$_SERVER['REMOTE_ADDR']." to ".environment('site_title');  
   }
   
-  $header = array(
-      "Status: 200 OK",
-      "Date: ".gmdate(DATE_RFC822),
-      "Content-Type: text/plain",
-      "Content-Length: " . strval(strlen($response))
-  );
-  
-  foreach ($header as $str)
-    header($str);
-  
-  echo substr($response,0,100);
-  
+  $data = substr($response,0,100);
+
+  header("Status: 200 OK");
+  header("Date: ".gmdate(DATE_RFC822));
+  header("Content-Type: text/plain");
+  header("Content-Length: " . strval(strlen($data)));
+  echo $data;  
   exit;
   
 }
@@ -148,4 +143,3 @@ function broadcast_sms_notice( &$model, &$rec ) {
   }
 }
 
-?>
