@@ -165,7 +165,7 @@ $(document).ready(function() {
 <div id="header">
 	<div class="sleeve">
 		<h1><a href="<?php bloginfo( 'url' ); ?>"><?php bloginfo( 'name' ); ?></a></h1>
-			<?php if(get_bloginfo('description')) : ?><small><?php bloginfo( 'description' ); ?></small><?php endif; ?>
+			<small><?php if(get_bloginfo('description')) : ?><?php bloginfo( 'description' ); ?><?php else : ?>&nbsp;<?php endif; ?></small>
 
 	</div>
 <div id="header-round">

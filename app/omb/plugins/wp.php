@@ -2321,6 +2321,8 @@ $limit_offset = 0;
 $microblog_themes = array('twitteronia','p2','prologue-theme');
 
 
+add_include_path(library_path());
+include('remy-tweed/plugins/linkify.php');
 
 
 
