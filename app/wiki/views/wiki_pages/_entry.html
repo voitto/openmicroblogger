@@ -1,5 +1,8 @@
 <html>
 <head>
+	<?php if (REALTIME_HOST) : ?>
+	  <script type="text/javascript" src="http://<?php echo REALTIME_HOST; ?>/meteor.js"></script>
+	<?php endif; ?>
 <script type="text/javascript" src="<?php base_path(); ?>resource/jquery-1.2.6.min.js"></script>
 <script type="text/javascript" src="<?php base_path(); ?>resource/tinymce/jscripts/tiny_mce/tiny_mce_src.js"></script>
 <script type="text/javascript" src="<?php base_path(); ?>resource/jeditable/jquery.jeditable.js"></script>
@@ -10,6 +13,10 @@ $.fn.tinymce = function(options){
    return this.each(function(){ 
       tinyMCE.execCommand("mceAddControl", true, this.id);
    });
+}
+
+function page_update(data){
+	$("#jeditable_"+data['div']).html(data['html']);
 }
 
 function initMCE(){
@@ -69,7 +76,7 @@ $.editable.addInputType('mce', {
 <div class="jeditable_footer" id="jeditable_footer"><?php echo $Member->footer; ?></div>
 
 
-<?php $stream = 'http://openmicroblogger.com/twitter/documentation/'; ?>
+<?php $stream = blog_url($blognick); ?>
 
 <?php $timeline_callback = $stream.'api/statuses/public_timeline.json?callback=twitterCallback2'; ?>
 
@@ -85,6 +92,22 @@ $.editable.addInputType('mce', {
 
 <script type="text/javascript">
 // <![CDATA[
+
+var formb = '<p style="font-size:10pt;">(<a style="font-size:10pt;" href="<?php echo $login_url; ?>">sign in w/Twitter</a>)</p>';
+var forma = '<form onsubmit="return do_wiki_comment()" method="post" action="<?php echo $post_to; ?>"><input type="hidden" name="method" value="post"><textarea name="post[title]" id="post_title" cols="15" rows="2"></textarea><br /><input type="checkbox" name="tweet_it" id="tweet_it">post to Twitter<br /><input type="submit" value="Post comment"></form>';
+
+function do_wiki_comment(){
+	var someurl = "<?php echo $post_to; ?>";
+  var submitdata = {};
+  submitdata['post[title]'] = $("#post_title").val();
+  submitdata['method'] = 'post';
+  $("#loginform").html("<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>");
+	$.post(someurl, submitdata, function(str) {
+    $("#loginform").html(forma);
+  });
+	return false;
+}
+
 function twitterCallback2(C){
   var A=[];
   for ( var D=0; D<C.length; D++ ) {
@@ -100,8 +123,6 @@ function twitterCallback2(C){
 document.getElementById("tweetlist").innerHTML=A.join("");
 }
 function loginCallback(C){
-  var formb = '<p style="font-size:10pt;">(<a style="font-size:10pt;" href="<?php echo $login_url; ?>">sign in w/Twitter</a>)</p>';
-	var forma = '<form method="post" action="<?php echo $post_to; ?>"><input type="hidden" name="method" value="post"><textarea name="post[title]" cols="15" rows="2"></textarea><br /><input type="submit" value="Post comment"></form>';
   if (C == 1){
   	document.getElementById("loginform").innerHTML=forma;
   }else {
@@ -140,28 +161,72 @@ function tweetime(C){
 $(function(){
    
 	<?php 
+	global $request;
+	
 $field='header';
 $nam="header";
 $post='wikipage';
-$namurl='http://openmicroblogger.com/wiki_pages';
+$namurl=$request->url_for('wiki_pages');
 	tinymce_widget_text_post_helper($nam,$namurl,$post,$field,$Entry);
 
 	$field='body';
 	$nam="body";
-	$post='wikipage';
-	$namurl='http://openmicroblogger.com/wiki_pages';
 		tinymce_widget_text_post_helper($nam,$namurl,$post,$field,$Entry);
 
 		$field='footer';
 		$nam="footer";
-		$post='wikipage';
-		$namurl='http://openmicroblogger.com/wiki_pages';
 			tinymce_widget_text_post_helper($nam,$namurl,$post,$field,$Entry);
 	
 	?>
 
 });
 </script>
+
+<?php if (REALTIME_HOST) : ?>
+  
+  <?php
+    
+     $chan = $blogprefix;
+  ?>
+  
+  <script type="text/javascript">
+    // <![CDATA[
+    Meteor.hostid = '<?php echo get_profile_id(); ?>';
+    Meteor.host = "<?php echo REALTIME_HOST; ?>";
+    Meteor.registerEventCallback("process", test);
+    Meteor.joinChannel("<?php echo $chan; ?>", 0);
+    Meteor.mode = 'stream';
+    Meteor.connect();
+    function test(data) {
+      data = data.substring(0,(data.length - 10));
+      eval( "data = " + data );
+      if (data['callback'].length >0) {
+	      eval( data['callback']+"(data)" );
+      } else if (data['in_reply_to']) {
+        var selectr = data['in_reply_to'];
+        $(selectr).append(render_a_tweet(data));
+        //$(selectr).append(data['html']);
+      } else {
+        $("#postlist").prepend(render_a_tweet(data));
+        //$("#postlist").prepend(data['html']);
+      }
+      <?php if (environment('oembed')) : ?>
+      $('a.oembed').oembed();
+      <?php endif; ?>
+    };
+
+
+		function render_a_tweet(data){
+			
+			var tweetit = '<li><img width="20" height="20" src="'+data['avatar']+"\"><span>&nbsp;"+'<a href="'+data['profile_url']+'">'+data['nickname']+"</a>"+' '+data['tweet']+'</span> <a href="'+data['link']+'">'+data['created']+"</a></li>";
+			$("#tweetlist").prepend(tweetit);
+			
+		}
+
+    // ]]>
+  </script>
+<?php endif; ?>
+
 <p>Page revisions:</p>
 <?php render_partial('revisions'); ?>
 </body>

@@ -606,3 +606,9 @@ $txt['wikis_edit_cancel'] = "Cancel";
 $txt['wikis_edit_save_stream'] = "Save Wiki";
 
 
+/////////////////////////////////////
+# /app/wiki/views/wikis/_index.html
+/////////////////////////////////////
+$txt['wikis_index'] = "Wikis";
+$txt['wikis_index_create_new_wiki'] = "Create a Wiki";
+

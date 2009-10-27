@@ -26,6 +26,8 @@ function post( &$vars ) {
 
 function put( &$vars ) {
   extract( $vars );
+
+
   $resource->update_from_post( $request, true );
   header_status( '200 OK' );
   redirect_to( array('resource'=>'wikis','id'=>$request->params['id']) );
@@ -76,7 +78,7 @@ function _index( &$vars ) {
 
 function _revisions( &$vars ) {
   extract($vars);
-
+echo 'a';
   $Member = $collection->MoveFirst();
   $Entry = $Member->FirstChild( 'entries' );
 
@@ -89,9 +91,10 @@ function _revisions( &$vars ) {
   );
   $Revision->set_param( 'find_by', $where );
   $Revision->find();
+echo 'rev';
 
   while ($r = $Revision->MoveNext()) {
-    $wp = mb_unserialize($r->data);
+echo 1;    $wp = mb_unserialize($r->data);
     if (is_object($wp)){
 	    if ($wp->id == $Member->id) {
         $revisor = get_profile($r->profile_id);
@@ -100,7 +103,7 @@ echo '<img width="20" height="20" src="'.$revisor->avatar.'"><span>&nbsp;<a href
     	}
     }
   }
-
+echo 'do';
   extract( $vars );
   return vars(
     array( &$collection, &$profile ),
@@ -115,8 +118,14 @@ function _entry( &$vars ) {
   extract( $vars );
   $Member = $collection->MoveNext();
   $Entry = $Member->FirstChild( 'entries' );
+  $Wiki =& $db->model('Wiki');
+  $w = $Wiki->find($Member->parent_id);
+  $Blog =& $db->model('Blog');
+  $b = $Blog->find($w->blog_id);
+  $blognick = $b->nickname;
+  $blogprefix = $b->prefix."_";
   return vars(
-    array( &$collection, &$Member, &$Entry, &$profile ),
+    array( &$collection, &$Member, &$Entry, &$profile, &$blognick, &$blogprefix ),
     get_defined_vars()
   );
 }

@@ -9,10 +9,15 @@ class Wiki extends Model {
     $this->char_field( 'title' );
     $this->char_field( 'prefix', 2 );
     $this->char_field( 'nickname' );
+
+    $this->char_field( 'password' );
     
     $this->time_field( 'created' );
     $this->time_field( 'modified' );
     
+    $this->int_field( 'profile_id' );
+    $this->int_field( 'blog_id' );
+
     $this->int_field( 'entry_id' );
     
     $this->auto_field( 'id' );
@@ -67,5 +72,47 @@ function wiki_urls(){
 	}
 	$wiki_urls_loaded = 'done';
 }
+
+
+
+after_filter( 'do_realtime_page_update', 'update_from_post' );
+
+function do_realtime_page_update( &$model, &$rec ) {
+
+  global $request,$db;
+
+  if (!($rec->table == 'wiki_pages'))
+    return;
+
+  $Wiki =& $db->model('Wiki');
+  $w = $Wiki->find($rec->parent_id);
+  $Blog =& $db->model('Blog');
+  $b = $Blog->find($w->blog_id);
+  $blognick = $b->nickname;
+  $blogprefix = $b->prefix."_";
+
+  $changed = false;
+
+	if (isset($request->params['wikipage']['header']))
+	  $changed = 'header';
+
+	if (isset($request->params['wikipage']['body']))
+	  $changed = 'body';
+
+	if (isset($request->params['wikipage']['footer']))
+	  $changed = 'footer';
+	
+	if ($changed)
+    realtime(
+	    'page_update',
+      array(
+	      'div'=>$changed,
+	      'html'=>$rec->$changed
+  	  ), 
+      $blogprefix
+    );
+   
+}
+
 
 

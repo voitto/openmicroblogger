@@ -279,6 +279,7 @@ class Record {
     $result = $db->save_record($this);
     if ($result)
       $this->exists = true;
+    trigger_after('save_changes',$db,$this);
     return $result;
   }
   

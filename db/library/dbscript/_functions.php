@@ -3260,7 +3260,7 @@ function readUrl($url){
   return false;
 }
 
-function realtime($callback,$payload){
+function realtime($callback,$payload,$prefix=false){
 
   if (!PING)
     return;
@@ -3270,7 +3270,9 @@ function realtime($callback,$payload){
 
   global $db;
   
-  if (!empty($db->prefix))
+  if ($prefix)
+    $chan = $prefix;
+  elseif (!empty($db->prefix))
     $chan = $db->prefix;
   else
     $chan = "chan";

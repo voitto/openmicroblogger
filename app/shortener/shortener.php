@@ -72,6 +72,8 @@ function set_up_new_shortener( &$model, &$rec ) {
   global $request;
   if (!($request->resource == 'blogs'))
     return;
+  if (!isset($_POST['shortener_domain']))
+    return;
   // XXX subdomain upgrade
   $url = $request->url_for(array('resource'=>'twitter/'.$rec->nickname));
   require_once(ABSPATH.WPINC.'/class-snoopy.php');

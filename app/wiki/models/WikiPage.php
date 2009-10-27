@@ -14,6 +14,8 @@ class WikiPage extends Model {
 
     $this->text_field( 'header' );
     $this->text_field( 'footer' );
+
+    $this->int_field( 'blog_id' );
     
     $this->text_field( 'summary' );
     
@@ -61,5 +63,8 @@ class WikiPage extends Model {
   }
   
 }
+
+
+  
 
 
