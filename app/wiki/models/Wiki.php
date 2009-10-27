@@ -74,6 +74,24 @@ function wiki_urls(){
 }
 
 
+after_filter( 'do_realtime_revision', 'save_record' );
+
+function do_realtime_revision( &$rec, &$db ) {
+  if (!($rec->table == 'wiki_pages'))
+    return;
+  $owner = owner_of($rec);
+	$html = '<li><img width="20" height="20" src="'.$owner->avatar.'"><span>&nbsp;<a href="'.$owner->profile_url.'">'.$owner->fullname.'</a> </span>
+	<a style="font-size:85%" href=""></a></li>';
+	realtime(
+	  'page_update',
+	  array(
+	    'div'=>'revisions',
+	    'html'=>$html
+	  ), 
+	  lookup_wiki_prefix($rec->parent_id)
+	);
+}
+
 
 after_filter( 'do_realtime_page_update', 'update_from_post' );
 
@@ -84,12 +102,7 @@ function do_realtime_page_update( &$model, &$rec ) {
   if (!($rec->table == 'wiki_pages'))
     return;
 
-  $Wiki =& $db->model('Wiki');
-  $w = $Wiki->find($rec->parent_id);
-  $Blog =& $db->model('Blog');
-  $b = $Blog->find($w->blog_id);
-  $blognick = $b->nickname;
-  $blogprefix = $b->prefix."_";
+  $blogprefix = lookup_wiki_prefix($rec->parent_id);
 
   $changed = false;
 

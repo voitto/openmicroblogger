@@ -91,21 +91,26 @@ function _revisions( &$vars ) {
   );
   $Revision->set_param( 'find_by', $where );
   $Revision->find();
-
+  $versions = array();
   while ($r = $Revision->MoveNext()) {
     $wp = mb_unserialize($r->data);
     if (is_object($wp)){
 	    if ($wp->id == $Member->id) {
         $revisor = get_profile($r->profile_id);
-echo '<img width="20" height="20" src="'.$revisor->avatar.'"><span>&nbsp;<a href="'.$revisor->profile_url.'">'.$revisor->fullname.'</a> </span>
-<a style="font-size:85%" href=""></a><BR>';
+				$versions[] = array(
+					'avatar'=>$revisor->avatar,
+					'link'=>$revisor->profile_url,
+					'name'=>$revisor->fullname,
+					'nickname'=>$revisor->nickname,
+					'date'=>$r->created
+				);
     	}
     }
   }
 
   extract( $vars );
   return vars(
-    array( &$collection, &$profile ),
+    array( &$collection, &$profile, &$versions ),
     get_defined_vars()
   );
 }
@@ -176,3 +181,23 @@ function _block( &$vars ) {
 
 }
 
+
+function lookup_wiki_prefix($wiki_id){
+	global $db;
+	$Wiki =& $db->model('Wiki');
+  $w = $Wiki->find($wiki_id);
+  $Blog =& $db->model('Blog');
+  $b = $Blog->find($w->blog_id);
+  $blogprefix = $b->prefix."_";
+  return $blogprefix;
+}
+
+function lookup_wiki_nickname($wiki_id){
+	global $db;
+	$Wiki =& $db->model('Wiki');
+  $w = $Wiki->find($wiki_id);
+  $Blog =& $db->model('Blog');
+  $b = $Blog->find($w->blog_id);
+  $blognick = $b->nickname;
+  return $blognick;
+}

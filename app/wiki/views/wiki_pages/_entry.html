@@ -16,6 +16,10 @@ $.fn.tinymce = function(options){
 }
 
 function page_update(data){
+	if (data['div'] == 'revisions') {
+		$("#"+data['div']).prepend(data['html']);
+		return;
+	}
 	$("#jeditable_"+data['div']).html(data['html']);
 }
 
@@ -80,7 +84,9 @@ $.editable.addInputType('mce', {
 
 <?php $timeline_callback = $stream.'api/statuses/public_timeline.json?callback=twitterCallback2'; ?>
 
+<?php $logout_url = $stream.'openid_logout?forward'; ?>
 <?php $login_url = $stream.'oauth_login?forward'; ?>
+<?php $fb_login_url = $stream.'facebook_login?forward'; ?>
 
 <?php $post_to = $stream.'posts'; ?>
 
@@ -93,8 +99,8 @@ $.editable.addInputType('mce', {
 <script type="text/javascript">
 // <![CDATA[
 
-var formb = '<p style="font-size:10pt;">(<a style="font-size:10pt;" href="<?php echo $login_url; ?>">sign in w/Twitter</a>)</p>';
-var forma = '<form onsubmit="return do_wiki_comment()" method="post" action="<?php echo $post_to; ?>"><input type="hidden" name="method" value="post"><textarea name="post[title]" id="post_title" cols="15" rows="2"></textarea><br /><input type="checkbox" name="tweet_it" id="tweet_it">post to Twitter<br /><input type="submit" value="Post comment"></form>';
+var formb = '<p style="font-size:10pt;">(sign in to edit page or comment:&nbsp;<a style="font-size:10pt;" href="<?php echo $login_url; ?>"> w/Twitter</a>&nbsp;<a style="font-size:10pt;" href="<?php echo $fb_login_url; ?>"> w/Facebook</a>)</p>';
+var forma = '<form onsubmit="return do_wiki_comment()" method="post" action="<?php echo $post_to; ?>"><input type="hidden" name="method" value="post"><textarea name="post[title]" id="post_title" cols="15" rows="2"></textarea><br /><input type="checkbox" name="tweet_it" id="tweet_it">post to Twitter<br /><input type="submit" value="Post comment"></form><a style="font-size:10pt;" href="<?php echo $logout_url; ?>"> sign out </a>';
 
 function do_wiki_comment(){
 	var someurl = "<?php echo $post_to; ?>";

@@ -619,6 +619,10 @@ function email_submit( &$vars ) {
 }
 
 function openid_logout( &$vars ) {
+
+  if (isset($_GET['forward']) && !empty($_SERVER['HTTP_REFERER']))
+    $_SESSION['logout_forward'] = $_SERVER['HTTP_REFERER'];
+
   unset_cookie();
   extract( $vars );
   $_SESSION['openid_complete'] = false;
@@ -637,6 +641,8 @@ function openid_logout( &$vars ) {
   unset($_SESSION['requested_url']);
   unset($_SESSION['openid_complete']);
   unset($_SESSION['oid_return_to']);
+  if (isset($_SESSION['logout_forward']))
+    redirect_to($_SESSION['logout_forward']);
   if (environment('authentication') == 'password') 
     redirect_to( $request->base );
   else
@@ -984,6 +990,9 @@ function facebook_login( &$vars ) {
   require_once "FacebookStream.php";
   require_once "Services/Facebook.php";
   
+  if (isset($_GET['forward']) && !empty($_SERVER['HTTP_REFERER']))
+    $_SESSION['fb_forward'] = $_SERVER['HTTP_REFERER'];
+  
   $fb = new Facebook($consumer_key, $consumer_secret, true);
   
   $_SESSION['fb_session'] = (string)$fb->api_client->session_key;
@@ -1073,10 +1082,10 @@ function facebook_login( &$vars ) {
 
   $_SESSION['fb_person_id'] = $i->person_id;
   
+  if (isset($_SESSION['fb_forward']))
+	  redirect_to($_SESSION['fb_forward']);
+
   redirect_to($request->base);
-  
-  //$fs->setStatus("nerding out with the latest Facebook API tools",$_SESSION['fb_userid']);
-  //$fs->StreamRequest( $app_id, $_SESSION['fb_session'], $_SESSION['fb_userid'] );
   
 }
 
