@@ -78,7 +78,7 @@ function _index( &$vars ) {
 
 function _revisions( &$vars ) {
   extract($vars);
-echo 'a';
+
   $Member = $collection->MoveFirst();
   $Entry = $Member->FirstChild( 'entries' );
 
@@ -91,10 +91,9 @@ echo 'a';
   );
   $Revision->set_param( 'find_by', $where );
   $Revision->find();
-echo 'rev';
 
   while ($r = $Revision->MoveNext()) {
-echo 1;    $wp = mb_unserialize($r->data);
+    $wp = mb_unserialize($r->data);
     if (is_object($wp)){
 	    if ($wp->id == $Member->id) {
         $revisor = get_profile($r->profile_id);
@@ -103,7 +102,7 @@ echo '<img width="20" height="20" src="'.$revisor->avatar.'"><span>&nbsp;<a href
     	}
     }
   }
-echo 'do';
+
   extract( $vars );
   return vars(
     array( &$collection, &$profile ),
