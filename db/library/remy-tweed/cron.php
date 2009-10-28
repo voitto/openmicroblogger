@@ -214,7 +214,7 @@ while ($f = $Feed->MoveNext()) {
 			'path'=>'/api/rsscloud/callback',
 			'protocol'=>get_option('cloud_protocol'),
 			'url1'=>$f->xref,
-//			'domain'=>get_option('cloud_domain')
+			'domain'=>get_option('cloud_domain')
 		);
     require_once(ABSPATH.WPINC.'/class-snoopy.php');
 		$snoop = new Snoopy;

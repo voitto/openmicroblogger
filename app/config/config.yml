@@ -85,13 +85,12 @@ env:
   
   installed:
     - password
-    - streams
     - twitter
-    - identica
     - translate
     - facebook
-    - pages
     - flickr
+    - rsscloud
+    - wiki
   
   boot: omb
   

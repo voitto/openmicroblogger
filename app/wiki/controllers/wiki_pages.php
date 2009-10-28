@@ -50,11 +50,16 @@ function _doctype( &$vars ) {
 
 function index( &$vars ) {
   extract( $vars );
+  $Member = $collection->MoveFirst();
   $theme = environment('theme');
   $blocks = environment('blocks');
   $atomfeed = $request->feed_url();
+  $wiki_rss = blog_url(lookup_wiki_nickname($Member->parent_id));
+  $wiki_title = lookup_wiki_title($Member->parent_id);
   return vars(
     array(
+	    &$wiki_rss,
+	    &$wiki_title,
       &$blocks,
       &$profile,
       &$collection,
@@ -200,4 +205,11 @@ function lookup_wiki_nickname($wiki_id){
   $b = $Blog->find($w->blog_id);
   $blognick = $b->nickname;
   return $blognick;
+}
+
+function lookup_wiki_title($wiki_id){
+	global $db;
+	$Wiki =& $db->model('Wiki');
+  $w = $Wiki->find($wiki_id);
+  return $w->title;
 }

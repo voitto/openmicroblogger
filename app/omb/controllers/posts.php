@@ -111,6 +111,15 @@ function _doctype( &$vars ) {
 
 function index( &$vars ) {
   extract( $vars );
+
+
+  if ($request->client_wants == 'rss'){
+	  $request->set_param('action','api_statuses_public_timeline_rss');
+	  $response->render($request);
+	  exit;
+  }
+
+
   $theme = environment('theme');
   $blocks = environment('blocks');
   $atomfeed = $request->feed_url();
