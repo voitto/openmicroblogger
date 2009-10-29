@@ -5,19 +5,97 @@
 ################################
 #           Cutline            #
 # * Changes                    #
-# (+)   New file added         #
-# (-)   File removed           #
-# (o)   File Changed           #
 # [#00] Ticket ID              #
 ################################
 
 ################################
-# Current Release: 0.3b81      #
+# Current Release: 0.3b95      #
 ################################
 
 
 
 This has changed in Release:
+
+#0.3b95
+
+* added: Realtime Wiki
+* added: RSS Cloud
+* added: Realtime comet function
+* added: Linkify
+* added: Tinymce
+* added: personal RSS Feed
+* added: flickr app
+* updated: P2 Theme update
+* fixed: Zeep Mobile
+* fixed: Nickname already in Use bug
+
+
+#0.3b94
+
+* added: Default language feature
+
+
+#0.3b93
+
+* added: Language import feature
+
+
+#0.3b92
+
+* fixed: URL Shortener setup
+* updated: Login Page
+
+
+#0.3b91
+
+* fixed: URL Shortener setup
+
+
+#0.3b90
+
+* added: URL Shortener
+
+
+#0.3b89
+
+* fixed: rply_yourls
+
+
+#0.3b88
+
+* added: rply_yourls support
+
+
+#0.3b87
+
+* added: User BG
+
+
+#0.3b86
+
+* install.php rollback
+
+
+#0.3b85
+
+* added: Memcache support
+
+
+#0.3b84
+
+* fixed: Streams
+
+
+#0.3b83
+
+* fixed: Tables
+* fixed: Twitter app
+
+
+#0.3b82
+
+* fixed: subdomain issues
+
 
 #0.3b81
 
