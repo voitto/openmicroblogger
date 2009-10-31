@@ -404,6 +404,13 @@ if ($pretty_url_base && !mu_url() && !('http://'.$subdomain.".".$rest == $pretty
 } elseif (mu_url()) {
   $pattern='/(\?)?twitter\/([a-z]+)(\/?)/';
   if ( 1 <= preg_match_all( $pattern, $request->uri, $found )) {
+	  if ($pretty_url_base && environment('subdomains')){
+		  $trail = "/";
+		  $pattern2='/(\?)?twitter\/([a-z]+)(\/?)(\/.+)/';
+		  if ( 1 <= preg_match_all( $pattern2, $request->uri, $found2 ))
+        $trail = $found2[4][0];
+      redirect_to('http://'.$found[2][0].".".$request->domain.$trail);
+	  }
     $uri = $request->uri;
     $tags[] = $found;
     // XXX subdomain upgrade

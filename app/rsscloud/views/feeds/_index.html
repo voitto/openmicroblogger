@@ -35,8 +35,14 @@
 	<a href="JavaScript:show_page('<?php url_for( array( 'resource'=>'admin', 'action'=>'cloud' )); ?>/partial');">
 	   <h2> Advanced Options...</h2>
 	  </a>
-
-
+	
+	<form action="<?php url_for( array('resource'=>'feeds') ); ?>" method="post" enctype="multipart/form-data">
+	<input name="method" type="hidden" value="post" />
+	RSS<input name="rss_follow" value="">
+	Title<input name="rss_title" value="">
+	Link<input name="rss_link" value="">
+	<input type="submit" value="Follow rssCloud Feed">
+	</form>
 
 
 

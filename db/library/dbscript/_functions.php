@@ -3216,24 +3216,39 @@ function esc_html($text) {
 
 function wp_remote_post( $url, $paramarr ){
 
+	return wp_remote_get( $url, $paramarr, true );
+
+}
+
+function esc_url($url){
+	return urlencode($url);
+}
+
+function wp_remote_get( $url, $paramarr, $post=false ){
+
   $method = $paramarr['method'];
   $timeout = $paramarr['timeout'];
   $agent = $paramarr['user-agent'];
   $port = $paramarr['port'];
 
-  foreach($paramarr['body'] as $url) {
-    // test the callback	
-  }
-
-	//  	'method' => 'POST', 
-	//	  'timeout' => RSSCLOUD_HTTP_TIMEOUT, 
-	//	  'user-agent' => RSSCLOUD_USER_AGENT, 
-	//	  'port' => $port, 
-	//	  'body' => array( 
-	//		'url' => $_POST['url1']
-	
+	$ch = curl_init();
+	curl_setopt ($ch, CURLOPT_URL, $url);
+	curl_setopt ($ch, CURLOPT_HEADER, 0); /// Header control
+	curl_setopt ($ch, CURLOPT_PORT, $port);
+	if ($post){
+	  curl_setopt ($ch, CURLOPT_POST, true);  /// tell it to make a POST, not a GET
+  	curl_setopt ($ch, CURLOPT_POSTFIELDS, $paramarr['body']);
+ 	}
+  curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+   curl_setopt( $curl, CURLOPT_TIMEOUT, $timeout);
+   curl_setopt($ch, CURLOPT_USERAGENT, $agent);
+	curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+	$xml_response = curl_exec ($ch);
+	$response = curl_getinfo( $ch );
+  curl_close ( $ch );
   $result = array();
-  $result['response'] = array('code'=>200);
+  $result['response'] = array('code'=>$response['http_code']);
+  $result['body']=$xml_response;
   return $result;
 
 }

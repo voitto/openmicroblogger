@@ -82,12 +82,16 @@ env:
     - facebook
     - pages
     - flickr
+    - rsscloud
+    - wiki
   
   installed:
-    - password
     - twitter
+    - password
+    - streams
     - translate
     - facebook
+    - pages
     - flickr
     - rsscloud
     - wiki

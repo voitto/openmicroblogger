@@ -253,6 +253,11 @@ exit;
     $m = $this->base();
     $m->set_value( 'code', '
 
+    if (!(function_exists(\'rsscloud_schedule_post_notifications\'))) {
+		function rsscloud_schedule_post_notifications() {
+			// prevent Joseph Scott\'s plugin from loading its update feature
+		}}
+		
 		global $blogdata;
 
 		$blogdata[\'rss2_url\'] =$_POST[\'url1\'];
@@ -371,6 +376,11 @@ exit;
 
     $m = $this->base();
     $m->set_value( 'code', '
+
+    if (!(function_exists(\'rsscloud_schedule_post_notifications\'))) {
+		function rsscloud_schedule_post_notifications() {
+			// prevent Joseph Scott\'s plugin from loading its update feature
+		}}
 
 		global $blogdata;
 
