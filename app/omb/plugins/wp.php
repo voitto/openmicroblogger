@@ -2272,6 +2272,15 @@ $req = false;
 if ($user_ID)
   $comments = true;
 
+
+if (pretty_urls()){
+	$atom = "posts.atom";
+	$rss = "posts.rss";
+} else {
+  $atom = "?posts.atom";
+  $rss = "?posts.rss";
+}
+
 $blogdata = array(
   'home'=>base_url(true),
   'name'=>environment('site_title'),
@@ -2279,9 +2288,9 @@ $blogdata = array(
   'description'=>environment('site_description'),
   'wpurl'=>base_url(true),
   'url'=>base_url(true),
-  'atom_url'=>base_url(true)."?posts.atom",
-  'rss_url'=>base_url(true)."?posts.rss",
-  'rss2_url'=>base_url(true)."?posts.rss",
+  'atom_url'=>base_url(true).$atom,
+  'rss_url'=>base_url(true).$rss,
+  'rss2_url'=>base_url(true).$rss,
   'charset'=>'utf-8',
   'html_type'=>'text/html',
   'theme_url'=>theme_path(),

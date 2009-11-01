@@ -59,7 +59,9 @@ $(document).ready(function() {
 		if (data['comment'] == 1){
 			avsize="32";
 			tweet = tweet + '	<li style="clear:both;margin-left:40px;padding:0px;">';
-		}
+		} else {
+	  	tweet = tweet + '<hr />';
+  	}
 		tweet = tweet + '	<div>';
 		tweet = tweet + '	<div class="tweet_avatar">';
 		tweet = tweet + '		<a href="'+data['profile_url']+'">';
