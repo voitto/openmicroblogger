@@ -15,9 +15,74 @@ function get( &$vars ) {
 }
 
 
+function handle_twitter_cmdline(&$request){
+  $commands = array(
+	  'follow ',
+	  'unfollow ',
+	  'addtolist '
+	);
+  $parts = explode(" ",$request->params['post']['title']);
+  $c = $parts[0]." ";
+  $result = false;
+  if (in_array($c,$commands)){
+	  $c = trim($c)."_cmdfunc";
+	  if (function_exists($c))
+ 	    $result = $c($parts);
+  }
+  return $result;
+}
+
+function follow_cmdfunc($parts){
+	if (isset($parts[1])){
+	  $to = get_twitter_oauth();
+    if ($to){
+		  $content = $to->OAuthRequest('https://twitter.com/friendships/create/'.$parts[1].'.xml', array(), 'POST');
+	    return true;
+    }
+	}
+	return false;
+}
+
+function unfollow_cmdfunc($parts){
+	if (isset($parts[1])){
+	  $to = get_twitter_oauth();
+    if ($to){
+		  $content = $to->OAuthRequest('https://twitter.com/friendships/destroy/'.$parts[1].'.xml', array(), 'POST');
+	    return true;
+    }
+	}
+	return false;
+}
+
+function addtolist_cmdfunc($parts){
+	if (isset($parts[1])&&isset($parts[2])){
+	  $to = get_twitter_oauth();
+    if ($to){
+		  $content = $to->OAuthRequest('https://twitter.com/users/show/'.$parts[1].'.json', array(), 'GET');
+		  if (!(class_exists('Services_JSON')))
+		    lib_include('json');
+			$json = new Services_JSON();
+			$data = $json->decode($content);
+			if ($content && $data && $json)
+  		  $content = $to->OAuthRequest('https://api.twitter.com/1/'.get_twitter_screen_name().'/'.$parts[2].'/members.xml', array('id'=>$data->id), 'POST');
+      if (isset($parts[3]))
+	      if ($parts[3] == '-u')
+				  $content = $to->OAuthRequest('https://twitter.com/friendships/destroy/'.$parts[1].'.xml', array(), 'POST');
+	    return true;
+    }
+	}
+	return false;
+}
+
 function post( &$vars ) {
   extract( $vars );
   global $request;
+
+  $twittercmd = handle_twitter_cmdline($request);
+
+  if ($twittercmd)
+    redirect_to($request->base);
+
   $modelvar = classify($request->resource);
   trigger_before( 'insert_from_post', $$modelvar, $request );
   $table = $request->resource;

@@ -982,6 +982,8 @@ function wp_head() {
     else
       echo '<script type="text/javascript" src="'.base_path(true).'resource/jquery-1.2.6.min.js"></script>';
 
+		echo '<script src="'.base_path(true).'resource/jquery.charcounter.js" type="text/javascript"></script>';
+
 if (environment('longurl'))
 echo '
 <script type="text/javascript" src="'.base_path(true).'resource/jquery.longurl.js"></script>  

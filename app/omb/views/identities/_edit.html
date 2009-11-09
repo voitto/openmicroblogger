@@ -9,7 +9,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
     <script type="text/javascript">
     // <![CDATA[
     
-    $(document).ready(function() {
+  function show_jeditable(){
 
 <?php setting_widget_helper('tz',$n2mode,$n2url,$n2entry,$n2list); ?>
 
@@ -41,7 +41,9 @@ var submit_to = "<?php echo $settingurl; ?>";
 
 <?php setting_widget_helper('tile',$setting_mode,$setting_url,$setting_entry,$setting_list); ?>
 
-    });
+    }
+		show_jeditable();
+		
     // ]]>
     </script>
 

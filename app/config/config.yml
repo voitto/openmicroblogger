@@ -84,6 +84,7 @@ env:
     - flickr
     - rsscloud
     - wiki
+    - shortener
   
   installed:
     - twitter
@@ -95,6 +96,7 @@ env:
     - flickr
     - rsscloud
     - wiki
+    - shortener
   
   boot: omb
   

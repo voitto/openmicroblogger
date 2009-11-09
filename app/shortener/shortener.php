@@ -4,27 +4,27 @@ if (isset($_POST['ozh_yourls'])) {
 
   if (!(signed_in()))
     return;
+
+	$yourls = array(
+    'service'=>'other',
+    'location'=>'',
+    'yourls_path'=>'',
+    'yourls_url'=>'',
+    'yourls_login'=>'',
+    'yourls_password'=>'',
+    'rply_login'=>'',
+    'rply_password'=>'',
+    'other'=>'rply'
+  );
   
-  $setting_name = 'ozh_yourls';
-  $setting_value = serialize(base64_encode($_POST['ozh_yourls']));
-  global $db,$request;
-  
-  $Setting =& $db->model('Setting');
-  
-  $sett = $Setting->find_by(array('name'=>$setting_name,'profile_id'=>get_profile_id()));
-  
-  if (!$sett) {
-    $s = $Setting->base();
-    $s->set_value('profile_id',get_profile_id());
-    $s->set_value('person_id',get_person_id());
-    $s->set_value('name',$setting_name);
-    $s->set_value('value',$setting_value);
-    $s->save_changes();
-    $s->set_etag();
-  } else {
-    $sett->set_value('value',$setting_value);
-    $sett->save_changes();
+  foreach($_POST['ozh_yourls'] as $key=>$val){
+	  if (!('N' == $val))
+  	  $yourls[$key] = $val;
   }
+
+  add_option('ozh_yourls',$yourls);
+  
+  global $request;
   
   $profile = get_profile();
   redirect_to($request->url_for(array("resource"=>$profile->nickname))."/settings");

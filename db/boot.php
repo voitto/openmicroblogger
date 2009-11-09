@@ -525,6 +525,7 @@ global $api_methods,$api_method_perms;
 $api_methods = array();
 $api_method_perms = array();
 $Method =& $db->model('Method');
+$Method->set_order('asc');
 $Method->find_by(array(
   'eq'        => 'like',
   'function'  => 'api_%'

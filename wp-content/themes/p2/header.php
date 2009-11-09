@@ -53,6 +53,16 @@ $(document).ready(function() {
 <script src="<?php base_path(); ?>resource/jeditable/jquery.jeditable.js" type="text/javascript"></script>
   <script type="text/javascript">
 
+  var lasttweet = '';
+
+  function content_changed(data){
+    if (lasttweet == data['html']){
+      return false;
+		}
+    lasttweet = data['html'];
+    return true;
+  }
+
 	function render_a_tweet(data){
 		var tweet = '';
 		var avsize="48";

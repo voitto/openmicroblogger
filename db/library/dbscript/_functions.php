@@ -2661,7 +2661,7 @@ function load_apps() {
   ))) return;
   
   $identity = get_app_id();
-  
+
   if (!$identity)
     return;
 
@@ -3115,7 +3115,8 @@ function authenticate_with_oauth() {
 
 function mu_url() {
   global $request;
-  if (!strpos($request->uri, 'ak_twitter/') && strpos($request->uri, 'twitter/'))
+  if ((!strpos($request->uri, 'ak_twitter/') && strpos($request->uri, 'twitter/')) ||
+(strpos($request->uri, 'ak_twitter/') && strpos($request->uri, 'twitter/')))
     return true;
   return false;
 }
