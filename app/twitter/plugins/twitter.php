@@ -16,7 +16,10 @@ function send_to_twitter( &$model, &$rec ) {
   if (!(isset($rec->title)) || !(isset($rec->uri)))
     return;
   
-  if (get_option('twitter_status') != 'enabled')
+  if ((get_option('twitter_status') != 'enabled') &&
+   (!isset($_POST['tweet_it']))
+     
+)
     return;
   
   global $db,$prefix,$request;

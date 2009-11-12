@@ -36,6 +36,12 @@ $omb_routes = array(
 foreach ($omb_routes as $func)
   $request->connect( $func );
 
+$request->connect( 'status', array(
+  'resource'=>'posts',
+  'action'=>'index'
+));
+
+
 $request->connect(
   'email/:ident',
   array(

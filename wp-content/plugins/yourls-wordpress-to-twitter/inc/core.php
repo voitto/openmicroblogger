@@ -172,7 +172,7 @@ function wp_ozh_yourls_api_call( $api, $url) {
 			break;
 			
 		default:
-			die('Error, unknown service');
+			die('Error, unknown service: '.$api);
 	
 	}
 	

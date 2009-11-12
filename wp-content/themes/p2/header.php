@@ -53,13 +53,25 @@ $(document).ready(function() {
 <script src="<?php base_path(); ?>resource/jeditable/jquery.jeditable.js" type="text/javascript"></script>
   <script type="text/javascript">
 
+  var lasttweet = '';
+
+  function content_changed(data){
+    if (lasttweet == data['html']){
+      return false;
+		}
+    lasttweet = data['html'];
+    return true;
+  }
+
 	function render_a_tweet(data){
 		var tweet = '';
 		var avsize="48";
 		if (data['comment'] == 1){
 			avsize="32";
 			tweet = tweet + '	<li style="clear:both;margin-left:40px;padding:0px;">';
-		}
+		} else {
+	  	tweet = tweet + '<hr />';
+  	}
 		tweet = tweet + '	<div>';
 		tweet = tweet + '	<div class="tweet_avatar">';
 		tweet = tweet + '		<a href="'+data['profile_url']+'">';

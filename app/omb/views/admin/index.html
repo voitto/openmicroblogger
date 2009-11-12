@@ -13,12 +13,6 @@
 	<script type="text/javascript">
 	$(function() {
 		$("#tabs").tabs();
-		$("#tabs").click(function() {
-
-                   var b = $("#tabs").tabs('option', 'selected');
-                   if (b == 6) location.href='<?php base_url(); ?>';
-
-                });
 	});
 	</script>
 
@@ -60,7 +54,7 @@
 		  <?php else : ?>
   		<li><a href="#tabs-4">&nbsp;</a></li>
   		<?php endif; ?>
-  		<li><a href="JavaScript:top.location.href('<?php base_url(); ?>');">Return To Site</a></li>
+  		<li><a onclick="go_home()" href="#tabs-5">Return To Site</a></li>
   	</ul>
 
 
@@ -73,6 +67,10 @@
 
     <script type="text/javascript">
     // <![CDATA[
+
+    function go_home(){
+      location.href='<?php base_url(); ?>';
+    }
 
     $(document).ready(function() {
 

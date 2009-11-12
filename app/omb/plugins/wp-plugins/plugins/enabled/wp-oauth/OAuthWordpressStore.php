@@ -1,5 +1,6 @@
 <?php
 
+if (!(class_exists('oauthexception')))
 require_once dirname(__FILE__).'/OAuth.php';
 
 //Assumes a Wordpress context ($wpdb especially)

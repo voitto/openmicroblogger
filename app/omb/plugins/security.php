@@ -1324,3 +1324,35 @@ function security_uninstall() {
 }
 
 
+function get_twitter_oauth(){
+	global $db,$prefix,$request;
+  $sql = "SELECT oauth_key,oauth_secret FROM ".$prefix."twitter_users WHERE profile_id = ".get_profile_id();
+  $result = $db->get_result( $sql );
+  if ($db->num_rows($result) == 1) {
+    // http://abrah.am
+    lib_include('twitteroauth');
+    $key = $db->result_value($result,0,'oauth_key');
+    $secret = $db->result_value($result,0,'oauth_secret');
+    $consumer_key = environment( 'twitterKey' );
+    $consumer_secret = environment( 'twitterSecret' );    
+    $to = new TwitterOAuth(
+      $consumer_key, 
+      $consumer_secret, 
+      $key, 
+      $secret
+    );
+    return $to;
+  }
+  return false;
+}
+
+function get_twitter_screen_name(){
+	global $db,$prefix,$request;
+  $sql = "SELECT screen_name FROM ".$prefix."twitter_users WHERE profile_id = ".get_profile_id();
+  $result = $db->get_result( $sql );
+  if ($db->num_rows($result) == 1)
+    return $db->result_value($result,0,'screen_name');
+  return false;
+}
+
+

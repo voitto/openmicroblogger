@@ -106,7 +106,12 @@ function do_wiki_comment(){
 	var someurl = "<?php echo $post_to; ?>";
   var submitdata = {};
   submitdata['post[title]'] = $("#post_title").val();
+  submitdata['post[body]'] = '';
   submitdata['method'] = 'post';
+	checked = document.getElementById("tweet_it").checked;
+	if (checked){
+	  submitdata['tweet_it'] = '1';
+  }
   $("#loginform").html("<img src='<?php base_path(); ?>resource/jeditable/indicator.gif'>");
 	$.post(someurl, submitdata, function(str) {
     $("#loginform").html(forma);
@@ -203,24 +208,39 @@ $namurl=$request->url_for('wiki_pages');
     Meteor.joinChannel("<?php echo $chan; ?>", 0);
     Meteor.mode = 'stream';
     Meteor.connect();
+    var lasttweet = '';
+
     function test(data) {
       data = data.substring(0,(data.length - 10));
       eval( "data = " + data );
       if (data['callback'].length >0) {
-	      eval( data['callback']+"(data)" );
+	      if (content_changed(data)){
+  	      eval( data['callback']+"(data)" );
+        }
       } else if (data['in_reply_to']) {
-        var selectr = data['in_reply_to'];
-        $(selectr).append(render_a_tweet(data));
-        //$(selectr).append(data['html']);
+	      if (content_changed(data)){
+          var selectr = data['in_reply_to'];
+          $(selectr).append(render_a_tweet(data));
+          //$(selectr).append(data['html']);
+        }
       } else {
-        $("#postlist").prepend(render_a_tweet(data));
-        //$("#postlist").prepend(data['html']);
+        if (content_changed(data)){
+          $("#postlist").prepend(render_a_tweet(data));
+          //$("#postlist").prepend(data['html']);
+        }
       }
       <?php if (environment('oembed')) : ?>
       $('a.oembed').oembed();
       <?php endif; ?>
     };
-
+    
+    function content_changed(data){
+      if (lasttweet == data['html']){
+	      return false;
+			}
+	    lasttweet = data['html'];
+	    return true;
+    }
 
 		function render_a_tweet(data){
 			

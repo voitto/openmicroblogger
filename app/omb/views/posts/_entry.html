@@ -27,8 +27,14 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
       data = data.substring(0,(data.length - 10));
       eval( "data = " + data );
       if (data['in_reply_to']) {
-        var selectr = data['in_reply_to'];
-        $(selectr).append(data['html']);
+	      if (lasttweet == data['html']){
+		
+				}else{
+			    var selectr = data['in_reply_to'];
+          $("#aftercomments").append(render_a_tweet(data));
+			    //$(selectr).append(data['html']);
+			    lasttweet = data['html'];
+				}
       } else {
         $("#postlist").prepend(data['html']);
       }
@@ -122,11 +128,9 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
   <br />
   
   
-  <div id="commentcontent-<?php echo $Member->id; ?>" class="commentlist"></div>
 
 <?php $ccrurl = 'JavaScript:inline_comment('.$Member->id.','.$Member->id.');'; ?>
 
-<a rel=\'nofollow\' class=\'comment-reply-link\' href="<?php echo $ccrurl; ?>">Comment</a>
 
   <br />
   
@@ -155,8 +159,10 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
   ?>
 
   <?php endwhile; ?>
-<div class="entry-clear"></div>
+<div class="entry-clear" id="aftercomments"></div>
+<div id="commentcontent-<?php echo $Member->id; ?>" class="commentlist"></div>
 
+<a rel=\'nofollow\' class=\'comment-reply-link\' href="<?php echo $ccrurl; ?>"><?php echo $txt['entry_reply']; ?></a>
 
 
 <?php if (environment('showpostmeta')) : ?>
@@ -196,7 +202,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
     $ident = $Identity->base();
 ?>
 
-
+<?php if (environment('old_reply_form')) : ?>
 <div>
 <br />
 <h3><?php echo $txt['entry_reply']; ?>:</h3>
@@ -211,7 +217,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 </form>
 <br />
 </div>
-
+<?php endif; ?>
 <?php if (environment('showpostmeta')) : ?>
 <h3><?php echo $txt['entry_rating']; ?>:</h3>
 <form name="reviewpost" method="post" action="<?php url_for(array('resource'=>'reviews')); ?>">

@@ -42,7 +42,7 @@ function do_install(appnam) {
 }
 
 
-$(document).ready(function() {
+function show_jeditable(){
   
   var submit_to = "<?php url_for(array(
     'resource'=>'settings'
@@ -129,7 +129,9 @@ $(document).ready(function() {
       }
   });
   
-});
+}
+show_jeditable();
+
 // ]]>
 </script>
 <p class="editable_select_installer" id="editable_select_installer"></p>

@@ -6,8 +6,24 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 
 
 ?>
-<?php if (!environment('uploads')) return; ?>
 
+<?php if (!environment('uploads')) return; ?>
+<script type="text/javascript">
+// <![CDATA[
+
+$(document).ready(function() {
+
+	$(".upload").charCounter(<?php echo (140 - $url_length) -1; ?>, {
+		container: "#tweetcounter",
+		format: "%1",
+		pulse: false
+	});
+
+});
+
+
+// ]]>
+</script>
 <form action="<?php url_for( $request->resource ); ?>" method="post" name="<?php url_for( $request->resource ); ?>" id="<?php url_for( $request->resource ); ?>" enctype="multipart/form-data">
 <div>
 <input name="method" type="hidden" value="post" />
@@ -15,8 +31,10 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 <input name="<?php print $post; ?>[local]" value="1" type="hidden" />
 
 
-    <?php echo $txt['upload_description']; ?>&nbsp;&nbsp;
-    <textarea class="upload" rows="3" cols="56" id="<?php print $post; ?>_title" name="<?php print $post; ?>[title]" maxlength="<?php echo (140 - $url_length) -1; ?>"><?php print $Member->title; ?></textarea>
+    &nbsp;&nbsp;
+		<div style="	font-family: Tahoma, sans-serif;
+			font-size: 18px;" id="tweetcounter">
+			</div>    <textarea class="upload" rows="3" cols="56" id="<?php print $post; ?>_title" name="<?php print $post; ?>[title]"><?php print $Member->title; ?></textarea>
   
 
     <?php echo $txt['upload_file']; ?>&nbsp;&nbsp;

@@ -73,13 +73,19 @@ get_header();
       data = data.substring(0,(data.length - 10));
       eval( "data = " + data );
       if (data['callback'].length >0) {
-	      eval( data['callback']+"(data)" );
+	      if (content_changed(data)){
+  	      eval( data['callback']+"(data)" );
+        }
       } else if (data['in_reply_to']) {
-        var selectr = data['in_reply_to'];
-        $(selectr).append(render_a_tweet(data));
-        //$(selectr).append(data['html']);
+	      if (content_changed(data)){
+          var selectr = data['in_reply_to'];
+          $(selectr).append(render_a_tweet(data));
+          //$(selectr).append(data['html']);
+        }
       } else {
-        $("#postlist").prepend(render_a_tweet(data));
+	      if (content_changed(data)){
+          $("#postlist").prepend(render_a_tweet(data));
+        }
         //$("#postlist").prepend(data['html']);
       }
       <?php if (environment('oembed')) : ?>

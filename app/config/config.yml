@@ -82,15 +82,21 @@ env:
     - facebook
     - pages
     - flickr
+    - rsscloud
+    - wiki
+    - shortener
   
   installed:
-    - password
     - twitter
+    - password
+    - streams
     - translate
     - facebook
+    - pages
     - flickr
     - rsscloud
     - wiki
+    - shortener
   
   boot: omb
   

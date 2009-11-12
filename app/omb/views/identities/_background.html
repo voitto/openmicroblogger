@@ -9,7 +9,7 @@
 <script type="text/javascript">
 // <![CDATA[
 
-$(document).ready(function() {
+function show_jeditable(){
   
   var submit_to = "<?php echo $settingurl; ?>";
   
@@ -39,7 +39,9 @@ $(document).ready(function() {
 
 <?php setting_widget_helper('tile',$setting_mode,$setting_url,$setting_entry,$setting_list); ?>
 
-});
+}
+show_jeditable();
+
 
 
 // ]]>
