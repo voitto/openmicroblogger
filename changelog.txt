@@ -5,19 +5,97 @@
 ################################
 #           Cutline            #
 # * Changes                    #
-# (+)   New file added         #
-# (-)   File removed           #
-# (o)   File Changed           #
 # [#00] Ticket ID              #
 ################################
 
 ################################
-# Current Release: 0.3b81      #
+# Current Release: 0.3b95      #
 ################################
 
 
 
 This has changed in Release:
+
+#0.3b95
+
+* added: Realtime Wiki
+* added: RSS Cloud
+* added: Realtime comet function
+* added: Linkify
+* added: Tinymce
+* added: personal RSS Feed
+* added: flickr app
+* updated: P2 Theme update
+* fixed: Zeep Mobile
+* fixed: Nickname already in Use bug
+
+
+#0.3b94
+
+* added: Default language feature
+
+
+#0.3b93
+
+* added: Language import feature
+
+
+#0.3b92
+
+* fixed: URL Shortener setup
+* updated: Login Page
+
+
+#0.3b91
+
+* fixed: URL Shortener setup
+
+
+#0.3b90
+
+* added: URL Shortener
+
+
+#0.3b89
+
+* fixed: rply_yourls
+
+
+#0.3b88
+
+* added: rply_yourls support
+
+
+#0.3b87
+
+* added: User BG
+
+
+#0.3b86
+
+* install.php rollback
+
+
+#0.3b85
+
+* added: Memcache support
+
+
+#0.3b84
+
+* fixed: Streams
+
+
+#0.3b83
+
+* fixed: Tables
+* fixed: Twitter app
+
+
+#0.3b82
+
+* fixed: subdomain issues
+
 
 #0.3b81
 
@@ -38,53 +116,6 @@ This has changed in Release:
 * upgrade/fixed cookie auth [#69]
 * possibility to add Contact box / impressum [#27]
 * Some smaller fixes
-
-(o) README
-(o) app/config/config.yml
-(o) app/omb/controllers/admin.php
-(o) app/omb/controllers/identities.php
-(o) app/omb/controllers/posts.php
-(o) app/omb/models/Page.php
-(o) app/omb/plugins/omb.php
-(o) app/omb/plugins/ping.php
-(o) app/omb/plugins/security.php
-(o) app/omb/plugins/wp.php
-(o) app/omb/views/_email.html
-(o) app/omb/views/admin/index.html
-(o) app/omb/views/blogs/_mystreams.html
-(o) app/omb/views/blogs/_remove.html
-(o) app/omb/views/categories/_block.js
-(o) app/omb/views/methods/_remove.html
-(o) app/omb/views/subscriptions/_following.html
-(o) db/library/dbscript/_functions.php
-(o) db/library/dbscript/cookie.php
-(o) db/library/dbscript/mapper.php
-(o) db/library/dbscript/model.php
-(o) db/library/dbscript/view.php
-(o) resource/prettyurls/.htaccess
-(o) wp-content/language/eng.php
-(o) wp-content/language/ger.php
-(o) wp-content/themes/p2/footer.php
-(o) wp-content/themes/p2/header.php
-(o) wp-content/themes/p2/index.php
-
-
-(+) app/omb/models/Thumbnail.php
-(+) app/omb/views/posts/_pagelist.html
-(+) app/omb/views/posts/_pagenew.html
-(+) app/omb/views/posts/_pagespan.html
-(+) app/pages/pages.php
-(+) db/library/Validate.php
-
-(-) app/omb/views/pages/_block.js
-(-) app/omb/views/pages/_edit.html
-(-) app/omb/views/pages/_entry.html
-(-) app/omb/views/pages/_entry.wml
-(-) app/omb/views/pages/_index.atom
-(-) app/omb/views/pages/_index.html
-(-) app/omb/views/pages/_index.wml
-(-) app/omb/views/pages/_new.html
-(-) app/omb/views/pages/_remove.html
 
 
 #0.3b80
@@ -108,104 +139,6 @@ This has changed in Release:
 * Fixed: @admin*** nicknames now redirecting to profile instead of admin-menu [#89]
 * Added Facebook-Connect
 
-(o) install.php
-(o) app/config/config.yml
-(o) app/identica/controllers/dents.php
-(o) app/identica/plugins/identica.php
-(o) app/identica/views/dents/_edit.html
-(o) app/omb/controllers/admin.php
-(o) app/omb/controllers/identities.php
-(o) app/omb/controllers/settings.php
-(o) app/omb/plugins/omb.php
-(o) app/omb/plugins/security.php
-(o) app/omb/plugins/sms_notice.php
-(o) app/omb/plugins/wp.php
-(o) app/omb/views/_index.rss
-(o) app/omb/views/_email.html
-(o) app/omb/views/admin/index.html
-(o) app/omb/views/identities/_admin.html
-(o) app/omb/views/identities/_edit.html
-(o) app/omb/views/identities/_entry.html
-(o) app/omb/views/pages/_entry.html
-(o) app/omb/views/posts/_apps.html
-(o) app/omb/views/posts/_entry.html
-(o) app/omb/views/posts/_profile.html
-(o) app/twitter/controllers/ak_twitter.php
-(o) app/twitter/views/ak_twitter/_edit.html
-(o) db/boot.php
-(o) db/library/openid.php
-(o) db/library/dbscript/_functions.php
-(o) db/library/dbscript/model.php
-(o) resource/jeditable/jquery.jeditable.js
-(o) wp-content/language/eng.php
-(o) wp-content/language/ger.php
-(o) wp-content/plugins/twitter-tools/twitter-tools.php
-(o) wp-content/themes/p2/header.php
-(o) wp-content/themes/p2/sidebar.php
-(o) wp-content/themes/p2/style.css
-(o) wp-content/themes/prologue-theme/style.css
-
-(+) app/facebook/models/FacebookUser.php
-(+) app/omb/models/Revision.php
-(+) db/library/facebook-platform/php/facebook.php
-(+) db/library/facebook-platform/php/facebook_desktop.php
-(+) db/library/facebook-platform/php/facebookapi_php5_restlib.php
-(+) db/library/facebook-platform/php/jsonwrapper/JSON/JSON.php
-(+) db/library/facebook-platform/php/jsonwrapper/JSON/LICENSE
-(+) db/library/facebook-platform/php/jsonwrapper/jsonwrapper.php
-(+) db/library/facebook-platform/php/jsonwrapper/jsonwrapper_inner.php
-(+) db/library/facebook_stream/FacebookStream.php
-(+) db/library/facebook_stream/README
-(+) db/library/facebook_stream/Services/Facebook.php
-(+) db/library/facebook_stream/Services/Facebook/Admin.php
-(+) db/library/facebook_stream/Services/Facebook/Application.php
-(+) db/library/facebook_stream/Services/Facebook/Auth.php
-(+) db/library/facebook_stream/Services/Facebook/Batch.php
-(+) db/library/facebook_stream/Services/Facebook/Common.php
-(+) db/library/facebook_stream/Services/Facebook/Connect.php
-(+) db/library/facebook_stream/Services/Facebook/Data.php
-(+) db/library/facebook_stream/Services/Facebook/Events.php
-(+) db/library/facebook_stream/Services/Facebook/Exception.php
-(+) db/library/facebook_stream/Services/Facebook/FBML.php
-(+) db/library/facebook_stream/Services/Facebook/FQL.php
-(+) db/library/facebook_stream/Services/Facebook/Feed.php
-(+) db/library/facebook_stream/Services/Facebook/Friends.php
-(+) db/library/facebook_stream/Services/Facebook/Groups.php
-(+) db/library/facebook_stream/Services/Facebook/MarketPlace.php
-(+) db/library/facebook_stream/Services/Facebook/MarketPlace/Listing.php
-(+) db/library/facebook_stream/Services/Facebook/Notifications.php
-(+) db/library/facebook_stream/Services/Facebook/Pages.php
-(+) db/library/facebook_stream/Services/Facebook/Photos.php
-(+) db/library/facebook_stream/Services/Facebook/Profile.php
-(+) db/library/facebook_stream/Services/Facebook/Share.php
-(+) db/library/facebook_stream/Services/Facebook/Users.php
-(+) db/library/facebook_stream/example/index.php
-(+) resource/xd_receiver.htm
-
-(-) app/facebook/Services/README
-(-) app/facebook/Services/Services/Facebook.php
-(-) app/facebook/Services/Services/Facebook/Admin.php
-(-) app/facebook/Services/Services/Facebook/Application.php
-(-) app/facebook/Services/Services/Facebook/Auth.php
-(-) app/facebook/Services/Services/Facebook/Batch.php
-(-) app/facebook/Services/Services/Facebook/Common.php
-(-) app/facebook/Services/Services/Facebook/Connect.php
-(-) app/facebook/Services/Services/Facebook/Data.php
-(-) app/facebook/Services/Services/Facebook/Events.php
-(-) app/facebook/Services/Services/Facebook/Exception.php
-(-) app/facebook/Services/Services/Facebook/FBML.php
-(-) app/facebook/Services/Services/Facebook/FQL.php
-(-) app/facebook/Services/Services/Facebook/Feed.php
-(-) app/facebook/Services/Services/Facebook/Friends.php
-(-) app/facebook/Services/Services/Facebook/Groups.php
-(-) app/facebook/Services/Services/Facebook/MarketPlace.php
-(-) app/facebook/Services/Services/Facebook/MarketPlace/Listing.php
-(-) app/facebook/Services/Services/Facebook/Notifications.php
-(-) app/facebook/Services/Services/Facebook/Pages.php
-(-) app/facebook/Services/Services/Facebook/Photos.php
-(-) app/facebook/Services/Services/Facebook/Profile.php
-(-) app/facebook/Services/Services/Facebook/Share.php
-(-) app/facebook/Services/Services/Facebook/Users.php
 
 
 #0.3b79
@@ -214,12 +147,6 @@ This has changed in Release:
 * P2-Theme: Minor style.css fix
 * Visual fix: new translation
 * Fixed: Can't save avatars
-
-(o) app/translate/views/translations/_new.html
-(o) app/omb/controllers/identities.php
-(o) db/library/dbscript/_functions.php
-(o) wp-content/themes/p2/sidebar.php
-(o) wp-content/themes/p2/style.css
 
 
 #0.3b78
@@ -230,21 +157,6 @@ This has changed in Release:
 * added true/false instead of 1/0 in admin menu settings
 * Cleaned up reply/permalink page
 
-(o) app/config/config.yml
-(o) app/omb/controllers/admin.php
-(o) app/omb/views/admin/index.html
-(o) app/omb/views/posts/_upload.html
-(o) app/omb/views/posts/_entry.html
-(o) db/boot.php
-(o) db/library/dbscript/mysql.php
-(o) db/library/dbscript/postgresql.php
-(o) wp-content/themes/p2/post-form.php
-(o) wp-content/themes/p2/sidebar.php
-(o) wp-content/themes/prologue-theme/post-form.php
-
-(+) app/translate/views/translations/export_eng.txt
-(+) app/translate/views/translations/export_ger.txt
-
 
 #0.3b77
 
@@ -253,15 +165,6 @@ This has changed in Release:
 * fixed: Tags are now saved as new categories
 * fixed some language-creator issues
 * added some features to language-creator
-
-(o) app/omb/plugins/omb.php
-(o) app/omb/plugins/wp.php
-(o) app/omb/views/subscriptions/_followers.html
-(o) app/translate/controllers/translations.php
-(o) app/translate/views/translations/_edit.html
-(o) app/translate/views/translations/_index.html
-(o) app/translate/views/translations/_new.html
-(o) db/library/dbscript/model.php
 
 
 #0.3b76
@@ -274,54 +177,11 @@ This has changed in Release:
 * updated readme
 * added this changelog so you can see what has changed since last release
 
-(o) README
-(o) app/omb/plugins/ping.php
-(o) app/omb/plugins/wp.php
-(o) app/omb/views/blogs/_edit.html
-(o) app/omb/views/blogs/_index.html
-(o) app/omb/views/blogs/_mystreams.html
-(o) app/omb/views/blogs/_new.html
-(o) app/omb/views/blogs/_newajax.html
-(o) app/omb/views/blogs/_remove.html
-(o) app/omb/views/categories/_edit.html
-(o) app/omb/views/categories/_manage.html
-(o) app/omb/views/categories/_new.html
-(o) app/omb/views/categories/_remove.html
-(o) app/omb/views/identities/_entry.html
-(o) app/omb/views/posts/_profile.html
-(o) db/library/php_microformats.php
-(o) wp-content/language/eng.php
-(o) wp-content/language/ger.php
-(o) wp-content/themes/p2/comments.php
-(o) wp-content/themes/p2/header.php
-(o) wp-content/themes/p2/index.php
-(o) wp-content/themes/p2/inline-comments.php
-(o) wp-content/themes/p2/page.php
-(o) wp-content/themes/p2/sidebar.php
-(o) wp-content/themes/p2/style.css
-(o) wp-content/themes/prologue-theme/style.css
-
-(+) changelog.txt
-
 
 #0.3b75
 
 * Added Photo-upload in P2-Theme
 * P2-Theme: Sidebar categories css update
-
-(o) app/omb/views/categories/_block.js
-(o) wp-content/language/eng.php
-(o) wp-content/language/ger.php
-(o) wp-content/themes/p2/header.php
-(o) wp-content/themes/p2/sidebar.php
-(o) wp-content/themes/p2/style.css
-(o) wp-content/themes/p2/post-form.php
-(o) wp-content/themes/prologue-theme/style.css
-
-(+) resource/cancel.png
-(+) resource/jquery.uploadify.js
-(+) resource/uploader.swf
-(+) resource/uploadify.css
 
 
 #0.3b74
@@ -334,103 +194,11 @@ This has changed in Release:
 * overhaul code: xhtml-conform <br />
 * removed unused files
 
-(o) app/auction/views/index.html
-(o) app/identica/views/dents/_edit.html
-(o) app/omb/views/identities/_admin.html
-(o) app/omb/plugins/email_group.php
-(o) app/omb/plugins/omb.php
-(o) app/omb/plugins/renderer.php
-(o) app/omb/plugins/wp.php
-(o) app/omb/views/_email.html
-(o) app/omb/views/_index.html
-(o) app/omb/views/blogs/_remove.html
-(o) app/omb/views/categories/_remove.html
-(o) app/omb/views/groups/_edit.html
-(o) app/omb/views/groups/_remove.html
-(o) app/omb/views/identities/_index.html
-(o) app/omb/views/identities/_edit.html
-(o) app/omb/views/identities/_entry.html
-(o) app/omb/views/identities/_new.html
-(o) app/omb/views/identities/_pass.html
-(o) app/omb/views/identities/_remove.html
-(o) app/omb/views/identities/_subs.html
-(o) app/omb/views/methods/_remove.html
-(o) app/omb/views/pages/_entry.html
-(o) app/omb/views/pages/_index.html
-(o) app/omb/views/pages/_new.html
-(o) app/omb/views/posts/_entry.html
-(o) app/omb/views/posts/_index.html
-(o) app/omb/views/posts/_new.html
-(o) (o) app/omb/views/posts/_profile.html
-(o) app/omb/views/pages/_remove.html
-(o) app/omb/views/posts/_upload.html
-(o) app/omb/views/posts/_widget.html
-(o) app/omb/views/subscriptions/_followers.html
-(o) app/omb/views/subscriptions/_following.html
-(o) app/omb/views/subscriptions/_remove.html
-(o) app/translate/views/translations/_remove.html
-(o) app/twitter/views/ak_twitter/_edit.html
-(o) db/boot.php
-(o) db/library/dbscript/_functions.php
-(o) db/library/dbscript/model.php
-(o) db/library/dbscript/postgresql.php
-(o) resource/dingshow_plainphp/magpierss/cookbook
-(o) wp-content/themes/p2/sidebar.php
-(o) wp-content/language/eng.php
-(o) wp-content/language/ger.php
-(o) wp-content/themes/p2/style.css
-(o) wp-content/themes/p2/inc/jquery.autogrow.js
-(o) wp-content/themes/prologue-theme/style.css
-
-(-) wp-content/plugins/post2ff/friendfeed-api/JSON.php
-(-) wp-content/plugins/post2ff/friendfeed-api/friendfeed.php
-(-) wp-content/plugins/post2ff/post2ff.php
-(-) wp-content/plugins/wordbook/facebook-platform/php/facebook.php
-(-) wp-content/plugins/wordbook/facebook-platform/php/facebook_desktop.php
-(-) wp-content/plugins/wordbook/facebook-platform/php/facebookapi_php5_restlib.php
-(-) wp-content/plugins/wordbook/facebook-platform/php/jsonwrapper/JSON/JSON.php
-(-) wp-content/plugins/wordbook/facebook-platform/php/jsonwrapper/JSON/LICENSE
-(-) wp-content/plugins/wordbook/facebook-platform/php/jsonwrapper/jsonwrapper.php
-(-) wp-content/plugins/wordbook/facebook-platform/php/jsonwrapper/jsonwrapper_inner.php
-(-) wp-content/plugins/wordbook/readme.txt
-(-) wp-content/plugins/wordbook/screenshot-1.png
-(-) wp-content/plugins/wordbook/screenshot-2.png
-(-) wp-content/plugins/wordbook/wordbook.php
-(-) wp-content/plugins/wordbook/wordbook_php5.php
-
 
 #0.3b73
 
 * multilanguage fixes
 * removed a lot of inline-css abd added to css-file
-
-(o) app/omb/plugins/omb.php
-(o) app/omb/plugins/wp.php
-(o) app/omb/views/_email.html
-(o) app/omb/views/_register.html
-(o) app/omb/views/admin/index.html
-(o) app/omb/views/admin/style.css
-(o) app/omb/views/identities/_pass.html
-(o) app/omb/views/pages/_edit.html
-(o) app/omb/views/pages/_new.html
-(o) app/omb/views/posts/_edit.html
-(o) app/omb/views/posts/_entry.html
-(o) app/omb/views/posts/_index.html
-(o) app/omb/views/posts/_new.html
-(o) app/omb/views/posts/_remove.html
-(o) app/omb/views/posts/_profile.html
-(o) app/omb/views/posts/_upload.html
-(o) db/library/dbscript/_functions.php
-(o) wp-content/language/eng.php
-(o) wp-content/language/ger.php
-(o) wp-content/themes/p2/archive.php
-(o) wp-content/themes/p2/author.php
-(o) wp-content/themes/p2/footer.php
-(o) wp-content/themes/p2/header.php
-(o) wp-content/themes/p2/index.php
-(o) wp-content/themes/p2/sidebar.php
-(o) wp-content/themes/p2/style.css
-(o) wp-content/themes/p2/tag.php
 
 
 #0.3b72
@@ -444,31 +212,10 @@ This has changed in Release:
 * fixed subscriptions list
 * fix pagination, personal tab 
 
-(o) app/identica/identica.php
-(o) app/identica/views/dents/_edit.html
-(o) app/omb/controllers/identities.php
-(o) app/omb/plugins/omb.php
-(o) app/omb/plugins/wp.php
-(o) app/omb/views/identities/_admin.html
-(o) app/omb/views/posts/_entry.html
-(o) app/password/password.php
-(o) app/streams/streams.php
-(o) app/translate/models/Translation.php
-(o) app/twitter/twitter.php
-(o) app/twitter/views/ak_twitter/_edit.html
-(o) db/library/dbscript/_functions.php
-(o) wp-content/language/eng.php
-(o) wp-content/language/ger.php
-(o) wp-content/themes/p2/header.php
-(o) wp-content/themes/p2/sidebar.php
-(o) wp-content/themes/p2/style.css
-
 
 #0.3b71
 
 * fixed language-selection
-
-(o) wp-content/language/lang_chooser.php
 
 
 #0.3b70
@@ -483,132 +230,50 @@ This has changed in Release:
 * P2-Theme: added sidebar greeting-message if not logged in
 * Settings - Profile headline redesign
 
-(o) install.php
-(o) app/omb/controllers/admin.php
-(o) app/omb/plugins/wp.php
-(o) app/omb/views/admin/index.html
-(o) app/omb/views/identities/_edit.html
-(o) app/omb/views/pages/_entry.html
-(o) app/omb/views/posts/_entry.html
-(o) db/library/php_microformats.php
-(o) db/library/dbscript/_functions.php
-(o) wp-content/language/eng.php
-(o) wp-content/language/ger.php
-(o) wp-content/themes/p2/archive.php
-(o) wp-content/themes/p2/author.php
-(o) wp-content/themes/p2/comments.php
-(o) wp-content/themes/p2/header.php
-(o) wp-content/themes/p2/index.php
-(o) wp-content/themes/p2/page.php
-(o) wp-content/themes/p2/post-form.php
-(o) wp-content/themes/p2/search.php
-(o) wp-content/themes/p2/sidebar.php
-(o) wp-content/themes/p2/style.css
-
-(+) wp-content/plugins/post2ff/friendfeed-api/JSON.php
-(+) wp-content/plugins/post2ff/friendfeed-api/friendfeed.php
-(+) wp-content/plugins/post2ff/post2ff.php
-
-(-) app/omb/views/identities/_pass.html
-(-) db/library/twitter-lib.php
-
 
 #0.3b69
 
 * Language fixes
-
-(o) app/config/config.yml
-(o) app/omb/views/_index.rss
-(o) db/library/dbscript/mysql.php
-(o) wp-content/language/lang_chooser.php
-(o) wp-content/themes/p2/header.php
-(o) wp-content/themes/p2/tag.php
-(o) wp-content/themes/prologue-theme/index.php
-(o) wp-content/themes/prologue-theme/tag.php
-
 
 
 #0.3b68
 
 * fixed remote subscriptions
 
-(o) app/omb/plugins/omb.php
-(o) db/library/dbscript/view.php
-
 
 #0.3b67
 
 * Every user can choose a language by himself
-
-(o) app/translate/views/translations/_index.html
-(o) db/library/dbscript/_functions.php
-(o) db/library/dbscript/view.php
-(o) wp-content/language/lang_chooser.php
 
 
 #0.3b66
 
 * Default language added
 
-(o) wp-content/language/lang_chooser.php
-
 
 #0.3b65
 
 * New-Function added: User translations
-
-(o) app/config/config.yml
-(o) app/omb/plugins/omb.php
-(o) db/boot.php
-(o) wp-content/language/lang_chooser.php
-
-(+) app/translate/controllers/translations.php
-(+) app/translate/models/Translation.php
-(+) app/translate/translate.php
-(+) app/translate/views/translations/_edit.html
-(+) app/translate/views/translations/_export.txt
-(+) app/translate/views/translations/_index.html
-(+) app/translate/views/translations/_new.html
-(+) app/translate/views/translations/_remove.html
 
 
 #0.3b64
 
 * Set language on webinstall
 
-(o) config.php
-(o) db/library/dbscript/view.php
-(o) wp-content/language/lang_chooser.php
-
 
 #0.3b63
 
 * New-Function added: Web-Installer
-
-(o) db/boot.php
-
-(+) install.php
-(+) config/.empty
 
 
 #0.3b62
 
 * fixed installation error
 
-(o) app/omb/plugins/omb.php
-(o) app/omb/views/subscriptions/_following.html
-(o) db/library/dbscript/database.php
-(o) db/library/dbscript/mysql.php
-(o) wp-content/themes/p2/sidebar.php
-
 
 #0.3b61
 
 * followers/following links
-
-(o) app/omb/plugins/omb.php
-(o) db/library/dbscript/_functions.php
-(o) wp-content/themes/p2/sidebar.php
 
 
 #0.3b60
@@ -621,45 +286,17 @@ This has changed in Release:
 * P2-Theme: Navigation fixes
 * P2-Theme: follow-button added
 
-(o) app/omb/plugins/omb.php
-(o) app/omb/plugins/ping.php
-(o) app/omb/plugins/wp.php
-(o) app/omb/views/posts/_apps.html
-(o) app/omb/views/posts/_edit.html
-(o) app/omb/views/posts/_profile.html
-(o) wp-content/themes/p2/header.php
-(o) wp-content/themes/p2/sidebar.php
-
 
 #0.3b58
 
 * Multi-language support enhanced
 * Minor fixes
 
-(o) app/omb/plugins/omb.php
-(o) app/omb/plugins/ping.php
-(o) app/omb/plugins/wp.php
-(o) app/omb/views/identities/_entry.html
-(o) app/omb/views/posts/_edit.html
-(o) app/omb/views/posts/_entry.html
-(o) app/omb/views/posts/_new.html
-(o) app/omb/views/posts/_profile.html
-(o) app/omb/views/posts/_remove.html
-(o) app/omb/views/posts/_upload.html
-(o) db/library/dbscript/mapper.php
-(o) db/library/dbscript/view.php
-(o) wp-content/themes/p2/index.php
-(o) wp-content/themes/p2/post-form.php
-
 
 #0.3b57
 
 * Multi-language support added
 * German localization
-
-(+) wp-content/language/eng.php
-(+) wp-content/language/ger.php
-(+) wp-content/language/lang_chooser.php
 
 
 #0.3b56
@@ -676,8 +313,6 @@ This has changed in Release:
 
 * post fix
 
-(o) wp-content/themes/p2/post-form.php
-
 
 #0.3b53
 
@@ -685,71 +320,16 @@ This has changed in Release:
 * Copyright update
 * Config-File added
 
-(o) README
-(o) app/auction/views/index.html
-(o) app/config/config.yml
-(o) app/omb/plugins/omb.php
-(o) app/omb/plugins/ping.php
-(o) app/omb/plugins/renderer.php
-(o) app/omb/plugins/security.php
-(o) app/omb/plugins/sessions.php
-(o) app/omb/plugins/validation.php
-(o) app/omb/plugins/wp.php
-(o) app/omb/views/posts/_profile.html
-(o) db/boot.php
-(o) db/library/dbscript/_functions.php
-(o) db/library/dbscript/aggregatefeed.php
-(o) db/library/dbscript/bootloader.php
-(o) db/library/dbscript/cache.php
-(o) db/library/dbscript/collection.php
-(o) db/library/dbscript/cookie.php
-(o) db/library/dbscript/database.php
-(o) db/library/dbscript/genericiterator.php
-(o) db/library/dbscript/mapper.php
-(o) db/library/dbscript/model.php
-(o) db/library/dbscript/mysql.php
-(o) db/library/dbscript/pdo.php
-(o) db/library/dbscript/postgresql.php
-(o) db/library/dbscript/record.php
-(o) db/library/dbscript/recordset.php
-(o) db/library/dbscript/resource.php
-(o) db/library/dbscript/resultiterator.php
-(o) db/library/dbscript/route.php
-(o) db/library/dbscript/view.php
-(o) wp-content/themes/p2/header.php
-(o) wp-content/themes/p2/index.php
-(o) wp-content/themes/p2/post-form.php
-(o) wp-content/themes/p2/sidebar.php
-(o) wp-content/themes/p2/style.css
-
-(+) config.php
 
 
 #0.3b52 / #0.3b51
 
 * openid overhaul
 
-(o) db/library/dbscript/_functions.php
-(o) db/library/openid.php
-
-(+) db/library/Yadis/Services/Yadis/HTTPFetcher.php
-(+) db/library/Yadis/Services/Yadis/Manager.php
-(+) db/library/Yadis/Services/Yadis/ParanoidHTTPFetcher.php
-(+) db/library/Yadis/Services/Yadis/ParseHTML.php
-(+) db/library/Yadis/Services/Yadis/PlainHTTPFetcher.php
-(+) db/library/Yadis/Services/Yadis/XML.php
-(+) db/library/Yadis/Services/Yadis/XRDS.php
-(+) db/library/Yadis/Services/Yadis/Yadis.php
-
 
 #0.3b50
 
 * @replies, openid fix, registration fix, subscribers, subscriptions
-
-(o) app/omb/controllers/identities.php
-(o) app/omb/controllers/posts.php
-(o) app/omb/plugins/omb.php
-(o) db/library/openid.php
 
 
 #0.3b49 - 0.1
