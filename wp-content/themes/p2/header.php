@@ -128,6 +128,7 @@ $(document).ready(function() {
           tooltip     : "Click to edit...",
           cancel      : "Cancel",
           callback  : function(value, settings) {
+	          $('#'+postid+'editable').remove();
             return(value);
           }
       });
