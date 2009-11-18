@@ -58,7 +58,8 @@ function wiki_urls(){
 	while ($w = $Wiki->MoveNext()){
 		$request->connect( str_replace(' ','',$w->title), array(
 		  'resource'=>'wikis',
-		  'id'=>$w->id
+		  'id'=>$w->id,
+		  'action'=>'entry'
 		));
 	}
 	$WikiPage =& $db->model('WikiPage');
@@ -67,7 +68,8 @@ function wiki_urls(){
 	while ($w = $WikiPage->MoveNext()){
 		$request->connect( str_replace(' ','',$w->title), array(
 		  'resource'=>'wiki_pages',
-		  'id'=>$w->id
+		  'id'=>$w->id,
+		  'action'=>'entry'
 		));
 	}
 	$wiki_urls_loaded = 'done';
