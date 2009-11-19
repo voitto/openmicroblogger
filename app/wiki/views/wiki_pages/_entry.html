@@ -9,39 +9,6 @@
 
 <script type="text/javascript">
 
-Meteor.hostid = '<?php echo get_profile_id(); ?>';
-Meteor.host = "<?php echo REALTIME_HOST; ?>";
-Meteor.registerEventCallback("process", test);
-Meteor.joinChannel("<?php echo $chan; ?>", 0);
-Meteor.mode = 'stream';
-Meteor.connect();
-var lasttweet = '';
-
-function test(data) {
-  data = data.substring(0,(data.length - 10));
-  eval( "data = " + data );
-  if (data['callback'].length >0) {
-    if (content_changed(data)){
-      eval( data['callback']+"(data)" );
-    }
-  } else if (data['in_reply_to']) {
-    if (content_changed(data)){
-      var selectr = data['in_reply_to'];
-      $(selectr).append(render_a_tweet(data));
-      //$(selectr).append(data['html']);
-    }
-  } else {
-    if (content_changed(data)){
-      $("#postlist").prepend(render_a_tweet(data));
-      //$("#postlist").prepend(data['html']);
-    }
-  }
-  <?php if (environment('oembed')) : ?>
-  $('a.oembed').oembed();
-  <?php endif; ?>
-}
-
-
 $.fn.tinymce = function(options){
    return this.each(function(){ 
       tinyMCE.execCommand("mceAddControl", true, this.id);
@@ -260,3 +227,52 @@ $namurl=$request->url_for('wiki_pages');
 <?php render_partial('revisions'); ?>
 </body>
 </html>
+
+<?php if (REALTIME_HOST) : ?>
+  
+  <?php
+    
+     $chan = $blogprefix;
+  ?>
+  
+  <script type="text/javascript">
+    // <![CDATA[
+    
+
+		Meteor.hostid = '<?php echo get_profile_id(); ?>';
+		Meteor.host = "<?php echo REALTIME_HOST; ?>";
+		Meteor.registerEventCallback("process", test);
+		Meteor.joinChannel("<?php echo $chan; ?>", 0);
+		Meteor.mode = 'stream';
+		Meteor.connect();
+		var lasttweet = '';
+
+		function test(data) {
+		  data = data.substring(0,(data.length - 10));
+		  eval( "data = " + data );
+		  if (data['callback'].length >0) {
+		    if (content_changed(data)){
+		      eval( data['callback']+"(data)" );
+		    }
+		  } else if (data['in_reply_to']) {
+		    if (content_changed(data)){
+		      var selectr = data['in_reply_to'];
+		      $(selectr).append(render_a_tweet(data));
+		      //$(selectr).append(data['html']);
+		    }
+		  } else {
+		    if (content_changed(data)){
+		      $("#postlist").prepend(render_a_tweet(data));
+		      //$("#postlist").prepend(data['html']);
+		    }
+		  }
+		  <?php if (environment('oembed')) : ?>
+		  $('a.oembed').oembed();
+		  <?php endif; ?>
+		}
+
+
+    // ]]>
+  </script>
+<?php endif; ?>
+
