@@ -69,7 +69,7 @@ if (file_exists('config/config.php'))
 else
   require('config.php');
 
-if (defined('PRETTY_URL_BASE') && !empty(PRETTY_URL_BASE) ){
+if (defined('PRETTY_URL_BASE') && PRETTY_URL_BASE ){
 	global $pretty_url_base;
 	$pretty_url_base = PRETTY_URL_BASE;
 }
@@ -336,16 +336,16 @@ db_include( array(
   $adapter
 ));
 
-if (defined('DB_NAME') && !empty(DB_NAME))
+if (defined('DB_NAME') && DB_NAME)
   $database = DB_NAME;
 
-if (defined('DB_USER') && !empty(DB_USER))
+if (defined('DB_USER') && DB_USER)
   $username = DB_USER;
 
-if (defined('DB_PASSWORD') && !empty(DB_PASSWORD))
+if (defined('DB_PASSWORD') && DB_PASSWORD)
   $password = DB_PASSWORD;
 
-if (defined('DB_HOST') && !empty(DB_HOST))
+if (defined('DB_HOST') && DB_HOST)
   $host = DB_HOST;
 
 
