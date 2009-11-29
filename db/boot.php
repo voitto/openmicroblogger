@@ -69,11 +69,16 @@ if (file_exists('config/config.php'))
 else
   require('config.php');
 
+if (defined('PRETTY_URL_BASE') && !empty(PRETTY_URL_BASE) ){
+	global $pretty_url_base;
+	$pretty_url_base = PRETTY_URL_BASE;
+}
+
   /**
    * memcached
    */
 
-if (MEMCACHED) {
+if (defined('MEMCACHED') && MEMCACHED ) {
   $perma = parse_url( $_SERVER['REQUEST_URI'] );
   $_PERMA = explode( "/", $perma['path'] );
   @array_shift( $_PERMA );
@@ -331,16 +336,16 @@ db_include( array(
   $adapter
 ));
 
-if (DB_NAME)
+if (defined('DB_NAME') && !empty(DB_NAME))
   $database = DB_NAME;
 
-if (DB_USER)
+if (defined('DB_USER') && !empty(DB_USER))
   $username = DB_USER;
 
-if (DB_PASSWORD)
+if (defined('DB_PASSWORD') && !empty(DB_PASSWORD))
   $password = DB_PASSWORD;
 
-if (DB_HOST)
+if (defined('DB_HOST') && !empty(DB_HOST))
   $host = DB_HOST;
 
 
@@ -500,7 +505,7 @@ while ($s = $Setting->MoveNext()) {
 if (isset($env['max_upload_mb']))
   $db->max_upload_megabytes($env['max_upload_mb']);
 
-if (INTRANET)
+if (defined('INTRANET') && INTRANET)
   $env['authentication'] = 'password';
 
 //if (UPLOADS)

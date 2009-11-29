@@ -2,7 +2,7 @@
 
 function send_ping( &$model, &$rec ) {
 
-  if (!PING)
+  if (defined('PING') && !PING)
     return;
 
   global $db;
@@ -18,7 +18,7 @@ function send_ping( &$model, &$rec ) {
   else
     $chan = "chan";
   
-  if (REALTIME_HOST) {
+  if (defined('REALTIME_HOST') && REALTIME_HOST) {
     
     $o = owner_of($rec);
     $payload = array();

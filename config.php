@@ -24,7 +24,9 @@ define(    "DB_CHARSET", "utf8"  );
 define(    "DB_COLLATE", ""      );
 
 // pretty URLs setup
+// example value: "http://twitteronia.com"
+// you must also copy resource/prettyurls/.htaccess
+// to your omb folder & edit lines 2 and 3 of the file
 
-// global $pretty_url_base;
-// $pretty_url_base = "http://openmicroblogger.com";
+define("PRETTY_URL_BASE", ""     );
 

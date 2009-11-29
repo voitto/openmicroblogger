@@ -54,8 +54,15 @@ function index( &$vars ) {
   $theme = environment('theme');
   $blocks = environment('blocks');
   $atomfeed = $request->feed_url();
-  $wiki_rss = blog_url(lookup_wiki_nickname($Member->parent_id));
-  $wiki_title = lookup_wiki_title($Member->parent_id);
+  if ($Member){
+	  $wiki_rss = blog_url(lookup_wiki_nickname($Member->parent_id));
+	  $wiki_title = lookup_wiki_title($Member->parent_id);
+	
+} else {
+	$wiki_rss = '';
+  $wiki_title = '';
+  
+}
   return vars(
     array(
 	    &$wiki_rss,
@@ -189,27 +196,48 @@ function _block( &$vars ) {
 
 function lookup_wiki_prefix($wiki_id){
 	global $db;
-	$Wiki =& $db->model('Wiki');
-  $w = $Wiki->find($wiki_id);
+  $sql = "SELECT blog_id FROM wikis WHERE id = $wiki_id";
+  $result = $db->get_result( $sql );
+  if ( $db->num_rows($result) == 1 ) {
+    $blog_id = $db->result_value( $result, 0, "blog_id" );
+  } else {
+		$Wiki =& $db->model('Wiki');
+	  $w = $Wiki->find($wiki_id);
+    $blog_id = $w->blog_id;
+  }
   $Blog =& $db->model('Blog');
-  $b = $Blog->find($w->blog_id);
+  $b = $Blog->find($blog_id);
   $blogprefix = $b->prefix."_";
   return $blogprefix;
 }
 
 function lookup_wiki_nickname($wiki_id){
 	global $db;
-	$Wiki =& $db->model('Wiki');
-  $w = $Wiki->find($wiki_id);
+  $sql = "SELECT blog_id FROM wikis WHERE id = $wiki_id";
+  $result = $db->get_result( $sql );
+  if ( $db->num_rows($result) == 1 ) {
+    $blog_id = $db->result_value( $result, 0, "blog_id" );
+  } else {
+		$Wiki =& $db->model('Wiki');
+	  $w = $Wiki->find($wiki_id);
+    $blog_id = $w->blog_id;
+  }
   $Blog =& $db->model('Blog');
-  $b = $Blog->find($w->blog_id);
+  $b = $Blog->find($blog_id);
   $blognick = $b->nickname;
   return $blognick;
 }
 
 function lookup_wiki_title($wiki_id){
 	global $db;
-	$Wiki =& $db->model('Wiki');
-  $w = $Wiki->find($wiki_id);
-  return $w->title;
+  $sql = "SELECT title FROM wikis WHERE id = $wiki_id";
+  $result = $db->get_result( $sql );
+  if ( $db->num_rows($result) == 1 ) {
+    return $db->result_value( $result, 0, "title" );
+  } else {
+		$Wiki =& $db->model('Wiki');
+	  $w = $Wiki->find($wiki_id);
+    return $w->title;
+  }
+  return false;
 }

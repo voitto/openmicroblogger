@@ -76,6 +76,40 @@ function wiki_urls(){
 }
 
 
+after_filter('get_blog_for_wiki','routematch');
+
+function get_blog_for_wiki(&$request,&$route) {
+  
+  if (!in_array($request->resource,array('wiki_pages','wikis')))
+    return;
+
+  if (!$request->id)
+    return;
+ 
+  global $prefix;
+  if (!empty($prefix))
+    return;
+  
+  $wiki_prefix = false;
+ 
+  global $db;
+	$Blog =& $db->model('Blog');
+
+	if ($request->resource == 'wiki_pages'){
+		$WikiPage =& $db->model('WikiPage');
+		$w = $WikiPage->find($request->id);
+		if ($w->prefix)
+		  $wiki_prefix = $w->prefix."_";
+	}
+
+	if ($wiki_prefix){
+	  $prefix = $wiki_prefix;
+	  $db->prefix = $prefix;
+	}
+	
+}
+
+
 after_filter( 'do_realtime_revision', 'save_record' );
 
 function do_realtime_revision( &$rec, &$db ) {

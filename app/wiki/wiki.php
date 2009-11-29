@@ -5,7 +5,13 @@ global $prefix;
  function wiki_init() {
    include 'wp-content/language/lang_chooser.php'; //Loads the language-file
    // app_register_init( table, action, apptitle, appname, number )
+   global $prefix;
+   if (empty($prefix)){
      app_register_init( 'wikis', 'index', 'Wiki', 'wiki', 2 );
+	
+}else{
+      app_register_init( 'wiki_pages', 'index', 'Wiki Pages', 'wiki', 2 );
+}
  }
 
  function wiki_show() {
@@ -26,6 +32,9 @@ function set_up_new_wiki( &$model, &$rec ) {
   global $request,$db;
   if (!($request->resource == 'blogs'))
     return;
+  global $prefix;
+  if (!empty($prefix))
+    return;
   if (!isset($_POST['wiki_title']))
     return;
   $url = $request->url_for(array('resource'=>'twitter/'.$rec->nickname));
@@ -43,6 +52,7 @@ function set_up_new_wiki( &$model, &$rec ) {
   $s->set_value('profile_id',$profile->id);
   $s->set_value('nickname',$rec->nickname);
   $s->set_value('blog_id',$rec->id);
+  $s->set_value('prefix',$rec->prefix);
   $s->set_value('title',$_POST['wiki_title']);
   $s->save_changes();
   $s->set_etag();

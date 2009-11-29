@@ -6,7 +6,7 @@ class Post extends Model {
     
     // fields
     
-    if (TWEET_SIZE)
+    if (defined('TWEET_SIZE') && TWEET_SIZE )
       $this->char_field( 'title', array('len'=>TWEET_SIZE) );
     else
       $this->char_field( 'title' );

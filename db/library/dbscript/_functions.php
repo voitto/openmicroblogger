@@ -420,7 +420,7 @@ function read_uploads_blob( &$request, $value, $coll, $ext ) {
     if ($coll[$request->resource]['location'] == 'uploads') {
       $file = 'uploads' . DIRECTORY_SEPARATOR . $request->resource . $request->id;
       if (file_exists($file)) {
-        if (MEMCACHED) {
+        if (defined('MEMCACHED') && MEMCACHED ) {
           global $response;
           $timeout = MEMCACHED;
           $cache = PCA::get_best_backend();
@@ -501,7 +501,7 @@ function read_cache_blob( &$request, $value, $coll ) {
         fclose( $fp );
         unset( $fp );
         
-        if (MEMCACHED) {
+        if (defined('MEMCACHED') && MEMCACHED ) {
           global $response;
           $timeout = MEMCACHED;
           $cache = PCA::get_best_backend();
@@ -3278,10 +3278,10 @@ function readUrl($url){
 
 function realtime($callback,$payload,$prefix=false){
 
-  if (!PING)
+  if (defined('PING') && !PING)
     return;
 
-  if (!REALTIME_HOST)
+  if (defined('REALTIME_HOST') && !REALTIME_HOST )
     return;
 
   global $db;

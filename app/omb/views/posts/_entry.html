@@ -5,7 +5,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
   $post = strtolower(classify($request->resource));
 
 ?>
-<?php if (REALTIME_HOST) : ?>
+<?php if (defined('REALTIME_HOST') && REALTIME_HOST ) : ?>
   
   <?php
     global $db;
@@ -17,6 +17,8 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
   
   <script type="text/javascript">
     // <![CDATA[
+		if (typeof Meteor=="undefined"){
+		} else {
     Meteor.hostid = '<?php echo get_profile_id(); ?>';
     Meteor.host = "<?php echo REALTIME_HOST; ?>";
     Meteor.registerEventCallback("process", test);
@@ -39,7 +41,8 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
         $("#postlist").prepend(data['html']);
       }
       $('a.oembed').oembed();
-    };
+    }
+    }
     // ]]>
   </script>
 <?php endif; ?>

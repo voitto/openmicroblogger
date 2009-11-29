@@ -36,10 +36,12 @@
 </table>
 
 
-<form action="<?php url_for( 'wiki_pages' ); ?>" method="post" name="wiki_pages" id="wiki_pages">
+<form action="<?php echo blog_url( lookup_wiki_nickname($request->id) ); ?>wiki_pages" method="post" name="wiki_pages" id="wiki_pages">
 <div>
 <input name="method" type="hidden" value="post" />
 <input name="submit_form" type="hidden" value="wiki_pages" />
+
+
 <input name="wikipage[parent_id]" type="hidden" value="<?php echo $request->id; ?>">
 <table border="0">
 

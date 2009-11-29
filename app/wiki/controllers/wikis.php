@@ -74,15 +74,16 @@ function _index( &$vars ) {
 function _pagelist( &$vars ) {
 
   extract( $vars );
-
+  $Member = $collection->MoveFirst();
+  $blogprefix = $Member->prefix;
   $find_by = array(
     'parent_id'=>$request->id
   );
   
   $collection = new Collection( 'wiki_pages', $find_by );
-  
+
   return vars(
-    array( &$collection, &$profile ),
+    array( &$collection, &$profile, &$blogprefix ),
     get_defined_vars()
   );
 }
@@ -94,8 +95,10 @@ function _entry( &$vars ) {
   extract( $vars );
   $Member = $collection->MoveNext();
   $Entry = $Member->FirstChild( 'entries' );
+  $blogprefix = $Member->prefix;
+
   return vars(
-    array( &$collection, &$Member, &$Entry, &$profile ),
+    array( &$collection, &$Member, &$Entry, &$profile, &$blogprefix ),
     get_defined_vars()
   );
 }
@@ -147,3 +150,19 @@ function _block( &$vars ) {
 
 }
 
+function lookup_wiki_nickname($wiki_id){
+	global $db;
+  $sql = "SELECT blog_id FROM wikis WHERE id = $wiki_id";
+  $result = $db->get_result( $sql );
+  if ( $db->num_rows($result) == 1 ) {
+    $blog_id = $db->result_value( $result, 0, "blog_id" );
+  } else {
+		$Wiki =& $db->model('Wiki');
+	  $w = $Wiki->find($wiki_id);
+    $blog_id = $w->blog_id;
+  }
+  $Blog =& $db->model('Blog');
+  $b = $Blog->find($blog_id);
+  $blognick = $b->nickname;
+  return $blognick;
+}

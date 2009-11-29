@@ -130,14 +130,18 @@ db_include( array(
   'resultiterator',
   $adapter
 ));
-if (DB_NAME)
+if (defined('DB_NAME') && !empty(DB_NAME))
   $database = DB_NAME;
-if (DB_USER)
+
+if (defined('DB_USER') && !empty(DB_USER))
   $username = DB_USER;
-if (DB_PASSWORD)
+
+if (defined('DB_PASSWORD') && !empty(DB_PASSWORD))
   $password = DB_PASSWORD;
-if (DB_HOST)
+
+if (defined('DB_HOST') && !empty(DB_HOST))
   $host = DB_HOST;
+
 $db = new $adapter(
   $host,
   $database,

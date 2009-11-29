@@ -51,7 +51,7 @@ get_header();
 ?>
 
 
-<?php if (REALTIME_HOST) : ?>
+<?php if (defined('REALTIME_HOST') && REALTIME_HOST ) : ?>
   
   <?php
     global $db;
@@ -63,6 +63,8 @@ get_header();
   
   <script type="text/javascript">
     // <![CDATA[
+	if (typeof Meteor=="undefined"){
+	} else {
     Meteor.hostid = '<?php echo get_profile_id(); ?>';
     Meteor.host = "<?php echo REALTIME_HOST; ?>";
     Meteor.registerEventCallback("process", test);
@@ -91,7 +93,8 @@ get_header();
       <?php if (environment('oembed')) : ?>
       $('a.oembed').oembed();
       <?php endif; ?>
-    };
+    }
+  }
     // ]]>
   </script>
 <?php endif; ?>

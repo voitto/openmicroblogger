@@ -28,7 +28,7 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
 ?>
 
 
-<?php if (REALTIME_HOST) : ?>
+<?php if (defined('REALTIME_HOST') && REALTIME_HOST ) : ?>
   <script type="text/javascript" src="http://<?php echo REALTIME_HOST; ?>/meteor.js"></script>
 <?php endif; ?>
 
