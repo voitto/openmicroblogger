@@ -97,7 +97,7 @@ if (!empty($prefix)) {
   }
 }
 
-if ( REWRITE ) {
+if ( defined('REWRITE') && REWRITE ) {
   $urlbase = $urlbase.dirname($_SERVER['PHP_SELF']);
 } else {
   $urlbase = 'http://'.$request->domain.$_SERVER['PHP_SELF'];
@@ -215,7 +215,7 @@ if ( isset($request->url) ) {
     
       $shorturl->add_url($longurl, $plain);
   
-  		if ( REWRITE ) {
+  		if ( defined('REWRITE') && REWRITE ) {
   			$strurl = $urlbase.''.$shorturl->get_id($longurl);
   		} else {
   			$strurl = $urlbase.'?id='.$shorturl->get_id($longurl);

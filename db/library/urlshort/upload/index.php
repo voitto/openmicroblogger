@@ -51,7 +51,7 @@ if ( isset($_POST['longurl']) )
 	// Build link or error message
 	if ( $protocol_ok && $url->add_url($longurl, $plain) && $plaincheck)
 	{
-		if ( REWRITE ) // mod_rewrite style link
+		if (  defined('REWRITE') && REWRITE  ) // mod_rewrite style link
 		{
 			$url = 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['PHP_SELF']).''.$url->get_id($longurl);
 		}

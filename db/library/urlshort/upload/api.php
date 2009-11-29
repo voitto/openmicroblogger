@@ -46,7 +46,7 @@ if ( isset($request->url) && strlen(trim($request->url)) )
 	// add the url to the database
 	if ( $protocol_ok && $url->add_url($longurl) )
 	{
-		if ( REWRITE ) // mod_rewrite style link
+		if (  defined('REWRITE') && REWRITE  ) // mod_rewrite style link
 		{
 			$url = 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['PHP_SELF']).''.$url->get_id($longurl);
 		}
