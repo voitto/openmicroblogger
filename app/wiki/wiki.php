@@ -37,7 +37,7 @@ function set_up_new_wiki( &$model, &$rec ) {
     return;
   if (!isset($_POST['wiki_title']))
     return;
-  $url = $request->url_for(array('resource'=>'twitter/'.$rec->nickname));
+  $url = blog_url($rec->nickname,true);
   require_once(ABSPATH.WPINC.'/class-snoopy.php');
   $snoop = new Snoopy;
   $snoop->agent = 'OpenMicroBlogger http://openmicroblogger.org';

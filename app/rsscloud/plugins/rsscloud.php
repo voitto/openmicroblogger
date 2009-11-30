@@ -20,8 +20,11 @@ function set_up_cloud_toplevel_ping(){
 	$optiondata['cloud_protocol'] = get_option('cloud_protocol');
 }
 
-before_filter( 'set_up_cloud_toplevel_ping', 'insert_from_post');
-before_filter( 'rss_cloud_ping', 'insert_from_post' );
-before_filter( 'set_up_cloud_ping', 'insert_from_post');
-before_filter( 'rss_cloud_ping', 'insert_from_post' );
+global $request;
+if ($request->resource == 'posts'){
+	before_filter( 'set_up_cloud_toplevel_ping', 'insert_from_post');
+	before_filter( 'rss_cloud_ping', 'insert_from_post' );
+	before_filter( 'set_up_cloud_ping', 'insert_from_post');
+	before_filter( 'rss_cloud_ping', 'insert_from_post' );
+}
 

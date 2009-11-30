@@ -6,7 +6,8 @@ function broadcast_email_notice( &$model, &$rec ) {
   
   if (!(isset($rec->title)))
     return;
-  
+  if (!($rec->table == 'posts'))
+    return;
   global $request, $db;
   
   $i = owner_of($rec);
