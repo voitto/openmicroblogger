@@ -249,9 +249,6 @@ $namurl=blog_url($blognick,true)."wiki_pages";
 	      eval( data['callback']+"(data)" );
 	    }
 	  } else if (data['in_reply_to']) {
-		alert(data['in_reply_to']);
-		alert(data['html']);
-		alert(data['tweet']);
 	    if (content_changed(data)){
 	      var selectr = data['in_reply_to'];
 	      $(selectr).append(render_a_tweet(data));
