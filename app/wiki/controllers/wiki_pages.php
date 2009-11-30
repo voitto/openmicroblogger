@@ -56,7 +56,7 @@ function index( &$vars ) {
   $blocks = environment('blocks');
   $atomfeed = $request->feed_url();
   if ($Member){
-	  $wiki_rss = blog_url(lookup_wiki_nickname($Member->parent_id));
+	  $wiki_rss = blog_url(lookup_wiki_nickname($Member->parent_id),true);
 	  $wiki_title = lookup_wiki_title($Member->parent_id);
 	
 } else {

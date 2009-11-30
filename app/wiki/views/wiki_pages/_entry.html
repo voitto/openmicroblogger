@@ -80,7 +80,7 @@ $.editable.addInputType('mce', {
 <div class="jeditable_footer" id="jeditable_footer"><?php echo $Member->footer; ?></div>
 
 
-<?php $stream = blog_url($blognick); ?>
+<?php $stream = blog_url($blognick,true); ?>
 
 <?php $timeline_callback = $stream.'api/statuses/public_timeline.json?callback=twitterCallback2'; ?>
 
@@ -177,7 +177,7 @@ $(function(){
 $field='header';
 $nam="header";
 $post='wikipage';
-$namurl=blog_url($blognick)."wiki_pages";
+$namurl=blog_url($blognick,true)."wiki_pages";
 
 	tinymce_widget_text_post_helper($nam,$namurl,$post,$field,$Entry);
 

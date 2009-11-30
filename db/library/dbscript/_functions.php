@@ -738,7 +738,10 @@ function blog_url($nickname,$return = false) {
   }
   if ( !( substr( $base, -1 ) == '/' ))
     $base = $base . "/";
-  return $base;
+  if ($return)
+    return $base;
+  else
+    echo $base;
 }
 
   /**
