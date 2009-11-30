@@ -65,6 +65,11 @@ function _index( &$vars ) {
   // index controller returns
   // a Collection of recent entries
   extract( $vars );
+
+	$find_by = array(
+    'profile_id'=>$profile->id
+  );
+$collection = new Collection( 'wikis', $find_by );
   return vars(
     array( &$collection, &$profile ),
     get_defined_vars()

@@ -83,6 +83,6 @@ function set_up_new_wiki( &$model, &$rec ) {
   set_cookie($person_id);
   $_SESSION['openid_complete'] = true;
 
-  redirect_to($url);
+  redirect_to($request->url_for( array( 'resource'=>str_replace(' ','',$s->title) )));
 
 }

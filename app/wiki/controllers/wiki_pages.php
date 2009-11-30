@@ -20,7 +20,8 @@ function post( &$vars ) {
   $request->set_param( array( 'wikipage', 'footer' ), 'click to edit footer...' );
   $resource->insert_from_post( $request );
   header_status( '201 Created' );
-  redirect_to( array('resource'=>'wikis','id'=>$request->params['wikipage']['parent_id']) );
+
+  redirect_to( $request->url_for( array( 'resource'=>str_replace(' ','',$request->params['wikipage']['title']) )) );
 }
 
 
@@ -134,12 +135,10 @@ function _entry( &$vars ) {
   extract( $vars );
   $Member = $collection->MoveNext();
   $Entry = $Member->FirstChild( 'entries' );
-  $Wiki =& $db->model('Wiki');
-  $w = $Wiki->find($Member->parent_id);
-  $Blog =& $db->model('Blog');
-  $b = $Blog->find($w->blog_id);
-  $blognick = $b->nickname;
-  $blogprefix = $b->prefix."_";
+
+  $blognick = lookup_wiki_nickname($Member->parent_id);
+  $blogprefix = lookup_wiki_prefix($Member->parent_id);
+
   return vars(
     array( &$collection, &$Member, &$Entry, &$profile, &$blognick, &$blogprefix ),
     get_defined_vars()
@@ -198,6 +197,7 @@ function lookup_wiki_prefix($wiki_id){
 	global $db;
   $sql = "SELECT blog_id FROM wikis WHERE id = $wiki_id";
   $result = $db->get_result( $sql );
+  $blogprefix = false;
   if ( $db->num_rows($result) == 1 ) {
     $blog_id = $db->result_value( $result, 0, "blog_id" );
   } else {
@@ -205,9 +205,12 @@ function lookup_wiki_prefix($wiki_id){
 	  $w = $Wiki->find($wiki_id);
     $blog_id = $w->blog_id;
   }
-  $Blog =& $db->model('Blog');
-  $b = $Blog->find($blog_id);
-  $blogprefix = $b->prefix."_";
+  if ($blog_id){
+  $sql = "SELECT prefix FROM blogs WHERE id = $blog_id";
+  $result = $db->get_result( $sql );
+  if ( $db->num_rows($result) == 1 )
+    return $db->result_value( $result, 0, "prefix" )."_";
+}
   return $blogprefix;
 }
 
@@ -222,10 +225,13 @@ function lookup_wiki_nickname($wiki_id){
 	  $w = $Wiki->find($wiki_id);
     $blog_id = $w->blog_id;
   }
-  $Blog =& $db->model('Blog');
-  $b = $Blog->find($blog_id);
-  $blognick = $b->nickname;
-  return $blognick;
+  if ($blog_id){
+  $sql = "SELECT nickname FROM blogs WHERE id = $blog_id";
+  $result = $db->get_result( $sql );
+  if ( $db->num_rows($result) == 1 )
+    return $db->result_value( $result, 0, "nickname" );
+}
+  return $blogprefix;
 }
 
 function lookup_wiki_title($wiki_id){

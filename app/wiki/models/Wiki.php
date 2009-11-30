@@ -61,6 +61,19 @@ function wiki_urls(){
 		  'id'=>$w->id,
 		  'action'=>'entry'
 		));
+		if (!empty($w->prefix)){
+    $result = $db->get_result( "SELECT title,id FROM ".$w->prefix."_wiki_pages WHERE parent_id = ".$w->id );
+   if ($result)
+	  while ( $row = $db->fetch_array( $result ) ) {
+			$request->connect( str_replace(' ','',$row['title']), array(
+			  'resource'=>'wikis',
+			  'id'=>$w->id,
+			  'action'=>'entry',
+			  'wikipage_id'=>$row['id']
+			));
+	    //$row['id']
+	  }
+    }
 	}
 	$WikiPage =& $db->model('WikiPage');
 	$WikiPage->set_limit(100);
@@ -69,7 +82,7 @@ function wiki_urls(){
 		$request->connect( str_replace(' ','',$w->title), array(
 		  'resource'=>'wiki_pages',
 		  'id'=>$w->id,
-		  'action'=>'entry'
+		  'action'=>'entry',
 		));
 	}
 	$wiki_urls_loaded = 'done';
@@ -93,19 +106,27 @@ function get_blog_for_wiki(&$request,&$route) {
   $wiki_prefix = false;
  
   global $db;
+
 	$Blog =& $db->model('Blog');
 
-	if ($request->resource == 'wiki_pages'){
-		$WikiPage =& $db->model('WikiPage');
-		$w = $WikiPage->find($request->id);
+	if ($request->resource == 'wikis'){
+		$Wiki =& $db->model('Wiki');
+		$w = $Wiki->find($request->id);
 		if ($w->prefix)
 		  $wiki_prefix = $w->prefix."_";
 	}
 
 	if ($wiki_prefix){
-	  $prefix = $wiki_prefix;
-	  $db->prefix = $prefix;
-	}
+		$id = false;
+//		$result = $db->get_result( "SELECT id FROM ".$w->prefix."_wiki_pages WHERE title like '".$request->params[0] ."'");
+   if (isset($request->params['wikipage_id'])) {
+  $prefix = $wiki_prefix;
+  $db->prefix = $prefix;
+  $request->set_param( 'resource', 'wiki_pages' );
+  $request->set_param( 'id', $request->params['wikipage_id'] );
+}
+}
+    
 	
 }
 

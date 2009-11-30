@@ -1826,6 +1826,11 @@ function get_person_id() {
     }
   }
   
+  $p = get_cookie_id();
+
+  if ($p)
+    return $p;
+  
   if (isset($_SESSION['fb_person_id'])
   && $_SESSION['fb_person_id'] >0) {
     return $_SESSION['fb_person_id'];
@@ -1835,11 +1840,6 @@ function get_person_id() {
   && $_SESSION['oauth_person_id'] >0) {
     return $_SESSION['oauth_person_id'];
   }
-  
-  $p = get_cookie_id();
-  
-  if ($p)
-    return $p;
   
   if (isset($_SERVER['PHP_AUTH_USER'])) 
     return $_SERVER['PHP_AUTH_USER'];

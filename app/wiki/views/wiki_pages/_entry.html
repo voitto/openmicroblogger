@@ -177,7 +177,8 @@ $(function(){
 $field='header';
 $nam="header";
 $post='wikipage';
-$namurl=$request->url_for('wiki_pages');
+$namurl=blog_url($blognick)."wiki_pages";
+
 	tinymce_widget_text_post_helper($nam,$namurl,$post,$field,$Entry);
 
 	$field='body';
