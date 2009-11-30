@@ -18,7 +18,7 @@ function send_ping( &$model, &$rec ) {
   else
     $chan = "chan";
   
-  if (defined('REALTIME_HOST') && REALTIME_HOST) {
+  if (defined('REALTIME_HOST') && REALTIME_HOST && $rec->table == 'posts') {
     
     $o = owner_of($rec);
     $payload = array();

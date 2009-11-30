@@ -136,7 +136,8 @@ after_filter( 'do_realtime_revision', 'save_record' );
 function do_realtime_revision( &$rec, &$db ) {
   if (!($rec->table == 'wiki_pages'))
     return;
-  $owner = owner_of($rec);
+  $owner = get_profile();
+  //$owner = owner_of($rec);
 	$html = '<li><img width="20" height="20" src="'.$owner->avatar.'"><span>&nbsp;<a href="'.$owner->profile_url.'">'.$owner->fullname.'</a> </span>
 	<a style="font-size:85%" href=""></a></li>';
 	realtime(

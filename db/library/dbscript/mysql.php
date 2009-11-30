@@ -665,7 +665,7 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
           if (strpos($col,".") === false)
             $field = "$table.$col";
           else
-            $field = $col;
+            $field = $this->prefix.$col;
           
           if ($eq == 'IS')
             $eqval = $val;

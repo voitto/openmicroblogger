@@ -99,7 +99,7 @@ $.editable.addInputType('mce', {
 <script type="text/javascript">
 // <![CDATA[
 
-var formb = '<p style="font-size:10pt;">(sign in to edit page or comment:&nbsp;<a style="font-size:10pt;" href="<?php echo $login_url; ?>"> w/Twitter</a>&nbsp;<a style="font-size:10pt;" href="<?php echo $fb_login_url; ?>"> w/Facebook</a>)</p>';
+var formb = '<p style="font-size:10pt;">(sign in to edit page or post comments:&nbsp;<a style="font-size:10pt;" href="<?php echo $login_url; ?>"> w/Twitter</a>&nbsp;<?php if (environment('subdomains')) : ?><a style="font-size:10pt;" href="<?php echo $fb_login_url; ?>"> w/Facebook</a><?php endif; ?>)</p>';
 var forma = '<form onsubmit="return do_wiki_comment()" method="post" action="<?php echo $post_to; ?>"><input type="hidden" name="method" value="post"><textarea name="post[title]" id="post_title" cols="15" rows="2"></textarea><br /><input type="checkbox" name="tweet_it" id="tweet_it">post to Twitter<br /><input type="submit" value="Post comment"></form><a style="font-size:10pt;" href="<?php echo $logout_url; ?>"> sign out </a>';
 
 function do_wiki_comment(){
@@ -249,6 +249,9 @@ $namurl=blog_url($blognick,true)."wiki_pages";
 	      eval( data['callback']+"(data)" );
 	    }
 	  } else if (data['in_reply_to']) {
+		alert(data['in_reply_to']);
+		alert(data['html']);
+		alert(data['tweet']);
 	    if (content_changed(data)){
 	      var selectr = data['in_reply_to'];
 	      $(selectr).append(render_a_tweet(data));

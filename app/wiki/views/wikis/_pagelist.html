@@ -28,13 +28,9 @@
 
   <?php endwhile; ?>
   
-  <tr>
-    <td colspan="2"><a href="<?php url_for( array( 'resource'=>'wiki_pages','action'=>'new' )); ?>"><?php echo $txt['wikis_index_create_new_wiki']; ?></a></td>
-
-  </tr>
-
+<?php global $db; 	$db->prefix = "";
+?>
 </table>
-
 
 <form action="<?php blog_url( lookup_wiki_nickname($request->id) ); ?>wiki_pages" method="post" name="wiki_pages" id="wiki_pages">
 <div>

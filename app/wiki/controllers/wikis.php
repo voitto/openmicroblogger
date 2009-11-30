@@ -101,7 +101,11 @@ function _entry( &$vars ) {
   $Member = $collection->MoveNext();
   $Entry = $Member->FirstChild( 'entries' );
   $blogprefix = $Member->prefix;
-
+  $find_by = array(
+    'parent_id'=>$Member->id
+  );
+  $db->prefix = $Member->prefix."_";
+  $collection = new Collection('wiki_pages',$find_by);
   return vars(
     array( &$collection, &$Member, &$Entry, &$profile, &$blogprefix ),
     get_defined_vars()
