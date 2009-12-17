@@ -928,8 +928,11 @@ function make_identity( $user, $newperson=false ) {
 	  $p = $Person->base();
 	  $p->save();
   }
-	if (!(get_class($p) == 'Record'))
-  	trigger_error('there was an error creating the child-identity',E_USER_ERROR);
+	if (!(get_class($p) == 'Record')){
+		$p = $Person->base();
+	  $p->save();
+	}
+
 
   $Identity =& $db->model('Identity');
   $i = $Identity->base();
@@ -1311,6 +1314,9 @@ function security_init() {
   } elseif ( isset( $_SESSION['openid_complete'] ) && check_cookie() ) {
     if ( !isset($request->openid_url) && $_SESSION['openid_complete'] == true)
       $request->openid_complete = true;
+  } elseif (check_cookie()) {
+	  $_SESSION['openid_complete'] = true;
+  	$request->openid_complete = true;
   }
   
 }
