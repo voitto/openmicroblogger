@@ -2,7 +2,7 @@
 
 global $request,$omb_routes,$db,$ombversion;
 
-// OpenMicroblogger 0.5.0
+// rp.ly 0.5.0
 $ombversion = "0.5.0";
 
 // Openmicroblogging 0.1
@@ -532,7 +532,7 @@ global $db;
     $url = "http://twitter.com/".$nick;
     require_once(ABSPATH.WPINC.'/class-snoopy.php');
     $snoop = new Snoopy;
-    $snoop->agent = 'OpenMicroBlogger http://openmicroblogger.org';
+    $snoop->agent = 'rp.ly http://rp.ly';
     $snoop->submit($url);
     if (strpos($snoop->response_code, '200')) {
       redirect_to($url);

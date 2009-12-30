@@ -1844,8 +1844,11 @@ function get_person_id() {
     return $_SESSION['oauth_person_id'];
   }
   
-  if (isset($_SERVER['PHP_AUTH_USER'])) 
-    return $_SERVER['PHP_AUTH_USER'];
+  if (isset($_SERVER['PHP_AUTH_USER'])) {
+	  global $person_id;
+	  if ($person_id)
+	    return $person_id;
+  }
 
   if (isset($_POST['auth']) && $_POST['auth'] == 'omb')
     authenticate_with_omb();
@@ -3118,8 +3121,8 @@ function authenticate_with_oauth() {
 
 function mu_url() {
   global $request;
-  if ((!strpos($request->uri, 'ak_twitter/') && strpos($request->uri, 'twitter/')) ||
-(strpos($request->uri, 'ak_twitter/') && strpos($request->uri, 'twitter/')))
+  if ((!strpos($request->uri, 'ak_twitter/') && strpos($request->uri, '?twitter/')) ||
+(strpos($request->uri, 'ak_twitter/') && strpos($request->uri, '?twitter/')))
     return true;
   return false;
 }
@@ -3313,4 +3316,139 @@ function realtime($callback,$payload,$prefix=false){
 
 	curl_exec($curl);
 
+}
+
+
+function render_home_timeline(){
+	
+global $request,$db;
+
+$profile = get_profile();
+	$nick = $profile->nickname;
+	$Identity =& $db->model( 'Identity' );
+	$Identity->set_param('find_by',array(
+	  'nickname' => $nick,
+	  'eq'=>'IS',
+	  'post_notice' => 'NULL',
+	));
+
+	$Post =& $db->model( 'Post' );
+	$Post->set_param( 'find_by', array(
+	  'entries.person_id' => $profile->person_id
+	));
+
+$Setting =& $db->model('Setting');
+
+	echo '<?xml version="1.0" encoding="UTF-8"?>
+<statuses type="array">
+';
+
+
+//$Post->set_limit(1);
+//$Post->set_order('desc');
+	$Post->find();
+	$tweets = array();
+	while ($p = $Post->MoveNext()) {
+		$profile = get_profile($p->profile_id);
+	  $tweet = array();
+	  $user = array();
+	  $tweet['text'] = htmlentities($p->title);
+	  $tweet['truncated'] = 'false';
+	  $tweet['created_at'] = date( "D M d G:i:s O Y", strtotime( $p->created ));
+	  $tweet['in_reply_to_status_id'] = '';
+	  $tweet['source'] = 'web';
+	  $tweet['id'] = intval( $p->id );
+	  $tweet['favorited'] ='false';
+	  $tweet['user'] = htmlentities($nick);
+
+	  $tweet['in_reply_to_user_id'] = '';
+	  $tweet['in_reply_to_screen_name'] = '';
+
+		$user['id'] = $profile->id;
+		$user['name'] = htmlentities($profile->fullname);
+		$user['screen_name'] = htmlentities($profile->nickname);
+		$user['location'] = htmlentities($profile->locality);
+		$user['description'] = htmlentities($profile->bio);
+		$user['profile_image_url'] = $profile->avatar;
+		$user['url'] = $profile->homepage;
+		$user['protected'] = 'false';
+		$user['followers_count'] = '0';
+		$user['profile_background_color'] = 'FFFFFF';
+		$user['profile_text_color'] = '000000';
+		$user['profile_link_color'] = '405991';
+		$user['profile_sidebar_fill_color'] = 'FFFFFF';
+		$user['profile_sidebar_border_color'] = 'FFFFFF';
+		$user['friends_count'] = '0';
+		$user['created_at'] = date( "D M d G:i:s O Y", strtotime( $profile->created ));
+		$user['favourites_count'] = '0';
+		$user['utc_offset'] = '-28800';
+		$user['time_zone'] = 'Pacific Time (US &amp; Canada)';
+
+
+	  $settingvalue = $Setting->find_by(array('name'=>'background_image','profile_id'=>$profile->id));
+
+
+		$user['profile_background_image_url'] = $settingvalue->value;
+
+	  $settingvalue = $Setting->find_by(array('name'=>'background_tile','profile_id'=>$profile->id));
+		$user['profile_background_tile'] = $settingvalue->value;
+		$user['notifications'] = 'false';
+		$user['geo_enabled'] = 'false';
+		$user['verified'] = 'false';
+		$user['following'] = 'true';
+		$user['statuses_count'] = '0';
+
+	  $tweets[] = array($tweet,$user);
+
+		echo '  <status>
+			  <created_at>'.$tweet['created_at'].'</created_at>
+			  <id>'.$tweet['id'].'</id>
+			  <text>'.$tweet['text'].'</text>
+			  <source>'.$tweet['source'].'</source>
+			  <truncated>'.$tweet['truncated'].'</truncated>
+			  <in_reply_to_status_id>'.$tweet['in_reply_to_status_id'].'</in_reply_to_status_id>
+			  <in_reply_to_user_id>'.$tweet['in_reply_to_user_id'].'</in_reply_to_user_id>
+			  <favorited>'.$tweet['favorited'].'</favorited>
+			  <in_reply_to_screen_name>'.$tweet['in_reply_to_screen_name'].'</in_reply_to_screen_name>
+			  <user>
+			    <id>'.$user['id'].'</id>
+			    <name>'.$user['name'].'</name>
+			    <screen_name>'.$user['screen_name'].'</screen_name>
+			    <location>'.$user['location'].'</location>
+			    <description>'.$user['description'].'</description>
+			    <profile_image_url>'.$user['profile_image_url'].'</profile_image_url>
+			    <url>'.$user['url'].'</url>
+			    <protected>'.$user['protected'].'</protected>
+			    <followers_count>'.$user['followers_count'].'</followers_count>
+			    <profile_background_color>'.$user['profile_background_color'].'</profile_background_color>
+			    <profile_text_color>'.$user['profile_text_color'].'</profile_text_color>
+			    <profile_link_color>'.$user['profile_link_color'].'</profile_link_color>
+			    <profile_sidebar_fill_color>'.$user['profile_sidebar_fill_color'].'</profile_sidebar_fill_color>
+			    <profile_sidebar_border_color>'.$user['profile_sidebar_border_color'].'</profile_sidebar_border_color>
+			    <friends_count>'.$user['friends_count'].'</friends_count>
+			    <created_at>'.$user['created_at'].'</created_at>
+			    <favourites_count>'.$user['favourites_count'].'</favourites_count>
+			    <utc_offset>'.$user['utc_offset'].'</utc_offset>
+			    <time_zone>'.$user['time_zone'].'</time_zone>
+			    <profile_background_image_url>'.$user['profile_background_image_url'].'</profile_background_image_url>
+			    <profile_background_tile>'.$user['profile_background_tile'].'</profile_background_tile>
+			    <notifications>'.$user['notifications'].'</notifications>
+			    <geo_enabled>'.$user['geo_enabled'].'</geo_enabled>
+			    <verified>'.$user['verified'].'</verified>
+			    <following>'.$user['following'].'</following>
+			    <statuses_count>'.$user['statuses_count'].'</statuses_count>
+			  </user>
+			  <geo/>
+			</status>
+		';
+
+
+	}
+
+
+
+echo '</statuses>';
+
+	exit;
+	
 }
