@@ -63,6 +63,29 @@ get_header();
   
   <script type="text/javascript">
     // <![CDATA[
+  function test(data) {
+    data = data.substring(0,(data.length - 10));
+    eval( "data = " + data );
+    if (data['callback'].length >0) {
+      if (content_changed(data)){
+	      eval( data['callback']+"(data)" );
+      }
+    } else if (data['in_reply_to']) {
+      if (content_changed(data)){
+        var selectr = data['in_reply_to'];
+        $(selectr).append(render_a_tweet(data));
+        //$(selectr).append(data['html']);
+      }
+    } else {
+      if (content_changed(data)){
+        $("#postlist").prepend(render_a_tweet(data));
+      }
+      //$("#postlist").prepend(data['html']);
+    }
+    <?php if (environment('oembed')) : ?>
+    $('a.oembed').oembed();
+    <?php endif; ?>
+  }
 	if (typeof Meteor=="undefined"){
 	} else {
     Meteor.hostid = '<?php echo get_profile_id(); ?>';
@@ -71,29 +94,6 @@ get_header();
     Meteor.joinChannel("<?php echo $chan; ?>", 0);
     Meteor.mode = 'stream';
     Meteor.connect();
-    function test(data) {
-      data = data.substring(0,(data.length - 10));
-      eval( "data = " + data );
-      if (data['callback'].length >0) {
-	      if (content_changed(data)){
-  	      eval( data['callback']+"(data)" );
-        }
-      } else if (data['in_reply_to']) {
-	      if (content_changed(data)){
-          var selectr = data['in_reply_to'];
-          $(selectr).append(render_a_tweet(data));
-          //$(selectr).append(data['html']);
-        }
-      } else {
-	      if (content_changed(data)){
-          $("#postlist").prepend(render_a_tweet(data));
-        }
-        //$("#postlist").prepend(data['html']);
-      }
-      <?php if (environment('oembed')) : ?>
-      $('a.oembed').oembed();
-      <?php endif; ?>
-    }
   }
     // ]]>
   </script>

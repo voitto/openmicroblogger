@@ -17,14 +17,6 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
   
   <script type="text/javascript">
     // <![CDATA[
-		if (typeof Meteor=="undefined"){
-		} else {
-    Meteor.hostid = '<?php echo get_profile_id(); ?>';
-    Meteor.host = "<?php echo REALTIME_HOST; ?>";
-    Meteor.registerEventCallback("process", test);
-    Meteor.joinChannel("<?php echo $chan; ?>", 0);
-    Meteor.mode = 'stream';
-    Meteor.connect();
     function test(data) {
       data = data.substring(0,(data.length - 10));
       eval( "data = " + data );
@@ -42,6 +34,15 @@ include 'wp-content/language/lang_chooser.php'; //Loads the language-file
       }
       $('a.oembed').oembed();
     }
+
+		if (typeof Meteor=="undefined"){
+		} else {
+    Meteor.hostid = '<?php echo get_profile_id(); ?>';
+    Meteor.host = "<?php echo REALTIME_HOST; ?>";
+    Meteor.registerEventCallback("process", test);
+    Meteor.joinChannel("<?php echo $chan; ?>", 0);
+    Meteor.mode = 'stream';
+    Meteor.connect();
     }
     // ]]>
   </script>
