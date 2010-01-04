@@ -3333,9 +3333,9 @@ $profile = get_profile();
 	));
 
 	$Post =& $db->model( 'Post' );
-	$Post->set_param( 'find_by', array(
-	  'entries.person_id' => $profile->person_id
-	));
+	//$Post->set_param( 'find_by', array(
+	//  'entries.person_id' => $profile->person_id
+	//));
 
 $Setting =& $db->model('Setting');
 

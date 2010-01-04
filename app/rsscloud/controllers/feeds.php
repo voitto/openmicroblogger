@@ -1,5 +1,34 @@
 <?php
 
+function get_cloud_element($f){
+	$buf = readURL($f['xmlUrl']);
+	$xml = new SimpleXmlElement($buf);
+	foreach($xml as $k1=>$v1){
+    foreach($v1 as $k2=>$v2){
+      if ($k2 == 'description')
+        $f['description'] = (string)$v2;
+      if ($k2 == 'webMaster')
+        $f['email'] = (string)$v2;
+      if ($k2 == 'managingEditor')
+        $f['email'] = (string)$v2;
+      if ($k2 == 'cloud') {
+        foreach($v2->attributes() as $k4 => $v4) {
+          if ($k4 == 'domain')
+            $f['domain'] = (string)$v4;
+          if ($k4 == 'port')
+            $f['port'] = (string)$v4;
+          if ($k4 == 'path')
+            $f['path'] = (string)$v4;
+          if ($k4 == 'registerProcedure')
+            $f['registerProcedure'] = (string)$v4;
+          if ($k4 == 'protocol')
+            $f['protocol'] = (string)$v4;
+        }
+      }
+		}
+	}
+	return $f;
+}
 
 function get( &$vars ) {
   extract( $vars );
@@ -66,8 +95,6 @@ function post( &$vars ) {
 	} elseif (isset($_POST['rss_follow'])) {
 		$thisfeed = array();
     $thisfeed['xmlUrl'] = $_POST['rss_follow'];
-    $thisfeed['htmlUrl'] = $_POST['rss_link'];
-    $thisfeed['text'] = $_POST['rss_title'];
     $thisfeed['type'] = 'rss';
   	$feeds[$thisfeed['xmlUrl']] = $thisfeed;
 	} else{
@@ -77,38 +104,14 @@ function post( &$vars ) {
   $Subscription =& $db->model('Subscription');
 	foreach($feeds as $f){
 		$fd = $Feed->find_by('xref',$f['xmlUrl']);
+		$fd = true;
     if (!$fd){
 	    $fd = $Feed->base();
 	    $fd->set_value('xref',$f['xmlUrl']);
 	    $fd->set_value('href',$f['htmlUrl']);
 	    $fd->set_value('title',$f['text']);
 	    $fd->set_value('type',$f['type']);
-			$buf = readURL($f['xmlUrl']);
-			$xml = new SimpleXmlElement($buf);
-			foreach($xml as $k1=>$v1){
-	      foreach($v1 as $k2=>$v2){
-	        if ($k2 == 'description')
-		        $f['description'] = (string)$v2;
-	        if ($k2 == 'webMaster')
-		        $f['email'] = (string)$v2;
-	        if ($k2 == 'managingEditor')
-		        $f['email'] = (string)$v2;
-	        if ($k2 == 'cloud') {
-		        foreach($v2->attributes() as $k4 => $v4) {
-		          if ($k4 == 'domain')
-		            $f['domain'] = (string)$v4;
-		          if ($k4 == 'port')
-		            $f['port'] = (string)$v4;
-		          if ($k4 == 'path')
-		            $f['path'] = (string)$v4;
-		          if ($k4 == 'registerProcedure')
-		            $f['registerProcedure'] = (string)$v4;
-		          if ($k4 == 'protocol')
-		            $f['protocol'] = (string)$v4;
-	          }
-	        }
-				}
-			}
+      $f = get_cloud_element($f);
   		if (isset($f['domain'])){
 		    $fd->set_value('cloud_domain',$f['domain']);
 		    $fd->set_value('cloud_port',$f['port']);
@@ -149,6 +152,11 @@ function post( &$vars ) {
         $s->set_etag(get_person_id());
 			}
 		}
+print_r($f); exit;
+		if (isset($f['domain']))
+		echo 1;
+		 if ( !empty($_POST['rss_follow'])) echo 2;
+		exit;
 		if (isset($f['domain']) && !empty($_POST['rss_follow'])){
 			$subscribe_url = "http://" . $f['domain'] . ":" . $f['port'] . "" . $f['path'] . "";
 			$params = array(
@@ -161,6 +169,8 @@ function post( &$vars ) {
 			);
 	    require_once(ABSPATH.WPINC.'/class-snoopy.php');
 			$snoop = new Snoopy;
+			
+			print_r($params); exit;
 				$snoop->submit(
 					$subscribe_url,
 					$params
