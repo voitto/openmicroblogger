@@ -729,7 +729,11 @@ function base_url($return = false) {
 function blog_url($nickname,$return = false) {
   global $request;
   if (pretty_urls() && environment('subdomains')) {
-    $base = 'http://'.$nickname . '.' . $request->domain;
+	  global $prefix;
+	  if (!empty($prefix))
+	    $base = 'http://' . $request->domain;
+  	else
+      $base = 'http://'.$nickname . '.' . $request->domain;
   } else {
     $q = '?';
     if (pretty_urls())

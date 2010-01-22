@@ -15,7 +15,7 @@
 
     <tr>
       <td>
-        <b><a href="<?php url_for( array( 'resource'=>str_replace(' ','',$Member->title))); ?>"><?php print $Member->title; ?></a>
+        <b><a href="<?php blog_url( lookup_wiki_nickname($Member->parent_id) ); echo str_replace(' ','',$Member->title); ?>"><?php print $Member->title; ?></a>
           
         </b>
       </td>
