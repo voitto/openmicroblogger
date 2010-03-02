@@ -1891,7 +1891,7 @@ if ($commentcount > 0) {
   echo "|&nbsp;<a href=\"JavaScript:add_comment('addcomment-$the_post->id')";
   echo "\">comment</a><div id=\"addcomment-$the_post->id\"></div>";
   
-$userurl = "http://rp.ly";
+$userurl = "http://openmicroblogger.org";
 $etag = 1;
 
 echo '
@@ -2112,7 +2112,7 @@ function dynamic_sidebar() {
     $sidebar_done = true;
   }
   if (environment('theme') == 'prologue-theme')
-    echo '<a href="http://rp.ly"><img src="http://openmicroblogger.org/omb.gif" style="border:none;" alt="rp.ly" /></a>'."\n";
+    echo '<a href="http://openmicroblogger.org"><img src="http://openmicroblogger.org/omb.gif" style="border:none;" alt="OpenMicroBlogger" /></a>'."\n";
   return true;
 }
 

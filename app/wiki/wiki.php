@@ -40,7 +40,7 @@ function set_up_new_wiki( &$model, &$rec ) {
   $url = blog_url($rec->nickname,true);
   require_once(ABSPATH.WPINC.'/class-snoopy.php');
   $snoop = new Snoopy;
-  $snoop->agent = 'rp.ly http://rp.ly';
+  $snoop->agent = 'OpenMicroBlogger http://openmicroblogger.org';
   $snoop->submit($url);
   if (!(strpos($snoop->response_code, '200')))
     trigger_error('could not configure the new wiki', E_USER_ERROR);

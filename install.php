@@ -1,12 +1,12 @@
 <html>
 <head>
-<title>rp.ly - installation</title>
+<title>OpenMicroBlogger - installation</title>
 </head>
 <body>
 
 <?php
 
-echo "<H1>rp.ly - Installation</H1><br />";
+echo "<H1>OpenMicroBlogger - Installation</H1><br />";
 $checkfile = "config/config.php";
 $checkfile2 = "config/.htaccess";
 
@@ -29,7 +29,7 @@ echo "<p style='color:orange; font-weight:bold'>Some other changes to do<ul><li>
 	if (!is_writable ('config')) {
 		echo "<p style='color:green; font-weight:bold'>Security-Check: You already set CHMOD of folder /config/ back to 755. Great job!<br /></p>";
                               }
-echo "<p style='color:green; font-weight:bold'>Thats it. You can now visit your installation of rp.ly. Have fun! :-)</p>";
+echo "<p style='color:green; font-weight:bold'>Thats it. You can now visit your installation of OpenMicroBlogger. Have fun! :-)</p>";
 exit;
                               }
 // If there is a config.php in config folder but connection to database fails, this message will appear.
@@ -47,7 +47,7 @@ if (file_exists($checkfile)) {
 
 	if (!isset($_POST['db_name'])) {
 // Checks if folders config/cache/uploads are writable
-		echo "<strong>The following folders have to be writable to install rp.ly:</strong><br />";
+		echo "<strong>The following folders have to be writable to install OpenMicroBlogger:</strong><br />";
 	if (is_writable ('config')) {
 		echo "<p style='color:green; font-weight:bold'>GOOD: /config/ is <strong>writable</strong></p>";
                              }
@@ -192,7 +192,7 @@ echo "<p style='color:orange; font-weight:bold'>Some other changes to do<ul><li>
 	if (!is_writable ('config')) {
 		echo "<p style='color:green; font-weight:bold'>Security-Check: You already set CHMOD of folder /config/ back to 755. Great job!<br /></p>";
                               }
-echo "<p style='color:green; font-weight:bold'>Thats it. You can now visit your installation of rp.ly. Have fun! :-)</p>";
+echo "<p style='color:green; font-weight:bold'>Thats it. You can now visit your installation of OpenMicroBlogger. Have fun! :-)</p>";
 exit;
 exit;
 }
@@ -254,7 +254,7 @@ echo "<br /><h2>Please enter your Database Information:</h2>
             <strong>Advanced Options (you don't have to edit this unless you want to change standard-settings)</strong><br />
             <ul>
             <li>Disable memcached? <input type=\"checkbox\" name=\"memcached\" value=\"TRUE\" $memcached_checked></li>
-            <li>Do you want to use rp.ly on intranet (password protected)? <input type=\"checkbox\" name=\"intranet\" value=\"TRUE\" $intranet_checked></li>
+            <li>Do you want to use OpenMicroBlogger on intranet (password protected)? <input type=\"checkbox\" name=\"intranet\" value=\"TRUE\" $intranet_checked></li>
             <li>Ping? Uncheck for silent operation <input type=\"checkbox\" name=\"ping\" value=\"TRUE\" $ping_checked></li>
             <li>Host for comet push <input type=\"text\" size=\"20\" maxlength=\"30\" name=\"cometpush_host\" value=\"$cometpush_host_tmp\" /></li>
             <li>Port for comet push <input type=\"text\" size=\"5\" maxlength=\"5\" name=\"cometpush_port\" value=\"$cometpush_port_tmp\" /></li>
@@ -310,7 +310,7 @@ else if ((!isset($_POST['db_name'])) AND (!isset($_POST['db_user'])) AND (!isset
             echo "
             <li>Disable memcached? <input type=\"checkbox\" name=\"memcached\" value=\"TRUE\"><br />(Setup detected PHP safe-mode is set to 'off' on your server and enabled memcached by default)</li>"; }
             echo "
-            <li>Do you want to use rp.ly on intranet? <input type=\"checkbox\" name=\"intranet\" value=\"TRUE\"></li>
+            <li>Do you want to use OpenMicroBlogger on intranet? <input type=\"checkbox\" name=\"intranet\" value=\"TRUE\"></li>
             <li>Ping? Uncheck for silent operation <input type=\"checkbox\" name=\"ping\" value=\"TRUE\" checked></li>
             <li>Host for comet push <input type=\"text\" size=\"20\" maxlength=\"30\" name=\"cometpush_host\" /></li>
             <li>Port for comet push <input type=\"text\" size=\"5\" maxlength=\"5\" name=\"cometpush_port\" /></li>

@@ -49,9 +49,9 @@ function do_dent($tweet = '') {
 	}
 	require_once(ABSPATH.WPINC.'/class-snoopy.php');
 	$snoop = new Snoopy;
-	$snoop->agent = 'rp.ly http://rp.ly';
+	$snoop->agent = 'OpenMicroBlogger http://openmicroblogger.org';
 	$snoop->rawheaders = array(
-		'X-Twitter-Client' => 'rp.ly'
+		'X-Twitter-Client' => 'OpenMicroBlogger'
 		, 'X-Twitter-Client-Version' => $aktt->version
 		, 'X-Twitter-Client-URL' => 'http://alexking.org/projects/wordpress/twitter-tools.xml'
 	);

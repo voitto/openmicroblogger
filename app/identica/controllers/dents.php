@@ -138,7 +138,7 @@ function identica_login_test() {
 function dent_login_test($username, $password) {
 	require_once(ABSPATH.WPINC.'/class-snoopy.php');
 	$snoop = new Snoopy;
-	$snoop->agent = 'rp.ly http://rp.ly';
+	$snoop->agent = 'OpenMicroBlogger http://openmicroblogger.org';
 	$snoop->user = $username;
 	$snoop->pass = $password;
 	$snoop->fetch('http://identi.ca/api/statuses/user_timeline.json');

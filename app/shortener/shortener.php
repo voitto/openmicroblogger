@@ -78,7 +78,7 @@ function set_up_new_shortener( &$model, &$rec ) {
   $url = $request->url_for(array('resource'=>'twitter/'.$rec->nickname));
   require_once(ABSPATH.WPINC.'/class-snoopy.php');
   $snoop = new Snoopy;
-  $snoop->agent = 'rp.ly http://rp.ly';
+  $snoop->agent = 'OpenMicroBlogger http://openmicroblogger.org';
   $snoop->submit($url);
   if (strpos($snoop->response_code, '200')) {
     
