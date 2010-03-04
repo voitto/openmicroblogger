@@ -291,6 +291,8 @@ function complete_openid_authentication( &$request ) {
         
         }
         
+        $i->set_value( 'avatar', base_path(true).'resource/favicon.png' );
+
         $i->save_changes();
         
         $i->set_etag( $p->id );
@@ -511,6 +513,8 @@ function password_register( &$vars ) {
     $i->set_value( 'nickname', $request->nickname );
     $i->set_value( 'url', $request->base."".$request->nickname );
     $i->set_value( 'password', md5($request->password) );
+    $i->set_value( 'avatar', base_path(true).'resource/favicon.png' );
+
     $i->save_changes();
     $i->set_etag( $p->id );
     
@@ -949,8 +953,10 @@ function make_identity( $user, $newperson=false ) {
     }
   }
 
+  $i->set_value( 'avatar', base_path(true).'resource/favicon.png' );
   $i->set_value( 'nickname', $nicker );
-  $i->set_value( 'avatar', $user[1] ); 
+  if (!empty($user[1]))
+    $i->set_value( 'avatar', $user[1] ); 
   $i->set_value( 'fullname', $user[2] );
   $i->set_value( 'bio', $user[3] );
   $i->set_value( 'homepage', $user[4] );
