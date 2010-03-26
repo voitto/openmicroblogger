@@ -894,6 +894,14 @@ function _oauth( &$vars ) {
         $twuser = make_twuser($user,$i->id,$session_oauth_token,$session_oauth_secret);
         if (!$twuser)
           trigger_error('sorry I was unable to create a twitter user', E_USER_ERROR);
+				$Setting =& $db->model('Setting');
+				$cfg = $Setting->base();
+				$cfg->set_value('profile_id',$i->id);
+				$cfg->set_value('person_id',$i->person_id);
+				$cfg->set_value('name','config.env.importtwitter_'.$user->id);
+				$cfg->set_value('value',1);
+				$cfg->save_changes();
+				$cfg->set_etag();
       }
           
       $_SESSION['oauth_person_id'] = $i->person_id;
@@ -1009,6 +1017,10 @@ function facebook_login( &$vars ) {
 
   $fs = new FacebookStream($consumer_key,$consumer_secret,$agent);
   
+  $token = $fs->getAccessToken();
+
+	$_SESSION['fb_request_token'] = $token;
+	
   $fieldlist = array(
     'last_name',
     'first_name',
@@ -1073,6 +1085,21 @@ function facebook_login( &$vars ) {
     $faceuser = make_fb_user($user,$i->id);
     if (!$faceuser)
       trigger_error('sorry I was unable to create a facebook user', E_USER_ERROR);
+    $Setting =& $db->model('Setting');
+		$cfg = $Setting->base();
+		$cfg->set_value('profile_id',$i->id);
+		$cfg->set_value('person_id',$i->person_id);
+		$cfg->set_value('name','config.env.importfacebook_'.(string)$user->user->uid);
+		$cfg->set_value('value',1);
+		$cfg->save_changes();
+		$cfg->set_etag();
+  }
+
+  $fb_can_offline = profile_setting('fb_can_upload');
+
+  if (!$fb_can_offline) {
+  	$fs->VerifyPerm($_SESSION['fb_userid'],'offline_access');
+	  update_option('fb_can_offline',true);
   }
 
   $fb_can_tweet = profile_setting('fb_can_tweet');
@@ -1306,7 +1333,11 @@ function security_init() {
   $request->connect( 'oauth_login' );
 
   $request->connect( 'facebook_login' );
-  
+
+  $request->connect( 'authsub' );
+
+  $request->connect( 'permanent_facebook_key/:key', array('action'=>'permanent_facebook_key') );
+
   $request->routematch();
   
     if (isset($_SESSION['fb_person_id'])
