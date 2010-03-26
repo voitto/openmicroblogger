@@ -124,14 +124,12 @@ define(    \"DB_COLLATE\", \"$db_collate\"      );\n\n\n
 ";
 if ($pretty_urls == 0) {
      $content .= "
-// global \$pretty_url_base;\n
-// \$pretty_url_base = \"http://yourwebsite.com\";\n\n\n
+// define(\"PRETTY_URL_BASE\", \"http://yourwebsite.com\"     );
 ";
 }
 if ($pretty_urls != 0) {
      $content .= "
-global \$pretty_url_base;\n
-\$pretty_url_base = \"$pretty_urls_base\";\n\n\n
+define(\"PRETTY_URL_BASE\", \"$pretty_urls_base\"     );
 ";
 }
      $content .= "
