@@ -1498,7 +1498,7 @@ function authsub( &$vars ) {
 		  $r = explode_returned($responseString);
 		  $token = $r['oauth_token'];
 		  $secret = $r['oauth_token_secret'];
-		  $callback_url = $base_url."authsub?oauth_secret=".$secret;
+		  $callback_url = $base_url."/authsub?oauth_secret=".$secret;
 		  $auth_url = $endpoints[1] . "?oauth_token=$token&oauth_callback=".urlencode($callback_url);
 		  redirect_to($auth_url);
 	  } else {
@@ -1846,7 +1846,7 @@ function has_flickr_account(){
 
 function setup_new_tweetiepic( &$rec ) {
   global $request,$db;
-  $url = $request->url_for(array('resource'=>'twitter/'.$rec->nickname));
+  $url = blog_url($rec->nickname,true);
   require_once(ABSPATH.WPINC.'/class-snoopy.php');
   $snoop = new Snoopy;
   $snoop->agent = 'OpenMicroBlogger http://openmicroblogger.org';
@@ -2079,3 +2079,27 @@ function add_rss_if_blob($p,$posturl){
 	return "";
 }
 
+function permanent_facebook_key(&$vars){
+	extract($vars);
+	
+  $app_id = environment('facebookAppId');
+  $consumer_key = environment('facebookKey');
+  $consumer_secret = environment('facebookSecret');
+  $agent = environment('facebookAppName')." (curl)";
+  
+  add_include_path(library_path());
+  add_include_path(library_path().'facebook-platform/php');
+  add_include_path(library_path().'facebook_stream');
+
+  require_once "facebook.php";
+  require_once "FacebookStream.php";
+  require_once "Services/Facebook.php";
+
+  $facebook = new Facebook($consumer_key, $consumer_secret);
+  $infinite_key_array = $facebook->api_client->auth_getSession($request->params['key']);
+  if ($infinite_key_array['session_key'])
+    echo "your permanent session key is ". $infinite_key_array['session_key'];
+  else
+    echo "sorry there was an error getting your permanent session key";
+  exit;
+}

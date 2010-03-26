@@ -401,7 +401,7 @@ $stream = false;
 list($subdomain, $rest) = explode('.', $_SERVER['SERVER_NAME'], 2);
 // XXX subdomain upgrade
 if ($pretty_url_base && !mu_url() && !('http://'.$subdomain.".".$rest == $pretty_url_base)) {
-  $request->base = 'http://'.$subdomain.".".$rest;
+  $request->base = $request->values[1].$subdomain.".".$rest;
   $request->domain = $subdomain.".".$rest;
   $pretty_url_base = $request->base;
   $stream = $subdomain;
