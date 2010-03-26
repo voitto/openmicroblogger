@@ -1367,4 +1367,677 @@ function get_twitter_screen_name(){
   return false;
 }
 
+function explode_returned($responseString){
+	$r = array();
+  foreach (explode('&', $responseString) as $param) {
+    $pair = explode('=', $param, 2);
+    if (count($pair) != 2) continue;
+    $r[urldecode($pair[0])] = urldecode($pair[1]);
+  }
+  return $r;
+}
+function setup_google_account(){
+	if (!isset($_SESSION['googleAccessKey']) && !isset($_SESSION['googleAccessSecret']))
+	  trigger_error('sorry the oauth credentials were not found', E_USER_ERROR);
+	global $request,$db;
+	$Setting =& $db->model('Setting');
+	
+	$stat = $Setting->find_by(array('name'=>'google_key','profile_id'=>get_profile_id()));
+	
+  if (!$stat && !empty($_SESSION['googleAccessKey']) && get_profile_id()) {
+    $stat = $Setting->base();
+    $stat->set_value('profile_id',get_profile_id());
+    $stat->set_value('person_id',get_person_id());
+    $stat->set_value('name','google_key');
+    $stat->set_value('value',$_SESSION['googleAccessKey']);
+    $stat->save_changes();
+    $stat->set_etag();
+    $stat = $Setting->base();
+    $stat->set_value('profile_id',get_profile_id());
+    $stat->set_value('person_id',get_person_id());
+    $stat->set_value('name','google_secret');
+    $stat->set_value('value',$_SESSION['googleAccessSecret']);
+    $stat->save_changes();
+    $stat->set_etag();
+		$cfg = $Setting->base();
+		$cfg->set_value('profile_id',get_profile_id());
+		$cfg->set_value('person_id',get_person_id());
+		$cfg->set_value('name','config.env.importgoogle_'.$_SESSION['googleAccessKey']);
+		$cfg->set_value('value',1);
+		$cfg->save_changes();
+		$cfg->set_etag();
+
+  }	
+  redirect_to($request->base);
+
+	exit;
+	
+	// this is how you make a gdata api request
+  $endpoint = $scope;
+	$parsed = parse_url($endpoint);
+	$params = array();
+	parse_str($parsed['query'], $params);
+  lib_include('twitteroauth');
+	$base_url = $request->base;
+  $key = environment( 'googleKey' );
+  $secret = environment( 'googleSecret' );
+	$consumer = new OAuthConsumer($key, $secret, NULL);
+  $hmac_method = new OAuthSignatureMethod_HMAC_SHA1();
+  $token = get_oauth_token($_SESSION['googleAccessKey'], $_SESSION['googleAccessSecret']);
+	$oauth_req = OAuthRequest::from_consumer_and_token($consumer, $token, "GET", $endpoint, $params);
+	$oauth_req->sign_request($hmac_method, $consumer, $token);
+	$responseString = send_signed_request($oauth_req->get_normalized_http_method(),
+	                                      $endpoint, $oauth_req->to_header(), NULL, false);
+	echo $responseString;
+	exit;
+
+  $key = environment( 'googleKey' );
+  $secret = environment( 'googleSecret' );
+  $hmac_method = new OAuthSignatureMethod_HMAC_SHA1();
+	$consumer = new OAuthConsumer($key, $secret, NULL);
+	$token = $arr['oauth_token'];
+	$tokensecret = $arr['oauth_token_secret'];
+  $token = new OAuthToken($token, $tokensecret);
+  $endpoint = 'https://mail.google.com/mail/feed/atom/';
+	$oauth_req = OAuthRequest::from_consumer_and_token($consumer, $token, "GET", $endpoint, NULL);
+	$oauth_req->sign_request($hmac_method, $consumer, $token);
+	$responseString = readUrl($oauth_req->to_url());
+	print_r($responseString);
+}
+
+function authsub( &$vars ) {
+  extract($vars);
+  $scope = 'https://mail.google.com/mail/feed/atom/';
+  $base_url = $request->base;
+  $endpoints = array(
+		'https://www.google.com/accounts/OAuthGetRequestToken?scope='.$scope,
+		'https://www.google.com/accounts/OAuthAuthorizeToken',
+		'https://www.google.com/accounts/OAuthGetAccessToken'
+	);
+  if (!isset($_SESSION['googleAccessKey']) && !isset($_SESSION['googleAccessSecret'])){
+	  if (!isset($request->oauth_token)){
+		  $req_req = get_oauth_request(NULL,$endpoints[0]);
+		  $responseString = readUrl($req_req->to_url());
+		  $r = explode_returned($responseString);
+		  $token = $r['oauth_token'];
+		  $secret = $r['oauth_token_secret'];
+		  $callback_url = $base_url."authsub?oauth_secret=".$secret;
+		  $auth_url = $endpoints[1] . "?oauth_token=$token&oauth_callback=".urlencode($callback_url);
+		  redirect_to($auth_url);
+	  } else {
+		  $token = get_oauth_token($request->oauth_token,$request->oauth_secret);
+		  $acc_req = get_oauth_request($token,$endpoints[2]);
+			$responseString = readUrl($acc_req->to_url());
+		  $r = explode_returned($responseString);
+		  $_SESSION['googleAccessKey'] = $r['oauth_token'];
+		  $_SESSION['googleAccessSecret'] = $r['oauth_token_secret'];
+	  }
+	}
+  setup_google_account();
+}
+
+
+
+
+function get_oauth_request($token,$endpoint) {
+	if (!class_exists('OAuthToken'))
+	  lib_include('twitteroauth');
+	$base_url = $request->base;
+  $key = environment( 'googleKey' );
+  $secret = environment( 'googleSecret' );
+	$consumer = new OAuthConsumer($key, $secret, NULL);
+  $hmac_method = new OAuthSignatureMethod_HMAC_SHA1();
+	$parsed = parse_url($endpoint);
+	$params = array();
+	parse_str($parsed['query'], $params);
+	$rq = OAuthRequest::from_consumer_and_token($consumer, $token, "GET", $endpoint, $params);
+  $rq->sign_request($hmac_method, $consumer, $token);
+  return $rq;
+}
+function get_oauth_token($token,$secret){
+	if (!class_exists('OAuthToken'))
+	  lib_include('twitteroauth');
+	return new OAuthToken($token,$secret);
+}
+
+function send_signed_request($http_method, $url, $auth_header=null,
+                             $postData=null, $returnResponseHeaders=true) {
+  $curl = curl_init($url);
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($curl, CURLOPT_FAILONERROR, false);
+  curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+  if ($returnResponseHeaders) {
+    curl_setopt($curl, CURLOPT_HEADER, true);
+  }
+
+  switch($http_method) {
+    case 'GET':
+      if ($auth_header) {
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array($auth_header));
+      }
+      break;
+    case 'POST':
+      $headers = array('Content-Type: application/atom+xml', $auth_header);
+      curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+      curl_setopt($curl, CURLOPT_POST, 1);
+      curl_setopt($curl, CURLOPT_POSTFIELDS, $postData);
+      break;
+    case 'PUT':
+      $headers = array('Content-Type: application/atom+xml', $auth_header);
+      curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+      curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $http_method);
+      curl_setopt($curl, CURLOPT_POSTFIELDS, $postData);
+      break;
+    case 'DELETE':
+      $headers = array($auth_header);
+      curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+      curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $http_method);
+      break;
+  }
+  $response = curl_exec($curl);
+  if (!$response) {
+    $response = curl_error($curl);
+  }
+  curl_close($curl);
+  return $response;
+}
+
+
+function facebook_timeline(&$vars){
+	extract($vars);
+  global $db,$prefix;
+  $sql = "SELECT DISTINCT facebook_id,oauth_key FROM ".$prefix."facebook_users, ".$prefix."identities WHERE ".$prefix."identities.person_id = ".get_person_id();
+  $result = $db->get_result( $sql );
+ if ($db->num_rows($result) == 1) {
+		$app_id = environment('facebookAppId');
+	  $consumer_key = environment('facebookKey');
+	  $consumer_secret = environment('facebookSecret');
+	  $agent = environment('facebookAppName')." (curl)";
+	  add_include_path(library_path());
+	  add_include_path(library_path().'facebook-platform/php');
+	  add_include_path(library_path().'facebook_stream');
+	  require_once "FacebookStream.php";
+	  require_once "Services/Facebook.php";
+
+$sesskey = 'a441dc31cd9e03b5b03b9912-1421801327';
+  $appid = $app_id;
+  $userid = $db->result_value($result,0,'facebook_id');
+
+
+		  require_once "facebook.php";
+
+	$fb = new Facebook($consumer_key, $consumer_secret, true);
+	//	  $fs = new FacebookStream($consumer_key,$consumer_secret,$agent);
+	$facebook->api_client->session_key = $sesskey;
+	$facebook->api_client->user = $userid;
+	    $data = $fb->api_client->stream_get();
+		  print_r($data);
+	    exit;
+
+
+
+//  $access_token = $db->result_value($result,0,'oauth_key');
+
+ $fs = new FacebookStream($consumer_key,$consumer_secret,$agent);
+	$fs->VerifyPerm($userid,'offline_access');
+
+		$hash = md5("app_id=".$appid."session_key=".$sesskey."source_id=".$userid.$fs->getApiSecret());
+    
+    $url = 'http://www.facebook.com/activitystreams/feed.php';
+    $url .= '?source_id=';
+    $url .= $userid;
+    $url .= '&app_id=';
+    $url .= $appid;
+    $url .= '&session_key=';
+    $url .= $sesskey;
+    $url .= '&sig=';
+    $url .= $hash;
+    $url .= '&v=0.7&read';
+				    $ch = curl_init();
+				    if (defined("CURL_CA_BUNDLE_PATH")) curl_setopt($ch, CURLOPT_CAINFO, CURL_CA_BUNDLE_PATH);
+				    curl_setopt($ch, CURLOPT_URL, $url);
+				    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+						curl_setopt($ch, CURLOPT_HEADER, false);
+				    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+				    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+				    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+				    curl_setopt($ch, CURLOPT_USERAGENT, "Safari " . phpversion());
+				    $response = curl_exec($ch);
+								echo "<BR><BR>";    
+				echo $response;
+				echo "<BR><BR>";    
+				echo curl_getinfo($ch, CURLINFO_HTTP_CODE);
+exit;
+
+
+
+
+//    $auth_token
+//echo $_SESSION['fb_request_token']; exit;
+		$facebook = new Facebook($consumer_key, $consumer_secret);
+		$infinite_key_array = $facebook->api_client->auth_getSession('CC1E30');
+		print_r($infinite_key_array);
+		echo "<BR>";
+		echo $_SESSION['fb_session'];
+		exit;
+
+
+    
+  
+$sesskey = $_SESSION['fb_session'];
+
+		$user = $fs->GetInfo($appid,$_SESSION['fb_session'],$userid,$fields);
+
+		$hash = md5("app_id=".$appid."session_key=".$sesskey."source_id=".$userid.$fs->getApiSecret());
+    
+
+    $url = 'http://www.facebook.com/activitystreams/feed.php';
+    $url .= '?source_id=';
+    $url .= $userid;
+    $url .= '&app_id=';
+    $url .= $appid;
+    $url .= '&session_key=';
+    $url .= $sesskey;
+    $url .= '&sig=';
+    $url .= $hash;
+    $url .= '&v=0.7&read';
+
+		$hash = md5("v=1.0method=stream.getformat=XMLviewer_id=".$userid."session_key=".$sesskey."api_key=".$fs->getApiKey().$fs->getApiSecret());
+		$url = "http://api.facebook.com/restserver.php?v=1.0&method=stream.get&format=XML&viewer_id=$userid&session_key=$sesskey&api_key=".$fs->getApiKey()."&sig=$hash";
+
+		echo htmlspecialchars($url);
+		
+				    $ch = curl_init();
+				    if (defined("CURL_CA_BUNDLE_PATH")) curl_setopt($ch, CURLOPT_CAINFO, CURL_CA_BUNDLE_PATH);
+				    curl_setopt($ch, CURLOPT_URL, $url);
+				    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+						curl_setopt($ch, CURLOPT_HEADER, false);
+				    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+				curl_setopt($curl, CURLOPT_POST, 1);
+				    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+				    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+				    curl_setopt($ch, CURLOPT_USERAGENT, "Safari " . phpversion());
+				    $response = curl_exec($ch);
+								echo "<BR><BR>";    
+				echo $response;
+				echo "<BR><BR>";    
+				echo curl_getinfo($ch, CURLINFO_HTTP_CODE);
+exit;
+
+
+	  $fieldlist = array(
+	    'last_name',
+	    'first_name',
+	    'pic_small',
+	    'profile_blurb',
+	    'profile_url',
+	    'locale',
+	    'name',
+	    'proxied_email'
+	  );
+
+	  $fields = implode(',',$fieldlist);
+
+$user = $fs->GetInfo($appid,$_SESSION['fb_session'],$userid,$fields);
+print_r($user); exit;
+
+$fs->StreamRequest( $app_id, $_SESSION['fb_session'], $userid );
+exit;
+    //$token = $fs->getAccessToken();
+//    $session = $fs->getSession($access_token);
+//print_r($session);
+//print_r($sessid); exit;
+//echo $fs->api->auth->getSession();exit;
+//echo "app_id=".$appid."session_key=".$sesskey."source_id=".$userid."[p]".$fs->getApiSecret();
+		    $hash = md5("app_id=".$appid."session_key=".$sesskey."source_id=".$userid.$fs->getApiSecret());
+
+		    $url = 'http://www.facebook.com/activitystreams/feed.php';
+		    $url .= '?source_id=';
+		    $url .= $userid;
+		    $url .= '&app_id=';
+		    $url .= $appid;
+		    $url .= '&session_key=';
+		    $url .= $sesskey;
+		    $url .= '&sig=';
+		    $url .= $hash;
+		    $url .= '&v=0.7&read';
+
+echo htmlspecialchars($url);exit;
+		    $ch = curl_init();
+		    if (defined("CURL_CA_BUNDLE_PATH")) curl_setopt($ch, CURLOPT_CAINFO, CURL_CA_BUNDLE_PATH);
+		    curl_setopt($ch, CURLOPT_URL, $url);
+		    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+				curl_setopt($ch, CURLOPT_HEADER, false);
+		    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+		    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		    curl_setopt($ch, CURLOPT_USERAGENT, "Safari " . phpversion());
+		    $response = curl_exec($ch);
+		echo $response;
+		echo "<BR><BR>";    
+		echo curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+
+exit;
+echo 1; exit;
+    //$sessid = $_SESSION['fb_request_token'];
+	  $fs->StreamRequest( $app_id, $sessid, $userid );
+    exit;
+
+    $token = $fs->getAccessToken();
+
+    //$_SESSION['fb_request_token'] = $token;
+    $sessid = $fs->getSession($token);
+print_r($sessid); exit;
+
+	  $fs->StreamRequest( $app_id, $sessid, $userid );
+	  echo 'done';
+	  exit;
+  }
+
+
+	exit;
+}
+
+
+
+function has_twitter_account(){
+	global $db;
+	$Setting =& $db->model('Setting');
+	$stat = $Setting->find_by(array(
+		'person_id'=>get_person_id(),
+	  'eq'    => 'like',
+	  'name'  => '%importtwitter%'
+	));
+	if ($stat)
+	  return true;
+	return false;
+}
+
+function has_facebook_account(){
+	global $db;
+	$Setting =& $db->model('Setting');
+	$stat = $Setting->find_by(array(
+		'person_id'=>get_person_id(),
+	  'eq'    => 'like',
+	  'name'  => '%importfacebook%'
+	));
+	if ($stat)
+	  return true;
+	return false;
+}
+
+function has_google_account(){
+	global $db;
+	$Setting =& $db->model('Setting');
+	$stat = $Setting->find_by(array(
+		'profile_id'=>get_profile_id(),
+	  'eq'    => 'like',
+	  'name'  => '%importgoogle%'
+	));
+	if ($stat)
+	  return true;
+	return false;
+}
+
+function has_flickr_account(){
+	global $db;
+	$Setting =& $db->model('Setting');
+	$stat = $Setting->find_by(array('name'=>'flickr_frob','profile_id'=>get_profile_id()));
+	if ($stat){
+		$stat = $Setting->find_by(array('name'=>'flickr_status','profile_id'=>get_profile_id()));
+	  if (!$stat) {
+	    $stat = $Setting->base();
+	    $stat->set_value('profile_id',get_profile_id());
+	    $stat->set_value('person_id',get_person_id());
+	    $stat->set_value('name','flickr_status');
+	    $stat->set_value('value','enabled');
+	    $stat->save_changes();
+	    $stat->set_etag();
+	  }
+	  return true;
+	}
+	return false;
+}
+
+
+
+function setup_new_tweetiepic( &$rec ) {
+  global $request,$db;
+  $url = $request->url_for(array('resource'=>'twitter/'.$rec->nickname));
+  require_once(ABSPATH.WPINC.'/class-snoopy.php');
+  $snoop = new Snoopy;
+  $snoop->agent = 'OpenMicroBlogger http://openmicroblogger.org';
+  $snoop->submit($url);
+  if (!strpos($snoop->response_code, '200'))
+    trigger_error('unable to connect to your new microblog stream',E_USER_ERROR);
+
+  $profile = get_profile();
+  $Identity =& $db->model('Identity');
+  $Person =& $db->model('Person');
+  $user_identity = get_profile();
+  $user_person = $Person->find($user_identity->person_id);
+
+  global $prefix;
+  $prefix = $rec->prefix."_";
+  $db->prefix = $prefix;
+
+  $Entry =& $db->model('Entry');
+  $Entry->save();
+
+  $Setting =& $db->model('Setting');
+	$Setting->save();
+
+	$Method =& $db->model('Method');
+	$Method->save();
+
+  $Identity =& $db->model('Identity');
+  $Identity->save();
+  
+	$Person =& $db->model('Person');
+	$Person->save();
+
+	$p = $Person->base();
+	foreach ($user_person->attributes as $key=>$val)
+	  $p->set_value($key, $val);
+	$p->save();
+
+  $i= $Identity->base();
+  $i->set_value( 'id', $user_identity->id );
+  $i->set_value( 'person_id', $p->id );
+  $i->set_value( 'label', 'profile 1' );
+  $i->set_value( 'nickname', $user_identity->nickname );
+  $i->set_value( 'url', blog_url($rec->nickname,true)."".$user_identity->nickname );
+//  $i->set_value( 'password', md5($passer) );
+  $i->set_value( 'bio', $passer );
+  $i->set_value( 'avatar', base_path(true).'resource/favicon.png' );
+
+//echo $passer;
+  $i->save_changes();
+  $i->set_etag( $p->id );
+
+  $Membership =& $db->model('Membership');
+  $Membership->save();
+  $me = $Membership->base();
+  $me->set_value( 'person_id', $p->id);
+  $me->set_value( 'group_id', 2 );
+  $me->save_changes();
+  $me->set_etag($p->id);
+  $Setting =& $db->model('Setting');
+  $user = '';
+  $pass = '';
+  $data = base64_encode('a:14:{s:7:"service";s:5:"other";s:8:"location";s:0:"";s:11:"yourls_path";s:0:"";s:10:"yourls_url";s:0:"";s:12:"yourls_login";s:0:"";s:15:"yourls_password";s:0:"";s:5:"other";s:4:"rply";s:11:"bitly_login";s:0:"";s:14:"bitly_password";s:0:"";s:10:"trim_login";s:0:"";s:13:"trim_password";s:0:"";s:10:"rply_login";s:3:"'.$user.'";s:13:"rply_password";s:5:"'.$pass.'";s:19:"pingfm_user_app_key";s:0:"";}');
+  $s = $Setting->base();
+  $s->set_value('profile_id',$user_identity->id);
+  $s->set_value('person_id',$p->id);
+  $s->set_value('name','ozh_yourls');
+  $s->set_value('value',$data);
+  $s->save_changes();
+  $s->set_etag($p->id);
+  $m = $Method->base();
+  $m->set_value( 'code', '
+    do_shorten();
+  ');
+  $m->set_value( 'function', 'api_trim_url' );
+  $m->set_value( 'route', 'api/trim_url' );
+  $m->set_value( 'resource', 'posts' );
+  $m->set_value( 'permission', 'read' );
+  $m->set_value( 'enabled', true );
+  $m->set_value( 'omb', 0 );
+  $m->set_value( 'oauth', 1 );
+  $m->set_value( 'http', 1 );
+  $m->save_changes();
+  $m->set_etag($p->id);
+  $m = $Method->base();
+  $m->set_value( 'code', '
+    do_shorten();
+  ');
+  $m->set_value( 'function', 'api_trim_simple' );
+  $m->set_value( 'route', 'api/trim_simple' );
+  $m->set_value( 'resource', 'posts' );
+  $m->set_value( 'permission', 'read' );
+  $m->set_value( 'enabled', true );
+  $m->set_value( 'omb', 0 );
+  $m->set_value( 'oauth', 1 );
+  $m->set_value( 'http', 1 );
+  $m->save_changes();
+  $m->set_etag($p->id);
+  redirect_to($request->base);
+
+}
+
+
+function set_my_tweetiepic_pass() {
+
+	$stream = get_option('tweetiepic_stream',get_profile_id());
+
+	if ($stream){
+	  $Blog =& $db->model('Blog');
+	  $b = $Blog->find_by('prefix',$stream);
+	  $blognick = $b->nickname;
+	  $blogprefix = $b->prefix;
+	} else {
+		return;
+	}
+
+  $profile_id = get_profile_id();
+
+  global $prefix;
+  $prefix = $blogprefix."_";
+  $db->prefix = $prefix;
+
+  $Identity =& $db->model('Identity');
+
+  $i= $Identity->find($profile_id);
+  $i->set_value( 'password', md5($_POST['newpass']) );
+  $i->save_changes();
+
+ redirect_to($request->base);
+
+}
+
+
+
+function render_rss_feed($pro,$tweets){
+	global $request;
+	$loopcount = 0;
+	echo '<?xml version="1.0"?>
+	<!-- RSS generated by OpenMicroBlogger v0.5.0 on '.date( "n/j/Y; g:i:s A e" ).' -->
+	<rss version="2.0" xmlns:scripting="http://flickrfan.org/scriptingNamespace.html" xmlns:media="http://search.yahoo.com/mrss/">
+		<channel>
+			<title>'.environment('site_title').' / '.$pro->nickname.'</title>
+			<link>'.$pro->profile_url.'</link>
+			<description>'.environment('site_title').' updates from '.$pro->fullname.' / @'.$pro->nickname.'</description>
+			<language>en-us</language>
+			<copyright></copyright>
+			<pubDate>'.date( "D, j M Y H:i:s T" ).'</pubDate>
+			<lastBuildDate>'.date( "D, j M Y H:i:s T", strtotime( $tweets->updated )).'</lastBuildDate>
+			<generator>OpenMicroBlogger</generator>
+	    ';
+	    do_action('rss2_head');
+	echo '
+	';
+
+	while ($p = $tweets->MoveNext()) {
+	$loopcount++;
+	if ($loopcount > 1) break;
+	$posturl = $request->url_for(array('resource'=>'posts','id'=>$p->id));
+	$comurl = $posturl;
+	echo '		<item>
+				<title>'.$p->title.'</title>
+				<link>'.$posturl.add_extension_if_blob($p).'</link>
+				<scripting:byline>'.$pro->fullname.'</scripting:byline>
+				<guid>'.$posturl.'</guid>
+	      <comments>'.$comurl.'</comments>
+				<description>'.$p->body.'</description>
+				<pubDate>'.date( "D, j M Y H:i:s T", strtotime( $p->created )).'</pubDate>'.add_rss_if_blob($p,$posturl).'
+		  </item>
+	';
+	}
+	echo '	</channel>
+	</rss>
+	';
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+}
+
+
+function add_extension_if_blob($p){
+	global $db;
+	$Entry =& $db->model('Entry');
+	$e = $Entry->find($p->entry_id);
+  if (in_array(extension_for($e->content_type), array('jpg','png','gif')))
+	  return "/entry.".extension_for($e->content_type);
+	return "";
+}
+
+function add_rss_if_blob($p,$posturl){
+	global $db;
+	$Entry =& $db->model('Entry');
+	$e = $Entry->find($p->entry_id);
+	if (in_array(extension_for($e->content_type), array('jpg','png','gif'))){
+		$dname = "upload".$p->id.".".extension_for($e->content_type);
+		if (!file_exists("/tmp/".$dname)){
+			$download = tempnam("/tmp",$dname);
+			set_time_limit(0);
+			ini_set('display_errors',false);//Just in case we get some errors, let us know....
+			$fp = fopen ($download, 'w+');//This is the file where we save the information
+			$ch = curl_init($p->uri.".jpg");//Here is the file we are downloading
+			curl_setopt($ch, CURLOPT_TIMEOUT, 5000);
+			curl_setopt($ch, CURLOPT_FILE, $fp);
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+			curl_exec($ch);
+			curl_close($ch);
+			fclose($fp);
+		} else {
+			$download = "/tmp/".$dname;
+		}
+		if (extension_for($e->content_type) == 'jpg')
+	    $pic = imagecreatefromjpeg($download);
+	  if (extension_for($e->content_type) == 'gif')
+	    $pic = imagecreatefromgif($download);
+	  if (extension_for($e->content_type) == 'png')
+	    $pic = imagecreatefromstring(file_get_contents($download));
+		return 
+	 '
+				<enclosure url="'.$posturl.add_extension_if_blob($p).'" type="'.$e->content_type.'" length="'.filesize($download).'" />
+				<media:content url="'.$posturl.add_extension_if_blob($p).'" type="'.$e->content_type.'" height="'.imagesy($pic).'" width="'.imagesx($pic).'"/>
+				<media:title>'.$p->title.'</media:title>
+				<media:description type="html">'.$p->body.'</media:description>
+				<media:thumbnail url="" height="" width=""/>';
+	}
+	return "";
+}
 
