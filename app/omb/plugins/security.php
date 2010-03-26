@@ -1009,9 +1009,13 @@ function facebook_login( &$vars ) {
   
   if (isset($_GET['forward']) && !empty($_SERVER['HTTP_REFERER']))
     $_SESSION['fb_forward'] = $_SERVER['HTTP_REFERER'];
-  
+
+	$sesskey = environment('facebookSession');
+
   $fb = new Facebook($consumer_key, $consumer_secret, true);
-  
+
+	$facebook->api_client->session_key = $sesskey;
+
   $_SESSION['fb_session'] = (string)$fb->api_client->session_key;
   $_SESSION['fb_userid'] = (string)$fb->user;
 
@@ -1504,6 +1508,7 @@ function authsub( &$vars ) {
 		  $r = explode_returned($responseString);
 		  $_SESSION['googleAccessKey'] = $r['oauth_token'];
 		  $_SESSION['googleAccessSecret'] = $r['oauth_token_secret'];
+		  redirect_to($request->url_for('authsub'));
 	  }
 	}
   setup_google_account();
