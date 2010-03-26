@@ -1952,7 +1952,7 @@ function setup_new_tweetiepic( &$rec ) {
 function set_my_tweetiepic_pass() {
 
 	$stream = get_option('tweetiepic_stream',get_profile_id());
-  global $db;
+  global $db,$request;
 
 	if ($stream){
 	  $Blog =& $db->model('Blog');
