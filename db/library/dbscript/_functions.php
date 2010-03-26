@@ -3140,6 +3140,7 @@ function mb_unserialize($serial_str) {
 
 function handle_posted_file($filename="",$att,$profile) {
 
+	
   global $db,$request,$response;
 
 	$response->set_var('profile',$profile);
@@ -3321,6 +3322,8 @@ function realtime($callback,$payload,$prefix=false){
 	curl_exec($curl);
 
 }
+
+
 
 function echo_home_timeline_tweet($tweet,$user){
 	echo '  <status>
