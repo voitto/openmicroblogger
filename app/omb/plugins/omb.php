@@ -337,7 +337,7 @@ function wp_set_post_fields( &$model, &$rec ) {
   $Category =& $db->model('Category');
   $Category->set_limit(100);
   $Category->find();
-  
+  echo 3; exit;
   include 'wp-content/language/lang_chooser.php'; //Loads the language-file
   
   $t1 = html_entity_decode($txt['postform_tagit']);

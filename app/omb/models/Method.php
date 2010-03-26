@@ -112,14 +112,17 @@ extract( $vars );
 
 $request->set_param( array( \'post\', \'title\' ), $request->status );
 
+if ($request->client_wants == \'xml\')
+  render_home_timeline(true,$request->id);
+
 $resource->insert_from_post( $request );
 
 header( \'Status: 200 OK\' );
 
 ');
   
-    $m->set_value( 'function', 'api_statuses_update_json' );
-    $m->set_value( 'route', 'api/statuses/update.json' );
+    $m->set_value( 'function', 'api_statuses_update' );
+    $m->set_value( 'route', 'api/statuses/update' );
     $m->set_value( 'resource', 'posts' );
     $m->set_value( 'permission', 'write' );
     $m->set_value( 'enabled', true );

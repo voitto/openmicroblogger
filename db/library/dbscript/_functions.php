@@ -3322,8 +3322,51 @@ function realtime($callback,$payload,$prefix=false){
 
 }
 
+function echo_home_timeline_tweet($tweet,$user){
+	echo '  <status>
+		  <created_at>'.$tweet['created_at'].'</created_at>
+		  <id>'.$tweet['id'].'</id>
+		  <text>'.$tweet['text'].'</text>
+		  <source>'.$tweet['source'].'</source>
+		  <truncated>'.$tweet['truncated'].'</truncated>
+		  <in_reply_to_status_id>'.$tweet['in_reply_to_status_id'].'</in_reply_to_status_id>
+		  <in_reply_to_user_id>'.$tweet['in_reply_to_user_id'].'</in_reply_to_user_id>
+		  <favorited>'.$tweet['favorited'].'</favorited>
+		  <in_reply_to_screen_name>'.$tweet['in_reply_to_screen_name'].'</in_reply_to_screen_name>
+		  <user>
+		    <id>'.$user['id'].'</id>
+		    <name>'.$user['name'].'</name>
+		    <screen_name>'.$user['screen_name'].'</screen_name>
+		    <location>'.$user['location'].'</location>
+		    <description>'.$user['description'].'</description>
+		    <profile_image_url>'.$user['profile_image_url'].'</profile_image_url>
+		    <url>'.$user['url'].'</url>
+		    <protected>'.$user['protected'].'</protected>
+		    <followers_count>'.$user['followers_count'].'</followers_count>
+		    <profile_background_color>'.$user['profile_background_color'].'</profile_background_color>
+		    <profile_text_color>'.$user['profile_text_color'].'</profile_text_color>
+		    <profile_link_color>'.$user['profile_link_color'].'</profile_link_color>
+		    <profile_sidebar_fill_color>'.$user['profile_sidebar_fill_color'].'</profile_sidebar_fill_color>
+		    <profile_sidebar_border_color>'.$user['profile_sidebar_border_color'].'</profile_sidebar_border_color>
+		    <friends_count>'.$user['friends_count'].'</friends_count>
+		    <created_at>'.$user['created_at'].'</created_at>
+		    <favourites_count>'.$user['favourites_count'].'</favourites_count>
+		    <utc_offset>'.$user['utc_offset'].'</utc_offset>
+		    <time_zone>'.$user['time_zone'].'</time_zone>
+		    <profile_background_image_url>'.$user['profile_background_image_url'].'</profile_background_image_url>
+		    <profile_background_tile>'.$user['profile_background_tile'].'</profile_background_tile>
+		    <notifications>'.$user['notifications'].'</notifications>
+		    <geo_enabled>'.$user['geo_enabled'].'</geo_enabled>
+		    <verified>'.$user['verified'].'</verified>
+		    <following>'.$user['following'].'</following>
+		    <statuses_count>'.$user['statuses_count'].'</statuses_count>
+		  </user>
+		  <geo/>
+		</status>
+	';
+}
 
-function render_home_timeline(){
+function render_home_timeline($single=false,$id=null){
 	
 global $request,$db;
 
@@ -3343,14 +3386,24 @@ $profile = get_profile();
 
 $Setting =& $db->model('Setting');
 
+if (!$single)
 	echo '<?xml version="1.0" encoding="UTF-8"?>
 <statuses type="array">
 ';
+else
+		echo '<?xml version="1.0" encoding="UTF-8"?>
+	';
 
 
 //$Post->set_limit(1);
 //$Post->set_order('desc');
+
+if (!$single) {
+
 	$Post->find();
+} else {
+	$Post->find($id);
+}
 	$tweets = array();
 	while ($p = $Post->MoveNext()) {
 		$profile = get_profile($p->profile_id);
@@ -3404,54 +3457,14 @@ $Setting =& $db->model('Setting');
 
 	  $tweets[] = array($tweet,$user);
 
-		echo '  <status>
-			  <created_at>'.$tweet['created_at'].'</created_at>
-			  <id>'.$tweet['id'].'</id>
-			  <text>'.$tweet['text'].'</text>
-			  <source>'.$tweet['source'].'</source>
-			  <truncated>'.$tweet['truncated'].'</truncated>
-			  <in_reply_to_status_id>'.$tweet['in_reply_to_status_id'].'</in_reply_to_status_id>
-			  <in_reply_to_user_id>'.$tweet['in_reply_to_user_id'].'</in_reply_to_user_id>
-			  <favorited>'.$tweet['favorited'].'</favorited>
-			  <in_reply_to_screen_name>'.$tweet['in_reply_to_screen_name'].'</in_reply_to_screen_name>
-			  <user>
-			    <id>'.$user['id'].'</id>
-			    <name>'.$user['name'].'</name>
-			    <screen_name>'.$user['screen_name'].'</screen_name>
-			    <location>'.$user['location'].'</location>
-			    <description>'.$user['description'].'</description>
-			    <profile_image_url>'.$user['profile_image_url'].'</profile_image_url>
-			    <url>'.$user['url'].'</url>
-			    <protected>'.$user['protected'].'</protected>
-			    <followers_count>'.$user['followers_count'].'</followers_count>
-			    <profile_background_color>'.$user['profile_background_color'].'</profile_background_color>
-			    <profile_text_color>'.$user['profile_text_color'].'</profile_text_color>
-			    <profile_link_color>'.$user['profile_link_color'].'</profile_link_color>
-			    <profile_sidebar_fill_color>'.$user['profile_sidebar_fill_color'].'</profile_sidebar_fill_color>
-			    <profile_sidebar_border_color>'.$user['profile_sidebar_border_color'].'</profile_sidebar_border_color>
-			    <friends_count>'.$user['friends_count'].'</friends_count>
-			    <created_at>'.$user['created_at'].'</created_at>
-			    <favourites_count>'.$user['favourites_count'].'</favourites_count>
-			    <utc_offset>'.$user['utc_offset'].'</utc_offset>
-			    <time_zone>'.$user['time_zone'].'</time_zone>
-			    <profile_background_image_url>'.$user['profile_background_image_url'].'</profile_background_image_url>
-			    <profile_background_tile>'.$user['profile_background_tile'].'</profile_background_tile>
-			    <notifications>'.$user['notifications'].'</notifications>
-			    <geo_enabled>'.$user['geo_enabled'].'</geo_enabled>
-			    <verified>'.$user['verified'].'</verified>
-			    <following>'.$user['following'].'</following>
-			    <statuses_count>'.$user['statuses_count'].'</statuses_count>
-			  </user>
-			  <geo/>
-			</status>
-		';
-
+    echo_home_timeline_tweet($tweet,$user);
 
 	}
 
 
 
-echo '</statuses>';
+if (!$single)
+  echo '</statuses>';
 
 	exit;
 	

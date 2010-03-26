@@ -83,5 +83,30 @@ function send_to_flickr( &$model, &$rec ) {
 				//$is_family = null
 				
 			}
+	} elseif (isset($_FILES['media'])) {
+		
+		add_include_path(library_path()."phpFlickr");
+
+		include('phpFlickr.php');
+
+		$f = new phpFlickr( $key, $secret );
+
+		$Setting =& $db->model('Setting');
+
+		$stat = $Setting->find_by(array('name'=>'flickr_frob','profile_id'=>get_profile_id()));
+		
+		if (!empty($stat->value)) {
+			$f->setToken($stat->value);
+			$f->sync_upload(
+			  $_FILES['media']['tmp_name'],
+				$rec->title,
+				'',
+				null,
+				1,
+				1,
+				1
+			);
+
+		
 	}
 }

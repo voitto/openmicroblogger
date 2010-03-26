@@ -474,6 +474,9 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
   }
   function add_table( $table, $field_array ) {
     trigger_before( 'add_table', $this, $this );
+    $exists = $this->get_tables();
+    if (in_array($this->prefix.$table,$exists))
+      return true;
     if (!(count($field_array)>0)) trigger_error( "Error creating table, no fields are defined. Use \$model->auto_field and \$model->text_field etc.", E_USER_ERROR );
     $sql = "CREATE TABLE ".$this->prefix."$table (";
     $comma = "";
