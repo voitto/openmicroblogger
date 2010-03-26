@@ -1477,6 +1477,8 @@ function setup_google_account(){
 }
 
 function authsub( &$vars ) {
+	if (isset($_SESSION['googleAccessKey']) && isset($_SESSION['googleAccessSecret']))
+	  setup_google_account();
   extract($vars);
   $scope = 'https://mail.google.com/mail/feed/atom/';
   $base_url = $request->base;
