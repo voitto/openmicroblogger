@@ -112,10 +112,10 @@ extract( $vars );
 
 $request->set_param( array( \'post\', \'title\' ), $request->status );
 
+$resource->insert_from_post( $request );
+
 if ($request->client_wants == \'xml\')
   render_home_timeline(true,$request->id);
-
-$resource->insert_from_post( $request );
 
 header( \'Status: 200 OK\' );
 
