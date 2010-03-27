@@ -259,6 +259,7 @@ $request->set_param(\'order\',\'desc\');
 $tweets = new Collection( \'posts\', $where );
 $pro = get_profile($id);
 
+header( \'Content-Type: application/rss+xml\' );
 
 render_rss_feed($pro,$tweets);
 
