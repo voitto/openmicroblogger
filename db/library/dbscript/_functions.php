@@ -3170,7 +3170,10 @@ function handle_posted_file($filename="",$att,$profile) {
 	$content_type = type_of( $filename );
 	$rec->set_value('profile_id',get_profile_id());
 	$rec->set_value( 'parent_id', 0 );
-	$rec->set_value( 'title', '' );
+	if (isset($request->params['message']))
+		$rec->set_value( 'title', $request->params['message'] );
+	else
+	  $rec->set_value( 'title', '' );
 	$upload_types = environment('upload_types');
 	if (!$upload_types)
 	  $upload_types = array('jpg','jpeg','png','gif');
@@ -3340,7 +3343,6 @@ function echo_home_timeline_tweet($tweet,$user){
 		    <id>'.$user['id'].'</id>
 		    <name>'.$user['name'].'</name>
 		    <screen_name>'.$user['screen_name'].'</screen_name>
-		    <location>'.$user['location'].'</location>
 		    <description>'.$user['description'].'</description>
 		    <profile_image_url>'.$user['profile_image_url'].'</profile_image_url>
 		    <url>'.$user['url'].'</url>
@@ -3364,7 +3366,6 @@ function echo_home_timeline_tweet($tweet,$user){
 		    <following>'.$user['following'].'</following>
 		    <statuses_count>'.$user['statuses_count'].'</statuses_count>
 		  </user>
-		  <geo/>
 		</status>
 	';
 }

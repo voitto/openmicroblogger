@@ -43,9 +43,6 @@ function send_to_flickr( &$model, &$rec ) {
 	$Setting =& $db->model('Setting');
 	
 	$Post =& $db->model('Post');
-	$p= $Post->base();
-	$p->set_value('title','waypoint1');
-	$p->save_changes();
 
 	$sql = "SELECT value FROM settings WHERE profile_id = '".get_profile_id()."' AND name = 'flickr_status'";
   $result = $db->get_result( $sql );
@@ -53,9 +50,6 @@ function send_to_flickr( &$model, &$rec ) {
   
 	//$enabled = $Setting->find_by(array('settings.name'=>'flickr_status','settings.profile_id'=>get_profile_id()));
 
-	$p= $Post->base();
-	$p->set_value('title','waypoint2');
-	$p->save_changes();
 
   if (!($enabled == 'enabled'))
     return;
@@ -72,9 +66,7 @@ function send_to_flickr( &$model, &$rec ) {
 
   if (extension_for(type_of($_FILES['post']['name']['attachment'])) == 'jpg'
 		&& (file_exists($_SESSION['copied_blob_flickr']))){
-			$p= $Post->base();
-			$p->set_value('title','waypoint3');
-			$p->save_changes();
+
 
 			$sql = "SELECT value FROM settings WHERE profile_id = '".get_profile_id()."' AND name = 'flickr_frob'";
 		  $result = $db->get_result( $sql );
@@ -106,9 +98,7 @@ function send_to_flickr( &$model, &$rec ) {
 				
 			}
 	} else {
-		$p= $Post->base();
-		$p->set_value('title','waypoint4');
-		$p->save_changes();
+
 		
 		$Setting =& $db->model('Setting');
 
