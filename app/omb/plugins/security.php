@@ -2041,7 +2041,7 @@ function add_extension_if_blob($p){
 }
 
 function add_rss_if_blob($p,$posturl){
-	global $db;
+	global $db,$request;
 	$Entry =& $db->model('Entry');
 	$e = $Entry->find($p->entry_id);
 	if (in_array(extension_for($e->content_type), array('jpg','png','gif'))){
@@ -2051,7 +2051,7 @@ function add_rss_if_blob($p,$posturl){
 			set_time_limit(0);
 			ini_set('display_errors',false);//Just in case we get some errors, let us know....
 			$fp = fopen ($download, 'w+');//This is the file where we save the information
-			$ch = curl_init($p->uri.".jpg");//Here is the file we are downloading
+			$ch = curl_init($p->uri.".".extension_for($e->content_type));//Here is the file we are downloading
 			curl_setopt($ch, CURLOPT_TIMEOUT, 5000);
 			curl_setopt($ch, CURLOPT_FILE, $fp);
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -2067,13 +2067,35 @@ function add_rss_if_blob($p,$posturl){
 	    $pic = imagecreatefromgif($download);
 	  if (extension_for($e->content_type) == 'png')
 	    $pic = imagecreatefromstring(file_get_contents($download));
+
+    $Thumbnail =& $db->model('Thumbnail');
+    $t = $Thumbnail->find_by(array('target_id'=>$e->id));
+
+    if (!$t){
+      $t = $Thumbnail->base();
+      $t->set_value('target_id',$e->id);
+      $t->save_changes();
+      $t->set_etag($e->person_id);
+		  $uploadfile = 'uploads'.DIRECTORY_SEPARATOR.'thumbnails'.$t->id;
+		  photoCreateCropThumb( $uploadfile, $download, 150, 100, $download );
+		} else {
+		  $uploadfile = 'uploads'.DIRECTORY_SEPARATOR.'thumbnails'.$t->id;
+		}
+
+		if (extension_for($e->content_type) == 'jpg')
+	    $th = imagecreatefromjpeg($uploadfile);
+	  if (extension_for($e->content_type) == 'gif')
+	    $th = imagecreatefromgif($uploadfile);
+	  if (extension_for($e->content_type) == 'png')
+	    $th = imagecreatefromstring(file_get_contents($uploadfile));
+
 		return 
 	 '
 				<enclosure url="'.$posturl.add_extension_if_blob($p).'" type="'.$e->content_type.'" length="'.filesize($download).'" />
 				<media:content url="'.$posturl.add_extension_if_blob($p).'" type="'.$e->content_type.'" height="'.imagesy($pic).'" width="'.imagesx($pic).'"/>
 				<media:title>'.$p->title.'</media:title>
 				<media:description type="html">'.$p->body.'</media:description>
-				<media:thumbnail url="" height="" width=""/>';
+				<media:thumbnail url="'.$request->url_for(array('resource'=>'posts','action'=>'preview','id'=>$p->id)).'" height="'.imagesy($th).'" width="'.imagesx($th).'"/>';
 	}
 	return "";
 }
