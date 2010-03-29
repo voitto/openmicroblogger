@@ -3147,6 +3147,11 @@ function handle_posted_file($filename="",$att,$profile) {
 	
 	load_apps();
 
+	if (isset($_FILES['media']['tmp_name']))
+		$table = 'uploads';
+	else
+	  $table = 'posts';
+
 	$_FILES = array(
 	  'post' => array( 
 	    'name' => array( 'attachment' => $filename ),
@@ -3155,11 +3160,6 @@ function handle_posted_file($filename="",$att,$profile) {
 
 	$Post =& $db->model( 'Post' );
   $Upload =& $db->model( 'Upload' );
-
-	if (isset($_FILES['media']['tmp_name']))
-		$table = 'uploads';
-	else
-	  $table = 'posts';
 
 	$field = 'attachment';
   $modelvar = classify($table);
