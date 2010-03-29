@@ -506,6 +506,7 @@ function update_option( $opt, $newval ) {
   if (!$s) {
     $s = $Setting->base();
     $s->set_value('profile_id',get_profile_id());
+    $s->set_value('person_id',get_person_id());
     $s->set_value('name',$opt);
   }
   if (is_array($newval))

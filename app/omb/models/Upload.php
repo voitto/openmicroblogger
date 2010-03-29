@@ -10,6 +10,14 @@ class Upload extends Model {
 
     $this->auto_field( 'id' );
     
+    $this->file_field( 'attachment' );
+
+    $this->int_field( 'parent_id' );
+
+    $this->int_field( 'profile_id' );
+
+    $this->char_field( 'title' );
+
   }
   
 }
