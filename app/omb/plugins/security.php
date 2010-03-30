@@ -2095,7 +2095,7 @@ function add_rss_if_blob($p,$posturl){
 				<media:content url="'.$posturl.add_extension_if_blob($p).'" type="'.$e->content_type.'" height="'.imagesy($pic).'" width="'.imagesx($pic).'"/>
 				<media:title>'.$p->title.'</media:title>
 				<media:description type="html">'.$p->body.'</media:description>
-				<media:thumbnail url="'.$request->url_for(array('resource'=>'posts','action'=>'preview','id'=>$p->id)).'" height="'.imagesy($th).'" width="'.imagesx($th).'"/>';
+				<media:thumbnail url="'.$request->url_for(array('resource'=>'uploads','action'=>'preview','id'=>$p->id)).'" height="'.imagesy($th).'" width="'.imagesx($th).'"/>';
 	}
 	return "";
 }

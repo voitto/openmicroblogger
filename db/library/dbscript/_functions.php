@@ -3152,8 +3152,10 @@ function handle_posted_file($filename="",$att,$profile) {
 	else
 	  $table = 'posts';
 
+  $modelvar = classify($table);
+
 	$_FILES = array(
-	  'post' => array( 
+	  strtolower($modelvar) => array( 
 	    'name' => array( 'attachment' => $filename ),
 	    'tmp_name' => array( 'attachment' => $att )
 	));
@@ -3162,7 +3164,6 @@ function handle_posted_file($filename="",$att,$profile) {
   $Upload =& $db->model( 'Upload' );
 
 	$field = 'attachment';
-  $modelvar = classify($table);
 
   $request->set_param('resource',$table);
 

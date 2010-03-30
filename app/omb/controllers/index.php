@@ -131,3 +131,18 @@ function _block( &$vars ) {
 
 }
 
+function preview( &$vars ) {
+  extract($vars);
+  $model =& $db->get_table( $request->resource );
+  $p = $model->find($request->id);
+  $e = $p->FirstChild('entries');
+  $t = $Thumbnail->find_by('target_id',$e->id);
+  if ($t) {
+    $request->set_param('resource','thumbnails');
+    $request->set_param('id',$t->id);
+    render_blob($t->attachment,extension_for($e->content_type));
+  } else {
+    render_blob($p->attachment,extension_for($e->content_type));
+  }
+}
+

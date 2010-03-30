@@ -18,6 +18,8 @@ class Upload extends Model {
 
     $this->char_field( 'title' );
 
+    $this->int_field( 'target_id' );
+
   }
   
 }
