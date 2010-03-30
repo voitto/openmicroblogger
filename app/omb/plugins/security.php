@@ -2043,8 +2043,10 @@ function add_extension_if_blob($p){
 function add_rss_if_blob($p,$posturl){
 	global $db,$request;
 	$Upload =& $db->model('Upload');
-	$e = $Upload->find_by(array('target_id'=>$p->entry_id));
-	if (!$e) return;
+	$u = $Upload->find_by(array('target_id'=>$p->entry_id));
+	if (!$u) return;
+	$e = $u->FirstChild('entries');
+  $origurl = $request->url_for(array('resource'=>'uploads','action'=>'entry','id'=>$u->id));
 	$thumburl = $request->url_for(array('resource'=>'uploads','action'=>'preview','id'=>$u->id));
 	if (in_array(extension_for($e->content_type), array('jpg','png','gif'))){
 		$dname = "upload".$u->id.".".extension_for($e->content_type);
@@ -2053,7 +2055,7 @@ function add_rss_if_blob($p,$posturl){
 			set_time_limit(0);
 			ini_set('display_errors',false);//Just in case we get some errors, let us know....
 			$fp = fopen ($download, 'w+');//This is the file where we save the information
-			$ch = curl_init( $thumburl.".".extension_for($e->content_type));//Here is the file we are downloading
+			$ch = curl_init( $origurl.".".extension_for($e->content_type));//Here is the file we are downloading
 			curl_setopt($ch, CURLOPT_TIMEOUT, 5000);
 			curl_setopt($ch, CURLOPT_FILE, $fp);
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -2095,8 +2097,8 @@ function add_rss_if_blob($p,$posturl){
 
 		return 
 	 '
-				<enclosure url="'.$posturl.add_extension_if_blob($p).'" type="'.$e->content_type.'" length="'.filesize($download).'" />
-				<media:content url="'.$posturl.add_extension_if_blob($p).'" type="'.$e->content_type.'" height="'.imagesy($pic).'" width="'.imagesx($pic).'"/>
+				<enclosure url="'.$posturl.add_extension_if_blob($u).'" type="'.$e->content_type.'" length="'.filesize($download).'" />
+				<media:content url="'.$posturl.add_extension_if_blob($u).'" type="'.$e->content_type.'" height="'.imagesy($pic).'" width="'.imagesx($pic).'"/>
 				<media:title>'.$p->title.'</media:title>
 				<media:description type="html">'.$p->body.'</media:description>
 				<media:thumbnail url="'.$thumburl.'" height="'.imagesy($th).'" width="'.imagesx($th).'"/>';
