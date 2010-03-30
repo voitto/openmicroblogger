@@ -3203,6 +3203,9 @@ function handle_posted_file($filename="",$att,$profile) {
 	}
 	
 	$atomentry = $$modelvar->set_metadata($rec,$content_type,$table,'id');
+
+	if (isset($request->params['message']))
+    $rec->set_value('target_id',$atomentry->id);
 	
 	$$modelvar->set_categories($rec,$request,$atomentry);
 	

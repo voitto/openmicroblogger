@@ -157,7 +157,7 @@ if (isset($_FILES[\'media\'])) {
   handle_posted_file(\'jpg\',$_FILES[\'media\'][\'tmp_name\'],$i);
   $mediaid = \'_\'.$request->id;
   $mediaurl = $request->url_for(array(
-\'resource\'=>\'uploads/entry/\'.$request->id.".jpg"));
+\'resource\'=>\'uploads/\'.$request->id."/entry.jpg"));
   echo \'<rsp stat="ok">
  <mediaid>\'.$mediaid.\'</mediaid>
  <mediaurl>\'.$mediaurl.\'</mediaurl>
