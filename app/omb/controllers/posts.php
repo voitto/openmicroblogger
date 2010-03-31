@@ -463,8 +463,10 @@ function _apps( &$vars ) {
 
 function preview( &$vars ) {
   extract($vars);
-  $p = $Post->find($request->id);
-  $e = $p->FirstChild('entries');
+  $model =& $db->get_table( $request->resource );
+  $Entry =& $db->model('Entry');
+  $p = $model->find($request->id);
+  $e = $Entry->find($p->entry_id);
   $t = $Thumbnail->find_by('target_id',$e->id);
   if ($t) {
     $request->set_param('resource','thumbnails');
@@ -474,6 +476,7 @@ function preview( &$vars ) {
     render_blob($p->attachment,extension_for($e->content_type));
   }
 }
+
 
 function _pagelist( &$vars ) {
   extract( $vars );

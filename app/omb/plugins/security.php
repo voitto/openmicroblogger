@@ -2043,19 +2043,28 @@ function add_extension_if_blob($p){
 function add_rss_if_blob($p,$posturl){
 	global $db,$request;
 	$Upload =& $db->model('Upload');
-	$u = $Upload->find_by(array('target_id'=>$p->entry_id));
+	$Entry =& $db->model('Entry');
+
+	$u = $Upload->find_by(array(
+    'eq'    => 'like',
+		'title'=>substr($p->title,0,-10)
+		));
 	if (!$u) return;
-	$e = $u->FirstChild('entries');
-  $origurl = $request->url_for(array('resource'=>'uploads','action'=>'entry','id'=>$u->id));
-	$thumburl = $request->url_for(array('resource'=>'uploads','action'=>'preview','id'=>$u->id));
+
+	$e = $Entry->find($u->entry_id);
+
 	if (in_array(extension_for($e->content_type), array('jpg','png','gif'))){
+
+	  $origurl = $request->url_for(array('resource'=>'uploads','action'=>'entry.'.extension_for($e->content_type),'id'=>$u->id));
+		$thumburl = $request->url_for(array('resource'=>'uploads','action'=>'preview.'.extension_for($e->content_type),'id'=>$u->id));
+
 		$dname = "upload".$u->id.".".extension_for($e->content_type);
 		if (!file_exists("/tmp/".$dname)){
 			$download = tempnam("/tmp",$dname);
 			set_time_limit(0);
 			ini_set('display_errors',false);//Just in case we get some errors, let us know....
 			$fp = fopen ($download, 'w+');//This is the file where we save the information
-			$ch = curl_init( $origurl.".".extension_for($e->content_type));//Here is the file we are downloading
+			$ch = curl_init( $origurl );//Here is the file we are downloading
 			curl_setopt($ch, CURLOPT_TIMEOUT, 5000);
 			curl_setopt($ch, CURLOPT_FILE, $fp);
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -2097,14 +2106,15 @@ function add_rss_if_blob($p,$posturl){
 
 		return 
 	 '
-				<enclosure url="'.$posturl.add_extension_if_blob($u).'" type="'.$e->content_type.'" length="'.filesize($download).'" />
-				<media:content url="'.$posturl.add_extension_if_blob($u).'" type="'.$e->content_type.'" height="'.imagesy($pic).'" width="'.imagesx($pic).'"/>
+				<enclosure url="'.$origurl.'" type="'.$e->content_type.'" length="'.filesize($download).'" />
+				<media:content url="'.$origurl.'" type="'.$e->content_type.'" height="'.imagesy($pic).'" width="'.imagesx($pic).'"/>
 				<media:title>'.$p->title.'</media:title>
 				<media:description type="html">'.$p->body.'</media:description>
 				<media:thumbnail url="'.$thumburl.'" height="'.imagesy($th).'" width="'.imagesx($th).'"/>';
 	}
 	return "";
 }
+
 
 function permanent_facebook_key(&$vars){
 	extract($vars);

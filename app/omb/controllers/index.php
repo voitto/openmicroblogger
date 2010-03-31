@@ -134,8 +134,9 @@ function _block( &$vars ) {
 function preview( &$vars ) {
   extract($vars);
   $model =& $db->get_table( $request->resource );
+  $Entry =& $db->model('Entry');
   $p = $model->find($request->id);
-  $e = $p->FirstChild('entries');
+  $e = $Entry->find($p->entry_id);
   $t = $Thumbnail->find_by('target_id',$e->id);
   if ($t) {
     $request->set_param('resource','thumbnails');
