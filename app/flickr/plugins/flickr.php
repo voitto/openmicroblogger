@@ -23,7 +23,7 @@ function copy_posted_blob_flickr( &$model, &$req ) {
 
 function send_to_flickr( &$model, &$rec ) {
 	
-  global $db;
+  global $db,$request;
 
 	$key = environment( 'flickrKey' );
 	$secret = environment( 'flickrSecret' );
