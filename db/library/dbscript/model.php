@@ -243,6 +243,8 @@ class Model {
           $rec->set_value( 'entry_id', $atomentry->id );
         if ( array_key_exists( 'person_id', $rec->attributes ))
           $rec->set_value( 'person_id', get_person_id() );
+        if ( array_key_exists( 'profile_id', $rec->attributes ))
+          $rec->set_value( 'profile_id', get_profile_id() );
         $rec->save_changes();
       }
     } else {
