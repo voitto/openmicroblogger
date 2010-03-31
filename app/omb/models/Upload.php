@@ -20,6 +20,8 @@ class Upload extends Model {
 
     $this->int_field( 'target_id' );
 
+    $this->int_field( 'entry_id' );
+
   }
   
 }
