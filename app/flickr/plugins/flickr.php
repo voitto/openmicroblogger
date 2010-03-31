@@ -108,16 +108,30 @@ function send_to_flickr( &$model, &$rec ) {
 
 		//$stat = $Setting->find_by(array('settings.name'=>'flickr_frob','settings.profile_id'=>get_profile_id()));
 		if (!empty($stat)) {
+
+			// send jpegs to Flickr
+			$Upload =& $db->model('Upload');
 			$Entry =& $db->model('Entry');
-			$e = $Entry->find($rec->entry_id);
+
+			$u = $Upload->find_by(array(
+		    'eq'    => 'like',
+				'title'=>substr($rec->title,0,-10)
+				));
+			if (!$u) return;
+
+			$e = $Entry->find($u->entry_id);
+
+		  $origurl = $request->url_for(array('resource'=>'uploads','action'=>'entry.'.extension_for($e->content_type),'id'=>$u->id));
+			$thumburl = $request->url_for(array('resource'=>'uploads','action'=>'preview.'.extension_for($e->content_type),'id'=>$u->id));
+			
 	    if (extension_for($e->content_type) == 'jpg'){
-			  $download = tempnam( "/tmp", "upload".$rec->id.".jpg" );
+			  $download = tempnam( "/tmp", "upload".$u->id.".jpg" );
 //        $result = download($e->uri.".jpg",$download);
 
 set_time_limit(0);
 ini_set('display_errors',false);//Just in case we get some errors, let us know....
 $fp = fopen ($download, 'w+');//This is the file where we save the information
-$ch = curl_init($rec->uri.".jpg");//Here is the file we are downloading
+$ch = curl_init($origurl);//Here is the file we are downloading
 curl_setopt($ch, CURLOPT_TIMEOUT, 5000);
 curl_setopt($ch, CURLOPT_FILE, $fp);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
