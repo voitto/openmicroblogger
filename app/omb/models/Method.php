@@ -108,16 +108,37 @@ echo ");";
     $m = $this->base();
     $m->set_value( 'code', '
     
-extract( $vars );
+		extract( $vars );
 
-$request->set_param( array( \'post\', \'title\' ), $request->status );
+		$request->set_param( array( \'post\', \'title\' ), $request->status );
 
-$resource->insert_from_post( $request );
+		global $db,$request,$response;
 
-if ($request->client_wants == \'xml\')
-  render_home_timeline(true,$request->id);
+		$pid = get_app_id();
 
-header( \'Status: 200 OK\' );
+		$i = get_profile($pid);
+
+		$response->set_var(\'profile\',$profile);
+
+		load_apps();
+
+		$table = \'posts\';
+
+		$modelvar = classify($table);
+
+		$twittercmd = handle_twitter_cmdline($request);
+
+    if (function_exists(\'handle_tweetiepic\'))
+		  handle_tweetiepic($request);
+
+		$request->set_param(\'resource\',$table);
+
+		$resource->insert_from_post( $request );
+
+		if ($request->client_wants == \'xml\')
+		  render_home_timeline(true,$request->id);
+
+		header( \'Status: 200 OK\' );
 
 ');
   

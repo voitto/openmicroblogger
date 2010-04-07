@@ -1916,6 +1916,24 @@ function setup_new_tweetiepic( &$rec ) {
   $s->set_value('value',$data);
   $s->save_changes();
   $s->set_etag($p->id);
+
+
+  $s = $Setting->base();
+  $s->set_value('profile_id',$user_identity->id);
+  $s->set_value('person_id',$p->id);
+  $s->set_value('name','twitter_status');
+  $s->set_value('value','enabled');
+  $s->save_changes();
+  $s->set_etag($p->id);
+
+  $s = $Setting->base();
+  $s->set_value('profile_id',$user_identity->id);
+  $s->set_value('person_id',$p->id);
+  $s->set_value('name','facebook_status');
+  $s->set_value('value','disabled');
+  $s->save_changes();
+  $s->set_etag($p->id);
+
   $m = $Method->base();
   $m->set_value( 'code', '
     do_shorten();

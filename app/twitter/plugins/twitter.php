@@ -24,7 +24,7 @@ function send_to_twitter( &$model, &$rec ) {
   
   global $db,$prefix,$request;
 
-  $sql = "SELECT oauth_key,oauth_secret FROM ".$prefix."twitter_users WHERE profile_id = ".get_profile_id();
+  $sql = "SELECT oauth_key,oauth_secret FROM identities,twitter_users WHERE twitter_users.profile_id = identities.id and identities.person_id = ".get_person_id();
   $result = $db->get_result( $sql );
   
   if ($db->num_rows($result) == 1) {

@@ -34,7 +34,14 @@ class FacebookStream {
     $this->agent = $agent;
     
   }
-  
+
+  /**
+   * Use an "infinite" key from Facebook
+   */
+  function setSess($s){
+	  $this->api->sessionKey = $s; 
+  }  
+
   /**
    * Make a Request token
    */

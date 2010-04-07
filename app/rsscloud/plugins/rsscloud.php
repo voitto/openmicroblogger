@@ -22,9 +22,9 @@ function set_up_cloud_toplevel_ping(){
 
 global $request;
 if ($request->resource == 'posts'){
-	before_filter( 'set_up_cloud_toplevel_ping', 'insert_from_post');
-	before_filter( 'rss_cloud_ping', 'insert_from_post' );
-	before_filter( 'set_up_cloud_ping', 'insert_from_post');
-	before_filter( 'rss_cloud_ping', 'insert_from_post' );
+	after_filter( 'set_up_cloud_toplevel_ping', 'insert_from_post');
+	after_filter( 'rss_cloud_ping', 'insert_from_post' );
+	after_filter( 'set_up_cloud_ping', 'insert_from_post');
+	after_filter( 'rss_cloud_ping', 'insert_from_post' );
 }
 
