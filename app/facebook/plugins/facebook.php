@@ -75,7 +75,7 @@ if (!function_exists('json_encode'))
 
 		//$fb->api_client->session_key = $sesskey;
 		//$fb->api_client->user = $uid;
-		$fs = new FacebookStream($consumer_key,$consumer_secret,$agent);
+		$fs = new FacebookStream($consumer_key,$consumer_secret,$agent,$app_id);
 	  
 //    $fs->api->sessionKey = $sesskey;
     $fs->setSess($sesskey);

@@ -1019,7 +1019,7 @@ function facebook_login( &$vars ) {
   $_SESSION['fb_session'] = (string)$fb->api_client->session_key;
   $_SESSION['fb_userid'] = (string)$fb->user;
 
-  $fs = new FacebookStream($consumer_key,$consumer_secret,$agent);
+  $fs = new FacebookStream($consumer_key,$consumer_secret,$agent,$app_id);
   
   $token = $fs->getAccessToken();
 
@@ -1038,7 +1038,7 @@ function facebook_login( &$vars ) {
   
   $fields = implode(',',$fieldlist);
   
-  $user = $fs->GetInfo( $app_id, $_SESSION['fb_session'], $_SESSION['fb_userid'], $fields );
+  $user = $fs->GetInfo( $_SESSION['fb_userid'], $fields );
   
   $values = array();
   
@@ -1606,7 +1606,7 @@ $sesskey = 'a441dc31cd9e03b5b03b9912-1421801327';
 		  require_once "facebook.php";
 
 	$fb = new Facebook($consumer_key, $consumer_secret, true);
-	//	  $fs = new FacebookStream($consumer_key,$consumer_secret,$agent);
+	//	  $fs = new FacebookStream($consumer_key,$consumer_secret,$agent,$app_id);
 	$facebook->api_client->session_key = $sesskey;
 	$facebook->api_client->user = $userid;
 	    $data = $fb->api_client->stream_get();
@@ -1617,7 +1617,7 @@ $sesskey = 'a441dc31cd9e03b5b03b9912-1421801327';
 
 //  $access_token = $db->result_value($result,0,'oauth_key');
 
- $fs = new FacebookStream($consumer_key,$consumer_secret,$agent);
+ $fs = new FacebookStream($consumer_key,$consumer_secret,$agent,$app_id);
 	$fs->VerifyPerm($userid,'offline_access');
 
 		$hash = md5("app_id=".$appid."session_key=".$sesskey."source_id=".$userid.$fs->getApiSecret());
@@ -1666,7 +1666,7 @@ exit;
   
 $sesskey = $_SESSION['fb_session'];
 
-		$user = $fs->GetInfo($appid,$_SESSION['fb_session'],$userid,$fields);
+		$user = $fs->GetInfo($userid,$fields);
 
 		$hash = md5("app_id=".$appid."session_key=".$sesskey."source_id=".$userid.$fs->getApiSecret());
     
@@ -1719,7 +1719,7 @@ exit;
 
 	  $fields = implode(',',$fieldlist);
 
-$user = $fs->GetInfo($appid,$_SESSION['fb_session'],$userid,$fields);
+$user = $fs->GetInfo($userid,$fields);
 print_r($user); exit;
 
 $fs->StreamRequest( $app_id, $_SESSION['fb_session'], $userid );

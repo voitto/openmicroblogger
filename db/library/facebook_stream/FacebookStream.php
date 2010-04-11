@@ -18,11 +18,12 @@ class FacebookStream {
   private $last_api_call;
   private $api;
   private $agent;
+  private $appid;
   
   /**
    * construct FacebookStream object
    */
-  function __construct($consumer_key, $consumer_secret, $agent) {
+  function __construct($consumer_key, $consumer_secret, $agent, $appid) {
     
     /* Set Facebook key/secret */
     Services_Facebook::$apiKey = $consumer_key;
@@ -32,6 +33,8 @@ class FacebookStream {
     $this->api = new Services_Facebook();
     
     $this->agent = $agent;
+
+    $this->appid = $appid;
     
   }
 
@@ -55,7 +58,14 @@ class FacebookStream {
   function getApiKey() { 
     return Services_Facebook::$apiKey;    
   }
-  
+
+	/**
+	 * Return the session Key
+	 */
+	function getSessionKey() { 
+	  return $this->api->sessionKey;
+	}
+
   /**
    * Return the API secret
    */
@@ -88,48 +98,45 @@ class FacebookStream {
   /**
    * Facebook Stream API request
    */
-  function StreamRequest($appid,$sesskey,$userid) {
+  function StreamRequest($userid) {
     
-    //$this->verifyPerms(array('read_stream'),$userid);
-    
-    $hash = md5("app_id=".$appid."session_key=".$sesskey."source_id=".$userid.$this->getApiSecret());
-    
-    $url = 'http://www.facebook.com/activitystreams/feed.php';
-    $url .= '?source_id=';
-    $url .= $userid;
-    $url .= '&app_id=';
-    $url .= $appid;
-    $url .= '&session_key=';
-    $url .= $sesskey;
-    $url .= '&sig=';
-    $url .= $hash;
-    $url .= '&v=0.7&read';
-    
-    echo $this->http($url);
-    
-    exit;
+    // requires read_stream
+		$hash = md5("app_id=".$this->appid."session_key=".$this->getSessionKey()."source_id=".$userid.$this->getApiSecret());
+
+		$url = 'http://www.facebook.com/activitystreams/feed.php';
+		$url .= '?source_id=';
+		$url .= $userid;
+		$url .= '&app_id=';
+		$url .= $this->appid;
+		$url .= '&session_key=';
+		$url .= $this->getSessionKey();
+		$url .= '&sig=';
+		$url .= $hash;
+		$url .= '&v=0.7&read';
+
+    return $this->http($url);
     
   }
   
-  function GetInfo($appid,$sesskey,$userid,$fields) {
+  function GetInfo($userid,$fields) {
     
     // http://wiki.developers.facebook.com/index.php/Users.getInfo
     
     $params = array(
       'api_key' => $this->getApiKey(),
       'call_id' => microtime(true),
-      'sig' =>  md5("app_id=".$appid."session_key=".$sesskey."source_id=".$userid.$this->getApiSecret()),
+      'sig' =>  md5("app_id=".$this->appid."session_key=".$this->getSessionKey()."source_id=".$userid.$this->getApiSecret()),
       'v' => '1.0',
       'uids' => $userid,
       'fields' => $fields,
-      'session_key' => $sesskey
+      'session_key' => $this->getSessionKey()
     );
     
     return $this->api->users->callMethod( 'users.getInfo', $params );
     
   }
   
-  function verifyPerms($perms,$userid,$path='') {
+  function verifyPerms($userid,$perms,$path='') {
 
 	  $showperms = array();
 
@@ -153,7 +160,7 @@ class FacebookStream {
   
   function setStatus($status,$userid) {
     
-    //$this->verifyPerms(array('status_update','photo_upload'),$userid);
+    //$this->verifyPerms($userid,array('status_update','photo_upload'));
     
     $params = array(
       'uid' => $userid,
@@ -173,7 +180,7 @@ class FacebookStream {
 
   function PhotoUpload( $file, $aid=0, $caption='',$userid ) {
     
-    //$this->verifyPerms(array('status_update','photo_upload'),$userid);
+    //$this->verifyPerms($userid,array('status_update','photo_upload'));
 	  
 	  $params = array(
 	    'method' => 'photos.upload',
