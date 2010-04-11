@@ -129,7 +129,7 @@ class FacebookStream {
     
   }
   
-  function verifyPerms($perms,$userid) {
+  function verifyPerms($perms,$userid,$path='') {
 
 	  $showperms = array();
 
@@ -147,7 +147,7 @@ class FacebookStream {
     }
 
     if (count($showperms) > 0)
-      $this->showPopup(implode(',',$showperms));
+      $this->showPopup(implode(',',$showperms),$path);
 
   }
   
@@ -247,14 +247,16 @@ EOD;
 
   }
 
-  function showPopup($perms){
+  function showPopup($perms,$path){
 	
     $key = $this->getApiKey();
+
+    $path = $path.'xd_receiver.htm';
 
 		echo <<<EOD
 			<script type="text/javascript"> 
 				FB_RequireFeatures(["XFBML"], function(){ 
-				FB.Facebook.init('$key', 'xd_receiver.htm', null);
+				FB.Facebook.init('$key', '$path', null);
 				FB.ensureInit(function () { 
 					FB.Connect.showPermissionDialog('$perms', function(accepted) { window.close(); } )
 				});
