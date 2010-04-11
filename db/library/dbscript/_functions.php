@@ -3420,7 +3420,8 @@ if (!$single) {
 		$profile = get_profile($p->profile_id);
 	  $tweet = array();
 	  $user = array();
-	  $tweet['text'] = htmlentities($p->title);
+		$tit = iconv('UTF-8', 'ASCII//TRANSLIT', $p->title);
+	  $tweet['text'] = htmlentities($tit);
 	  $tweet['truncated'] = 'false';
 	  $tweet['created_at'] = date( "D M d G:i:s O Y", strtotime( $p->created ));
 	  $tweet['in_reply_to_status_id'] = '';

@@ -21,6 +21,8 @@
  * @link      http://pear.php.net/package/Services_Facebook
  */
 
+require_once 'Services/Facebook.php';
+require_once 'Services/Facebook/Exception.php';
 require_once 'Validate.php';
 
 /**
@@ -56,6 +58,13 @@ abstract class Services_Facebook_Common
      * @var         string      $sessionKey
      */
     public $sessionKey = '';
+
+    /**
+     * Use secret as session secret or not
+     *
+     * @var bool $useSessionSecret
+     */
+    public $useSessionSecret = false;
 
     /**
      * Construct 
@@ -115,6 +124,7 @@ abstract class Services_Facebook_Common
         curl_setopt($ch, CURLOPT_POSTFIELDS, $args);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, Services_Facebook::$timeout);
+        curl_setopt($ch, CURLOPT_DNS_USE_GLOBAL_CACHE, Services_Facebook::$useDnsCache);
         $response = curl_exec($ch);
 
         if (curl_errno($ch)) {
@@ -190,6 +200,10 @@ abstract class Services_Facebook_Common
             unset($args['sig']);
         }
 
+        if ($this->useSessionSecret) {
+            $args['ss'] = 1;
+        }
+
         ksort($args);
 
         $sig = '';
@@ -261,7 +275,7 @@ abstract class Services_Facebook_Common
     public function setAPI($api)
     {
         if (!Validate::uri($api)) {
-            throw new Services_Facebook('Invalid API: ' . $api);
+            throw new Services_Facebook_Exception('Invalid API: ' . $api);
         }
 
         $this->api = $api;

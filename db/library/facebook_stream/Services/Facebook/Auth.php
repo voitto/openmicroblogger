@@ -20,6 +20,8 @@
  * @link      http://pear.php.net/package/Services_Facebook
  */
 
+require_once 'Services/Facebook/Common.php';
+
 /**
  * Facebook Authentication Interface
  *
@@ -111,6 +113,8 @@ class Services_Facebook_Auth extends Services_Facebook_Common
      * If this method is called for the logged in user, then no further API
      * calls can be made on that user's behalf until the user decides to
      * authorize the application again.
+     *
+     * @param string $uid User's id
      *
      * @access public
      * @return void

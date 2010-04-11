@@ -8,45 +8,48 @@
  * Basic lib to work with Facebook Streams API
  *
  */
+
  
-/* Facebook app ID */
-$app_id = "";
-
-/* Facebook app API key */
-$consumer_key = "";
-
-/* Facebook app secret key */
-$consumer_secret = "";
-
-/* User agent, example: "Twitteronia (curl) " */
+/* Application Name " */
 $agent = "";
 
+/* Application ID */
+$appid = "";
+
+/* API Key */
+$consumer_key = "";
+
+/* Secret */
+$consumer_secret = "";
+
+/* "Infinite" Session Key (optional) */
+$infinite_session = "";
 
 
 /* Load libraries */
 require_once "FacebookStream.php";
 require_once "Services/Facebook.php";
 
-/* Sessions are used to keep track of tokens */
+/* in this example, sessions are used to keep track of tokens */
 session_start();
 
+/* if this is the first pass, set the state to 'start' */
 if (empty($_SESSION['fb_state']))
   $_SESSION['fb_state'] = 'start';
-  
 $state = $_SESSION['fb_state'];
 
+/* use ?test=clear to reset the sessions */
 if ($_REQUEST['test'] === 'clear') {
   session_destroy();
   session_start();
 }
 
+/* if we have a token AND program state is 'start', change state to 'returned' */
 if ($_SESSION['fb_request_token'] != NULL && $_SESSION['fb_state'] === 'start') {
   $_SESSION['fb_state'] = $state = 'returned';
 }
 
 /*
- * Switch based on where in the process you are
- *
  * 'default': Get a request token from Facebook for new user
  * 'returned': The user has authorize the app on Facebook
  */
@@ -72,10 +75,16 @@ switch ($state) {
   case 'returned':
     
     $fs = new FacebookStream($consumer_key,$consumer_secret,$agent);
-    
-    /* If the access tokens are already set skip to the API call */
-    if ($_SESSION['fb_session'] === NULL && $_SESSION['fb_userid'] === NULL) {
+
+    if ( !empty( $infinite_session ) && ( $_SESSION['fb_userid'] > 0 )) {
+
+	    /* Infinite session, headless mode, use FB UserID from database to skip to the API call */
+	    $fs->StreamRequest( $appid, $infinite_session, $_SESSION['fb_userid'] );
+	
+    } elseif ($_SESSION['fb_session'] === NULL && $_SESSION['fb_userid'] === NULL) {
       
+	    /* If the access tokens are already set skip to the API call */
+
       /* Create session */
       $session = $fs->getSession($_SESSION['fb_request_token']);
       
@@ -85,8 +94,11 @@ switch ($state) {
       
     }
     
+    if (isset($_GET['key']))
+	    $fs->permanent_facebook_key($consumer_key,$consumer_secret);
+	
     //$fs->setStatus("updating my status with my new php library called Facebook Streams",$_SESSION['fb_userid']);
-    $fs->StreamRequest( $app_id, $_SESSION['fb_session'], $_SESSION['fb_userid'] );
+    $fs->StreamRequest( $appid, $_SESSION['fb_session'], $_SESSION['fb_userid'] );
     
 }
 
@@ -97,6 +109,9 @@ switch ($state) {
     <title>Facebook Streams</title>
   </head>
   <body>
+
+	  <?php $fs->showJs(); ?> 
+
     <h2>Welcome to a Facebook Streams PHP example.</h2>
     <p>This site is a basic showcase of Facebook's new Streams method. Everything is saved in sessions. If you want to start over <a href='<?php echo $_SERVER['PHP_SELF']; ?>?test=clear'>clear sessions</a>.</p>
 
@@ -106,7 +121,12 @@ switch ($state) {
       Read the documentation at <a href='http://docs.google.com/Doc?id=dg9cvb8x_028vf5f6t'>http://docs.google.com/Doc?id=dg9cvb8x_028vf5f6t</a> 
     </p>
 
-    <p><pre><?php print_r($content); ?><pre></p>
+    <p>
+
+    <?php $fs->verifyPerms(array('offline_access','status_update','read_mailbox'),$_SESSION['fb_userid']); ?>
+
+
+</p>
 
   </body>
 </html>

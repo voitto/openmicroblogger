@@ -20,6 +20,8 @@
  * @link      http://pear.php.net/package/Services_Facebook
  */
 
+require_once 'Services/Facebook/Common.php';
+
 /**
  * Facebook FQL (Facebook Query Language) Interface
  *

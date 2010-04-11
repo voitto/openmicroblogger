@@ -1,4 +1,7 @@
 
+<?php if (environment('facebookKey')) : ?>
+  <script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>
+<?php endif; ?>
 
 
 <?php if (environment('authentication') == 'password') : ?>
@@ -35,9 +38,6 @@
 <?php else : ?>
 
 
-<?php if (environment('facebookKey')) : ?>
-  <script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>
-<?php endif; ?>
 
 <form method="post" action="<?php print $submit_url; ?>">
 

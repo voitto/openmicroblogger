@@ -20,7 +20,9 @@
  * @link      http://pear.php.net/package/Services_Facebook
  */
 
-require_once 'MarketPlace/Listing.php';
+require_once 'Services/Facebook/Common.php';
+require_once 'Services/Facebook/Exception.php';
+require_once 'Services/Facebook/MarketPlace/Listing.php';
 
 /**
  * Facebook Marketplace Interface

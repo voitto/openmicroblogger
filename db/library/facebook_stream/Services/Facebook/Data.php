@@ -1,8 +1,26 @@
 <?php
+/**
+ * Services_Facebook_Data 
+ * 
+ * @uses      Services_Facebook_Common
+ * @category  Web Services
+ * @package   Services_Facebook
+ * @license   http://www.opensource.org/licenses/bsd-license.php FreeBSD
+ * @link      http://github.com/joestump/services_facebook
+ */
 
 require_once 'Services/Facebook/Common.php';
 require_once 'Services/Facebook/Exception.php';
 
+/**
+ * Services_Facebook_Data 
+ * 
+ * @uses      Services_Facebook_Common
+ * @category  Web Services
+ * @package   Services_Facebook
+ * @license   http://www.opensource.org/licenses/bsd-license.php FreeBSD
+ * @link      http://github.com/joestump/services_facebook
+ */
 class Services_Facebook_Data extends Services_Facebook_Common
 {
     const _PROP_TYPE_INTEGER = 1;

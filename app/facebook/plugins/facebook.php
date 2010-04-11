@@ -97,8 +97,8 @@ if (!function_exists('json_encode'))
 		    'eq'    => 'like',
 				'title'=>substr($notice_content,0,-10)
 				));
-						if (!$u) return;
-			$e = $Entry->find($u->entry_id);
+			if ($u)
+			  $e = $Entry->find($u->entry_id);
 
 			$download = false;
 		  $origurl = $request->url_for(array('resource'=>'uploads','action'=>'entry.'.extension_for($e->content_type),'id'=>$u->id));
@@ -140,8 +140,8 @@ if (!function_exists('json_encode'))
 				
 		 
 		 } else {
-			  $fb->api_client->stream_publish($notice_content);
-//			  $fs->setStatus($notice_content,$uid);
+//			  $fb->api_client->stream_publish($notice_content);
+			  $fs->setStatus($notice_content,$uid);
 			}
 	    
 		}

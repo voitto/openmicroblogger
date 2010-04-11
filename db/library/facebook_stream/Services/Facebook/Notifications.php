@@ -20,6 +20,7 @@
  * @link      http://pear.php.net/package/Services_Facebook
  */
 
+require_once 'Services/Facebook/Common.php';
 require_once 'Validate.php';
 
 /**

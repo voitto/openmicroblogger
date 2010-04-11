@@ -20,6 +20,8 @@
  * @link      http://pear.php.net/package/Services_Facebook
  */
 
+require_once 'Services/Facebook/Common.php';
+
 /**
  * Facebook Friends Interface
  *
@@ -75,7 +77,7 @@ class Services_Facebook_Friends extends Services_Facebook_Common
     /**
      * Get the current user's friends
      *
-     * @param int $uid FB uid to get a friend list of
+     * @param string $uid FB uid to get a friend list of
      *
      * @return array A list of uid's of current user's friends
      * @link http://wiki.developers.facebook.com/index.php/Friends.get
@@ -84,7 +86,7 @@ class Services_Facebook_Friends extends Services_Facebook_Common
     {
         $args = array();
         if ($uid !== null) {
-            $args['uid'] = (int) $uid;
+            $args['uid'] = (string) $uid;
         } elseif (!empty($this->sessionKey)) {
             $args['session_key'] = $this->sessionKey;
         }
@@ -93,7 +95,7 @@ class Services_Facebook_Friends extends Services_Facebook_Common
 
         $ret = array();
         foreach ($result->uid as $uid) {
-            $ret[] = intval((string)$uid);
+            $ret[] = (string)$uid;
         }
 
         return $ret;
@@ -117,7 +119,7 @@ class Services_Facebook_Friends extends Services_Facebook_Common
         
         $ret = array();
         foreach ($result->uid as $uid) {
-            $ret[] = intval((string)$uid);
+            $ret[] = (string)$uid;
         }
         
         return $ret;
@@ -137,7 +139,7 @@ class Services_Facebook_Friends extends Services_Facebook_Common
 
         $ret = array();
         foreach ($result->uid as $uid) {
-            $ret[] = intval((string)$uid);
+            $ret[] = (string)$uid;
         }
 
         return $ret;

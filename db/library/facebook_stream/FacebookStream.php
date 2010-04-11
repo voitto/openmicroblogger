@@ -40,7 +40,7 @@ class FacebookStream {
    */
   function setSess($s){
 	  $this->api->sessionKey = $s; 
-  }  
+  }
 
   /**
    * Make a Request token
@@ -69,13 +69,28 @@ class FacebookStream {
   function getSession($token) { 
     return $this->api->auth->getSession($token);
   }
+
+  /**
+   * get a permanent session key
+   */
+	function permanent_facebook_key($key,$secret){
+	  add_lib_path('facebook-platform/php');
+	  require_once "facebook.php";
+	  $facebook = new Facebook($key, $secret);
+	  $infinite_key_array = $facebook->api_client->auth_getSession($_GET['key']);
+	  if ($infinite_key_array['session_key'])
+	    echo "your permanent session key is ". $infinite_key_array['session_key'];
+	  else
+	    echo "sorry there was an error getting your permanent session key";
+	  exit;
+	}
   
   /**
    * Facebook Stream API request
    */
   function StreamRequest($appid,$sesskey,$userid) {
     
-    $this->VerifyStream($userid);
+    //$this->verifyPerms(array('read_stream'),$userid);
     
     $hash = md5("app_id=".$appid."session_key=".$sesskey."source_id=".$userid.$this->getApiSecret());
     
@@ -114,92 +129,31 @@ class FacebookStream {
     
   }
   
-  function VerifyStream($userid) {
-    
-    $perm = 'read_stream';
-    
-    $params = array(
-      'ext_perm' => $perm,
-      'uid' => $userid
-    );
-    
-    // optional URL-encoded GET parameters 
-    //  next
-    //  next_cancel
-    
-    $response = $this->api->users->callMethod('users.hasAppPermission', $params);
-    
-    if (!strpos($response->asXML(),"1</users_hasAppPermission")) {
-      $url = 'http://www.facebook.com/authorize.php';
-      $url .= '?api_key=';
-      $url .= $this->getApiKey();
-      $url .= '&v=1.0';
-      $url .= '&ext_perm=';
-      $url .= $perm;
-      header('Location:'.$url);
-      exit;
-    }
-    
-  }
+  function verifyPerms($perms,$userid) {
 
-  function VerifyUpdate($userid) {
-    
-    $perm = 'status_update';
-    
-    $params = array(
-      'ext_perm' => $perm,
-      'uid' => $userid
-    );
-    
-    // optional URL-encoded GET parameters 
-    //  next
-    //  next_cancel
-    
-    $response = $this->api->users->callMethod('users.hasAppPermission', $params);
-    
-    if (!strpos($response->asXML(),"1</users_hasAppPermission")) {
-      $url = 'http://www.facebook.com/authorize.php';
-      $url .= '?api_key=';
-      $url .= $this->getApiKey();
-      $url .= '&v=1.0';
-      $url .= '&ext_perm=';
-      $url .= $perm;
-      header('Location:'.$url);
-      exit;
-    }
-    
-  }
+	  $showperms = array();
 
-  function VerifyPerm($userid,$perm) {
-    
-    $params = array(
-      'ext_perm' => $perm,
-      'uid' => $userid
-    );
-    
-    // optional URL-encoded GET parameters 
-    //  next
-    //  next_cancel
-    
-    $response = $this->api->users->callMethod('users.hasAppPermission', $params);
-    
-    if (!strpos($response->asXML(),"1</users_hasAppPermission")) {
-      $url = 'http://www.facebook.com/authorize.php';
-      $url .= '?api_key=';
-      $url .= $this->getApiKey();
-      $url .= '&v=1.0';
-      $url .= '&ext_perm=';
-      $url .= $perm;
-      header('Location:'.$url);
-      exit;
+	  foreach($perms as $perm){
+	    $params = array(
+	      'ext_perm' => $perm,
+	      'uid' => $userid
+	    );
+	    $response = $this->api->users->callMethod('users.hasAppPermission', $params);
+	    $xml = simplexml_load_string($response->asXML());
+	    if (is_object($xml))
+	      $xml = (array) $xml;
+	    if (!$xml[0])
+		    $showperms[] = $perm;
     }
-    
+
+    if (count($showperms) > 0)
+      $this->showPopup(implode(',',$showperms));
+
   }
   
   function setStatus($status,$userid) {
     
-    $this->VerifyUpdate($userid);
-    $this->VerifyPerm($userid,'photo_upload');
+    //$this->verifyPerms(array('status_update','photo_upload'),$userid);
     
     $params = array(
       'uid' => $userid,
@@ -211,10 +165,6 @@ class FacebookStream {
       $params['status'] = $status;
     }
     
-    // optional URL-encoded GET parameters 
-    //  next
-    //  next_cancel
-    
     $response = $this->api->users->callMethod('users.setStatus', $params);
     
     return (intval((string)$res) == 1);
@@ -223,9 +173,7 @@ class FacebookStream {
 
   function PhotoUpload( $file, $aid=0, $caption='',$userid ) {
     
-    $this->VerifyUpdate($userid);
-    
-    $this->VerifyPerm($userid,'photo_upload');
+    //$this->verifyPerms(array('status_update','photo_upload'),$userid);
 	  
 	  $params = array(
 	    'method' => 'photos.upload',
@@ -289,6 +237,48 @@ class FacebookStream {
 		$sig  .= $this->getApiSecret();
 		$params['sig'] = md5($sig);
 		return $params;
-  }	
+  }
+
+  function showJs(){
+
+		echo <<<EOD
+      <script src="http://static.ak.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>
+EOD;
+
+  }
+
+  function showPopup($perms){
 	
+    $key = $this->getApiKey();
+
+		echo <<<EOD
+			<script type="text/javascript"> 
+				FB_RequireFeatures(["XFBML"], function(){ 
+				FB.Facebook.init('$key', 'xd_receiver.htm', null);
+				FB.ensureInit(function () { 
+					FB.Connect.showPermissionDialog('$perms', function(accepted) { window.close(); } )
+				});
+			});
+			</script>
+EOD;
+
+  }
+
+}
+
+function add_lib_path($path,$prepend = false) {
+   if (!file_exists($path) OR (file_exists($path) && filetype($path) !== 'dir'))
+   {
+       trigger_error("Include path '{$path}' not exists", E_USER_WARNING);
+       continue;
+   }
+   
+   $paths = explode(PATH_SEPARATOR, get_include_path());
+   
+   if (array_search($path, $paths) === false && $prepend)
+       array_unshift($paths, $path);
+   if (array_search($path, $paths) === false)
+       array_push($paths, $path);
+   
+   set_include_path(implode(PATH_SEPARATOR, $paths));
 }

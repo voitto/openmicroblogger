@@ -2022,13 +2022,15 @@ function render_rss_feed($pro,$tweets){
 	
 	$posturl = $request->url_for(array('resource'=>'posts','id'=>$p->id));
 	$comurl = $posturl;
+	$tit = iconv('UTF-8', 'ASCII//TRANSLIT', $p->title);
+	$bod = iconv('UTF-8', 'ASCII//TRANSLIT', $p->body);
 	echo '		<item>
-				<title>'.$p->title.'</title>
+				<title>'.$tit.'</title>
 				<link>'.$posturl.add_extension_if_blob($p).'</link>
 				<scripting:byline>'.$pro->fullname.'</scripting:byline>
 				<guid>'.$posturl.'</guid>
 	      <comments>'.$comurl.'</comments>
-				<description>'.$p->body.'</description>
+				<description>'.$bod.'</description>
 				<pubDate>'.date( "D, j M Y H:i:s T", strtotime( $p->created )).'</pubDate>'.add_rss_if_blob($p,$posturl).'
 		  </item>
 	';

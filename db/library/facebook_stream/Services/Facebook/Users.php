@@ -21,6 +21,7 @@
  */
 
 require_once 'Services/Facebook/Common.php';
+require_once 'Services/Facebook/Exception.php';
 
 /**
  * Facebook Users Interface
@@ -158,7 +159,7 @@ class Services_Facebook_Users extends Services_Facebook_Common
      * Returns the Facebook uid of the person currently "logged in" as 
      * specified by $sessionKey.
      *
-     * @return      int         The uid of the person logged in
+     * @return      string      The uid of the person logged in
      * @see         Services_Digg::$sessionKey
      * @link        http://wiki.developers.facebook.com/index.php/Users.getLoggedInUser
      */
@@ -168,14 +169,14 @@ class Services_Facebook_Users extends Services_Facebook_Common
             'session_key' => $this->sessionKey
         ));
 
-        return intval((string)$result);
+        return (string)$result;
     }
 
     /**
      * Has given extended permission
      *
      * @param string  $perm Permission to check
-     * @param integer $uid  User's ID, optional if session key present
+     * @param string  $uid  User's ID, optional if session key present
      * 
      * @return boolean True if user has enabled extended permission
      * @link http://wiki.developers.facebook.com/index.php/Users.hasAppPermission
@@ -198,7 +199,7 @@ class Services_Facebook_Users extends Services_Facebook_Common
         );
 
         if ($uid !== null) {
-            $params['uid'] = (int) $uid;
+            $params['uid'] = $uid;
         } elseif (!empty($this->sessionKey)) {
             $params['session_key'] = $this->sessionKey;
         } else {
@@ -216,7 +217,7 @@ class Services_Facebook_Users extends Services_Facebook_Common
      *
      * Get a photo given an user id. Allow different sizes.
      * 
-     * @param int    $uid  Id of the user you want to get a photo of
+     * @param string $uid  Id of the user you want to get a photo of
      * @param string $size Size of the photo {@link self::photoSizes}
      *
      * @return mixed Photo data
