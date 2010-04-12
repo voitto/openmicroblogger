@@ -533,6 +533,11 @@ update_option($options[0],$options[1]);
 				} elseif (substr($options[0],9,13) == 'importtwitter') {
 					// do twitter
 			  // http://abrah.am
+
+			  global $prefix;
+			  $prefix = $microblog->value."_";
+			  $db->prefix = $prefix;
+
 			  lib_include('twitteroauth');
   			// look for a twitter user  
 			  global $db;
@@ -579,9 +584,6 @@ update_option($options[0],$options[1]);
 			              $table = 'posts';
 			              $content_type = 'text/html';
 
-									  global $prefix;
-									  $prefix = $microblog->value."_";
-									  $db->prefix = $prefix;
 
 			              $rec = $Post->base();
 			              $fields = $Post->fields_from_request($request);

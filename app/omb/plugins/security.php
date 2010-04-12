@@ -1099,27 +1099,6 @@ function facebook_login( &$vars ) {
 		$cfg->set_etag();
   }
 
-  $fb_can_offline = profile_setting('fb_can_upload');
-
-  if (!$fb_can_offline) {
-  	$fs->VerifyPerm($_SESSION['fb_userid'],'offline_access');
-	  update_option('fb_can_offline',true);
-  }
-
-  $fb_can_tweet = profile_setting('fb_can_tweet');
-
-  if (!$fb_can_tweet) {
-	  $result = $fs->VerifyUpdate($_SESSION['fb_userid']);
-	  update_option('fb_can_tweet',true);
-  }
-
-  $fb_can_upload = profile_setting('fb_can_upload');
-
-  if (!$fb_can_upload) {
-  	$fs->VerifyPerm($_SESSION['fb_userid'],'photo_upload');
-	  update_option('fb_can_upload',true);
-  }
-
   $_SESSION['fb_person_id'] = $i->person_id;
   
   if (isset($_SESSION['fb_forward']))
@@ -1618,7 +1597,7 @@ $sesskey = 'a441dc31cd9e03b5b03b9912-1421801327';
 //  $access_token = $db->result_value($result,0,'oauth_key');
 
  $fs = new FacebookStream($consumer_key,$consumer_secret,$agent,$app_id);
-	$fs->VerifyPerm($userid,'offline_access');
+	$fs->verifyPerms($userid,'offline_access');
 
 		$hash = md5("app_id=".$appid."session_key=".$sesskey."source_id=".$userid.$fs->getApiSecret());
     
