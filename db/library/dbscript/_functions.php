@@ -3211,16 +3211,16 @@ function handle_posted_file($filename="",$att,$profile) {
 	  'id'=>$rec->id
 	));
 	
-	$title = substr($rec->title,0,140);
+//	$title = substr($rec->title,0,140);
 	
-	$over = ((strlen($title) + strlen($url) + 1) - 140);
+//	$over = ((strlen($title) + strlen($url) + 1) - 140);
 	
-	if ($over > 0)
-	  $rec->set_value('title',substr($title,0,-$over)." ".$url);
-	else
-	  $rec->set_value('title',$title." ".$url);
+//	if ($over > 0)
+//	  $rec->set_value('title',substr($title,0,-$over)." ".$url);
+//	else
+//	  $rec->set_value('title',$title." ".$url);
 	
-	$rec->save_changes();
+//	$rec->save_changes();
 	
 	trigger_after( 'insert_from_post', $$modelvar, $rec );
 	
