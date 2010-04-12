@@ -3406,8 +3406,9 @@ else
 	';
 
 
-//$Post->set_limit(1);
+$Post->set_limit(100);
 //$Post->set_order('desc');
+$Post->has_one('profile_id:'.$prefix.'identities');
 
 if (!$single) {
 
@@ -3417,7 +3418,7 @@ if (!$single) {
 }
 	$tweets = array();
 	while ($p = $Post->MoveNext()) {
-		$profile = get_profile($p->profile_id);
+		$profile = $p->FirstChild('identities');
 	  $tweet = array();
 	  $user = array();
 		$tit = iconv('UTF-8', 'ASCII//TRANSLIT', $p->title);
