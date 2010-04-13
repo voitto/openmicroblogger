@@ -118,18 +118,18 @@ class FacebookStream {
     
   }
   
-  function GetInfo($userid,$fields) {
+  function GetInfo($appid,$sesskey,$userid,$fields) {
     
     // http://wiki.developers.facebook.com/index.php/Users.getInfo
     
     $params = array(
       'api_key' => $this->getApiKey(),
       'call_id' => microtime(true),
-      'sig' =>  md5("app_id=".$this->appid."session_key=".$this->getSessionKey()."source_id=".$userid.$this->getApiSecret()),
+      'sig' =>  md5("app_id=".$appid."session_key=".$sesskey."source_id=".$userid.$this->getApiSecret()),
       'v' => '1.0',
       'uids' => $userid,
       'fields' => $fields,
-      'session_key' => $this->getSessionKey()
+      'session_key' => $sesskey
     );
     
     return $this->api->users->callMethod( 'users.getInfo', $params );

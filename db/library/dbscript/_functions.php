@@ -3406,7 +3406,7 @@ else
 	';
 
 
-$Post->set_limit(100);
+$Post->set_limit(20);
 //$Post->set_order('desc');
 $Post->has_one('profile_id:'.$prefix.'identities');
 

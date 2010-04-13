@@ -1038,7 +1038,7 @@ function facebook_login( &$vars ) {
   
   $fields = implode(',',$fieldlist);
   
-  $user = $fs->GetInfo( $_SESSION['fb_userid'], $fields );
+  $user = $fs->GetInfo(environment('facebookAppId'),environment('facebookSession'), $_SESSION['fb_userid'], $fields );
   
   $values = array();
   
@@ -1645,7 +1645,7 @@ exit;
   
 $sesskey = $_SESSION['fb_session'];
 
-		$user = $fs->GetInfo($userid,$fields);
+		$user = $fs->GetInfo(environment('facebookAppId'),environment('facebookSession'),$userid,$fields);
 
 		$hash = md5("app_id=".$appid."session_key=".$sesskey."source_id=".$userid.$fs->getApiSecret());
     
@@ -1698,7 +1698,7 @@ exit;
 
 	  $fields = implode(',',$fieldlist);
 
-$user = $fs->GetInfo($userid,$fields);
+$user = $fs->GetInfo(environment('facebookAppId'),environment('facebookSession'),$userid,$fields);
 print_r($user); exit;
 
 $fs->StreamRequest( $app_id, $_SESSION['fb_session'], $userid );
