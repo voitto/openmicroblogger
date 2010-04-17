@@ -717,8 +717,12 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
     if (strpos($model->orderby,".") === false)
       $model->orderby = "$table.".$model->orderby;
     
-    if ($this->prefix && !(substr($model->orderby,0,3) == $this->prefix))
-      $model->orderby = $this->prefix.$model->orderby;
+    if ($this->prefix && !(substr($model->orderby,0,3) == $this->prefix)){
+			$spl = split("\.",$model->orderby);
+	    if (count($spl)==2){
+	      $model->orderby = "$table.".$spl[1];
+    	}
+    }
     
     $sql .= " ORDER BY " . $model->orderby . " ";
     

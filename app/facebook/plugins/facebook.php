@@ -84,7 +84,7 @@ if (!function_exists('json_encode'))
 		if ($uid && isset($_SESSION['copied_blob'])) {
 			
 		  //if (extension_for(type_of($_FILES['post']['name']['attachment'])) == 'jpg')
-	    //  $fs->PhotoUpload($_SESSION['copied_blob'], 0, $notice_content,$uid);
+	    //  $fs->photoUpload($_SESSION['copied_blob'], 0, $notice_content,$uid);
 	
       unlink($_SESSION['copied_blob']);
       unset($_SESSION['copied_blob']);
@@ -121,7 +121,7 @@ if (!function_exists('json_encode'))
 			
 			if ($download){
 				
-		      $fs->PhotoUpload($download, 0, $notice_content,$uid);
+		      $fs->photoUpload($download, 0, $notice_content,$uid);
 				
 				$message = $notice_content;
 				$attachment = array(

@@ -79,7 +79,7 @@ switch ($state) {
     if ( !empty( $infinite_session ) && ( $_SESSION['fb_userid'] > 0 )) {
 
 	    /* Infinite session, headless mode, use FB UserID from database to skip to the API call */
-	    $fs->StreamRequest( $appid, $infinite_session, $_SESSION['fb_userid'] );
+	    $fs->streamRequest( $_SESSION['fb_userid'] );
 	
     } elseif ($_SESSION['fb_session'] === NULL && $_SESSION['fb_userid'] === NULL) {
       
@@ -98,7 +98,7 @@ switch ($state) {
 	    $fs->permanent_facebook_key($consumer_key,$consumer_secret);
 	
     //$fs->setStatus("updating my status with my new php library called Facebook Streams",$_SESSION['fb_userid']);
-    $fs->StreamRequest( $appid, $_SESSION['fb_session'], $_SESSION['fb_userid'] );
+    $fs->streamRequest($_SESSION['fb_userid'] );
     
 }
 

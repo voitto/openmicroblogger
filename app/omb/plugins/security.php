@@ -640,6 +640,7 @@ function openid_logout( &$vars ) {
   unset($_SESSION['oauth_request_token_secret']);  
   unset($_SESSION['oauth_state']);
   unset($_SESSION['oauth_twitter']);
+  unset($_SESSION['fb_userid']);
   unset($_SESSION['fb_person_id']);
   unset($_SESSION['oauth_person_id']);
   unset($_SESSION['requested_url']);
@@ -1037,8 +1038,11 @@ function facebook_login( &$vars ) {
   );
   
   $fields = implode(',',$fieldlist);
-  
-  $user = $fs->GetInfo(environment('facebookAppId'),environment('facebookSession'), $_SESSION['fb_userid'], $fields );
+
+  if (!$_SESSION['fb_userid'])
+	  trigger_error('unknown Facebook user error sorry',E_USER_ERROR);
+
+  $user = $fs->getInfo( $_SESSION['fb_userid'], $fields );
   
   $values = array();
   
@@ -1645,7 +1649,7 @@ exit;
   
 $sesskey = $_SESSION['fb_session'];
 
-		$user = $fs->GetInfo(environment('facebookAppId'),environment('facebookSession'),$userid,$fields);
+		$user = $fs->getInfo($userid,$fields);
 
 		$hash = md5("app_id=".$appid."session_key=".$sesskey."source_id=".$userid.$fs->getApiSecret());
     
@@ -1698,10 +1702,10 @@ exit;
 
 	  $fields = implode(',',$fieldlist);
 
-$user = $fs->GetInfo(environment('facebookAppId'),environment('facebookSession'),$userid,$fields);
+$user = $fs->getInfo($userid,$fields);
 print_r($user); exit;
 
-$fs->StreamRequest( $app_id, $_SESSION['fb_session'], $userid );
+$fs->streamRequest( $userid );
 exit;
     //$token = $fs->getAccessToken();
 //    $session = $fs->getSession($access_token);
@@ -1742,7 +1746,7 @@ echo htmlspecialchars($url);exit;
 exit;
 echo 1; exit;
     //$sessid = $_SESSION['fb_request_token'];
-	  $fs->StreamRequest( $app_id, $sessid, $userid );
+	  $fs->streamRequest($userid );
     exit;
 
     $token = $fs->getAccessToken();
@@ -1751,7 +1755,7 @@ echo 1; exit;
     $sessid = $fs->getSession($token);
 print_r($sessid); exit;
 
-	  $fs->StreamRequest( $app_id, $sessid, $userid );
+	  $fs->streamRequest( $userid );
 	  echo 'done';
 	  exit;
   }

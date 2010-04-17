@@ -77,8 +77,11 @@ Facebook:
   2. click "Edit Settings"
   3. click "Connect"
 your connect URL is
-    http://yoursite.com/?email_login   [or]
-    http://yoursite.com/email_login (pretty URLs)
+    http://yoursite.com/?email_login
+get an infinite session key: 3 steps:
+    http://www.facebook.com/code_gen.php?v=1.0&api_key=[api key]
+    http://yoursite.com/permanent_facebook_key/[code from step 1]
+    add to config.yml ->    facebookSession: [key from step 2] 
     
 Twitter:
   
