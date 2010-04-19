@@ -66,7 +66,7 @@ global $variants,$request,$loader,$db,$logic;
 
 if (file_exists('config/config.php'))
   require('config/config.php');
-else
+elseif (file_exists('config.php'))
   require('config.php');
 
 if (defined('PRETTY_URL_BASE') && PRETTY_URL_BASE ){

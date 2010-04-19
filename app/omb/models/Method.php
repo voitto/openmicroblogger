@@ -159,38 +159,77 @@ echo ");";
     $m = $this->base();
     $m->set_value( 'code', '
 
-global $db,$request;
+			global $db,$request;
 
-$Identity =& $db->get_table( \'identities\' );
-$Person =& $db->get_table( \'people\' );
-$i = $Identity->find_by(array(
-  \'nickname\'=>$db->escape_string($_POST[\'username\']),
-  \'password\'=>md5($db->escape_string($_POST[\'password\']))
-),1);
-$p = $Person->find( $i->person_id );
-if (!(isset( $p->id ) && $p->id > 0))
-  exit;
+			$Identity =& $db->get_table( \'identities\' );
+			$Person =& $db->get_table( \'people\' );
+			$i = $Identity->find_by(array(
+			  \'nickname\'=>$db->escape_string($_POST[\'username\']),
+			  \'password\'=>md5($db->escape_string($_POST[\'password\']))
+			),1);
+			$p = $Person->find( $i->person_id );
+			if (!(isset( $p->id ) && $p->id > 0))
+			  exit;
 
-header(\'Content-Type: text/xml\');
-echo \'<?xml version="1.0" encoding="UTF-8"?>
-\';
-if (isset($_FILES[\'media\'])) {
-  handle_posted_file(\'jpg\',$_FILES[\'media\'][\'tmp_name\'],$i);
-  $mediaid = \'_\'.$request->id;
-  $mediaurl = $request->url_for(array(
-\'resource\'=>\'uploads/\'.$request->id."/entry.jpg"));
-  echo \'<rsp stat="ok">
- <mediaid>\'.$mediaid.\'</mediaid>
- <mediaurl>\'.$mediaurl.\'</mediaurl>
-</rsp>
-\';
-} else {
-  echo \'<rsp stat="fail">
-    <err code="1001" msg="Invalid twitter username or password" />
-</rsp>
-\';
-}
-exit;
+			if (isset($_FILES[\'media\'])) {
+			  handle_posted_file(\'jpg\',$_FILES[\'media\'][\'tmp_name\'],$i);
+
+			  $mediaurl = $request->url_for(array(
+			\'resource\'=>\'uploads/\'.$request->id."/entry.jpg"));
+
+			global $response;
+			$response->set_var(\'profile\',$i);
+			load_apps();
+			  shortener_init();
+				global $wp_ozh_yourls;
+				if (!$wp_ozh_yourls)
+					wp_ozh_yourls_admin_init();
+				$service = wp_ozh_yourls_service();
+				if (empty($service)) {
+			    add_option(\'ozh_yourls\',array(
+			      \'service\'=>\'other\',
+			      \'location\'=>\'\',
+			      \'yourls_path\'=>\'\',
+			      \'yourls_url\'=>\'\',
+			      \'yourls_login\'=>\'\',
+			      \'yourls_password\'=>\'\',
+			      \'rply_login\'=>\'\',
+			      \'rply_password\'=>\'\',
+			      \'other\'=>\'rply\'
+			    ));
+			  	global $wp_ozh_yourls;
+			  	if (!$wp_ozh_yourls)
+			  		wp_ozh_yourls_admin_init();
+			  	$service = wp_ozh_yourls_service();
+			  }
+				$mediaurl = wp_ozh_yourls_api_call( wp_ozh_yourls_service(), $mediaurl);
+
+
+			header(\'Content-Type: text/xml\');
+			echo \'<?xml version="1.0" encoding="UTF-8"?>
+			\';
+
+			  $mediaid = \'_\'.$request->id;
+
+			  echo \'<rsp stat="ok">
+			 <mediaid>\'.$mediaid.\'</mediaid>
+			 <mediaurl>\'.$mediaurl.\'</mediaurl>
+			</rsp>
+			\';
+			} else {
+
+			header(\'Content-Type: text/xml\');
+			echo \'<?xml version="1.0" encoding="UTF-8"?>
+			\';
+
+			  echo \'<rsp stat="fail">
+			    <err code="1001" msg="Invalid twitter username or password" />
+			</rsp>
+			\';
+			}
+			exit;
+
+
 
 ');
 

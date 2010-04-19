@@ -94,11 +94,11 @@ if (!function_exists('json_encode'))
 			$Upload =& $db->model('Upload');
 			$Entry =& $db->model('Entry');
 			$u = $Upload->find_by(array(
-		    'eq'    => 'like',
-				'title'=>substr($notice_content,0,-10)
+				'profile_id'=>get_profile_id()
 				));
-			if ($u)
-			  $e = $Entry->find($u->entry_id);
+			if (!$u->exists) return;
+
+			$e = $Entry->find($u->entry_id);
 
 			$download = false;
 		  $origurl = $request->url_for(array('resource'=>'uploads','action'=>'entry.'.extension_for($e->content_type),'id'=>$u->id));
