@@ -98,28 +98,36 @@ if (!function_exists('json_encode'))
 			  'eq'=>'IS NOT',
 			  'tmp_name'=>'NULL'
 			));
-			if (!$u->exists) return;
+			
+			if (!$u->exists) {
+			  $download = false;	
+			} else {
 
-			$e = $Entry->find($u->entry_id);
+				$e = $Entry->find($u->entry_id);
 
-			$download = false;
-		  $origurl = $request->url_for(array('resource'=>'uploads','action'=>'entry.'.extension_for($e->content_type),'id'=>$u->id));
-			$thumburl = $request->url_for(array('resource'=>'uploads','action'=>'preview.'.extension_for($e->content_type),'id'=>$u->id));
-	    $posturl = $request->url_for(array('resource'=>'posts','id'=>$rec->id));
-	    if (extension_for($e->content_type) == 'jpg'){
-			  $download = tempnam( "/tmp", "upload".$u->id.".jpg" );
+				$download = false;
+			  $origurl = $request->url_for(array('resource'=>'uploads','action'=>'entry.'.extension_for($e->content_type),'id'=>$u->id));
+				$thumburl = $request->url_for(array('resource'=>'uploads','action'=>'preview.'.extension_for($e->content_type),'id'=>$u->id));
+		    $posturl = $request->url_for(array('resource'=>'posts','id'=>$rec->id));
+		    if (extension_for($e->content_type) == 'jpg'){
+				  $download = tempnam( "/tmp", "upload".$u->id.".jpg" );
+
+						set_time_limit(0);
+						ini_set('display_errors',false);//Just in case we get some errors, let us know....
+						$fp = fopen ($download, 'w+');//This is the file where we save the information
+						$ch = curl_init($origurl);//Here is the file we are downloading
+						curl_setopt($ch, CURLOPT_TIMEOUT, 5000);
+						curl_setopt($ch, CURLOPT_FILE, $fp);
+						curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+						curl_exec($ch);
+						curl_close($ch);
+						fclose($fp);
+		    }
+
 				
-					set_time_limit(0);
-					ini_set('display_errors',false);//Just in case we get some errors, let us know....
-					$fp = fopen ($download, 'w+');//This is the file where we save the information
-					$ch = curl_init($origurl);//Here is the file we are downloading
-					curl_setopt($ch, CURLOPT_TIMEOUT, 5000);
-					curl_setopt($ch, CURLOPT_FILE, $fp);
-					curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-					curl_exec($ch);
-					curl_close($ch);
-					fclose($fp);
-	    }
+			}
+
+
 			
 			if ($download){
 				
