@@ -3336,44 +3336,50 @@ function realtime($callback,$payload,$prefix=false){
 
 
 function echo_home_timeline_tweet($tweet,$user){
-	echo '  <status>
-		  <created_at>'.$tweet['created_at'].'</created_at>
-		  <id>'.$tweet['id'].'</id>
-		  <text>'.$tweet['text'].'</text>
-		  <source>'.$tweet['source'].'</source>
-		  <truncated>'.$tweet['truncated'].'</truncated>
-		  <in_reply_to_status_id>'.$tweet['in_reply_to_status_id'].'</in_reply_to_status_id>
-		  <in_reply_to_user_id>'.$tweet['in_reply_to_user_id'].'</in_reply_to_user_id>
-		  <favorited>'.$tweet['favorited'].'</favorited>
-		  <in_reply_to_screen_name>'.$tweet['in_reply_to_screen_name'].'</in_reply_to_screen_name>
-		  <user>
-		    <id>'.$user['id'].'</id>
-		    <name>'.$user['name'].'</name>
-		    <screen_name>'.$user['screen_name'].'</screen_name>
-		    <description>'.$user['description'].'</description>
-		    <profile_image_url>'.$user['profile_image_url'].'</profile_image_url>
-		    <url>'.$user['url'].'</url>
-		    <protected>'.$user['protected'].'</protected>
-		    <followers_count>'.$user['followers_count'].'</followers_count>
-		    <profile_background_color>'.$user['profile_background_color'].'</profile_background_color>
-		    <profile_text_color>'.$user['profile_text_color'].'</profile_text_color>
-		    <profile_link_color>'.$user['profile_link_color'].'</profile_link_color>
-		    <profile_sidebar_fill_color>'.$user['profile_sidebar_fill_color'].'</profile_sidebar_fill_color>
-		    <profile_sidebar_border_color>'.$user['profile_sidebar_border_color'].'</profile_sidebar_border_color>
-		    <friends_count>'.$user['friends_count'].'</friends_count>
-		    <created_at>'.$user['created_at'].'</created_at>
-		    <favourites_count>'.$user['favourites_count'].'</favourites_count>
-		    <utc_offset>'.$user['utc_offset'].'</utc_offset>
-		    <time_zone>'.$user['time_zone'].'</time_zone>
-		    <profile_background_image_url>'.$user['profile_background_image_url'].'</profile_background_image_url>
-		    <profile_background_tile>'.$user['profile_background_tile'].'</profile_background_tile>
-		    <notifications>'.$user['notifications'].'</notifications>
-		    <geo_enabled>'.$user['geo_enabled'].'</geo_enabled>
-		    <verified>'.$user['verified'].'</verified>
-		    <following>'.$user['following'].'</following>
-		    <statuses_count>'.$user['statuses_count'].'</statuses_count>
-		  </user>
-		</status>
+	echo '	<status>
+		<created_at>'.$tweet['created_at'].'</created_at>
+		<id>'.$tweet['id'].'</id>
+		<text>'.$tweet['text'].'</text>
+		<source>'.$tweet['source'].'</source>
+		<truncated>'.$tweet['truncated'].'</truncated>
+		<in_reply_to_status_id>'.$tweet['in_reply_to_status_id'].'</in_reply_to_status_id>
+		<in_reply_to_user_id>'.$tweet['in_reply_to_user_id'].'</in_reply_to_user_id>
+		<favorited>'.$tweet['favorited'].'</favorited>
+		<in_reply_to_screen_name>'.$tweet['in_reply_to_screen_name'].'</in_reply_to_screen_name>
+		<user>
+		  <id>'.$user['id'].'</id>
+		  <name>'.$user['name'].'</name>
+		  <screen_name>'.$user['screen_name'].'</screen_name>
+		  <description>'.$user['description'].'</description>
+		  <profile_image_url>'.$user['profile_image_url'].'</profile_image_url>
+		  <url>'.$user['url'].'</url>
+		  <protected>'.$user['protected'].'</protected>
+		  <followers_count>'.$user['followers_count'].'</followers_count>
+		  <profile_background_color>'.$user['profile_background_color'].'</profile_background_color>
+		  <profile_text_color>'.$user['profile_text_color'].'</profile_text_color>
+		  <profile_link_color>'.$user['profile_link_color'].'</profile_link_color>
+		  <profile_sidebar_fill_color>'.$user['profile_sidebar_fill_color'].'</profile_sidebar_fill_color>
+		  <profile_sidebar_border_color>'.$user['profile_sidebar_border_color'].'</profile_sidebar_border_color>
+		  <friends_count>'.$user['friends_count'].'</friends_count>
+		  <created_at>'.$user['created_at'].'</created_at>
+		  <favourites_count>'.$user['favourites_count'].'</favourites_count>
+		  <utc_offset>'.$user['utc_offset'].'</utc_offset>
+		  <time_zone>'.$user['time_zone'].'</time_zone>
+		  <profile_background_image_url>'.$user['profile_background_image_url'].'</profile_background_image_url>
+		  <profile_background_tile>'.$user['profile_background_tile'].'</profile_background_tile>
+		  <notifications>'.$user['notifications'].'</notifications>
+		  <geo_enabled>'.$user['geo_enabled'].'</geo_enabled>
+		  <verified>'.$user['verified'].'</verified>
+		  <following>'.$user['following'].'</following>
+		  <statuses_count>'.$user['statuses_count'].'</statuses_count>
+		 <lang>en</lang>
+		 <contributors_enabled>false</contributors_enabled>
+		</user>
+		<geo/>
+		<coordinates/>
+		<place/>
+		<contributors/>
+	</status>
 	';
 }
 
@@ -3434,13 +3440,15 @@ if (!$single) {
 	  $tweet['in_reply_to_user_id'] = '';
 	  $tweet['in_reply_to_screen_name'] = '';
 
+		$bio = iconv('UTF-8', 'ASCII//TRANSLIT', $profile->bio);
+
 		$user['id'] = $profile->id;
 		$user['name'] = htmlentities($profile->fullname);
 		$user['screen_name'] = htmlentities($profile->nickname);
 		$user['location'] = htmlentities($profile->locality);
-		$user['description'] = htmlentities($profile->bio);
-		$user['profile_image_url'] = $profile->avatar;
-		$user['url'] = $profile->homepage;
+		$user['description'] = htmlentities($bio);
+		$user['profile_image_url'] = htmlentities($profile->avatar);
+		$user['url'] = htmlentities($profile->homepage);
 		$user['protected'] = 'false';
 		$user['followers_count'] = '0';
 		$user['profile_background_color'] = 'FFFFFF';

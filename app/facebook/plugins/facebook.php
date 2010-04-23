@@ -39,7 +39,7 @@ function send_to_facebook( &$model, &$rec ) {
   global $db,$prefix,$request;
 
 //  $sql = "SELECT facebook_id FROM ".$prefix."facebook_users WHERE profile_id = ".get_profile_id();
-  $sql = "SELECT facebook_id FROM identities,facebook_users WHERE facebook_users.profile_id = identities.id and identities.person_id = ".get_person_id();
+  $sql = "SELECT facebook_id,oauth_key FROM identities,facebook_users WHERE facebook_users.profile_id = identities.id and identities.person_id = ".get_person_id();
   $result = $db->get_result( $sql );
   
   if ($db->num_rows($result) == 1) {
@@ -66,8 +66,8 @@ if (!function_exists('json_encode'))
 	  require_once "Services/Facebook.php";
  
 
-   	$sesskey = environment('facebookSession');
-
+   	//$sesskey = environment('facebookSession');
+    $sesskey = $db->result_value($result,0,'oauth_key');
     $uid = $db->result_value($result,0,'facebook_id');
 
 

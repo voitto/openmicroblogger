@@ -1011,11 +1011,11 @@ function facebook_login( &$vars ) {
   if (isset($_GET['forward']) && !empty($_SERVER['HTTP_REFERER']))
     $_SESSION['fb_forward'] = $_SERVER['HTTP_REFERER'];
 
-	$sesskey = environment('facebookSession');
+//	$sesskey = environment('facebookSession');
 
   $fb = new Facebook($consumer_key, $consumer_secret, true);
 
-	$facebook->api_client->session_key = $sesskey;
+//	$facebook->api_client->session_key = $sesskey;
 
   $_SESSION['fb_session'] = (string)$fb->api_client->session_key;
   $_SESSION['fb_userid'] = (string)$fb->user;
@@ -1137,6 +1137,7 @@ function make_fb_user( $user, $profile_id ) {
   $faceuser->set_value('location',          (string)$user->user->locale);
   $faceuser->set_value('facebook_id',       (string)$user->user->uid);
   $faceuser->set_value('profile_id',        $profile_id);
+  $faceuser->set_value('oauth_key',        $_SESSION['fb_session']);
   $faceuser->save_changes();
   
   return $faceuser;
