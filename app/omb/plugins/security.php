@@ -634,6 +634,7 @@ function openid_logout( &$vars ) {
   //unset($_SESSION['openid_url']);
   $_SESSION['oauth_person_id']=0;
   $_SESSION['fb_person_id']=0;
+	unset($_SESSION['fb_session']);
   unset($_SESSION['oauth_access_token']);
   unset($_SESSION['oauth_access_token_secret']);
   unset($_SESSION['oauth_request_token']);

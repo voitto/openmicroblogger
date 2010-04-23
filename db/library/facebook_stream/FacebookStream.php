@@ -164,6 +164,7 @@ class FacebookStream {
     
     $params = array(
       'uid' => $userid,
+      'status_includes_verb' => 'true'
     );
     
     if (is_bool($status) && $status === true) {
