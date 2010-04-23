@@ -94,8 +94,10 @@ if (!function_exists('json_encode'))
 			$Upload =& $db->model('Upload');
 			$Entry =& $db->model('Entry');
 			$u = $Upload->find_by(array(
-				'profile_id'=>get_profile_id()
-				));
+				'profile_id'=>get_profile_id(),
+			  'eq'=>'IS NOT',
+			  'tmp_name'=>'NULL'
+			));
 			if (!$u->exists) return;
 
 			$e = $Entry->find($u->entry_id);
