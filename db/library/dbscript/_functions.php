@@ -3181,6 +3181,8 @@ function handle_posted_file($filename="",$att,$profile) {
 		$rec->set_value( 'title', $request->params['message'] );
 	else
 	  $rec->set_value( 'title', '' );
+  if ($table == 'uploads')
+	  $rec->set_value( 'tmp_name', 'new' );
 	$upload_types = environment('upload_types');
 	if (!$upload_types)
 	  $upload_types = array('jpg','jpeg','png','gif');

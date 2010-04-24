@@ -134,9 +134,20 @@ echo ");";
 		$request->set_param(\'resource\',$table);
 
 		$resource->insert_from_post( $request );
+		
+		$Upload =& $db->model(\'Upload\');
 
-		if ($request->client_wants == \'xml\')
-		  render_home_timeline(true,$request->id);
+		$Upload->find_by(array(
+			\'profile_id\'=>get_profile_id(),
+		  \'eq\'=>\'IS NOT\',
+		  \'tmp_name\'=>\'NULL\'
+		));
+
+		while ( $u = $Upload->MoveNext() )
+      $result = $db->get_result( "UPDATE ".$db->prefix."uploads SET tmp_name = NULL WHERE id = ".$u->id );
+
+		if ( $request->client_wants == \'xml\' )
+		  render_home_timeline( true, $request->id );
 
 		header( \'Status: 200 OK\' );
 
