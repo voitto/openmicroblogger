@@ -139,8 +139,8 @@ echo ");";
 
 		$Upload->find_by(array(
 			\'profile_id\'=>get_profile_id(),
-		  \'eq\'=>\'IS NOT\',
-		  \'tmp_name\'=>\'NULL\'
+		  \'eq\'=>\'IS\',
+		  \'tmp_name\'=>\'NOT NULL\'
 		));
 
 		while ( $u = $Upload->MoveNext() )
