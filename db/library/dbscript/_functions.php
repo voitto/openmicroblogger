@@ -3191,9 +3191,6 @@ function handle_posted_file($filename="",$att,$profile) {
 	  trigger_error('Sorry, this site only allows the following file types: '.implode(',',$upload_types), E_USER_ERROR);
 	   $rec->set_value( $field, $att );
 	$rec->save_changes();
-
-	$atomentry = $$modelvar->set_metadata($rec,$content_type,$table,'id');
-
 	$tmp = $att;
 	if (is_jpg($tmp)) {
 	  $thumbsize = environment('max_pixels');
@@ -3207,6 +3204,7 @@ function handle_posted_file($filename="",$att,$profile) {
 	  $t->set_etag();
 	}
 	
+	$atomentry = $$modelvar->set_metadata($rec,$content_type,$table,'id');
 
 	$$modelvar->set_categories($rec,$request,$atomentry);
 	
