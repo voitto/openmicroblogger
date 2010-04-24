@@ -238,7 +238,7 @@ class Model {
       $atomentry->set_value( 'last_modified', timestamp() );
       $atomentry->set_value( 'person_id', get_person_id() );
       $aresult = $atomentry->save_changes();
-      if ($aresult->exists) {
+      if ($aresult) {
         if ( array_key_exists( 'entry_id', $rec->attributes ))
           $rec->set_value( 'entry_id', $atomentry->id );
         if ( array_key_exists( 'person_id', $rec->attributes ))
