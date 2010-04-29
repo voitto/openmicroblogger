@@ -902,23 +902,6 @@ function mime_types() {
    * @param string $template
    */
 
-function render( $param, $value ) {
-  
-  global $db,$response,$request;
-
-  if ( $param == 'action' && !(strpos($value,".") === false ) ) {
-    $spleet = split( "\.", $value );
-    $value = $spleet[0];
-    $request->set( 'client_wants', $spleet[1] );
-  }
-  
-  $request->set_param( $param, $value );
-  
-  $response->render( $request );
-  
-  exit;
-  
-}
 
 
   /**
@@ -1903,7 +1886,50 @@ function get_cookie_id() {
    * @param string $var
    * @return string
    */
-  
+
+
+ function render($varios, $scope=false, $prefix='unique', $suffix='value') {
+
+if ($varios == 'action'){
+	$param = $varios;
+	$value = $scope;
+  global $db,$response,$request;
+
+  if ( $param == 'action' && !(strpos($value,".") === false ) ) {
+    $spleet = split( "\.", $value );
+    $value = $spleet[0];
+    $request->set( 'client_wants', $spleet[1] );
+  }
+
+  $request->set_param( $param, $value );
+
+  $response->render( $request );
+
+  exit;
+}
+
+    if ( $scope )
+      $vals = $scope;
+    else
+      $vals = $GLOBALS;
+    $i = 0;
+    foreach ($varios as $orig) {
+      $var =& $varios[$i];
+      $old = $var;
+      $var = $new = $prefix . rand() . $suffix;
+      $vname = FALSE;
+      foreach( $vals as $key => $val ) {
+        if ( $val === $new ) $vname = $key;
+      }
+      $var = $old;
+      if ($vname) {
+        $varios[$vname] = $var;
+      }
+      $i++;
+    }
+    return $varios;
+  }
+
   function vars($varios, $scope=false, $prefix='unique', $suffix='value') {
     if ( $scope )
       $vals = $scope;
@@ -3492,3 +3518,11 @@ if (!$single)
 	exit;
 	
 }
+
+
+
+
+
+
+
+
