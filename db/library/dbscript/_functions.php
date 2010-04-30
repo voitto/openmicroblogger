@@ -3520,9 +3520,9 @@ if (!$single)
 }
 
 
+class AuthToken  {
+ 
+  var $token;
+  var $secret;
 
-
-
-
-
-
+}
