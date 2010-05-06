@@ -14,14 +14,18 @@ class Helper {
 	
 	function content_tag( $name, $content_or_options, $options=false, $escape=true, $block=null ) {
 		$content = $content_or_options;
-		$this->content_tag_string( $name, $content, $options, $escape );
+		return $this->content_tag_string( $name, $content, $options, $escape );
 	}
 
 	function content_tag_string( $name, $content, $options, $escape ) {
 		$tag_options = '';
 		if ($options)
 		  $tag_options = $this->tag_options( $options, $escape );
-		echo "<$name$tag_options>$content</$name>";
+		if (!isset($options['return']))
+  		echo "<$name$tag_options>$content</$name>";
+    else
+      return "<$name$tag_options>$content</$name>";
+    return "";
 	}
 
 	function tag_options( $options, $escape = true ) {
@@ -30,12 +34,18 @@ class Helper {
 			foreach( $options as $key => $value ){
 				if (!$value)
 				  continue;
-				$attrs[] = "$key=\"$value\"";
+				if ($key == 'return')
+				  continue;
+				else
+				  $attrs[] = "$key=\"$value\"";
 			}
 		} else {
 
 		}
-		return ' '.implode( ' ', $attrs );
+		if (count($attrs)>0)
+		  return ' '.implode( ' ', $attrs );
+		else
+		  return '';
 	}
 	
 }
