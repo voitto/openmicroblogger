@@ -44,7 +44,7 @@ function send_to_facebook( &$model, &$rec ) {
   
   if ($db->num_rows($result) == 1) {
 
-    // Facebook Streams http://brianjesse.com
+
 	  ini_set('display_errors','1');
 	  ini_set('display_startup_errors','1');
 	  error_reporting (E_ALL & ~E_NOTICE );
@@ -55,15 +55,10 @@ function send_to_facebook( &$model, &$rec ) {
 	  $agent = environment('facebookAppName')." (curl)";
 
     $Post =& $db->model('Post');
-	  add_include_path(library_path());
-	  add_include_path(library_path().'facebook-platform/php');
-	  add_include_path(library_path().'facebook_stream');
 
-if (!function_exists('json_encode'))
-  lib_include('json');
-	  require_once "facebook.php";
-	  require_once "FacebookStream.php";
-	  require_once "Services/Facebook.php";
+		if (!function_exists('json_encode'))
+		  lib_include('json');
+
  
 
    	//$sesskey = environment('facebookSession');
@@ -75,10 +70,7 @@ if (!function_exists('json_encode'))
 
 		//$fb->api_client->session_key = $sesskey;
 		//$fb->api_client->user = $uid;
-		$fs = new FacebookStream($consumer_key,$consumer_secret,$agent,$app_id);
-	  
-//    $fs->api->sessionKey = $sesskey;
-    $fs->setSess($sesskey);
+
     $notice_content = $rec->attributes['title'];
 
 		if ($uid && isset($_SESSION['copied_blob'])) {
@@ -128,8 +120,29 @@ if (!function_exists('json_encode'))
 			}
 
 
-			
+			$Setting =& $db->model('Setting');
+
+		  $stat = $Setting->find_by(array('name'=>'facebook_uid','person_id'=>get_person_id()));
+
+      if ($stat->exists)
+        $uid = $stat->value;
+
 			if ($download){
+
+
+					  add_include_path(library_path());
+					  add_include_path(library_path().'facebook-platform/php');
+					  add_include_path(library_path().'facebook_stream');
+
+					  require_once "facebook.php";
+					  require_once "FacebookStream.php";
+					  require_once "Services/Facebook.php";
+						$fs = new FacebookStream($consumer_key,$consumer_secret,$agent,$app_id);
+
+				//    $fs->api->sessionKey = $sesskey;
+				    $fs->setSess($sesskey);
+
+
 				
 		      $fs->photoUpload($download, 0, $notice_content,$uid);
 				
@@ -151,7 +164,25 @@ if (!function_exists('json_encode'))
 		 
 		 } else {
 //			  $fb->api_client->stream_publish($notice_content);
-			  $fs->setStatus($notice_content,$uid);
+
+
+					$next = $request->base;
+
+					add_include_path(library_path().'facebook_stream');
+					require_once "Services/Facebook.php";
+db_include('helper');
+db_include('facebook');
+					$f = new Facebook(
+					  $consumer_key,
+					  $consumer_secret,
+					  $appid,
+					  $agent,
+					  $sesskey,
+					  $next
+					);
+
+
+			  $f->update($notice_content,$uid);
 			}
 	    
 		}

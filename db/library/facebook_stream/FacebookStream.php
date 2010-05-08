@@ -136,7 +136,12 @@ class FacebookStream {
     
   }
   
-  function verifyPerms($userid,$perms,$path='') {
+  function verifyPerms($userid,$perms,$path='',$force=false) {
+
+    if ($force){
+      $this->showPopup(implode(',',$perms),$path,$userid);
+      return;
+    }
 
 	  $showperms = array();
 
@@ -154,7 +159,7 @@ class FacebookStream {
     }
 
     if (count($showperms) > 0)
-      $this->showPopup(implode(',',$showperms),$path);
+      $this->showPopup(implode(',',$showperms),$path,$userid);
 
   }
   
@@ -255,21 +260,41 @@ EOD;
 
   }
 
-  function showPopup($perms,$path){
-	
+  function showPopup($perms,$path,$uid=false){
+
     $key = $this->getApiKey();
 
     $path = $path.'xd_receiver.htm';
 
+if ($uid)
+
 		echo <<<EOD
 			<script type="text/javascript"> 
+		function ondone(st) {
+			//alert('done '+st);
+		}
+
 				FB_RequireFeatures(["XFBML"], function(){ 
 				FB.Facebook.init('$key', '$path', null);
 				FB.ensureInit(function () { 
-					FB.Connect.showPermissionDialog('$perms', function(accepted) { window.close(); } )
+					FB.Connect.showPermissionDialog('$perms', ondone, true, [$uid] );
 				});
 			});
 			</script>
+EOD;
+
+else
+
+			echo <<<EOD
+				<script type="text/javascript"> 
+
+					FB_RequireFeatures(["XFBML"], function(){ 
+					FB.Facebook.init('$key', '$path', null);
+					FB.ensureInit(function () { 
+						FB.Connect.showPermissionDialog('$perms', function(accepted) { window.close(); } )
+					});
+				});
+				</script>
 EOD;
 
   }

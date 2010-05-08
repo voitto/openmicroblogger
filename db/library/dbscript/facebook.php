@@ -115,18 +115,24 @@ class Facebook {
 	  $this->userid = $this->api->users->getLoggedInUser();
 	}
 	
-	function permission_to( $perm ) {
+	function permission_to( $perm, $uid=false, $force=false ) {
     $params = array(
       'ext_perm' => $perm,
       'uid' => $this->userid
     );
-    $response = $this->api->users->callMethod( 'users.hasAppPermission', $params );
-		$xml = simplexml_load_string($response->asXML());
-		$xml = (array) $xml;
-    if (!$xml[0]) {
+    if ($uid)
+      $params['uid'] = $uid;
+    if (!$force){
+      $response = $this->api->users->callMethod( 'users.hasAppPermission', $params );
+  		$xml = simplexml_load_string($response->asXML());
+	  	$xml = (array) $xml;
+	  }
+    if ($force || !$xml[0]) {
       $url = $this->api_root . '/authorize.php';
 	    $params = array('api_key' => Services_Facebook::$apiKey,
 	                    'v'       => '1.0');
+	    if ($uid)
+	      $params['uid'] = $uid;
 			$params['ext_perm'] = $perm;
 	    $params['next'] = $this->next;
 	    $url = $url . '?' . http_build_query($params);
@@ -135,11 +141,29 @@ class Facebook {
     }
   }
 
-  function update( $status ) {
-	  $this->permission_to( 'status_update' );
+  function publish( $status, $uid=false ) {
+	  $this->permission_to( 'publish_stream', $uid );
 	  $params = array(
 	    'uid' => $this->userid,
 	  );
+	  if ($uid)
+	    $params['uid'] = $uid;
+	  if (is_bool($status) && $status === true) {
+	    $params['clear'] = 'true';
+	  } else {
+	    $params['status'] = $status;
+	  }
+	  $res = $this->api->users->callMethod( 'stream.publish', $params );
+	  return (intval((string)$res) == 1);
+  }
+
+  function update( $status, $uid=false ) {
+	  $this->permission_to( 'status_update', $uid );
+	  $params = array(
+	    'uid' => $this->userid,
+	  );
+	  if ($uid)
+	    $params['uid'] = $uid;
 	  if (is_bool($status) && $status === true) {
 	    $params['clear'] = 'true';
 	  } else {
@@ -152,5 +176,53 @@ class Facebook {
   function search( $string ) {
   }
 
+  function getpages() {
+	  $fieldlist = array(
+	    'page_id',
+	    'name'
+	  );
+	  $fields = implode(',',$fieldlist);
+	  $params = array(
+	    'uid' => $this->userid,
+      'api_key' => Services_Facebook::$apiKey,
+      'call_id' => microtime(true),
+      'sig' =>  md5("app_id=".$this->appid."session_key=". $this->api->sessionKey."source_id=".$this->userid.Services_Facebook::$secret),
+      'v' => '1.0',
+      'fields' => $fields,
+      'session_key' => $this->api->sessionKey
+	  );
+	  $pages = array();
+	  $response = $this->api->users->callMethod( 'pages.getinfo', $params );
+		$xml = simplexml_load_string($response->asXML());
+		foreach($xml as $k=>$v){
+		  foreach($v as $b=>$r){
+			  if ((string) $b == 'name')
+			    $name = (string) $r;
+			  if ((string) $b == 'page_id')
+			    $pid = (string) $r;
+		  }
+	    $pages[$pid] = array('name'=>$name);
+		}
+		return $pages;
+  }
+
+  function ispageadmin( $p ) {
+	  $params = array(
+	    'page_id' => $p,
+	    'uid' => $this->userid,
+      'api_key' => Services_Facebook::$apiKey,
+      'call_id' => microtime(true),
+      'sig' =>  md5("app_id=".$this->appid."session_key=". $this->api->sessionKey."source_id=".$this->userid.Services_Facebook::$secret),
+      'v' => '1.0',
+      'session_key' => $this->api->sessionKey
+	  );
+	  //return true;
+	  $response = $this->api->users->callMethod( 'pages.isAdmin', $params );
+		$xml = simplexml_load_string($response->asXML());
+		$xml = (array) $xml;
+    if (!$xml[0])
+	    return false;
+		return true;
+  }
 }
 
