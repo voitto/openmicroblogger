@@ -45,8 +45,30 @@ function send_to_twitter( &$model, &$rec ) {
     );
 
     $notice_content = substr( $rec->title, 0, 140 );  
-    
-    $content = $to->OAuthRequest('https://twitter.com/statuses/update.xml', array('status' => $notice_content), 'POST');
+
+		  $content = $to->OAuthRequest('https://twitter.com/statuses/update.json', array('status' => $notice_content), 'POST');
+
+		  if (!(class_exists('Services_JSON')))
+		    lib_include('json');
+
+	    $json = new Services_JSON();
+	    $tw_post = (array) $json->decode($content);
+
+			$Like =& $db->model('Like');
+
+	    $l = $Like->find_by(array('post_id'=>$rec->id));
+
+	    if (!$l->exists){
+
+		    $l = $Like->base();
+		    $l->set_value('post_id',$rec->id);
+	    }
+
+	    $l->set_value('tw_post_id',$tw_post['id']);
+
+	    $l->save_changes();
+
+
     
   } else {
     

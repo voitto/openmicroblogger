@@ -4,10 +4,13 @@ class FacebookHelper extends Helper {
 	
 	function header( $key, $xd, $next ) {
 		
+		global $request;
+		$url = $request->url_for('facebook_login');
+
 		echo <<<EOD
 			<script type="text/javascript">
 			  function facebook_onlogin() {
-			    window.location='$next';
+			    window.location='$url';
 			  }
 			  function facebook_dologin() {
 					FB_RequireFeatures(["XFBML"], function(){ 
@@ -94,13 +97,16 @@ class Facebook {
   var $userid;
   var $api_root = 'http://www.facebook.com';
 
-  function Facebook( $key, $secret, $appid, $agent, $session, $next ){
+  function Facebook( $key, $secret, $appid, $agent, $session=false, $next ){
     Services_Facebook::$apiKey = $key;
     Services_Facebook::$secret = $secret;
     $this->api = new Services_Facebook();
     $this->agent = $agent;
     $this->appid = $appid;
-    $this->api->sessionKey = $session;
+    if (!$session)
+      $_SESSION['fb_session'] = $this->api->sessionKey;
+    else
+      $this->api->sessionKey = $session;
     $this->next = $next;
   }
 
@@ -115,7 +121,7 @@ class Facebook {
 	  $this->userid = $this->api->users->getLoggedInUser();
 	}
 	
-	function permission_to( $perm, $uid=false, $force=false ) {
+	function permission_to( $perm, $uid=false, $force=false, $return=false ) {
     $params = array(
       'ext_perm' => $perm,
       'uid' => $this->userid
@@ -128,7 +134,8 @@ class Facebook {
 	  	$xml = (array) $xml;
 	  }
     if ($force || !$xml[0]) {
-      $url = $this->api_root . '/authorize.php';
+
+      $url = $this->api_root . '/connect/prompt_permissions.php';
 	    $params = array('api_key' => Services_Facebook::$apiKey,
 	                    'v'       => '1.0');
 	    if ($uid)
@@ -136,25 +143,36 @@ class Facebook {
 			$params['ext_perm'] = $perm;
 	    $params['next'] = $this->next;
 	    $url = $url . '?' . http_build_query($params);
+
+	    if ($return)
+	      return $url;
       header( 'Location:' . $url );
       exit;
     }
   }
 
-  function publish( $status, $uid=false ) {
-	  $this->permission_to( 'publish_stream', $uid );
+  function like( $id, $uid=false ) {
+	  //$this->permission_to( 'publish_stream', $uid );
 	  $params = array(
 	    'uid' => $this->userid,
 	  );
 	  if ($uid)
 	    $params['uid'] = $uid;
-	  if (is_bool($status) && $status === true) {
-	    $params['clear'] = 'true';
-	  } else {
-	    $params['status'] = $status;
-	  }
-	  $res = $this->api->users->callMethod( 'stream.publish', $params );
+    $params['post_id'] = $id;
+	  $res = $this->api->users->callMethod( 'stream.addLike', $params );
 	  return (intval((string)$res) == 1);
+  }
+
+  function publish( $status, $uid=false ) {
+	  //$this->permission_to( 'publish_stream', $uid );
+	  $params = array(
+	    'uid' => $this->userid,
+	  );
+	  if ($uid)
+	    $params['uid'] = $uid;
+    $params['message'] = $status;
+	  $res = $this->api->users->callMethod( 'stream.publish', $params );
+	  return (string)$res;
   }
 
   function update( $status, $uid=false ) {

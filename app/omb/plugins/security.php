@@ -907,7 +907,10 @@ function _oauth( &$vars ) {
       }
           
       $_SESSION['oauth_person_id'] = $i->person_id;
-      
+
+		  if (isset($_SESSION['tw_forward']))
+			  redirect_to($_SESSION['tw_forward']);
+
       if (empty($redirect_to)) {
         $content = "<p>there was an error in the oauth routine, sorry</p>";
       } else {

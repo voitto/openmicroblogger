@@ -2336,8 +2336,16 @@ $microblog_themes = array('twitteronia','p2','prologue-theme');
 add_include_path(library_path());
 include('remy-tweed/plugins/linkify.php');
 
+function add_shortcode(){
+	return "";
+}
 
+function maybe_unserialize(){
+	return "";
+}
 
-
+function is_page_template(){
+	return "";
+}
 
 

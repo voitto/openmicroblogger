@@ -182,7 +182,22 @@ db_include('facebook');
 					);
 
 
-			  $f->update($notice_content,$uid);
+					$fb_post_id = $f->publish($notice_content,$uid);
+
+
+					$Like =& $db->model('Like');
+			   
+			    $l = $Like->find_by(array('post_id'=>$rec->id));
+
+			    if (!$l->exists){
+
+				    $l = $Like->base();
+				    $l->set_value('post_id',$rec->id);
+			    }
+			
+			    $l->set_value('fb_post_id',$fb_post_id);
+			
+			    $l->save_changes();
 			}
 	    
 		}
