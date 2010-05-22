@@ -135,6 +135,22 @@ class FacebookStream {
     return $this->api->users->callMethod( 'users.getInfo', $params );
     
   }
+
+  function getPageInfo($pageid,$fields) {
+    
+    $params = array(
+      'api_key' => $this->getApiKey(),
+      'call_id' => microtime(true),
+      'sig' =>  md5("app_id=".$this->appid."session_key=".$this->getSessionKey()."source_id=".$userid.$this->getApiSecret()),
+      'v' => '1.0',
+      'page_ids' => $pageid,
+      'fields' => $fields,
+      'session_key' => $this->getSessionKey()
+    );
+    
+    return $this->api->users->callMethod( 'pages.getInfo', $params );
+    
+  }
   
   function verifyPerms($userid,$perms,$path='',$force=false) {
 

@@ -3440,11 +3440,24 @@ else
 	';
 
 
-$Post->set_limit(20);
 //$Post->set_order('desc');
+if (isset($_GET['count'])){
+	$Post->set_limit($_GET['count']);
+}else {
+	$Post->set_limit(100);
+}
 $Post->has_one('profile_id:'.$prefix.'identities');
 
 if (!$single) {
+
+	if (isset($_GET['since_id'])){
+		$Post->set_param( 'find_by', array(
+			'eq'=>'>',
+		  'posts.id' => $_GET['since_id']
+		));
+	}
+
+//	echo $Post->get_query(); exit;
 
 	$Post->find();
 } else {
@@ -3471,12 +3484,12 @@ if (!$single) {
 		$bio = iconv('UTF-8', 'ASCII//TRANSLIT', $profile->bio);
 
 		$user['id'] = $profile->id;
-		$user['name'] = htmlentities($profile->fullname);
-		$user['screen_name'] = htmlentities($profile->nickname);
-		$user['location'] = htmlentities($profile->locality);
+		$user['name'] = htmlentities(iconv('UTF-8', 'ASCII//TRANSLIT', $profile->fullname));
+		$user['screen_name'] = htmlentities(iconv('UTF-8', 'ASCII//TRANSLIT', $profile->nickname));
+		$user['location'] = htmlentities(iconv('UTF-8', 'ASCII//TRANSLIT', $profile->locality));
 		$user['description'] = htmlentities($bio);
-		$user['profile_image_url'] = htmlentities($profile->avatar);
-		$user['url'] = htmlentities($profile->homepage);
+		$user['profile_image_url'] = htmlentities(iconv('UTF-8', 'ASCII//TRANSLIT', $profile->avatar));
+		$user['url'] = htmlentities(iconv('UTF-8', 'ASCII//TRANSLIT', $profile->homepage));
 		$user['protected'] = 'false';
 		$user['followers_count'] = '0';
 		$user['profile_background_color'] = 'FFFFFF';
@@ -3518,6 +3531,7 @@ if (!$single)
 	exit;
 	
 }
+
 
 
 class AuthToken  {
