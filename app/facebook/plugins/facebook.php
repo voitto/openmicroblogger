@@ -35,6 +35,7 @@ function send_to_facebook( &$model, &$rec ) {
   
   if ((get_option('facebook_status') != 'enabled') &&
    (!isset($_POST['face_it']))
+    return;
   
   global $db,$prefix,$request;
 
