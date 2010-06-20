@@ -657,6 +657,7 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
       $op = "AND";
       $eq = '=';
       foreach( $model->find_by as $col=>$val ) {
+
         if (is_array($val))
             list($col,$val) = each($val);
         if ($col == 'op') {
@@ -685,6 +686,7 @@ $result = $this->get_result("CREATE TABLE openid_associations (\n".
           
         }
       }
+
     } elseif ($model->id != NULL) {
       if (strpos($model->find_by,".") === false)
         $field = $table.".".$model->find_by;

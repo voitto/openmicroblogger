@@ -138,8 +138,15 @@ class Facebook {
       $url = $this->api_root . '/connect/prompt_permissions.php';
 	    $params = array('api_key' => Services_Facebook::$apiKey,
 	                    'v'       => '1.0');
-	    if ($uid)
+	    if ($uid){
 	      $params['uid'] = $uid;
+	    } elseif ($this->userid) {
+	      $params['uid'] = $this->userid;
+	    } else {
+	      unset($params['uid']);
+	      $params['session_key'] = $this->api->sessionKey;
+      }
+	   
 			$params['ext_perm'] = $perm;
 	    $params['next'] = $this->next;
 	    $url = $url . '?' . http_build_query($params);

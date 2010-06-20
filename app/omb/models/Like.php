@@ -6,9 +6,11 @@ class Like extends Model {
 
     $this->char_field( 'fb_post_id' );
     $this->char_field( 'tw_post_id' );
+    $this->char_field( 'bz_post_id' );
     $this->char_field( 'post_id' );
 
     $this->int_field( 'entry_id' );
+
     
     $this->auto_field( 'id' );
     

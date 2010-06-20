@@ -154,7 +154,7 @@ class FacebookStream {
   
   function verifyPerms($userid,$perms,$path='',$force=false) {
 
-    if ($force){
+    if (!$force){
       $this->showPopup(implode(',',$perms),$path,$userid);
       return;
     }

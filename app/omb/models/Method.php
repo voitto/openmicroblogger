@@ -699,6 +699,278 @@ render_rss_feed($pro,$tweets);
     }
 
 
+    $m = $this->base();
+    $m->set_value( 'code', '
+
+			extract( $vars );
+
+
+			if (isset($request->client_wants)){
+			if ($request->client_wants == \'json\') {
+
+
+
+			$nick = substr( $request->params[\'nickname\'], 0, -5 );
+			$Identity =& $db->model( \'Identity\' );
+			$Identity->set_order(\'asc\');
+			$Identity->set_limit(1);
+			$Identity->set_param(\'find_by\',array(
+			  \'nickname\' => $nick,
+			  \'eq\'=>\'IS\',
+			  \'post_notice\' => \'NULL\',
+			));
+
+			$Post =& $db->model( \'Post\' );
+			$Post->set_param( \'find_by\', array(
+			  \'entries.person_id\' => $profile->person_id
+			));
+
+			$Post->find();
+			$tweets = array();
+			while ($p = $Post->MoveNext()) {
+			  $tweet = array();
+			  $tweet[\'text\'] = $p->title;
+			  $tweet[\'truncated\'] = \'false\';
+			  $tweet[\'created_at\'] = date( "D M d G:i:s O Y", strtotime( $p->created ));
+			  $tweet[\'in_reply_to_status_id\'] = null;
+			  $tweet[\'source\'] = null;
+			  $tweet[\'id\'] = intval( $p->id );
+			  $tweet[\'favorited\'] =\'false\';
+			  $tweet[\'user\'] = $nick;
+			  $tweets[] = $tweet;
+			}
+
+			echo "twitterCallback2(";
+
+			$json = new Services_JSON();
+
+			echo $json->encode( $tweets );
+
+			echo \');\';
+
+
+
+
+
+			exit;
+			}
+
+
+			}
+
+
+
+			$parts = split(\'\.\',$request->params[\'byid\']);
+			$id = $parts[0];
+			$request->set_param(\'byid\',$id);
+
+			global $db;
+			$Post =& $db->model(\'Post\');
+
+				$Post->has_one(\'like\');
+
+			  $Post->set_order(\'desc\');
+			global $prefix;
+			$Post->set_param(\'query\',\'
+			SELECT 
+			\'.$prefix.\'posts.title as "\'.$prefix.\'posts.title", 
+			\'.$prefix.\'posts.body as "\'.$prefix.\'posts.body", 
+			\'.$prefix.\'posts.summary as "\'.$prefix.\'posts.summary", 
+			\'.$prefix.\'posts.contributor as "\'.$prefix.\'posts.contributor", 
+			\'.$prefix.\'posts.rights as "\'.$prefix.\'posts.rights", 
+			\'.$prefix.\'posts.source as "\'.$prefix.\'posts.source", 
+			\'.$prefix.\'posts.uri as "\'.$prefix.\'posts.uri", 
+			\'.$prefix.\'posts.url as "\'.$prefix.\'posts.url", 
+			\'.$prefix.\'posts.attachment as "\'.$prefix.\'posts.attachment", 
+			\'.$prefix.\'posts.parent_id as "\'.$prefix.\'posts.parent_id", 
+			\'.$prefix.\'posts.profile_id as "\'.$prefix.\'posts.profile_id", 
+			\'.$prefix.\'posts.recipient_id as "\'.$prefix.\'posts.recipient_id", 
+			\'.$prefix.\'posts.local as "\'.$prefix.\'posts.local", 
+			\'.$prefix.\'posts.created as "\'.$prefix.\'posts.created", 
+			\'.$prefix.\'posts.modified as "\'.$prefix.\'posts.modified", 
+			\'.$prefix.\'posts.entry_id as "\'.$prefix.\'posts.entry_id", 
+			\'.$prefix.\'posts.id as "\'.$prefix.\'posts.id", 
+			\'.$prefix.\'entries.resource as "\'.$prefix.\'entries.resource", 
+			\'.$prefix.\'entries.record_id as "\'.$prefix.\'entries.record_id", 
+			\'.$prefix.\'entries.etag as "\'.$prefix.\'entries.etag", 
+			\'.$prefix.\'entries.content_type as "\'.$prefix.\'entries.content_type", 
+			\'.$prefix.\'entries.expires as "\'.$prefix.\'entries.expires", 
+			\'.$prefix.\'entries.last_modified as "\'.$prefix.\'entries.last_modified", 
+			\'.$prefix.\'entries.issued as "\'.$prefix.\'entries.issued", 
+			\'.$prefix.\'entries.person_id as "\'.$prefix.\'entries.person_id", 
+			\'.$prefix.\'entries.id as "\'.$prefix.\'entries.id", 
+			\'.$prefix.\'likes.fb_post_id as "\'.$prefix.\'likes.fb_post_id", 
+			\'.$prefix.\'likes.tw_post_id as "\'.$prefix.\'likes.tw_post_id", 
+			\'.$prefix.\'likes.bz_post_id as "\'.$prefix.\'likes.bz_post_id", 
+			\'.$prefix.\'likes.post_id as "\'.$prefix.\'likes.post_id", 
+			\'.$prefix.\'likes.entry_id as "\'.$prefix.\'likes.entry_id", 
+			\'.$prefix.\'likes.id as "\'.$prefix.\'likes.id" 
+			FROM ((\'.$prefix.\'posts left join \'.$prefix.\'entries on \'.$prefix.\'posts.entry_id = \'.$prefix.\'entries.id) left join \'.$prefix.\'likes on \'.$prefix.\'posts.id = \'.$prefix.\'likes.post_id) WHERE \'.$prefix.\'posts.parent_id > \\\'0\\\'  ORDER BY \'.$prefix.\'posts.id desc LIMIT 0,10\');
+
+
+
+			$tweets = new Collection( \'posts\' );
+
+			$pro = get_profile($id);
+
+			header( \'Content-Type: application/rss+xml\' );
+
+			render_rss_feed($pro,$tweets);
+
+
+		
+		');
+
+		$m->set_value( 'function', 'api_statuses_all_likes' );
+		$m->set_value( 'route', 'api/statuses/all_likes' );
+		$m->set_value( 'resource', 'posts' );
+		$m->set_value( 'permission', 'read' );
+    $m->set_value( 'enabled', true );
+    $m->set_value( 'omb', 1 );
+    $m->set_value( 'oauth', 1 );
+    $m->set_value( 'http', 1 );
+
+    if (!(in_array($m->attributes['function'],$methods))){
+      $m->save_changes();
+      $m->set_etag(1);
+    }
+
+    $m = $this->base();
+    $m->set_value( 'code', '
+
+			extract( $vars );
+
+
+			if (isset($request->client_wants)){
+			if ($request->client_wants == \'json\') {
+
+
+
+			$nick = substr( $request->params[\'nickname\'], 0, -5 );
+			$Identity =& $db->model( \'Identity\' );
+			$Identity->set_order(\'asc\');
+			$Identity->set_limit(1);
+			$Identity->set_param(\'find_by\',array(
+			  \'nickname\' => $nick,
+			  \'eq\'=>\'IS\',
+			  \'post_notice\' => \'NULL\',
+			));
+
+			$Post =& $db->model( \'Post\' );
+			$Post->set_param( \'find_by\', array(
+			  \'entries.person_id\' => $profile->person_id
+			));
+
+			$Post->find();
+			$tweets = array();
+			while ($p = $Post->MoveNext()) {
+			  $tweet = array();
+			  $tweet[\'text\'] = $p->title;
+			  $tweet[\'truncated\'] = \'false\';
+			  $tweet[\'created_at\'] = date( "D M d G:i:s O Y", strtotime( $p->created ));
+			  $tweet[\'in_reply_to_status_id\'] = null;
+			  $tweet[\'source\'] = null;
+			  $tweet[\'id\'] = intval( $p->id );
+			  $tweet[\'favorited\'] =\'false\';
+			  $tweet[\'user\'] = $nick;
+			  $tweets[] = $tweet;
+			}
+
+			echo "twitterCallback2(";
+
+			$json = new Services_JSON();
+
+			echo $json->encode( $tweets );
+
+			echo \');\';
+
+
+
+
+
+			exit;
+			}
+
+
+			}
+
+
+
+			$parts = split(\'\.\',$request->params[\'byid\']);
+			$id = $parts[0];
+			$request->set_param(\'byid\',$id);
+
+			global $db;
+			$Post =& $db->model(\'Post\');
+
+				$Post->has_one(\'like\');
+
+			  $Post->set_order(\'desc\');
+			global $prefix;
+			$Post->set_param(\'query\',\'
+			SELECT 
+			\'.$prefix.\'posts.title as "\'.$prefix.\'posts.title", 
+			\'.$prefix.\'posts.body as "\'.$prefix.\'posts.body", 
+			\'.$prefix.\'posts.summary as "\'.$prefix.\'posts.summary", 
+			\'.$prefix.\'posts.contributor as "\'.$prefix.\'posts.contributor", 
+			\'.$prefix.\'posts.rights as "\'.$prefix.\'posts.rights", 
+			\'.$prefix.\'posts.source as "\'.$prefix.\'posts.source", 
+			\'.$prefix.\'posts.uri as "\'.$prefix.\'posts.uri", 
+			\'.$prefix.\'posts.url as "\'.$prefix.\'posts.url", 
+			\'.$prefix.\'posts.attachment as "\'.$prefix.\'posts.attachment", 
+			\'.$prefix.\'posts.parent_id as "\'.$prefix.\'posts.parent_id", 
+			\'.$prefix.\'posts.profile_id as "\'.$prefix.\'posts.profile_id", 
+			\'.$prefix.\'posts.recipient_id as "\'.$prefix.\'posts.recipient_id", 
+			\'.$prefix.\'posts.local as "\'.$prefix.\'posts.local", 
+			\'.$prefix.\'posts.created as "\'.$prefix.\'posts.created", 
+			\'.$prefix.\'posts.modified as "\'.$prefix.\'posts.modified", 
+			\'.$prefix.\'posts.entry_id as "\'.$prefix.\'posts.entry_id", 
+			\'.$prefix.\'posts.id as "\'.$prefix.\'posts.id", 
+			\'.$prefix.\'entries.resource as "\'.$prefix.\'entries.resource", 
+			\'.$prefix.\'entries.record_id as "\'.$prefix.\'entries.record_id", 
+			\'.$prefix.\'entries.etag as "\'.$prefix.\'entries.etag", 
+			\'.$prefix.\'entries.content_type as "\'.$prefix.\'entries.content_type", 
+			\'.$prefix.\'entries.expires as "\'.$prefix.\'entries.expires", 
+			\'.$prefix.\'entries.last_modified as "\'.$prefix.\'entries.last_modified", 
+			\'.$prefix.\'entries.issued as "\'.$prefix.\'entries.issued", 
+			\'.$prefix.\'entries.person_id as "\'.$prefix.\'entries.person_id", 
+			\'.$prefix.\'entries.id as "\'.$prefix.\'entries.id", 
+			\'.$prefix.\'likes.fb_post_id as "\'.$prefix.\'likes.fb_post_id", 
+			\'.$prefix.\'likes.tw_post_id as "\'.$prefix.\'likes.tw_post_id", 
+			\'.$prefix.\'likes.bz_post_id as "\'.$prefix.\'likes.bz_post_id", 
+			\'.$prefix.\'likes.post_id as "\'.$prefix.\'likes.post_id", 
+			\'.$prefix.\'likes.entry_id as "\'.$prefix.\'likes.entry_id", 
+			\'.$prefix.\'likes.id as "\'.$prefix.\'likes.id" 
+			FROM ((\'.$prefix.\'posts left join \'.$prefix.\'entries on \'.$prefix.\'posts.entry_id = \'.$prefix.\'entries.id) left join \'.$prefix.\'likes on \'.$prefix.\'posts.id = \'.$prefix.\'likes.post_id) WHERE \'.$prefix.\'posts.profile_id = \\\'\'.$id.\'\\\'  AND \'.$prefix.\'posts.parent_id > \\\'0\\\'  ORDER BY \'.$prefix.\'posts.id desc LIMIT 0,10\');
+
+
+
+			$tweets = new Collection( \'posts\' );
+
+			$pro = get_profile($id);
+
+			header( \'Content-Type: application/rss+xml\' );
+
+			render_rss_feed($pro,$tweets);
+
+
+		
+		');
+
+		$m->set_value( 'function', 'api_statuses_user_likes' );
+		$m->set_value( 'route', 'api/statuses/user_likes/:byid' );
+		$m->set_value( 'resource', 'posts' );
+		$m->set_value( 'permission', 'read' );
+    $m->set_value( 'enabled', true );
+    $m->set_value( 'omb', 1 );
+    $m->set_value( 'oauth', 1 );
+    $m->set_value( 'http', 1 );
+
+    if (!(in_array($m->attributes['function'],$methods))){
+      $m->save_changes();
+      $m->set_etag(1);
+    }
+
 
   }
 

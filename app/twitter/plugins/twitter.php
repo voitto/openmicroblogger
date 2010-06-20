@@ -5,7 +5,6 @@ after_filter( 'send_to_twitter', 'insert_from_post' );
 
 // the "hook" function itself
 function send_to_twitter( &$model, &$rec ) {
-
   if (!($rec->table == 'posts'))
     return;
 
@@ -21,17 +20,18 @@ function send_to_twitter( &$model, &$rec ) {
      
 )
     return;
+
   
   global $db,$prefix,$request;
 
-  $sql = "SELECT oauth_key,oauth_secret FROM identities,twitter_users WHERE twitter_users.profile_id = identities.id and identities.person_id = ".get_person_id();
+  $sql = "SELECT oauth_key,oauth_secret FROM ".$prefix."identities,".$prefix."twitter_users WHERE ".$prefix."twitter_users.profile_id = ".$prefix."identities.id and ".$prefix."identities.person_id = ".get_person_id();
   $result = $db->get_result( $sql );
   
   if ($db->num_rows($result) == 1) {
-
   
     // http://abrah.am
-    lib_include('twitteroauth');
+		if (!class_exists('TwitterOAuth'));
+      lib_include('twitteroauth');
     
     $key = $db->result_value($result,0,'oauth_key');
     $secret = $db->result_value($result,0,'oauth_secret');

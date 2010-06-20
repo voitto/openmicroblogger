@@ -74,6 +74,11 @@ if (defined('PRETTY_URL_BASE') && PRETTY_URL_BASE ){
 	$pretty_url_base = PRETTY_URL_BASE;
 }
 
+// list($subdomain, $rest) = explode('.', $_SERVER['SERVER_NAME'], 2);
+// if ($rest != 'com')
+//	$pretty_url_base = "http://rsslike.com";
+
+
   /**
    * memcached
    */
@@ -555,6 +560,19 @@ while ($m = $Method->MoveNext()) {
     $m->route,
     $routesetup
   );
+	if (!$prefix) {
+	  $coll = new Collection('blogs');
+	  while ($b = $coll->MoveNext()) {
+		  $sub = $b->nickname;
+		  $routesetup['stream'] = $sub;
+		  $routesetup['prefix'] = $b->prefix;
+		  if (!empty($patterns[2]))
+				$request->connect(
+				  $sub.'/'.$patterns[2],
+				  $routesetup
+				);
+		}
+	}
   if ($m->omb)
     before_filter( 'authenticate_with_omb', $m->function );
   if ($m->http)
@@ -646,6 +664,21 @@ $request->connect( '', array( 'resource'=>$env['goes'], 'action'=>'get' ) );
 #aspect_join_functions( 'routematch', 'catch_params' );
 
 $request->routematch();
+
+if (isset($request->params['stream'])) {
+
+		$subdomain = $request->params['stream'];
+	  $request->base = $request->values[1].$subdomain.".".$request->domain;
+	  $request->domain = $subdomain.".".$request->domain;
+	  $pretty_url_base = $request->base;
+	  $stream = $subdomain;
+
+    global $prefix;
+    $prefix = $request->params['prefix']."_";
+    $db->prefix = $prefix;
+
+}
+
 
 //print_r($request->activeroute); echo '<br /><br />'; print_r($request->params); exit;
 

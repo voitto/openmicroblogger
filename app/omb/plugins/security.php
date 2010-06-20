@@ -678,6 +678,14 @@ function _oauth( &$vars ) {
   extract( $vars );
   global $prefix;
   $Blog =& $db->model('Blog');
+
+  if (isset($_GET['forward'])){
+	  if (!empty($_SERVER['HTTP_REFERER']))
+		  $_SESSION['tw_forward'] = $_SERVER['HTTP_REFERER'];
+		if (isset($_GET['callbackurl']))
+			$_SESSION['tw_forward'] = $_GET['callbackurl'];
+	} 
+
   
   if (empty($db->prefix)) {
     if (isset($_REQUEST['oauth_token'])) {
@@ -693,6 +701,7 @@ function _oauth( &$vars ) {
           if ($db->num_rows($result) == 1) {
             // XXX subdomain upgrade
             $redir = blog_url($b->nickname,true);
+
             $redir .= 'oauth_login';
             $redir .= "&oauth_token=".$_REQUEST['oauth_token'];
             $content = '<script type="text/javascript">'."\n";
@@ -747,7 +756,9 @@ function _oauth( &$vars ) {
       /* Save tokens for later */
       
       $Blog =& $db->model('Blog');
-      if (!empty($db->prefix) && isset($_REQUEST['oauth_token'])) {
+			$Blog->find();
+ 
+     if (!empty($db->prefix) && isset($_REQUEST['oauth_token'])) {
         $tabresult = $db->get_result("SHOW tables");
         $tables = array();
         $tablist = array();
@@ -779,7 +790,8 @@ function _oauth( &$vars ) {
       if (empty($auth_url)) {
         $content = 'Request token not found, <a href="'.$request->url_for('oauth_login').'">click here to try again...</a>';
       } else {
-        $content = '<script type="text/javascript">'."\n";
+	
+	      $content = '<script type="text/javascript">'."\n";
         $content .= '  // <![CDATA['."\n";
         $content .= "  location.replace('".$auth_url."');"."\n";
         $content .= '  // ]]>'."\n";
@@ -908,8 +920,10 @@ function _oauth( &$vars ) {
           
       $_SESSION['oauth_person_id'] = $i->person_id;
 
-		  if (isset($_SESSION['tw_forward']))
-			  redirect_to($_SESSION['tw_forward']);
+		  if (isset($_SESSION['tw_forward'])){
+			  $redirect_to = $_SESSION['tw_forward'];
+			  redirect_to($redirect_to);
+		  }
 
       if (empty($redirect_to)) {
         $content = "<p>there was an error in the oauth routine, sorry</p>";
@@ -996,6 +1010,141 @@ function make_identity( $user, $newperson=false ) {
   return $i;
 }
 
+function facebook_dologin(&$vars){
+
+extract($vars);
+
+foreach( array('helper','twitter','facebook') as $module )
+
+  require_once $GLOBALS['PATH']['dbscript'] . $module . '.php';
+
+
+
+
+
+
+$xd = '/resource/xd_receiver.htm';
+
+
+
+$fbkey = environment('facebookKey');
+$fbsec = environment('facebookSecret');
+$appid = environment('facebookAppId');
+$agent = environment('facebookAppName');
+
+$fblogin = $request->url_for('facebook_login');
+
+
+$fbuid = 0;
+
+if (signed_in() && has_facebook_account()){
+  $fbuid = $_SESSION['fb_userid'];
+}
+add_include_path(library_path().'facebook_stream');
+require_once "Services/Facebook.php";
+
+if (isset($_SESSION['fb_userid']) && !empty($_SESSION['fb_userid'])) {
+	global $prefix,$db;
+	$db->prefix = $prefix;
+	$uid = $_SESSION['fb_userid'];
+	$sql = "SELECT DISTINCT oauth_key FROM facebook_users WHERE facebook_id = ".$uid;
+	$result = $db->get_result( $sql );
+	if (!(mysql_num_rows($result) == 1))
+	  trigger_error('unable to find facebook user',E_USER_ERROR);
+	$sess = $db->result_value($result,0,'oauth_key');
+} else {
+  $sess = false;
+}
+
+  $next = $fblogin;
+
+$f = new Facebook(
+  $fbkey,
+  $fbsec,
+  $appid,
+  $agent,
+  $sess,
+  $next
+);
+
+$f->permission_to('publish_stream',false,true);
+
+redirect_to($request->base);
+  
+}
+
+
+
+
+function facebook_getloggedin(){
+
+	extract($vars);
+
+	foreach( array('helper','twitter','facebook') as $module )
+
+	  require_once $GLOBALS['PATH']['dbscript'] . $module . '.php';
+
+
+
+
+
+
+	$xd = '/resource/xd_receiver.htm';
+
+
+
+	$fbkey = environment('facebookKey');
+	$fbsec = environment('facebookSecret');
+	$appid = environment('facebookAppId');
+	$agent = environment('facebookAppName');
+
+  global $request;
+
+	$fblogin = $request->url_for('facebook_login');
+
+
+	$fbuid = 0;
+
+	if (signed_in() && has_facebook_account()){
+	  $fbuid = $_SESSION['fb_userid'];
+	  if (isset($_SESSION['fb_forward']))
+	    redirect_to($_SESSION['fb_forward']);
+	}
+	add_include_path(library_path().'facebook_stream');
+	require_once "Services/Facebook.php";
+
+	if (isset($_SESSION['fb_userid']) && !empty($_SESSION['fb_userid'])) {
+		global $prefix,$db;
+		$db->prefix = $prefix;
+		$uid = $_SESSION['fb_userid'];
+		$sql = "SELECT DISTINCT oauth_key FROM facebook_users WHERE facebook_id = ".$uid;
+		$result = $db->get_result( $sql );
+		if (!(mysql_num_rows($result) == 1))
+		  trigger_error('unable to find facebook user',E_USER_ERROR);
+		$sess = $db->result_value($result,0,'oauth_key');
+	} else {
+	  $sess = false;
+	}
+
+	$next = $fblogin;
+
+if (isset($_GET['callbackurl']))
+	$next = $_GET['callbackurl'];
+
+	$f = new Facebook(
+	  $fbkey,
+	  $fbsec,
+	  $appid,
+	  $agent,
+	  $sess,
+	  $next
+	);
+
+	$tok = $f->request_token();
+
+	redirect_to( $tok->authorize_url().'&fbconnect=true&return_session=true&req_perms=offline_access,publish_stream' );
+}
+
 function facebook_login( &$vars ) {
   extract($vars);
   
@@ -1012,8 +1161,12 @@ function facebook_login( &$vars ) {
   require_once "FacebookStream.php";
   require_once "Services/Facebook.php";
   
-  if (isset($_GET['forward']) && !empty($_SERVER['HTTP_REFERER']))
-    $_SESSION['fb_forward'] = $_SERVER['HTTP_REFERER'];
+  if (isset($_GET['forward'])){
+	  if (!empty($_SERVER['HTTP_REFERER']))
+		  $_SESSION['fb_forward'] = $_SERVER['HTTP_REFERER'];
+		if (isset($_GET['callbackurl']))
+			$_SESSION['fb_forward'] = $_GET['callbackurl'];
+	} 
 
 //	$sesskey = environment('facebookSession');
 
@@ -1024,12 +1177,35 @@ function facebook_login( &$vars ) {
   $_SESSION['fb_session'] = (string)$fb->api_client->session_key;
   $_SESSION['fb_userid'] = (string)$fb->user;
 
+
+//Array ( [facebook_login] => [session] => {"session_key":"f9635130200c863495a2b1b5-1437162069","uid":1437162069,"expires":0,"secret":"c3defc035b5d496f87c0c691c2072da5","base_domain":"tweetiepic.com","sig":"8936f0dc4ac9353b90a7a69bbbcb6a5a"} [permissions] => ["read_stream","offline_access","publish_stream"] ) 
+if (isset($_GET['session'])){
+
+  if (!(class_exists('Services_JSON')))
+    lib_include( 'json' );
+
+  $data = $_GET['session'];
+//  print_r(unserialize($data));
+$arr = (array)json_decode($data);
+if ($arr['uid'])
+  $_SESSION['fb_userid'] = $arr['uid'];
+if ($arr['session_key'])
+  $_SESSION['fb_session'] = $arr['session_key'];
+
+}
+
+
+
+  if (!$_SESSION['fb_userid'])
+	  redirect_to($request->url_for('facebook_getloggedin'));
+
+
   $fs = new FacebookStream($consumer_key,$consumer_secret,$agent,$app_id);
-  
+
   $token = $fs->getAccessToken();
 
 	$_SESSION['fb_request_token'] = $token;
-	
+
   $fieldlist = array(
     'last_name',
     'first_name',
@@ -1040,11 +1216,8 @@ function facebook_login( &$vars ) {
     'name',
     'proxied_email'
   );
-  
-  $fields = implode(',',$fieldlist);
 
-  if (!$_SESSION['fb_userid'])
-	  trigger_error('unknown Facebook user error sorry',E_USER_ERROR);
+  $fields = implode(',',$fieldlist);
 
   $user = $fs->getInfo( $_SESSION['fb_userid'], $fields );
   
@@ -1303,6 +1476,9 @@ function security_init() {
   $request->connect( 'openid_submit' );
   
   $request->connect( 'password_submit' );
+  $request->connect( 'facebook_dologin' );
+  $request->connect( 'facebook_getloggedin' );
+  $request->connect( 'rsslike/:forurl', array('action'=>'like','resource'=>'posts'));
 
   $request->connect( 'password_register' );
   
@@ -1381,13 +1557,21 @@ function get_twitter_oauth(){
   return false;
 }
 
-function get_twitter_screen_name(){
-	global $db,$prefix,$request;
-  $sql = "SELECT screen_name FROM ".$prefix."twitter_users WHERE profile_id = ".get_profile_id();
-  $result = $db->get_result( $sql );
-  if ($db->num_rows($result) == 1)
-    return $db->result_value($result,0,'screen_name');
-  return false;
+function get_twitter_screen_name($person_id=false){
+	global $db;
+	if (!$person_id)
+	  $person_id = get_person_id();
+
+  $TwitterUser =& $db->model('TwitterUser');
+  $TwitterUser->has_one('profile_id:identities');
+  $stat = $TwitterUser->find_by(array(
+		'identities.person_id'=>$person_id
+	));
+  if ($stat){
+	  $tu = $TwitterUser->MoveFirst();
+    return $tu->screen_name;
+  }
+	return false;
 }
 
 function explode_returned($responseString){
@@ -1431,7 +1615,12 @@ function setup_google_account(){
 		$cfg->set_etag();
 
   }	
+
+  if (isset($_SESSION['bz_forward']))
+	  redirect_to($_SESSION['bz_forward']);
+
   redirect_to($request->base);
+
 
 	exit;
 	
@@ -1473,6 +1662,15 @@ function authsub( &$vars ) {
 	  setup_google_account();
   extract($vars);
 //  $scope = 'https://mail.google.com/mail/feed/atom/';
+
+if (isset($_GET['forward'])){
+  if (!empty($_SERVER['HTTP_REFERER']))
+	  $_SESSION['bz_forward'] = $_SERVER['HTTP_REFERER'];
+	if (isset($_GET['callbackurl']))
+		$_SESSION['bz_forward'] = $_GET['callbackurl'];
+} 
+
+
   $scope = 'https://www.googleapis.com/auth/buzz';
   $base_url = $request->base;
   $endpoints = array(
@@ -1782,39 +1980,36 @@ print_r($sessid); exit;
 
 function has_twitter_account(){
 	global $db;
-	$Setting =& $db->model('Setting');
-	$stat = $Setting->find_by(array(
-		'person_id'=>get_person_id(),
-	  'eq'    => 'like',
-	  'name'  => '%importtwitter%'
+  $TwitterUser =& $db->model('TwitterUser');
+  $TwitterUser->has_one('profile_id:identities');
+  $stat = $TwitterUser->find_by(array(
+		'identities.person_id'=>get_person_id()
 	));
-	if ($stat)
-	  return true;
+  if ($stat)
+    return true;
 	return false;
 }
 
 function has_facebook_account(){
+	global $db,$prefix;
+  $FacebookUser =& $db->model('FacebookUser');
+	$FacebookUser->has_one('profile_id:identities');
+  $stat = $FacebookUser->find_by(array(
+		'identities.person_id'=>get_person_id()
+	));
+  if ($stat)
+    return true;
+	return false;
+}
+function has_google_account(){
 	global $db;
 	$Setting =& $db->model('Setting');
 	$stat = $Setting->find_by(array(
 		'person_id'=>get_person_id(),
 	  'eq'    => 'like',
-	  'name'  => '%importfacebook%'
-	));
-	if ($stat)
-	  return true;
-	return false;
-}
-
-function has_google_account(){
-	global $db;
-	$Setting =& $db->model('Setting');
-	$stat = $Setting->find_by(array(
-		'profile_id'=>get_profile_id(),
-	  'eq'    => 'like',
 	  'name'  => '%importgoogle%'
 	));
-	if ($stat)
+	if ($stat->exists)
 	  return true;
 	return false;
 }
@@ -1822,9 +2017,9 @@ function has_google_account(){
 function has_flickr_account(){
 	global $db;
 	$Setting =& $db->model('Setting');
-	$stat = $Setting->find_by(array('name'=>'flickr_frob','profile_id'=>get_profile_id()));
+	$stat = $Setting->find_by(array('name'=>'flickr_frob','person_id'=>get_person_id()));
 	if ($stat){
-		$stat = $Setting->find_by(array('name'=>'flickr_status','profile_id'=>get_profile_id()));
+		$stat = $Setting->find_by(array('name'=>'flickr_status','person_id'=>get_person_id()));
 	  if (!$stat) {
 	    $stat = $Setting->base();
 	    $stat->set_value('profile_id',get_profile_id());
@@ -1996,14 +2191,31 @@ function set_my_tweetiepic_pass() {
 
 
 
-function render_rss_feed($pro,$tweets){
+
+
+
+
+
+
+
+
+
+
+function render_rss_feed($pro,$tweets,$like = false,$likedata = false){
 	global $request;
 	echo '<?xml version="1.0"?>
 	<!-- RSS generated by OpenMicroBlogger v0.5.0 on '.date( "n/j/Y; g:i:s A e" ).' -->
-	<rss version="2.0" xmlns:scripting="http://flickrfan.org/scriptingNamespace.html" xmlns:media="http://search.yahoo.com/mrss/" xmlns:activity="http://activitystrea.ms/spec/1.0/" xmlns:osw="http://onesocialweb.org/spec/1.0/" xmlns:georss="http://www.georss.org/georss">
+	<rss version="2.0" xmlns:scripting="http://flickrfan.org/scriptingNamespace.html" xmlns:media="http://search.yahoo.com/mrss/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:activity="http://activitystrea.ms/spec/1.0/" xmlns:georss="http://www.georss.org/georss" xmlns:poco="http://portablecontacts.net/spec/1.0">
 		<channel>
 			<title>'.environment('site_title').' / '.$pro->nickname.'</title>
-			<link>'.$pro->profile_url.'</link>
+			<link>'.$pro->profile_url.'</link>';
+echo '
+			<atom:link type="application/rss+xml" href="'.$request->url_for(array('resource'=>'api/statuses/user_timeline/')).$pro->id.'.rss'.'" rel="self"></atom:link>
+			<image>
+				<link>'.$pro->profile_url.'</link>
+				<title>'.$pro->nickname.'</title>
+				<url>'.$pro->avatar.'</url>
+			</image>'; echo '
 			<description>'.environment('site_title').' updates from '.$pro->fullname.' / @'.$pro->nickname.'</description>
 			<language>en-us</language>
 			<copyright></copyright>
@@ -2011,24 +2223,48 @@ function render_rss_feed($pro,$tweets){
 			<lastBuildDate>'.date( "D, j M Y H:i:s T", strtotime( $tweets->updated )).'</lastBuildDate>
 			<generator>OpenMicroBlogger</generator>
 	    ';
-	    do_action('rss2_head');
+	    		do_action('rss2_head');
 	echo '
 	';
 
 	while ($p = $tweets->MoveNext()) {
 	
+		global $db;
+	$islike = false;
+	if ($p->parent_id > 0) {
+		$Like =& $db->model('Like');
+		$Like->find_by(array('post_id'=>$p->parent_id));
+		if ($Like->rowcount() == 1)
+		  $islike = true;
+	}
+$like = false;
+if ($islike)
+  $like = true;	
 	$posturl = $request->url_for(array('resource'=>'posts','id'=>$p->id));
 	$comurl = $posturl;
 	$tit = iconv('UTF-8', 'ASCII//TRANSLIT', $p->title);
 	$bod = iconv('UTF-8', 'ASCII//TRANSLIT', $p->body);
 
-	$like = false;
-	
-	$favorited_url = '';
-	$favorited_time = '';
-	$favorited_channel = '';
-	$favorited_channel_feed = '';
-	$favorited_channel_html = '';
+if ($like){
+
+$favdpost = $db->get_record( 'posts',$p->parent_id );
+ $owner = get_profile($favdpost->profile_id);
+	if (!is_object($favdpost)) continue;
+	$favorited_url = $favdpost->url;
+	$favorited_title = iconv('UTF-8', 'ASCII//TRANSLIT', $favdpost->title);
+	$favorited_time =  $favdpost->created;
+	$favorited_channel = ''.environment('site_title').' / '.$owner->nickname.'';
+	$favorited_channel_feed = $request->url_for(array('resource'=>'api/statuses/user_timeline/')).$owner->id.'.rss';
+	$favorited_channel_html = $owner->homepage;
+	$favorited_user_numeric_profile = $owner->profile;
+	$favorited_user_fullname = $owner->fullname;
+	$favorited_user_profile_url = $owner->profile_url;
+	$favorited_user_avatar_url = $owner->avatar;
+	$favorited_user_nickname = $owner->nickname;
+	$favorited_user_bio = $owner->bio;
+	$favorited_user_location = $owner->locality;
+	$favorited_user_homepage = $owner->homepage;
+}
 	
 	$private = false;
 	$permission = '		<osw:acl-action permission="http://onesocialweb.org/spec/1.0/acl/permission/grant">
@@ -2038,27 +2274,47 @@ function render_rss_feed($pro,$tweets){
   </osw:acl-rule>
 ';
 	echo '		<item>
-				<title>'.$tit.'</title>'; if ($like) echo '
-				<activity:verb>http://activitystrea.ms/schema/1.0/favorite</activity:verb>
-	  	  <activity:object xmlns="http://www.w3.org/2005/Atom">
-		      <id>'.$favorited_url.'</id>
-		      <title>'.$favorited_title.'</title>
-		      <published>'.date( "D, j M Y H:i:s T", strtotime( $favorited_time )).'</published>
-		      <link rel="alternate" type="text/html" href="'.$favorited_url.'" />
-		      <activity:object-type>http://onesocialweb.org/spec/1.0/object/status</activity:object-type>
-		      <source>
-		        <title>'.$favorited_channel.'</title>
-		        <link rel="self" type="application/rss+xml" href="'.$favorited_channel_feed.'" />
-		        <link rel="alternate" type="text/html" href="'.$favorited_channel_html.'" />
-		      </source>
-		   </activity:object>
-'; echo '		<link>'.$posturl.add_extension_if_blob($p).'</link>
+				<title>'.$tit.'</title>'; 
+				
+				if ($like) echo '
+				<activity:verb>http://activitystrea.ms/schema/1.0/like</activity:verb>
+	  	  <activity:object>
+		      <atom:id>'.$favorited_url.'</atom:id>
+		      <atom:title>'.$favorited_title.'</atom:title>
+		      <atom:published>'.date( "D, j M Y H:i:s T", strtotime( $favorited_time )).'</atom:published>
+		      <atom:link rel="alternate" type="text/html" href="'.$favorited_url.'" />
+		      <atom:source>
+		        <atom:title>'.$favorited_channel.'</atom:title>
+		        <atom:link rel="self" type="application/rss+xml" href="'.$favorited_channel_feed.'" />
+		        <atom:link rel="alternate" type="text/html" href="'.$favorited_channel_html.'" />
+		      </atom:source>
+		    </activity:object>
+				<activity:actor>
+					<activity:object-type>http://activitystrea.ms/schema/1.0/person</activity:object-type>
+					<atom:id>'.$favorited_user_numeric_profile.'</atom:id>
+					<atom:title>'.$favorited_user_fullname.'</atom:title>
+					<atom:link rel="alternate" type="text/html" href="'.$favorited_user_profile_url.'"/>
+					<atom:link rel="avatar" type="image/jpeg" media:width="96" media:height="96" href="'.$favorited_user_avatar_url.'"/>
+					<poco:preferredUsername>'.$favorited_user_nickname.'</poco:preferredUsername>
+					<poco:displayName>'.$favorited_user_fullname.'</poco:displayName>
+					<poco:note>'.$favorited_user_bio.'</poco:note>
+					<poco:address>
+						<poco:formatted>'.$favorited_user_location.'</poco:formatted>
+					</poco:address>
+					<poco:urls>
+						<poco:type>homepage</poco:type>
+						<poco:value>'.$favorited_user_homepage.'</poco:value>
+						<poco:primary>true</poco:primary>
+					</poco:urls>
+				</activity:actor>
+'; else echo '
+    '; echo '		<link>'.$posturl.add_extension_if_blob($p).'</link>
 				<scripting:byline>'.$pro->fullname.'</scripting:byline>
 				<guid>'.$posturl.'</guid>
 	      <comments>'.$comurl.'</comments>
 				<description>'.$bod.'</description>
 				<pubDate>'.date( "D, j M Y H:i:s T", strtotime( $p->created )).'</pubDate>'.add_rss_if_blob($p,$posturl); if ($private) echo $permission; echo '
-		  </item>
+		  	</item>
 	';
 	}
 	echo '	</channel>

@@ -1807,7 +1807,7 @@ function get_person_id() {
     if ($i)
       return $i->person_id;
   }
-  
+
   if (isset($_SERVER['PHP_AUTH_USER'])) {
     global $person_id;
     if ($person_id) {
@@ -1815,8 +1815,9 @@ function get_person_id() {
       return $person_id;
     }
   }
-  
+
   $p = get_cookie_id();
+
 
   if ($p)
     return $p;

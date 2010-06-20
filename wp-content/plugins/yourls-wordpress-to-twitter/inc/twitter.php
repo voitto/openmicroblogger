@@ -7,8 +7,13 @@ function wp_ozh_yourls_tweet_it($username, $password, $message){
 	
 	if ($ozh_yourls['other'] == 'rply' && isset($ozh_yourls['twitter_api']) && !empty($ozh_yourls['twitter_api'])) {
 	  $api_url = $ozh_yourls['twitter_api'];
-	  $body =    array( 'status'=>$message, 'username' => $ozh_yourls['rply_login'],'password'=>$ozh_yourls['rply_password'] );
-  	$headers = array();
+		if (strpos($api_url, 'rp.ly')) {
+		  $body =    array( 'status'=>$message, 'username' => $ozh_yourls['rply_login'],'password'=>$ozh_yourls['rply_password'] );
+			$headers = array();
+		} else {
+		  $body =    array( 'status'=>$message );
+		  $headers = array( 'Authorization' => 'Basic '.base64_encode("$username:$password") );
+		}
   } else {
     $api_url = 'http://twitter.com/statuses/update.json';
 	  $body =    array( 'status'=>$message );

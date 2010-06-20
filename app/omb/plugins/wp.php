@@ -14,7 +14,9 @@ function wp_create_nonce($action = -1) {
 function post_password_required() {
   return false;
 }
-
+function get_search_form(){
+	return false;
+}
 function post_reply_link($arr,$post_id) {
 require('wp-content/language/lang_chooser.php'); //Loads the language-file
   // peh

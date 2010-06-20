@@ -104,13 +104,16 @@ class Collection extends GenericIterator {
     if (isset($request->params['page']) && !is_array($request->params['page']))
       $table->set_offset( ($this->per_page * $request->params['page']) - $this->per_page );
 
-    if ( !( $find_by == NULL ))
-      $table->find_by( $find_by );
-    elseif ( !$request->id )
+    if ( !( $find_by == NULL )){
+      $table->set_param('find_by',$find_by);
+//print_r($find_by); 
+//echo $table->get_query(); exit; 
+     $table->find();
+  }  elseif ( !$request->id ){
       $table->find();
-    else
+}    else {
       $table->find( $request->id );
-    
+}    
     if (isset($table->uri_key))
       $uri_key = $table->uri_key;
     else
