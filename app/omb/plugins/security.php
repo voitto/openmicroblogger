@@ -694,6 +694,7 @@ function _oauth( &$vars ) {
       $tablist = array();
       for($i=0;$tables[$i]=mysql_fetch_assoc($tabresult);$i++)
         foreach($tables[$i] as $k=>$v) $tablist[] = $v;
+      $Blog->find();
       while ($b = $Blog->MoveNext()) {
         if (!empty($b->prefix) && in_array($b->prefix."_db_sessions",$tablist)) {
           $sql = "SELECT data FROM ".$b->prefix."_db_sessions WHERE data LIKE '%".$db->escape_string($_REQUEST['oauth_token'])."%'";
