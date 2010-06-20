@@ -1,0 +1,29 @@
+<?php if (!empty($theme)) return render_theme($theme); else render_partial( 'doctype' ); ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	<?php if (environment('facebookKey')) : ?>
+		<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
+	  <head>
+			<script type="text/javascript">
+			  function facebook_onlogin() {
+	        window.location='<?php url_for('facebook_login'); ?>';
+			  }
+			  function facebook_dologin() {
+					FB_RequireFeatures(["XFBML"], function(){ 
+						FB.Facebook.init('<?php echo environment('facebookKey') ?>', 'resource/xd_receiver.htm', null);
+						FB.ensureInit(function () { 
+							FB.Connect.requireSession(facebook_onlogin, true);
+						});
+					});
+				}
+			</script>
+		</head>
+	<?php else : ?>
+    <html>
+		<head></head>
+	<?php endif; ?>
+
+	<body>
+
+	
+</body>
+</html>

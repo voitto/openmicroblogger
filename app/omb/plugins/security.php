@@ -1179,7 +1179,7 @@ function facebook_login( &$vars ) {
   $_SESSION['fb_userid'] = (string)$fb->user;
 
 
-//Array ( [facebook_login] => [session] => {"session_key":"f9635130200c863495a2b1b5-1437162069","uid":1437162069,"expires":0,"secret":"c3defc035b5d496f87c0c691c2072da5","base_domain":"tweetiepic.com","sig":"8936f0dc4ac9353b90a7a69bbbcb6a5a"} [permissions] => ["read_stream","offline_access","publish_stream"] ) 
+
 if (isset($_GET['session'])){
 
   if (!(class_exists('Services_JSON')))
