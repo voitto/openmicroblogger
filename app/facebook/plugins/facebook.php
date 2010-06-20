@@ -33,8 +33,8 @@ function send_to_facebook( &$model, &$rec ) {
   if (!(isset($rec->title)) || !(isset($rec->uri)))
     return;
   
-  if (get_option('facebook_status') != 'enabled')
-    return;
+  if ((get_option('facebook_status') != 'enabled') &&
+   (!isset($_POST['face_it']))
   
   global $db,$prefix,$request;
 
