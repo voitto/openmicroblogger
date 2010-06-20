@@ -38,11 +38,22 @@ function send_to_facebook( &$model, &$rec ) {
   
   global $db,$prefix,$request;
 
+
+
 //  $sql = "SELECT facebook_id FROM ".$prefix."facebook_users WHERE profile_id = ".get_profile_id();
-  $sql = "SELECT facebook_id,oauth_key FROM identities,facebook_users WHERE facebook_users.profile_id = identities.id and identities.person_id = ".get_person_id();
+  $sql = "SELECT facebook_id,oauth_key FROM ".$prefix."identities,".$prefix."facebook_users WHERE ".$prefix."facebook_users.profile_id = ".$prefix."identities.id and ".$prefix."identities.person_id = ".get_person_id();
   $result = $db->get_result( $sql );
   
-  if ($db->num_rows($result) == 1) {
+
+	  if ($db->num_rows($result) == 1) {
+
+		} else {
+
+
+		  $sql = "SELECT facebook_id,oauth_key FROM identities,facebook_users WHERE facebook_users.profile_id = identities.id and identities.person_id = ".get_person_id();
+		  $result = $db->get_result( $sql );
+
+		}
 
 
 	  ini_set('display_errors','1');
@@ -200,7 +211,7 @@ db_include('facebook');
 			    $l->save_changes();
 			}
 	    
-		}
+
 
   }
 }
