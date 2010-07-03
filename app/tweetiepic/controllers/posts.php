@@ -93,6 +93,11 @@ function post( &$vars ) {
 
 
 if (isset($request->likedurl)) {
+	
+	$Like =& $db->model('Like');
+  if (!$Like->exists)
+    $Like->save();
+	
 	$Post =& $db->model('Post');
 	$shorturl = $request->likedurl;
 	$Post->has_one('like');
@@ -212,6 +217,7 @@ if ($fbu){
   $twittercmd = handle_twitter_cmdline($request);
   $twittercmd = handle_tweetiepic($request);
 
+
   if ($twittercmd)
     redirect_to($request->base);
 
@@ -253,7 +259,8 @@ if ($fbu){
       'resource'=>$table,
       'id'=>$rec->id
     ));
-    $title = substr($rec->title,0,140);
+    $title = html_entity_decode(substr($rec->title,0,140));
+
     $over = ((strlen($title) + strlen($url) + 1) - 140);
     if ($over > 0)
       $rec->set_value('title',substr($title,0,-$over)." ".$url);

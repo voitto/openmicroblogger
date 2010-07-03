@@ -1904,6 +1904,21 @@ if ($varios == 'action'){
 
   $request->set_param( $param, $value );
 
+  $variants = array(
+    array(
+      'id' => 'html',
+      'qs' => 1.000,
+      'type' => 'text/html',
+      'encoding' => null,
+      'charset' => 'utf-8',
+      'language' => 'en',
+      'size' => 3000
+    )
+  );
+  
+  $response->negotiator = $variants;
+
+
   $response->render( $request );
 
   exit;
