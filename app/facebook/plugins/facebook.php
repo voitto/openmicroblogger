@@ -33,9 +33,9 @@ function send_to_facebook( &$model, &$rec ) {
   if (!(isset($rec->title)) || !(isset($rec->uri)))
     return;
   
-  if ((get_option('facebook_status') != 'enabled') &&
-   (!isset($_POST['face_it'])))
-    return;
+if ($rec->parent_id > 0)
+  return;
+
   
   global $db,$prefix,$request;
 
@@ -43,17 +43,19 @@ function send_to_facebook( &$model, &$rec ) {
 
 //  $sql = "SELECT facebook_id FROM ".$prefix."facebook_users WHERE profile_id = ".get_profile_id();
   
-$sql = "SELECT facebook_id,oauth_key FROM identities,facebook_users WHERE facebook_users.profile_id = identities.id and identities.person_id = ".get_person_id();
+
+$sql = "SELECT facebook_id,oauth_key FROM ".$prefix."identities,".$prefix."facebook_users WHERE ".$prefix."facebook_users.profile_id = ".$prefix."identities.id and ".$prefix."identities.person_id = ".get_person_id();
 $result = $db->get_result( $sql );
 
-	  if ($db->num_rows($result) == 1) {
+if (!$result){
 
-		} else {
-
-		  $sql = "SELECT facebook_id,oauth_key FROM ".$prefix."identities,".$prefix."facebook_users WHERE ".$prefix."facebook_users.profile_id = ".$prefix."identities.id and ".$prefix."identities.person_id = ".get_person_id();
-		  $result = $db->get_result( $sql );
+			$sql = "SELECT facebook_id,oauth_key FROM identities,facebook_users WHERE facebook_users.profile_id = identities.id and identities.person_id = ".get_person_id();
+			$result = $db->get_result( $sql );
 
 		}
+
+		if (!$result)
+  		return;
 
 
 	  ini_set('display_errors','1');
