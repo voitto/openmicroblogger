@@ -3283,15 +3283,21 @@ function wp_remote_get( $url, $paramarr, $post=false ){
   $port = $paramarr['port'];
 
 	$ch = curl_init();
+
 	curl_setopt ($ch, CURLOPT_URL, $url);
 	curl_setopt ($ch, CURLOPT_HEADER, 0); /// Header control
 	curl_setopt ($ch, CURLOPT_PORT, $port);
+
 	if ($post){
 	  curl_setopt ($ch, CURLOPT_POST, true);  /// tell it to make a POST, not a GET
   	curl_setopt ($ch, CURLOPT_POSTFIELDS, $paramarr['body']);
  	}
-  curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-   curl_setopt( $curl, CURLOPT_TIMEOUT, $timeout);
+
+	if (isset($paramarr['headers']))
+	  curl_setopt($ch, CURLOPT_HTTPHEADER, $paramarr['headers']);
+
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+   curl_setopt( $ch, CURLOPT_TIMEOUT, $timeout);
    curl_setopt($ch, CURLOPT_USERAGENT, $agent);
 	curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
 	$xml_response = curl_exec ($ch);

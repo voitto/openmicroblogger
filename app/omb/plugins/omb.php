@@ -13,6 +13,25 @@ define( OAUTH_VERSION, 'http://oauth.net/core/1.0' );
 
 //lib_include('rsscloud_element');
 
+$request->connect('pushpress');
+
+function pushpress(){
+
+	require_once 'wp-content/plugins/pushpress/class-pushpress.php';
+
+	if ( !defined( 'PUSHPRESS_VERSION' ) )
+	define( 'PUSHPRESS_VERSION', '0.1.6' );
+
+	if ( !defined( 'PUSHPRESS_CLASS' ) )
+		define( 'PUSHPRESS_CLASS', 'PuSHPress' );
+
+	$pushpress_class = PUSHPRESS_CLASS;
+	$pushpress = new $pushpress_class( );
+
+
+	$pushpress->hub_request( );
+
+}
 
 
 $omb_routes = array(
@@ -32,6 +51,7 @@ $omb_routes = array(
   'flickr_login',
   'login_callback'
 );
+
 
 foreach ($omb_routes as $func)
   $request->connect( $func );
@@ -145,6 +165,8 @@ before_filter( 'omb_filter_posts', 'get_query' );
 
 function omb_filter_posts( &$model, &$db ) {
   global $request;
+  if (is_array($model->find_by))
+    return;
   if ($model->table != 'posts')
     return;
   if (isset($_POST['s']) && !empty($_POST['s'])) {
@@ -382,9 +404,7 @@ function wp_set_post_fields_after( &$model, &$rec ) {
     $rec->set_value( 'uri', $request->url_for( array(
       'resource'=>'__'.$rec->id,
     )));
-    $rec->set_value( 'url', $request->url_for( array(
-      'resource'=>'__'.$rec->id,
-    )));
+    $rec->set_value( 'url', $request->url_for(array('resource'=>'posts','id'=>$rec->id)));
     if (isset($_POST['parent_id']) && is_numeric($_POST['parent_id']) && is_ajax()) {
       $rec->set_value( 'parent_id',$_POST['parent_id']);
       $rec->set_value( 'local',1);

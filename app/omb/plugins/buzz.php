@@ -9,7 +9,8 @@ function send_to_buzz( &$model, &$rec ) {
     return;
   if (!(isset($rec->title)) || !(isset($rec->uri)))
     return;
-
+	if ($rec->parent_id > 0)
+	  return;
 //  if ((get_option('buzz_status') != 'enabled') &&
 //   (!isset($_POST['buzz_it'])))
 //    return;

@@ -40,13 +40,21 @@ function rsscloud_init(){
   
 function set_default_omb_cloud_options(){
 	global $request;
-	$cloud_path = '/api/rsscloud/pleaseNotify';
+  $cloud_domain = $request->domain;
+	$cloud_path = '/api/rsscloud/callback';
 	$cloud_ping = '/api/rsscloud/ping';
-	if (strlen($request->path)>1) {
+	if (empty($cloud_domain)) {
+    if ($request->values[1] == 'http://' && !pretty_urls())
+      $cloud_domain = $request->values[2];
+	} elseif (strlen($request->path)>1) {
 		$cloud_path = '/'.$request->path.$cloud_path;
 		$cloud_ping = '/'.$request->path.$cloud_ping;
+  }
+  if (!pretty_urls()) {
+		$cloud_path = $request->path.'?api/rsscloud/callback';
+		$cloud_ping = $request->path.'?api/rsscloud/ping';
 	}
-  add_option('cloud_domain',$request->domain,'Cloud Domain');
+  add_option('cloud_domain',$cloud_domain,'Cloud Domain');
   add_option('cloud_port','80','Cloud Port');
   add_option('cloud_path',$cloud_path,'Cloud Path');
   add_option('cloud_function','','Cloud Function');

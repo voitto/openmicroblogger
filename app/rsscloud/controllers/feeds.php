@@ -30,6 +30,21 @@ function get_cloud_element($f){
 	return $f;
 }
 
+function get_profile_elements($f){
+	$buf = readURL($f['xmlUrl']);
+	$xml = new SimpleXmlElement($buf);
+	$values = array();
+	foreach($xml as $k1=>$v1){
+    foreach($v1 as $k2=>$v2){
+	    $entry = array((string)$k2 => (string)$v2);
+      foreach($v2->attributes() as $k4 => $v4)
+		    $entry[(string)$k4] = (string)$v4;
+      $values[] = $entry;
+		}
+	}
+	return $values;
+}
+
 function get( &$vars ) {
   extract( $vars );
   switch ( count( $collection->members )) {
@@ -104,7 +119,8 @@ function post( &$vars ) {
   $Subscription =& $db->model('Subscription');
 	foreach($feeds as $f){
 		$fd = $Feed->find_by('xref',$f['xmlUrl']);
-		$fd = true;
+//		$fd = true;
+
     if (!$fd){
 	    $fd = $Feed->base();
 	    $fd->set_value('xref',$f['xmlUrl']);
@@ -119,26 +135,76 @@ function post( &$vars ) {
 		    $fd->set_value('cloud_function',$f['registerProcedure']);
 		    $fd->set_value('cloud_protocol',$f['protocol']);
 			}
+
+
 	    $fd->set_value('description',$f['description']);
 			$fd->set_value('email',$f['email']);
+
 			$nickname = '';
-			$letters = str_split(strtolower($f['text']));
+			$arr = get_profile_elements($f);
+
+			$href = $f['htmlUrl'];
+			
+			foreach($arr as $k=>$v){
+				if (isset($v['link'])){
+			    if (!isset($v['rel']) && empty($href))
+					  $href = $v['link'];
+				}
+				if (isset($v['title']))
+				  $title = $v['title'];
+			}
+			foreach($arr as $k=>$v){
+				if (isset($v['link'])){
+			    if (isset($v['href']) && empty($href))
+					  $href = $v['href'];
+				}
+			}
+
+			if (!empty($f['text']))
+				$letters = str_split(strtolower($f['text']));
+			else
+			  $letters = str_split(strtolower($title));
+
 			foreach ($letters as $letter)
 		    if (ereg("([a-z])", $letter))
 		      $nickname .= $letter;
+
 			$default = "http://openmicroblogger.com/resource/feed16.png";
+
 			$size = 40;
+
+if (!empty($f['email']))
 			$grav_url = "http://www.gravatar.com/avatar.php?
 			gravatar_id=".md5( strtolower($f['email']) ).
 			"&default=".urlencode($default).
 			"&size=".$size;
+else
+  $grav_url = $default;
+
 		  $location = '';
+
+
+if (!empty($f['text']))
+	$title = $f['text'];
+
+
+
+// nickname
+// avatar
+// fullname
+// bio
+// homepage
+// locality
+
+
+
+
 			$i = make_identity(array(
 				$nickname,
 				$grav_url,
-				$f['text'],
+				$title,
 				$f['description'],
-				$f['htmlUrl'],
+				$href,
 				$location
 			),true);
 			if ($i){
@@ -152,17 +218,15 @@ function post( &$vars ) {
         $s->set_etag(get_person_id());
 			}
 		}
-print_r($f); exit;
-		if (isset($f['domain']))
-		echo 1;
-		 if ( !empty($_POST['rss_follow'])) echo 2;
-		exit;
+
 		if (isset($f['domain']) && !empty($_POST['rss_follow'])){
+			
+
 			$subscribe_url = "http://" . $f['domain'] . ":" . $f['port'] . "" . $f['path'] . "";
 			$params = array(
-				'notifyProcedure'=>get_option('cloud_function'),
+				'notifyProcedure'=>'',
 				'port'=>get_option('cloud_port'),
-				'path'=>'/api/rsscloud/callback',
+				'path'=>get_option('cloud_path'),
 				'protocol'=>get_option('cloud_protocol'),
 				'url1'=>$f['xmlUrl'],
 				'domain'=>get_option('cloud_domain')
@@ -170,12 +234,21 @@ print_r($f); exit;
 	    require_once(ABSPATH.WPINC.'/class-snoopy.php');
 			$snoop = new Snoopy;
 			
-			print_r($params); exit;
-				$snoop->submit(
+
+$res =				$snoop->submit(
 					$subscribe_url,
 					$params
 				);
+print_r($snoop);
+			echo "<BR><BR>";
+print_r($res);
+echo "<BR><BR>";
+echo $subscribe_url;
+echo "<BR><BR>";
+print_r($params);
+
 			admin_alert("rssCloud follow: " . $f['title']);
+exit;
 		}
 	}
   //$resource->insert_from_post( $request );

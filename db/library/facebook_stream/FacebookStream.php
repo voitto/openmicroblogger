@@ -307,7 +307,7 @@ else
 					FB_RequireFeatures(["XFBML"], function(){ 
 					FB.Facebook.init('$key', '$path', null);
 					FB.ensureInit(function () { 
-						FB.Connect.showPermissionDialog('$perms', function(accepted) { window.close(); } )
+						FB.Connect.showPermissionDialog( '$perms', ondone );
 					});
 				});
 				</script>

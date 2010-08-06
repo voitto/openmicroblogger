@@ -657,6 +657,7 @@ $request->connect(
     'requirements' => array ( '[A-Za-z0-9_.]+' )
   )
 );
+$request->connect('pushpress=hub');
 
 $request->connect( '', array( 'resource'=>$env['goes'], 'action'=>'get' ) );
 
@@ -664,6 +665,19 @@ $request->connect( '', array( 'resource'=>$env['goes'], 'action'=>'get' ) );
 #aspect_join_functions( 'routematch', 'catch_params' );
 
 $request->routematch();
+
+if (isset($request->params['byid'])){
+	if ($request->params['byid'] > 0){
+	  global $blogdata;
+	  if (isset($blogdata)){
+			$p = get_profile($request->params['byid']);
+			if (pretty_urls())
+	  		$blogdata['rss2_url'] = base_url(true).$p->nickname.'.rss';
+			else
+				$blogdata['rss2_url'] = $request->url_for(array('resource'=>'api/statuses/user_timeline/')).$p->id.'.rss';
+	  }
+	}
+}
 
 if (isset($request->params['stream'])) {
 

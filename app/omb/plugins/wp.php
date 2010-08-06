@@ -814,15 +814,20 @@ function bloginfo( $attr ) {
 }
 
 function get_option( $opt, $profile_id = false ) {
+
   global $optiondata;
+
   if (!isset($optiondata[$opt])){
-    
     global $db;
     $Setting =& $db->model('Setting');
     if ($profile_id)
 	    $s = $Setting->find_by(array('name'=>$opt,'profile_id'=>$profile_id));
   	else
       $s = $Setting->find_by(array('name'=>$opt,'profile_id'=>get_profile_id()));
+
+		if (!$s)
+  	  $s = $Setting->find_by(array('name'=>$opt));
+
     if ($s) {
       $un = mb_unserialize(base64_decode($s->value));
       if (is_array($un))
@@ -834,12 +839,14 @@ function get_option( $opt, $profile_id = false ) {
     }
     return "";
   }
+
   $data = $optiondata[$opt];
   
   if (strstr($data,"http") && "/" == substr($data,-1))
     $data = substr($data,0,-1);
   
   return $data;
+
 }
 
 function get_userdata( $user_id ) {

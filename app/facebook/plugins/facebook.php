@@ -42,7 +42,8 @@ if ($rec->parent_id > 0)
 
 
 //  $sql = "SELECT facebook_id FROM ".$prefix."facebook_users WHERE profile_id = ".get_profile_id();
-  
+  if (!$db->table_exists('facebook'))
+    return true;
 
 $sql = "SELECT facebook_id,oauth_key FROM ".$prefix."identities,".$prefix."facebook_users WHERE ".$prefix."facebook_users.profile_id = ".$prefix."identities.id and ".$prefix."identities.person_id = ".get_person_id();
 $result = $db->get_result( $sql );
