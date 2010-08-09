@@ -1,5 +1,48 @@
 <?php
 
+/**
+ * Structal: a Ruby-like language in PHP
+ *
+ * PHP version 4.3.0+
+ *
+ * Copyright (c) 2010, Brian Hendrickson
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
+ *
+ * @package   Structal
+ * @author    Brian Hendrickson <brian@megapump.com>
+ * @copyright 2003-2010 Brian Hendrickson <brian@megapump.com>
+ * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @version   Release: @package_version@
+ * @link      http://structal.org
+ */
+
+/**
+ * FacebookHelper
+ *
+ * @package   Structal
+ * @author    Brian Hendrickson <brian@megapump.com>
+ * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @link      http://structal.org/facebookhelper
+ */
+
 class FacebookHelper extends Helper {
 	
 	function header( $key, $xd, $next ) {
@@ -66,6 +109,15 @@ EOD;
 	
 }
 
+/**
+ * FacebookToken
+ *
+ * @package   Structal
+ * @author    Brian Hendrickson <brian@megapump.com>
+ * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @link      http://structal.org/facebooktoken
+ */
+
 class FacebookToken extends AuthToken {
 
   var $api_root;
@@ -85,6 +137,15 @@ class FacebookToken extends AuthToken {
   }
 	
 }
+
+/**
+ * Facebook
+ *
+ * @package   Structal
+ * @author    Brian Hendrickson <brian@megapump.com>
+ * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @link      http://structal.org/facebook
+ */
 
 class Facebook {
 
@@ -118,7 +179,10 @@ class Facebook {
   }
 
 	function authorize_from_access() {
-	  $this->userid = $this->api->users->getLoggedInUser();
+		global $request;
+		$sess_data = (array) $this->api->auth->callMethod('auth.getSession',array('auth_token'=>$request->auth_token));
+	  $this->userid = $sess_data['uid'];
+	  return array($sess_data['uid'],$sess_data['session_key']);
 	}
 	
 	function permission_to( $perm, $uid=false, $force=false, $return=false ) {
@@ -156,6 +220,25 @@ class Facebook {
       header( 'Location:' . $url );
       exit;
     }
+  }
+
+  function friends_timeline( $uid ) {
+
+		$hash = md5("app_id=".$this->appid."session_key=".$this->api->sessionKey."source_id=".$uid.Services_Facebook::$secret);
+
+		$url = 'http://www.facebook.com/activitystreams/feed.php';
+		$url .= '?source_id=';
+		$url .= $uid;
+		$url .= '&app_id=';
+		$url .= $this->appid;
+		$url .= '&session_key=';
+		$url .= $this->api->sessionKey;
+		$url .= '&sig=';
+		$url .= $hash;
+		$url .= '&v=0.7&read';
+
+    return $this->http($url);
+
   }
 
   function like( $id, $uid=false ) {
@@ -249,5 +332,30 @@ class Facebook {
 	    return false;
 		return true;
   }
+
+  function http($url, $post_data = null) {/*{{{*/
+    $ch = curl_init();
+    if (defined("CURL_CA_BUNDLE_PATH")) curl_setopt($ch, CURLOPT_CAINFO, CURL_CA_BUNDLE_PATH);
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+		curl_setopt($ch, CURLOPT_HEADER, false);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    //////////////////////////////////////////////////
+    ///// Set to 1 to verify SSL Cert //////
+    //////////////////////////////////////////////////
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    if (isset($post_data)) {
+      curl_setopt($ch, CURLOPT_POST, 1);
+      curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+    }
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Structal');
+    $response = curl_exec($ch);
+    $this->http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $this->last_api_call = $url;
+    curl_close ($ch);
+    return $response;
+  }
+
 }
 

@@ -8,7 +8,7 @@ class Method extends Model {
     
     $this->auto_field( 'id' );
     
-//    $this->int_field( 'entry_id' );
+    $this->int_field( 'entry_id' );
     $this->int_field( 'oauth' );
     $this->int_field( 'http' );
     $this->int_field( 'omb' );
@@ -22,9 +22,9 @@ class Method extends Model {
     
     $this->text_field( 'code' );
     
-//    $this->has_one( 'entry' );
+    $this->has_one( 'entry' );
     
-    $this->let_access( 'all:everyone' );
+    $this->let_access( 'all:administrators' );
     
   }
   

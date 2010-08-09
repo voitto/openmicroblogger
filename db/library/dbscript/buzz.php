@@ -1,5 +1,48 @@
 <?php
 
+/**
+ * Structal: a Ruby-like language in PHP
+ *
+ * PHP version 4.3.0+
+ *
+ * Copyright (c) 2010, Brian Hendrickson
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
+ *
+ * @package   Structal
+ * @author    Brian Hendrickson <brian@megapump.com>
+ * @copyright 2003-2010 Brian Hendrickson <brian@megapump.com>
+ * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @version   Release: @package_version@
+ * @link      http://structal.org
+ */
+
+/**
+ * BuzzToken
+ *
+ * @package   Structal
+ * @author    Brian Hendrickson <brian@megapump.com>
+ * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @link      http://structal.org/buzztoken
+ */
+
 class BuzzToken extends AuthToken {
 
   var $api_root = 'https://www.googleapis.com/buzz/v1/activities';
@@ -26,6 +69,15 @@ class BuzzToken extends AuthToken {
   }
 	
 }
+
+/**
+ * Buzz
+ *
+ * @package   Structal
+ * @author    Brian Hendrickson <brian@megapump.com>
+ * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @link      http://structal.org/buzz
+ */
 
 class Buzz {
 
@@ -153,7 +205,7 @@ class Buzz {
     $w->data = new bz_data();
     $w->data->object = new bz_odata($status);
     if (!function_exists('json_encode'))
-      lib_include('json');
+      include 'structal/json.php';
     $buzzjson = json_encode($w);
 		$headers = array();
     $headers[] = 'Content-Type: application/json';
@@ -197,7 +249,7 @@ class Buzz {
     $data2 = new bz_data();
     $data2->data = $data;
     if (!function_exists('json_encode'))
-      lib_include('json');
+      include 'structal/json.php';
     $buzzjson = json_encode($data2);
 		$headers = array();
     $headers[] = 'Content-Type: application/json';
@@ -214,6 +266,39 @@ class Buzz {
   }
 
   function search( $string ) {
+  }
+
+  function friends_timeline() {
+	  $tk = new BuzzToken();
+	  $apiroot = $tk->api_root;
+	  $url = $apiroot . '/@me/@consumption';
+		$params = array(
+		  'oauth_consumer_key' => $this->consumer->key,
+		  'oauth_timestamp' => time(),
+		  'oauth_version' => OAuthRequest::$version,
+		  'oauth_nonce' => md5(microtime().mt_rand()),
+		  'oauth_token'=>$this->token->key
+		);
+    $oauthRequest = OAuthRequest::from_request(
+	    'GET',
+	    $url,
+	    $params
+	  );
+    $oauthRequest->sign_request(
+	    $this->method,
+	    $this->consumer,
+	    $this->token
+	  );
+    $url = $oauthRequest->to_url();
+		$headers = array();
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
+    curl_setopt($ch, CURLOPT_FAILONERROR, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    return @curl_exec($ch);
   }
 
 	function http( $url, $post_data = null, $headers = null ){
@@ -241,6 +326,14 @@ class Buzz {
 
 }
 
+/**
+ * BuzzHelper
+ *
+ * @package   Structal
+ * @author    Brian Hendrickson <brian@megapump.com>
+ * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @link      http://structal.org/buzzhelper
+ */
 
 class BuzzHelper extends Helper {
 	
@@ -260,9 +353,26 @@ EOD;
 	
 }
 
+/**
+ * bz_data
+ *
+ * @package   Structal
+ * @author    Brian Hendrickson <brian@megapump.com>
+ * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @link      http://structal.org/bz_data
+ */
 
 class bz_data {
 }
+
+/**
+ * bz_odata
+ *
+ * @package   Structal
+ * @author    Brian Hendrickson <brian@megapump.com>
+ * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @link      http://structal.org/bz_odata
+ */
 
 class bz_odata{
 	var $type = 'note';
