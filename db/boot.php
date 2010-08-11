@@ -671,10 +671,7 @@ if (isset($request->params['byid'])){
 	  global $blogdata;
 	  if (isset($blogdata)){
 			$p = get_profile($request->params['byid']);
-			if (pretty_urls())
-	  		$blogdata['rss2_url'] = base_url(true).$p->nickname.'.rss';
-			else
-				$blogdata['rss2_url'] = $request->url_for(array('resource'=>'api/statuses/user_timeline/')).$p->id.'.rss';
+			$blogdata['rss2_url'] = $request->url_for(array('resource'=>'api/statuses/user_timeline/')).$p->id.'.rss';
 	  }
 	}
 }
