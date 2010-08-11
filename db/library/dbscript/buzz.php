@@ -205,7 +205,7 @@ class Buzz {
     $w->data = new bz_data();
     $w->data->object = new bz_odata($status);
     if (!function_exists('json_encode'))
-      include 'structal/json.php';
+      lib_include('json');
     $buzzjson = json_encode($w);
 		$headers = array();
     $headers[] = 'Content-Type: application/json';
@@ -249,7 +249,7 @@ class Buzz {
     $data2 = new bz_data();
     $data2->data = $data;
     if (!function_exists('json_encode'))
-      include 'structal/json.php';
+      lib_include('json');
     $buzzjson = json_encode($data2);
 		$headers = array();
     $headers[] = 'Content-Type: application/json';
