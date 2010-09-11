@@ -279,22 +279,37 @@ class PuSHPress {
 			$url .= '?' . $hub_vars;
 		}
 
+/*
 		$response = wp_remote_get( $url, array(
 			'sslverify'		=> FALSE,
 			'timeout'		=> $this->http_timeout,
 			'user-agent'	=> $this->http_user_agent,
 		) );
+*/
 
+
+        $ch = curl_init();
+			  curl_setopt($ch, CURLOPT_URL, $url);
+			  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+			  curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+			  curl_setopt($ch, CURLOPT_HEADER, false);
+			  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        $response = array('body'=>curl_exec($ch));
+
+
+        $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+/*
 		// look for failure indicators
 		if ( isset( $response->errors['http_request_failed'][0] ) ) {
 			do_action( 'pushpress_verify_http_failure' );
 			$this->return_error( "Error verifying callback URL - {$response->errors['http_request_failed'][0]}" );
 		}
-
-		$status_code = (int) $response['response']['code'];
+*/
+		//$status_code = (int) $response['response']['code'];
 		if ( $status_code < 200 || $status_code > 299 ) {
 			do_action( 'pushpress_verify_not_2xx_failure' );
-			$this->return_error( "Error verifying callback URL, HTTP status code: {$status_code}" );
+			$this->return_error( "Error verifying callback URL, HTTP status code: {$status_code}". $url."RESPONSE ". $response['body']." RESPONSE_END" );
 		}
 
 		if ( trim( $response['body'] ) != $challenge ) {

@@ -32,6 +32,339 @@ function handle_twitter_cmdline(&$request){
   return $result;
 }
 
+class RSSActivityHandler {
+	  var $data;
+	  var $new_item;
+	  var $current_tag;
+	  var $parsing_item;
+    function RSSActivityHandler(){
+	    $this->parsing_item = false;
+	    $this->data = array(
+		    'items'     => array(),
+		    'channel'   => array()
+		  );
+    }
+    function openHandler(& $parser,$name,$attrs) {
+	    $this->current_tag = $name;
+	    if ($name == 'item'){
+	      $this->new_item = array();
+	      $this->parsing_item = true;
+		  } elseif ($name == 'textInput'){
+		      $this->new_item = array();
+		      $this->parsing_item = true;
+			} elseif ($this->parsing_item) {
+				$this->new_item[$name] = $attrs;
+			} else {
+				$this->data['channel'][$name] = $attrs;
+			}
+    }
+    function closeHandler(& $parser,$name) {
+	    if ($name == 'item'){
+	      $this->data['items'][] = $this->new_item;
+	      $this->parsing_item = false;
+	    }
+	    if ($name == 'textInput'){
+	      $this->data['channel']['textInput'] = $this->new_item;
+	      $this->parsing_item = false;
+	    }
+    }
+    function dataHandler(& $parser,$data) {
+	    if ($this->parsing_item)
+	      if (count($this->new_item[$this->current_tag]) > 0)
+	        $this->new_item[$this->current_tag.'_data'] = $data;
+	      else
+	        $this->new_item[$this->current_tag] = $data;
+	    else
+	      if (count($this->data['channel'][$this->current_tag]) > 0)
+	        $this->data['channel'][$this->current_tag.'_data'] = $data;
+	      else
+		      $this->data['channel'][$this->current_tag] = $data;
+    }
+    function escapeHandler(& $parser,$data) {
+	    if ($this->parsing_item)
+	      $this->new_item[$this->current_tag.'_escape'] = $data;
+	    else
+	      $this->data['channel'][$this->current_tag.'_escape'] = $data;
+    }
+    function piHandler(& $parser,$target,$data) {
+	    if ($this->parsing_item)
+	      $this->new_item[$this->current_tag.'_pi'] = $data;
+	    else
+	      $this->data['channel'][$this->current_tag.'_pi'] = $data;
+    }
+    function jaspHandler(& $parser,$data) {
+	    if ($this->parsing_item)
+	      $this->new_item[$this->current_tag.'_jasp'] = $data;
+	    else
+	      $this->data['channel'][$this->current_tag.'_jasp'] = $data;
+    }
+}
+
+
+function discover_feeds($url){
+
+	add_include_path(library_path());
+	include 'Zend/Uri.php';
+
+  $curl = curl_init($url);
+  curl_setopt($curl, CURLOPT_FOLLOWLOCATION, false);
+  curl_setopt($curl, CURLOPT_HEADER, false);
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+  $result = curl_exec( $curl );
+
+  if ($result) 
+		$contents = $result;
+	else
+		$contents = '';
+
+  @ini_set('track_errors', 1);
+  $pattern = '~(<link[^>]+)/?>~i';
+  $result = @preg_match_all($pattern, $contents, $matches);
+  @ini_restore('track_errors');
+  $feeds = array();
+  if (isset($matches[1]) && count($matches[1]) > 0) {
+      foreach ($matches[1] as $link) {
+          if (!mb_check_encoding($link, 'UTF-8')) {
+              $link = mb_convert_encoding($link, 'UTF-8');
+          }
+          $xml = @simplexml_load_string(rtrim($link, ' /') . ' />');
+          if ($xml === false) {
+              continue;
+          }
+          $attributes = $xml->attributes();
+          if (!isset($attributes['rel']) || !@preg_match('~^(?:alternate|service\.feed)~i', $attributes['rel'])) {
+              continue;
+          }
+          if (!isset($attributes['type']) ||
+                  !@preg_match('~^application/(?:atom|rss|rdf)\+xml~', $attributes['type'])) {
+              continue;
+          }
+          if (!isset($attributes['href'])) {
+              continue;
+          }
+          try {
+              // checks if we need to canonize the given uri
+              try {
+                  $uri = Zend_Uri::factory((string) $attributes['href']);
+              } catch (Zend_Uri_Exception $e) {
+                  // canonize the uri
+                  $path = (string) $attributes['href'];
+                  $query = $fragment = '';
+                  if (substr($path, 0, 1) != '/') {
+                      // add the current root path to this one
+                      $path = rtrim($client->getUri()->getPath(), '/') . '/' . $path;
+                  }
+                  if (strpos($path, '?') !== false) {
+                      list($path, $query) = explode('?', $path, 2);
+                  }
+                  if (strpos($query, '#') !== false) {
+                      list($query, $fragment) = explode('#', $query, 2);
+                  }
+                  $uri = Zend_Uri::factory($client->getUri(true));
+                  $uri->setPath($path);
+                  $uri->setQuery($query);
+                  $uri->setFragment($fragment);
+              }
+
+          } catch (Exception $e) {
+              continue;
+          }
+          $feeds[] = $uri->getUri();
+      }
+  }
+  return $feeds;
+}
+
+function discover_textInput($url){
+
+  $curl = curl_init($url);
+  curl_setopt($curl, CURLOPT_FOLLOWLOCATION, false);
+  curl_setopt($curl, CURLOPT_HEADER, false);
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+  $result = curl_exec( $curl );
+
+  if ($result) 
+		$body = $result;
+	else
+		$body = false;
+
+  if ($body) {
+	  
+	  lib_include('parser');
+
+		$parser =& new HtmlParser();
+		$handler=& new RSSActivityHandler();
+
+		$parser->set_object($handler);
+
+		$parser->set_option('trimDataNodes', TRUE);
+
+		$parser->set_element_handler('openHandler','closeHandler');
+		$parser->set_data_handler('dataHandler');
+		$parser->set_escape_handler('escapeHandler');
+		$parser->set_pi_handler('piHandler');
+		$parser->set_jasp_handler('jaspHandler');
+
+		$parser->parse($body);
+ 
+    return $handler->data['channel']['textInput'];
+
+  }
+
+  return false;
+
+}
+
+
+function discover_twitter_person( $nickname ) {
+	$url = false;
+	$parts = str_split($nickname);
+	if ($parts[0] == '@')
+	  array_shift($parts);
+  $endpoint = 'http://api.twitter.com/1/users/show/'.implode($parts).'.json';
+  $ch = curl_init();
+  if (defined("CURL_CA_BUNDLE_PATH")) curl_setopt($ch, CURLOPT_CAINFO, CURL_CA_BUNDLE_PATH);
+  curl_setopt($ch, CURLOPT_URL, $endpoint);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  $response = curl_exec($ch);
+	if (!function_exists('json_encode'))
+	  lib_include('json');
+  $j = new Services_JSON();	
+	$twuser = (array)$j->decode($response);
+	return $twuser;
+}
+
+function get_my_latest_object() {
+  global $db;
+  $Post =& $db->model('Post');
+	$where = array(
+    'profile_id'=>get_profile_id(),
+    'local'=>1
+  );
+  $Post->find_by($where);
+  while ($p = $Post->MoveNext()){
+    $e = $p->FirstChild('entries');
+    if ($e->content_type == 'image/jpeg')
+      return $p;
+  }
+  return false;
+}
+
+function annotate(&$request){
+  $commands = array(
+	  'tag '
+	);
+  $parts = explode(" ",$request->params['post']['title']);
+  $c = $parts[0]." ";
+  $result = false;
+  if (in_array($c,$commands)){
+	  $c = trim($c)."_cmdfunc";
+	  if (function_exists($c))
+ 	    $result = $c($parts);
+  }
+  return $result;
+}
+	
+function tag_cmdfunc($parts){
+	// tag tantek.com in url
+	// create a new post, and annotate it with acivity strea.ms
+	// do feed discovery on tagged person's homepage url
+	if (isset($parts[1])){
+
+
+    if (strpos($parts[1], '.') !== false)
+      $object = array('url'=>'http://'.$parts[1],'screen_name'=>$parts[2]);
+    else
+	    $object = discover_twitter_person( $parts[1] );
+	
+    global $db,$request;
+
+    $request->set_param( array( 'post', 'title' ), 'tagged '. $parts[1] . ' in a photo' );
+
+	  $Annotation =& $db->model('Annotation');
+	  if (!$db->table_exists('annotations'))
+	    $Annotation->save();
+	
+	  $post = get_my_latest_object();
+	
+		$arr = add_thumbs_if_blob($post->url);
+
+		if ($arr[0]){
+			$preview = $arr[0];
+		}
+
+		if ($arr[5]){
+			$preview = $arr[5];
+		}
+
+	  $tagverb = 'http://activitystrea.ms/schema/1.0/tag';
+	
+		$ann = '[
+		    {
+		        "annotations": {
+		            "activity": {
+		                "verb": "'.$tagverb.'",
+			              "target": "'.$post->url.'",
+		                "target-type": "photo",
+		                "target-link-preview": "'.$preview.'",
+		                "target-title": "'.$post->title.'",
+		                "target-id": "'.$post->url.'",
+			              "object": "'.$object['url'].'",
+		                "object-type": "person",
+		                "object-title": "'.$object['screen_name'].'",
+		                "object-id": "'.$object['url'].'"
+		            } 
+		        } 
+		    }
+		]';
+
+ 	  //object: person
+    //target: photo
+    preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "", $ann);
+
+		if (!function_exists('json_encode'))
+		  lib_include('json');
+	  $j = new Services_JSON();	
+
+	  $a = $Annotation->base();
+	  $a->set_value('json',$ann);
+	  $a->save();
+	
+	  // feed discovery to notify the tagged person
+    $feeds = discover_feeds( $object['url'] );
+
+    foreach($feeds as $f){
+
+	    $input = discover_textInput($f);
+
+	    if (is_array($input)) {
+
+		    if (isset($input['link'])){
+			    $reply_to = $input['link'];
+			    $parts = split('mailto:',$reply_to);
+			    $recipient = $parts[1];
+
+				  global $request;
+
+				  $subject = 'You were tagged in a photo on '.$request->base;
+
+				  $email = "Hi, you were tagged in this photo:\n\n".$post->url."\n\n";
+
+				  $html = false;
+
+				  send_email( $recipient, $subject, $email, environment('email_from'), environment('email_name'), $html );
+
+		    }
+	    }
+    }
+	
+    if ($a->id > 0)
+			return $a;
+	
+	}
+	return false;
+}
+
 function follow_cmdfunc($parts){
 	if (isset($parts[1])){
 	  $to = get_twitter_oauth();
@@ -79,6 +412,7 @@ function post( &$vars ) {
   global $request;
 
   $twittercmd = handle_twitter_cmdline($request);
+  $annotation = annotate($request);
 
   if ($twittercmd)
     redirect_to($request->base);
@@ -103,6 +437,10 @@ function post( &$vars ) {
   $result = $rec->save_changes();
   if ( !$result )
     trigger_error( "The record could not be saved into the database.", E_USER_ERROR );
+  if ($annotation) {
+    $annotation->set_value('target_id',$rec->id);
+    $annotation->save_changes();
+  }
   $atomentry = $$modelvar->set_metadata($rec,$content_type,$table,'id');
   $$modelvar->set_categories($rec,$request,$atomentry);
   if ((is_upload($table,'attachment'))) {
@@ -129,6 +467,7 @@ function post( &$vars ) {
       $rec->set_value('title',$title." ".$url);
     $rec->save_changes();
     
+
     $tmp = $_FILES[strtolower(classify($table))]['tmp_name']['attachment'];
     
     if (is_jpg($tmp)) {

@@ -1505,6 +1505,8 @@ function security_init() {
 
   $request->connect( 'authsub' );
 
+	$request->connect('api/rss/textInput',array('action'=>'api_rss_textInput'));
+
   $request->connect( 'permanent_facebook_key/:key', array('action'=>'permanent_facebook_key') );
 
   $request->routematch();
@@ -2235,16 +2237,35 @@ function activity_object_content_type($url){
 
 function activity_object_type($url){
 	global $db;
-	$Post =& $db->model('Post');
-	$p = $Post->find_by(array('url'=>$url));
-	if (!$p)
-		return false;
-	$Entry =& $db->model('Entry');
-	$e = false;
-	$e = $Entry->find($p->entry_id);
-	if ($e)
+	$content_type = false;
+  $result = $db->get_result("select entry_id,id from ".$db->prefix."posts where url like '$url'");
+  if ($db->num_rows($result) == 1) {
+    $entry_id = $db->result_value($result,0,"entry_id");
+    $id = $db->result_value($result,0,"id");
+	  $result = $db->get_result("select content_type from ".$db->prefix."entries where id = $entry_id");
+	  if ($db->num_rows($result) == 1) {
+	    $content_type = $db->result_value($result,0,"content_type");
+	  }
+  }
+	if ($content_type == 'image/jpeg')
       return 'photo';
-	return false;
+  $Annotation =& $db->model('Annotation');
+  if (!$db->table_exists('annotations'))
+    $Annotation->save();
+  $Annotation->find_by(array('target_id'=>$id));
+  $a = $Annotation->MoveFirst();
+  if ($a->json){
+	  if (!function_exists('json_encode'))
+		  lib_include('json');
+
+	  $j = new Services_JSON();	
+
+		$ann =  $j->decode($a->json);
+
+	  if (count($ann) > 0)
+	    return $ann;
+  }
+	return 'note';
 }
 
 
@@ -2255,28 +2276,177 @@ function activity_object_type($url){
 
 
 
+function api_rss_textInput() {
+
+
+	global $db;
+  global $request;
+	$Post =& $db->model('Post');
+
+	$xml = (array)simplexml_load_string(urldecode($request->item));
+
+  $i = false;
+  $profile_url = false;
+  $avatar_url = false;
+  $username = '';
+	foreach($xml['subject'] as $k=>$v){
+		if ($k == 'link'){
+	    $parts = (array)$v;
+	    if ($parts['@attributes']['rel'] == 'alternate'){
+		    $profile_url = $parts['@attributes']['href'];
+	    }
+	    if ($parts['@attributes']['rel'] == 'avatar'){
+		    $avatar_url = $parts['@attributes']['href'];
+	    }
+		}
+    if ($k == 'preferredUsername'){
+	    $username = (string)$v;
+    }
+	}
+
+  if (!$profile_url || !$avatar_url || empty($username)){
+
+    trigger_error(E_USER_ERROR,'could not generate identity');
+} 
+
+  $Identity =& $db->model('Identity');
+
+	$i = $Identity->find_by(array('post_notice'=>$profile_url));
+
+	if (!($i->id > 0))
+	  $i = false;
+
+	if (!$i){
+	  $arr = array(
+	     $username,
+	    $avatar_url,
+	    $username,
+	    '',
+	    $profile_url,
+	    ''
+	  );
+
+	  $i = make_identity($arr);
+
+	  $i->set_value( 'update_profile', $profile_url );
+	  $i->set_value( 'post_notice', $profile_url );
+	  $i->save_changes();
+	}
+	
+  if (!$i)
+    trigger_error('sorry I was unable to create an identity', E_USER_ERROR);
+
+  
+	foreach($xml as $k=>$v){
+		if ($k == 'in-reply-to'){
+			$rply = (array)$v;
+			if (isset($rply['@attributes']['href'])){
+
+			  $parent = $Post->find_by(array('url'=>$rply['@attributes']['href']));
+
+				if (!($parent->id > 0))
+					trigger_error(E_USER_ERROR,'bad reply ID');
+
+		    	  $p = $Post->base();
+    		  	 $p->set_value( 'profile_id', $i->id );
+				    $p->set_value( 'parent_id', $parent->id );
+				    $p->set_value( 'title', (string)$xml['title'] );
+				    $p->save_changes();
+				    $p->set_etag($i->person_id);
+				    trigger_after( 'insert_from_post', $Post, $p );
+						$p->save_changes();
+
+					
+		  }
+		}
+	}
+
+	exit;
+
+
+
+  if (isset($handler->data['items'][0]['thr:in-reply-to']['href'])){
+
+		$parent = $Post->find_by(array('url'=>$handler->data['items'][0]['thr:in-reply-to']['href']));
+
+		if (!($parent->id > 0))
+			trigger_error(E_USER_ERROR,'bad reply ID');
+
+	    $p = $Post->base();
+
+/*
+			<activity:subject>
+			 <activity:object-type>http://activitystrea.ms/schema/1.0/person</activity:object-type>
+			 <atom:id>http://localhost/~brian/brianjesse-clone/index.php/user/1</atom:id>
+			 <atom:title>brianjesse</atom:title>
+			 <atom:link rel="alternate" type="text/html" href="http://localhost/~brian/brianjesse-clone/index.php/brianjesse"></atom:link>
+			 <atom:link rel="avatar" type="image/png" media:width="96" media:height="96" href="http://localhost/~brian/brianjesse-clone/theme/default/default-avatar-profile.png"></atom:link>
+			 <atom:link rel="avatar" type="image/png" media:width="48" media:height="48" href="http://localhost/~brian/brianjesse-clone/theme/default/default-avatar-stream.png"></atom:link>
+			 <atom:link rel="avatar" type="image/png" media:width="24" media:height="24" href="http://localhost/~brian/brianjesse-clone/theme/default/default-avatar-mini.png"></atom:link>
+			<poco:preferredUsername>brianjesse</poco:preferredUsername>
+			<poco:displayName>brianjesse</poco:displayName>
+			</activity:subject>
+*/
+
+$profile_url = $handler->data['items'][0];
+
+	
+/*	    $p->set_value( 'profile_id', $sender->id );
+	    $p->set_value( 'parent_id', $parent->id );
+	    $p->set_value( 'uri', $notice_uri );
+	    $p->set_value( 'url', $notice_url );
+	    $p->set_value( 'title', $content );
+	    $p->save_changes();
+	    $p->set_etag($sender->person_id);
+
+	    trigger_after( 'insert_from_post', $Post, $p );
+	*/
+  }
+
+  exit;
+
+}
 
 function render_rss_feed($pro,$tweets,$like = false,$likedata = false, $return = false){
 	global $request;
-
+    add_include_path(library_path());
 		include 'Zend/Feed.php';
 		$feed = array();
 		$feed['title']          = environment('site_title').' / '.$pro->nickname;
 		$feed['link']           = $request->url_for(array('resource'=>'api/statuses/user_timeline/')).$pro->id.'.rss';
 		$feed['charset']    = 'utf-8';
 		$feed['language']   = 'en-us';
-		$feed['published']  = time();
+		$feed['published']  = strtotime( $tweets->updated );
 		$feed['entries']    = array();
+
+		$input = get_option('textinput_link',get_profile_id());
+		
+//		if (empty($input))
+			$input = $request->url_for(array('resource'=>'api/rss/textInput'));
+
+    $feed['textInput'] = array(
+	    'title' => '@reply '.$pro->nickname,
+	    'description'=>'send a reply to '.$pro->nickname,
+	    'name'=>'item',
+	    'link'=>$input
+	  );
 
 	while ($p = $tweets->MoveNext()) {
 		    $entry = array();
 		    $entry['title']     		= iconv('UTF-8', 'ASCII//TRANSLIT', $p->title);
 		    $entry['link']      		= $request->url_for(array('resource'=>'posts','id'=>$p->id));
 		    $entry['description']   = iconv('UTF-8', 'ASCII//TRANSLIT', $p->body);
-		    $entry['content']   		= $entry['description'];
-		    $entry['lastUpdate']    = date( "D, j M Y H:i:s T", strtotime( $p->created ));
+		    $entry['atom:content']   		= $entry['description'];
+		    $entry['lastUpdate']    = strtotime( $p->created );
 		    $feed['entries'][]  		= $entry;
 	}
+
+  if (!function_exists('set_default_omb_cloud_options'))
+    include(app_path().'rsscloud/rsscloud.php');
+
+
+  if ( '' == get_option( 'cloud_domain' ) )
+	    set_default_omb_cloud_options();
 
 		$feedObj = Zend_Feed::importArray($feed, 'rss');
 
@@ -2286,11 +2456,7 @@ if ($return)
   return true;
 exit;
 			
-      if (!function_exists('set_default_omb_cloud_options'))
-        include(app_path().'rsscloud/rsscloud.php');
-
-		  if ( '' == get_option( 'cloud_domain' ) )
-			    set_default_omb_cloud_options();
+$tweets->rewind();
 
 		  add_action('rss2_head','load_my_cloud_element');
 

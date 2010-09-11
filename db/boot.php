@@ -566,9 +566,9 @@ while ($m = $Method->MoveNext()) {
 		  $sub = $b->nickname;
 		  $routesetup['stream'] = $sub;
 		  $routesetup['prefix'] = $b->prefix;
-		  if (!empty($patterns[2]))
+		  if (is_array($patterns))
 				$request->connect(
-				  $sub.'/'.$patterns[2],
+				  $sub.'/'.implode('/',$patterns),
 				  $routesetup
 				);
 		}

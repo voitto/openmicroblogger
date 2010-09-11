@@ -208,6 +208,31 @@ class Zend_Feed_Rss extends Zend_Feed_Abstract
         $doc = $this->_element->createElement('docs', 'http://blogs.law.harvard.edu/tech/rss');
         $channel->appendChild($doc);
 
+
+	$hubs = apply_filters( 'pushpress_hubs', array(
+
+		get_bloginfo( 'url' ) . 'pushpress'
+	) );
+
+	foreach ( (array) $hubs as $hub ) {
+    $link = $this->_element->createElement('atom:link');
+    $link->setAttribute( 'rel', 'hub' );
+    $link->setAttribute( 'href', $hub );
+    $channel->appendChild( $link );
+	}
+
+	$pid = get_profile_id();
+	global $optiondata,$request,$blogdata;
+
+  $cloud = $this->_element->createElement('cloud');
+  $cloud->setAttribute('domain', get_option('cloud_domain',$pid));
+  $cloud->setAttribute('port', get_option('cloud_port',$pid));
+  $cloud->setAttribute('path', get_option('cloud_path',$pid));
+  $cloud->setAttribute('registerProcedure', get_option('cloud_function',$pid));
+  $cloud->setAttribute('protocol', get_option('cloud_protocol',$pid));
+  $channel->appendChild($cloud);
+
+
         if (isset($array->cloud)) {
             $cloud = $this->_element->createElement('cloud');
             $cloud->setAttribute('domain', $array->cloud['uri']->getHost());
@@ -414,18 +439,93 @@ class Zend_Feed_Rss extends Zend_Feed_Abstract
 
 //		        $objecttype = $this->_element->createElement('activity:verb','http://activitystrea.ms/schema/1.0/post');
 //		        $item->appendChild($objecttype);
-$activity = activity_object_type($dataentry->link);
+  $activity = activity_object_type($dataentry->link);
 
-if ($activity){
-		        $objecttype = $this->_element->createElement('activity:object-type','http://activitystrea.ms/schema/1.0/'.$activity);
-		        $item->appendChild($objecttype);
+	if ($activity){
 
-if ($activity == 'photo'){
+		if (is_array($activity)) {
+
+		  $objtyp = (array) $activity[0]->annotations->activity;
+
+		  if (isset($activity[0]->annotations->activity->verb)){
+				$el = $this->_element->createElement('activity:verb',$activity[0]->annotations->activity->verb);
+				$item->appendChild($el);
+		  }
+
+		  if (isset($activity[0]->annotations->activity->object)){
+				$obj = $this->_element->createElement('activity:object');
+				$el = $this->_element->createElement('atom:link');
+			  $el->setAttribute('rel', 'alternate');
+			  $el->setAttribute('href', $activity[0]->annotations->activity->object);
+			  $el->setAttribute('type', 'text/html');
+				$obj->appendChild($el);
+		  }
+		
+		  if (isset($activity[0]->annotations->activity->target)){
+				$tar = $this->_element->createElement('activity:target');
+				$el = $this->_element->createElement('atom:link');
+			  $el->setAttribute('rel', 'alternate');
+			  $el->setAttribute('href', $activity[0]->annotations->activity->target);
+			  $el->setAttribute('type', 'text/html');
+				$tar->appendChild($el);
+		  }
+
+		  if (isset($objtyp['object-type'])){
+				$el = $this->_element->createElement('activity:object-type',$objtyp['object-type']);
+				$obj->appendChild($el);
+		  }
+
+		  if (isset($objtyp['target-type'])){
+				$el = $this->_element->createElement('activity:object-type',$objtyp['target-type']);
+				$tar->appendChild($el);
+		  }
+
+		  if (isset($objtyp['target-title'])){
+				$el = $this->_element->createElement('atom:title',$objtyp['target-title']);
+				$tar->appendChild($el);
+		  }
+		  if (isset($objtyp['object-title'])){
+				$el = $this->_element->createElement('atom:title',$objtyp['object-title']);
+				$obj->appendChild($el);
+		  }
+		  if (isset($objtyp['target-id'])){
+				$el = $this->_element->createElement('atom:id',$objtyp['target-id']);
+				$tar->appendChild($el);
+		  }
+		  if (isset($objtyp['object-id'])){
+				$el = $this->_element->createElement('atom:id',$objtyp['object-id']);
+				$obj->appendChild($el);
+		  }
+		  if (isset($objtyp['target-link-preview'])){
+				$el = $this->_element->createElement('atom:link');
+			  $el->setAttribute('rel', 'preview');
+			  $el->setAttribute('href', $objtyp['target-link-preview']);
+			  $el->setAttribute('type', 'image/jpeg');
+				$tar->appendChild($el);
+		  }
+
+		  if (isset($activity[0]->annotations->activity->object)){
+			  $item->appendChild($obj);
+		  }
+		
+		  if (isset($activity[0]->annotations->activity->target)){
+			  $item->appendChild($tar);
+		  }
+
+		  $activity = 'note';
+
+		}
+	
+	  $objecttype = $this->_element->createElement('activity:object-type','http://activitystrea.ms/schema/1.0/'.$activity);
+
+	  $item->appendChild($objecttype);
+
+	if ($activity == 'photo'){
 
 
-$arr = add_thumbs_if_blob($dataentry->link);
-//$arr = false;
-if ($arr){
+	$arr = add_thumbs_if_blob($dataentry->link);
+	//$arr = false;
+	if ($arr){
 	
   $pic = $this->_element->createElement('atom:link');
   $pic->setAttribute('rel', 'enclosure');
