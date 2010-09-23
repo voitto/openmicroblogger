@@ -113,11 +113,16 @@ function send_to_flickr( &$model, &$rec ) {
 			$Upload =& $db->model('Upload');
 			$Entry =& $db->model('Entry');
 
-			$u = $Upload->find_by(array(
+			$Upload->set_param('find_by',array(
 				'profile_id'=>get_profile_id(),
 			  'eq'=>'IS',
 			  'tmp_name'=>'NOT NULL'
 				));
+			
+			$Upload->find();
+		  
+		  $u = $Upload->MoveFirst();
+		
 			if (!$u->exists) return;
 
 			$e = $Entry->find($u->entry_id);
