@@ -1505,7 +1505,54 @@ function security_init() {
 
   $request->connect( 'authsub' );
 
-	$request->connect('api/rss/textInput',array('action'=>'api_rss_textInput'));
+	foreach (array(
+
+
+
+    'api/direct_messages/sent'=>'api_direct_messages_sent',
+		'api/direct_messages'=>'api_direct_messages',
+	  'api/statuses/mentions'=>'api_statuses_mentions',
+	  'api/users/show'=>'api_users_show',
+	  'api/rss/textInput'=>'api_rss_textInput'
+
+	) as $f1=>$f2) {
+	
+	  $patterns = explode( '/', $f1 );
+	  $requirements = array();
+	  foreach ( $patterns as $pos => $str ) {
+	    if ( substr( $str, 0, 1 ) == ':' ) {
+			  $requirements[] = '[A-Za-z0-9_.]+';
+	    }
+	  }
+		$routesetup = array(
+		  'action'=>$f2,
+		  'resource'=>'posts'
+		);
+		if (count($requirements) > 0)
+			$routesetup['requirements'] = $requirements;
+		$request->connect(
+		  $f1,
+		  $routesetup
+		);
+		global $prefix;
+		if (!$prefix) {
+			global $db;
+			$Blog =& $db->model('Blog');
+			$Blog->set_limit(200);
+		  $coll = new Collection('blogs');
+		  while ($b = $coll->MoveNext()) {
+			  $sub = $b->nickname;
+			  $routesetup['stream'] = $sub;
+			  $routesetup['prefix'] = $b->prefix;
+			  if (is_array($patterns))
+					$request->connect(
+					  $sub.'/'.implode('/',$patterns),
+					  $routesetup
+					);
+			}
+		}
+
+	}
 
   $request->connect( 'permanent_facebook_key/:key', array('action'=>'permanent_facebook_key') );
 
@@ -2272,11 +2319,28 @@ function activity_object_type($url){
 
 
 
+function api_direct_messages() {
+	echo "";
+	exit;
+}
 
+function api_statuses_mentions() {
+	echo "";
+	exit;
+}
 
+function api_users_show() {
+	echo "";
+	exit;
+}
 
+function api_direct_messages_sent() {
+	echo "";
+	exit;
+}
 
 function api_rss_textInput() {
+
 
 
 	global $db;
@@ -2303,6 +2367,7 @@ function api_rss_textInput() {
 	    $username = (string)$v;
     }
 	}
+
 
   if (!$profile_url || !$avatar_url || empty($username)){
 
@@ -2336,26 +2401,93 @@ function api_rss_textInput() {
   if (!$i)
     trigger_error('sorry I was unable to create an identity', E_USER_ERROR);
 
-  
+
+
 	foreach($xml as $k=>$v){
 		if ($k == 'in-reply-to'){
 			$rply = (array)$v;
 			if (isset($rply['@attributes']['href'])){
 
+
 			  $parent = $Post->find_by(array('url'=>$rply['@attributes']['href']));
 
 				if (!($parent->id > 0))
-					trigger_error(E_USER_ERROR,'bad reply ID');
+					trigger_error('bad reply ID',E_USER_ERROR);
 
-		    	  $p = $Post->base();
-    		  	 $p->set_value( 'profile_id', $i->id );
-				    $p->set_value( 'parent_id', $parent->id );
-				    $p->set_value( 'title', (string)$xml['title'] );
-				    $p->save_changes();
-				    $p->set_etag($i->person_id);
-				    trigger_after( 'insert_from_post', $Post, $p );
-						$p->save_changes();
+    	  $p = $Post->base();
+  		  	$p->set_value( 'profile_id', $i->id );
+		    $p->set_value( 'parent_id', $parent->id );
+		    $p->set_value( 'title', (string)$xml['title'] );
+		    $p->save_changes();
+		    $p->set_etag($i->person_id);
+		    trigger_after( 'insert_from_post', $Post, $p );
+				$p->save_changes();
+				// notify the author of the original object
 
+
+				// notify any tagged people in the object
+
+
+
+			  $Annotation =& $db->model('Annotation');
+
+			  if (!$db->table_exists('annotations'))
+			    $Annotation->save();
+
+			  $Annotation->set_param('find_by',array('target_id'=>$parent->entry_id));
+
+
+        $Annotation->find();
+			  $a = $Annotation->MoveFirst();
+				if ($a->json){
+					if (!class_exists('Services_JSON'))
+					  lib_include('json');
+					
+				  $j = new Services_JSON();	
+					
+					$activity =  $j->decode($a->json);
+					
+			  }
+			
+        $discov = $activity[0]->annotations->activity->object;
+
+				$feeds = discover_feeds( $discov );
+
+		    foreach($feeds as $f){
+
+			    $input = discover_textInput($f);
+
+			    if (is_array($input)) {
+						
+				    if (isset($input['link'])){
+							
+					    $reply_to = $input['link'];
+					    $parts = split('mailto:',$reply_to);
+					    $recipient = $parts[1];
+
+						  global $request;
+
+						  $subject = 'New comment on a photo of you at '.$request->base;
+
+						  $email = "New comment on a photo of you:\n\n".$p->url."\n\n";
+
+						  $html = false;
+
+						  send_email( $recipient, $subject, $email, environment('email_from'), environment('email_name'), $html );
+
+				    }
+			    }
+		    }
+
+			  $subject = 'New comment on your post at '.$request->base;
+
+			  $email = "New comment on your post:\n\n".$p->url."\n\n";
+
+			  $html = false;
+				
+				$pro = owner_of($parent);
+        if (!empty($pro->email_value));
+				  send_email( $pro->email_value, $subject, $email, environment('email_from'), environment('email_name'), $html );
 					
 		  }
 		}

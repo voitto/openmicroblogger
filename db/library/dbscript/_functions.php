@@ -73,7 +73,16 @@ function tableize( $object ) {
 function dbscript_error( $errno, $errstr, $errfile, $errline ) {
   if ( !error_reporting() || $errno == 2048 )
     return;
+  
+  
+
+
+
+
   switch ($errno) {
+
+
+
     case E_USER_ERROR:
       global $request;
       $req =& $request;
@@ -94,10 +103,30 @@ function dbscript_error( $errno, $errstr, $errfile, $errline ) {
         if (environment('debug_enabled'))
           print "  Fatal error in line $errline of file $errfile<br />\n";
       }
+			$path = '/var/www/tweetiepic/logs/';
+			$file = $path.substr(  microtime(), 0, 7);
+			$fd = fopen($file , "a+");
+			global $request;
+			if (isset($request->uri))
+				$data = "ERROR ".serialize($errstr).' '.serialize($errfile).' '.serialize($errline)."   ".$request->uri."\n\n\n";
+			 else
+			$data = "ERROR ".serialize($errstr).' '.serialize($errfile).' '.serialize($errline)."   "."\n\n\n";
+			if ($fd) {
+				$result = fwrite( $fd, $data );
+			  fclose($fd);
+			}
       exit(1);
     case E_USER_WARNING:
-      print "<b>WARNING</b> [$errno] $errstr<br />\n";
-      break;
+      //print "<b>WARNING</b> [$errno] $errstr<br />\n";
+			$path = '/var/www/tweetiepic/logs/';
+			$file = $path.substr(  microtime(), 0, 7);
+			$fd = fopen($file , "a+");
+			$data = "WARNING ".serialize($errstr).' '.serialize($errfile).' '.serialize($errline)."\n\n";
+			if ($fd) {
+				$result = fwrite( $fd, $data );
+			  fclose($fd);
+			}
+			break;
     case E_USER_NOTICE:
       print "<b>NOTICE</b> [$errno] $errstr<br />\n";
   }
@@ -2661,7 +2690,11 @@ function get_app_id() {
 			$parts = split('\.',$id);
 			$id = $parts[0];	    
     }
-    
+    if (!$id) {
+      //authenticate_with_http();
+      //$id = get_profile_id();
+    }
+
     return $id;
 
   }
@@ -2688,7 +2721,9 @@ function app_path() {
 
 
 function load_apps() {
-  
+  global $apps_loaded;
+  if ($apps_loaded == true)
+    return;
   // enable wp-style callback functions
   
   global $db,$request,$env;
@@ -2698,6 +2733,17 @@ function load_apps() {
   ))) return;
   
   $identity = get_app_id();
+
+  if (!$identity){
+
+    global $api_methods;
+    
+    if (array_key_exists($request->action,$api_methods)){
+		  authenticate_with_http();
+		  $identity = get_app_id();
+	  }
+
+  }
 
   if (!$identity)
     return;
@@ -2724,7 +2770,8 @@ function load_apps() {
   }
   global $current_user;
   trigger_before( 'init', $current_user, $current_user );
-  
+ 	$apps_loaded = true;
+ 
 }
 
 function app_init($appname) {
@@ -3133,10 +3180,12 @@ function authenticate_with_http() {
   } else {
     $Identity =& $db->get_table( 'identities' );
     $Person =& $db->get_table( 'people' );
-    $i = $Identity->find_by(array(
+    $Identity->set_param('find_by',array(
       'nickname'=>$_SERVER['PHP_AUTH_USER'],
       'password'=>md5($_SERVER['PHP_AUTH_PW'])
-    ),1);
+    ));
+    $Identity->find();
+    $i = $Identity->MoveFirst();
     $p = $Person->find( $i->person_id );
     if (!(isset( $p->id ) && $p->id > 0)) {
       header('HTTP/1.1 401 Unauthorized');
@@ -3197,6 +3246,7 @@ function handle_posted_file($filename="",$att,$profile) {
 	$request->set_param( array( strtolower(classify($table)), $field ), 
 	  $att );
 
+  if (!isset($_FILES['media']['tmp_name']))
 	trigger_before( 'insert_from_post', $$modelvar, $request );
 
 	$content_type = 'text/html';
@@ -3235,10 +3285,10 @@ function handle_posted_file($filename="",$att,$profile) {
 
 	$$modelvar->set_categories($rec,$request,$atomentry);
 	
-	$url = $request->url_for(array(
-	  'resource'=>$table,
-	  'id'=>$rec->id
-	));
+//	$url = $request->url_for(array(
+//	  'resource'=>$table,
+//	  'id'=>$rec->id
+//	));
 	
 //	$title = substr($rec->title,0,140);
 	
@@ -3250,8 +3300,9 @@ function handle_posted_file($filename="",$att,$profile) {
 //	  $rec->set_value('title',$title." ".$url);
 	
 //	$rec->save_changes();
-	
-	trigger_after( 'insert_from_post', $$modelvar, $rec );
+
+  if (!isset($_FILES['media']['tmp_name']))
+  	trigger_after( 'insert_from_post', $$modelvar, $rec );
 	
 	return true;
 	
@@ -3528,6 +3579,8 @@ if (!$single) {
 
     echo_home_timeline_tweet($tweet,$user);
 
+    if ($single)
+      break;
 	}
 
 

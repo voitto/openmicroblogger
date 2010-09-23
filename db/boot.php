@@ -76,7 +76,7 @@ if (defined('PRETTY_URL_BASE') && PRETTY_URL_BASE ){
 
 // list($subdomain, $rest) = explode('.', $_SERVER['SERVER_NAME'], 2);
 // if ($rest != 'com')
-//	$pretty_url_base = "http://rsslike.com";
+//	$pretty_url_base = "http://tweetiepic.com";
 
 
   /**
@@ -535,6 +535,7 @@ global $api_methods,$api_method_perms;
 $api_methods = array();
 $api_method_perms = array();
 $Method =& $db->model('Method');
+$Method->set_limit(100);
 $Method->set_order('asc');
 $Method->find_by(array(
   'eq'        => 'like',
@@ -561,6 +562,8 @@ while ($m = $Method->MoveNext()) {
     $routesetup
   );
 	if (!$prefix) {
+		$Blog =& $db->model('Blog');
+		$Blog->set_limit(200);
 	  $coll = new Collection('blogs');
 	  while ($b = $coll->MoveNext()) {
 		  $sub = $b->nickname;
@@ -741,6 +744,8 @@ function test_log_in() {
  */
 
 $response = new View();
+
+
 
 render( 'action', $request->action );
 

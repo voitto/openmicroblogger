@@ -11,6 +11,86 @@ function get( &$vars ) {
   }
 }
 
+class RSSActivityHandler {
+	  var $data;
+	  var $new_item;
+	  var $current_tag;
+	  var $parsing_item;
+    function RSSActivityHandler(){
+	    $this->parsing_item = false;
+	    $this->data = array(
+		    'items'     => array(),
+		    'channel'   => array()
+		  );
+    }
+    function openHandler(& $parser,$name,$attrs) {
+	    $this->current_tag = $name;
+	    if ($name == 'item'){
+	      $this->new_item = array();
+	      $this->parsing_item = true;
+		  } elseif ($name == 'textInput'){
+		      $this->new_item = array();
+		      $this->parsing_item = true;
+			} elseif ($this->parsing_item) {
+				$this->new_item[$name] = $attrs;
+			} else {
+				$this->data['channel'][$name] = $attrs;
+			}
+    }
+    function closeHandler(& $parser,$name) {
+	    if ($name == 'item'){
+	      $this->data['items'][] = $this->new_item;
+	      $this->parsing_item = false;
+	    }
+	    if ($name == 'textInput'){
+	      $this->data['channel']['textInput'] = $this->new_item;
+	      $this->parsing_item = false;
+	    }
+    }
+    function dataHandler(& $parser,$data) {
+	    if ($this->parsing_item)
+	      if (count($this->new_item[$this->current_tag]) > 0)
+	        $this->new_item[$this->current_tag.'_data'] = $data;
+	      else
+	        $this->new_item[$this->current_tag] = $data;
+	    else
+	      if (count($this->data['channel'][$this->current_tag]) > 0)
+	        $this->data['channel'][$this->current_tag.'_data'] = $data;
+	      else
+		      $this->data['channel'][$this->current_tag] = $data;
+    }
+    function escapeHandler(& $parser,$data) {
+	    if ($this->parsing_item)
+	      $this->new_item[$this->current_tag.'_escape'] = $data;
+	    else
+	      $this->data['channel'][$this->current_tag.'_escape'] = $data;
+    }
+    function piHandler(& $parser,$target,$data) {
+	    if ($this->parsing_item)
+	      $this->new_item[$this->current_tag.'_pi'] = $data;
+	    else
+	      $this->data['channel'][$this->current_tag.'_pi'] = $data;
+    }
+    function jaspHandler(& $parser,$data) {
+	    if ($this->parsing_item)
+	      $this->new_item[$this->current_tag.'_jasp'] = $data;
+	    else
+	      $this->data['channel'][$this->current_tag.'_jasp'] = $data;
+    }
+}
+
+function add_rss_to_header() {
+	$i = get_profile();
+	if (!($i->id > 0)) {
+		global $db;
+		$Identity =& $db->model('Identity');
+	  $Identity->set_order('asc');
+	  $Identity->find();
+	  $i = $Identity->MoveFirst();
+	}
+	echo '<link rel="alternate" type="application/rss+xml" title="'.environment('site_title').' / '.$i->nickname.' RSS Feed" href="'.get_bloginfo('rss2_url').'" />'."\n";
+}
+
 function handle_tweetiepic(&$request){
 	$cmd = '#fb!';
   if (strstr($request->params['post']['title'], $cmd )){
@@ -24,6 +104,18 @@ function handle_tweetiepic(&$request){
 	  global $optiondata;
 	  $request->set_param(array('post','title'),str_replace($cmd,'',$request->params['post']['title']));
 	  $optiondata['facebook_status'] = 'enabled';
+  }
+  $commands = array(
+	  'tag '
+	);
+  $parts = explode(" ",strtolower($request->params['post']['title']));
+  $c = $parts[0]." ";
+  $result = false;
+  if (in_array($c,$commands)){
+	  $c = trim($c)."_cmdfunc";
+	  if (function_exists($c)) {
+ 	    $c($parts);
+	  }
   }
 }
 
@@ -43,6 +135,171 @@ function handle_twitter_cmdline(&$request){
  	    $result = $c($parts);
   }
   return $result;
+}
+
+
+
+
+function discover_feeds($url){
+
+	add_include_path(library_path());
+	include 'Zend/Uri.php';
+
+  $curl = curl_init($url);
+  curl_setopt($curl, CURLOPT_FOLLOWLOCATION, false);
+  curl_setopt($curl, CURLOPT_HEADER, false);
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+  $result = curl_exec( $curl );
+
+  if ($result) 
+		$contents = $result;
+	else
+		$contents = '';
+
+  @ini_set('track_errors', 1);
+  $pattern = '~(<link[^>]+)/?>~i';
+  $result = @preg_match_all($pattern, $contents, $matches);
+  @ini_restore('track_errors');
+  $feeds = array();
+  if (isset($matches[1]) && count($matches[1]) > 0) {
+      foreach ($matches[1] as $link) {
+          if (!mb_check_encoding($link, 'UTF-8')) {
+              $link = mb_convert_encoding($link, 'UTF-8');
+          }
+          $xml = @simplexml_load_string(rtrim($link, ' /') . ' />');
+          if ($xml === false) {
+              continue;
+          }
+          $attributes = $xml->attributes();
+          if (!isset($attributes['rel']) || !@preg_match('~^(?:alternate|service\.feed)~i', $attributes['rel'])) {
+              continue;
+          }
+          if (!isset($attributes['type']) ||
+                  !@preg_match('~^application/(?:atom|rss|rdf)\+xml~', $attributes['type'])) {
+              continue;
+          }
+          if (!isset($attributes['href'])) {
+              continue;
+          }
+          try {
+              // checks if we need to canonize the given uri
+              try {
+                  $uri = Zend_Uri::factory((string) $attributes['href']);
+              } catch (Zend_Uri_Exception $e) {
+                  // canonize the uri
+                  $path = (string) $attributes['href'];
+                  $query = $fragment = '';
+                  if (substr($path, 0, 1) != '/') {
+                      // add the current root path to this one
+                      $path = rtrim($client->getUri()->getPath(), '/') . '/' . $path;
+                  }
+                  if (strpos($path, '?') !== false) {
+                      list($path, $query) = explode('?', $path, 2);
+                  }
+                  if (strpos($query, '#') !== false) {
+                      list($query, $fragment) = explode('#', $query, 2);
+                  }
+                  $uri = Zend_Uri::factory($client->getUri(true));
+                  $uri->setPath($path);
+                  $uri->setQuery($query);
+                  $uri->setFragment($fragment);
+              }
+
+          } catch (Exception $e) {
+              continue;
+          }
+          $feeds[] = $uri->getUri();
+      }
+  }
+  return $feeds;
+}
+
+function discover_textInput($url){
+
+  $curl = curl_init($url);
+  curl_setopt($curl, CURLOPT_FOLLOWLOCATION, false);
+  curl_setopt($curl, CURLOPT_HEADER, false);
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+  $result = curl_exec( $curl );
+
+  if ($result) 
+		$body = $result;
+	else
+		$body = false;
+
+  if ($body) {
+	  
+	  lib_include('parser');
+
+		$parser =& new HtmlParser();
+		$handler=& new RSSActivityHandler();
+
+		$parser->set_object($handler);
+
+		$parser->set_option('trimDataNodes', TRUE);
+
+		$parser->set_element_handler('openHandler','closeHandler');
+		$parser->set_data_handler('dataHandler');
+		$parser->set_escape_handler('escapeHandler');
+		$parser->set_pi_handler('piHandler');
+		$parser->set_jasp_handler('jaspHandler');
+
+		$parser->parse($body);
+ 
+    return $handler->data['channel']['textInput'];
+
+  }
+
+  return false;
+
+}
+
+
+function discover_twitter_person( $nickname ) {
+	$url = false;
+	$parts = str_split($nickname);
+	if ($parts[0] == '@')
+	  array_shift($parts);
+  $endpoint = 'http://api.twitter.com/1/users/show/'.implode($parts).'.json';
+  $ch = curl_init();
+  if (defined("CURL_CA_BUNDLE_PATH")) curl_setopt($ch, CURLOPT_CAINFO, CURL_CA_BUNDLE_PATH);
+  curl_setopt($ch, CURLOPT_URL, $endpoint);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  $response = curl_exec($ch);
+	if (!function_exists('json_encode'))
+	  lib_include('json');
+  $j = new Services_JSON();	
+	$twuser = (array)$j->decode($response);
+	return $twuser;
+}
+
+function get_my_latest_object() {
+  global $db;
+  $Post =& $db->model('Post');
+	$where = array(
+    'profile_id'=>get_profile_id()
+  );
+  $Post->find_by($where);
+  while ($p = $Post->MoveNext()){
+	  $e = $p->FirstChild('entries');
+    if ($e->content_type == 'image/jpeg')
+      return $p;
+  }
+  return false;	
+}
+
+
+function tag_cmdfunc($parts){
+	// tag tantek.com in url
+	// create a new post, and annotate it with acivity strea.ms
+	// do feed discovery on tagged person's homepage url
+	if (isset($parts[1])){
+
+    global $db,$request;
+    $request->set_param( array( 'post', 'title' ), 'tagged '. $parts[1] . ' in a photo' );
+    //after_filter( 'attach_annotation', 'insert_from_post' );
+  }
+	 
 }
 
 function follow_cmdfunc($parts){
@@ -215,8 +472,8 @@ if ($fbu){
 
 
   $twittercmd = handle_twitter_cmdline($request);
+  $annotation = annotate($request);
   $twittercmd = handle_tweetiepic($request);
-
 
   if ($twittercmd)
     redirect_to($request->base);
@@ -384,6 +641,22 @@ if ($stream){
 	  $blognick = $rec->nickname;
 	  $blogprefix = $rec->prefix;
   }
+}	 else {
+	// Tweetiepic
+global $prefix;
+if (!empty($prefix)) {
+	
+	$Identity =& $db->model('Identity');
+  $Identity->set_order('asc');
+  $Identity->find();
+  $i = $Identity->MoveFirst();
+  $request->set_param('byid',$i->id);
+
+  $request->set_param('action','profile');
+  add_action('wp_head', 'add_rss_to_header');
+	global $blogdata;
+	$blogdata['rss2_url'] = $request->url_for(array('resource'=>'api/statuses/user_timeline/')).$i->id.'.rss';
+}
 }
 
   if ($request->client_wants == 'rss'){
@@ -450,7 +723,7 @@ function setpass(&$vars){
 }
 
 function _profile( &$vars ) {
-  // entry controller returns
+	// entry controller returns
   // a Collection w/ 1 member entry
   extract( $vars );
   $Identity =& $db->model('Identity');

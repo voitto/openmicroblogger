@@ -57,16 +57,26 @@ class View {
     else
       $this->named_vars['resource'] = false;
     $this->named_vars['prefix'] = $db->prefix;
+
+
+
+
+
     $this->controller = $request->controller;
     
     load_apps();
     
     $controller_path = controller_path();
     // check for a controller file in controllers/[resource].php
+
+
+
+
+
     if ( isset( $request->resource )) {
-      $cont = $controller_path . $request->resource . ".php";
+			$cont = $controller_path . $request->resource . ".php";
       if ( file_exists( $cont )) {
-        $this->controller = $request->resource . ".php";
+				$this->controller = $request->resource . ".php";
       } elseif (isset($request->templates_resource[$request->resource]) && file_exists($controller_path . $request->templates_resource[$request->resource] . ".php")) {
         $this->controller = $request->templates_resource[$request->resource] . ".php";
       } else {
@@ -81,6 +91,8 @@ class View {
       }
     }
     
+
+
     if ( is_file( $controller_path . $this->controller ))
       require_once( $controller_path . $this->controller );
     else
@@ -318,4 +330,4 @@ class View {
   
 }
 
-?>
+
