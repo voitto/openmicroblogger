@@ -2343,11 +2343,30 @@ function api_rss_textInput() {
 
 
 
+
 	global $db;
   global $request;
 	$Post =& $db->model('Post');
 
-	$xml = (array)simplexml_load_string(urldecode($request->item));
+	$ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL,$request->feed);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+  $buf = curl_exec($ch);
+
+	$res2 = simplexml_load_string($buf);
+
+	$senditem = '';
+
+	foreach($res2 as $b){
+		if (isset($b->item)){
+			$senditem = $b->item->asXML();
+		}
+	}
+
+	$xml = (array)simplexml_load_string($senditem);
 
   $i = false;
   $profile_url = false;
@@ -2369,10 +2388,8 @@ function api_rss_textInput() {
 	}
 
 
-  if (!$profile_url || !$avatar_url || empty($username)){
-
+  if (!$profile_url || !$avatar_url || empty($username))
     trigger_error(E_USER_ERROR,'could not generate identity');
-} 
 
   $Identity =& $db->model('Identity');
 
@@ -2404,6 +2421,7 @@ function api_rss_textInput() {
 
 
 	foreach($xml as $k=>$v){
+
 		if ($k == 'in-reply-to'){
 			$rply = (array)$v;
 			if (isset($rply['@attributes']['href'])){
@@ -2446,13 +2464,12 @@ function api_rss_textInput() {
 				  $j = new Services_JSON();	
 					
 					$activity =  $j->decode($a->json);
-					
 			  }
-			
+				
         $discov = $activity[0]->annotations->activity->object;
-
+				
 				$feeds = discover_feeds( $discov );
-
+				
 		    foreach($feeds as $f){
 
 			    $input = discover_textInput($f);
@@ -2488,12 +2505,13 @@ function api_rss_textInput() {
 				$pro = owner_of($parent);
         if (!empty($pro->email_value));
 				  send_email( $pro->email_value, $subject, $email, environment('email_from'), environment('email_name'), $html );
-					
+
 		  }
 		}
 	}
 
 	exit;
+
 
 
 
