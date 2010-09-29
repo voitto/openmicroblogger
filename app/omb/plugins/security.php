@@ -2577,7 +2577,7 @@ function render_rss_feed($pro,$tweets,$like = false,$likedata = false, $return =
     $feed['textInput'] = array(
 	    'title' => '@reply '.$pro->nickname,
 	    'description'=>'send a reply to '.$pro->nickname,
-	    'name'=>'item',
+	    'name'=>'guid',
 	    'link'=>$input
 	  );
 
