@@ -1,9 +1,0 @@
-# urlShort
-# urlshort.sf.net
-# robots.txt
-# Last updated May 29 2009
-
-User-agent: *
-Crawl-delay: 10
-# Directories
-Disallow: includes

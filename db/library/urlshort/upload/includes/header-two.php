@@ -1,5 +1,0 @@
-		<br/><a href="<?php include 'install_path.php'; echo $install_path; ?>"><img src="<?php include 'install_path.php'; echo $install_path; ?>logo.png" border="0"></a>
-
-<br/><div class="tip-display" id="tip-display" style="display:block;" onclick="document.getElementById('tip-display').style.display=(document.getElementById('tip-display').style.display== 'block')?'none':'block';" style="cursor: pointer;"><a href="http://sourceforge.net/community/cca09/nominate/?project_name=urlShort&project_url=http://urlshort.sourceforge.net/"><span style="color: #333;">Nominate urlShort in the SourceForge Community Choice Awards!</span></a></div>
-
-<!--<div class="notification-display" id="notification-display" style="display:block;" onclick="document.getElementById('notification-display').style.display=(document.getElementById('notification-display').style.display== 'block')?'none':'block';" style="cursor: pointer;">Use this to notify your users of changes to terms, updates, or problems.</div>-->

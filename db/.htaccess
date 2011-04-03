@@ -1,5 +1,0 @@
-Order Allow,Deny
-Deny from all
-<files  ?\.(jpg|gif|png|js|css)$? ~>
-	Allow from all
-</files>
