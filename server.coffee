@@ -24,9 +24,16 @@ class Home extends app.View
     @controller = new Posts @model, @
     
 class Show extends app.View
-  constructor: ->
+  constructor: ( model, req, res, id ) ->
     super
-    @controller = new Posts @model, @
+    @controller = new PostsShow @model, @, id
+    
+class PostsShow extends app.Controller
+  constructor: ( Post, View, id ) ->
+    super
+    Post.find( id )
+  render: ->
+    @view.render()
 
 class Posts extends app.Controller
   constructor: ( Post ) ->
@@ -40,8 +47,8 @@ app.get '/', ( req, res ) ->
   @view = new Home @model, req, res
 
 app.get '/:id', ( req, res, id ) ->
-  @model = new Post id
-  @view = new Show @model, req, res
+  @model = new Post
+  @view = new Show @model, req, res, id
 
 app.post '/post/new', ( req, res ) ->
   @fullBody = '';
