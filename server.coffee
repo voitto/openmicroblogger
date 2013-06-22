@@ -10,7 +10,7 @@ $ = require 'jquery'
 
 app = require( 'zygote' ).config
   port: 4444,
-  dbname: 'javascriptly',
+  dbname: 'omb2',
   dbuser: 'brian',
   dbpass: '',
   dbhost: 'localhost',
@@ -19,6 +19,11 @@ app = require( 'zygote' ).config
 class Post extends app.Model
 
 class Home extends app.View
+  constructor: ->
+    super
+    @controller = new Posts @model, @
+    
+class Show extends app.View
   constructor: ->
     super
     @controller = new Posts @model, @
@@ -33,6 +38,10 @@ class Posts extends app.Controller
 app.get '/', ( req, res ) ->
   @model = new Post
   @view = new Home @model, req, res
+
+app.get '/:id', ( req, res, id ) ->
+  @model = new Post id
+  @view = new Show @model, req, res
 
 app.post '/post/new', ( req, res ) ->
   @fullBody = '';

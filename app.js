@@ -7,7 +7,7 @@
 
   app = require('zygote').config({
     port: 4444,
-    dbname: 'javascriptly',
+    dbname: 'omb2',
     dbuser: 'brian',
     dbpass: '',
     dbhost: 'localhost',
