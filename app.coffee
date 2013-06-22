@@ -23,6 +23,10 @@ class Show extends app.View
   constructor: ( model, req, res, id ) ->
     super
     @controller = new PostsShow @model, @, id
+  render: ->
+    $.get '/post/_show.html', ( tpl ) =>
+      @template = tpl
+      $( '#content' ).html Mustache.render @template, @model.to_hash()
     
 class PostsShow extends app.Controller
   constructor: ( Post, View, id ) ->

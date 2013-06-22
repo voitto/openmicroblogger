@@ -46,6 +46,14 @@
       this.controller = new PostsShow(this.model, this, id);
     }
 
+    Show.prototype.render = function() {
+      var _this = this;
+      return $.get('/post/_show.html', function(tpl) {
+        _this.template = tpl;
+        return $('#content').html(Mustache.render(_this.template, _this.model.to_hash()));
+      });
+    };
+
     return Show;
 
   })(app.View);
