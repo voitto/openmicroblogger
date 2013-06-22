@@ -1,0 +1,33 @@
+<html>
+<head>
+<script src="/io.js"></script>
+<script src="/jquery.js"></script>
+<script>
+  var socket = io.connect('http://localhost:4444');
+</script>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+
+<a id="openbtn" href="#">+ new post</a>
+
+
+<div id="content">{{{content}}}</div>
+
+<div class="modal modal-medium" id="mymodal">
+    <a class="modal-close close">x</a>
+    <h3>New Post...</h3>
+    <form>
+      <textarea id="post-title"></textarea>
+      <button id="post-save" class="btn" onclick="return false">Save</button>
+    </form>
+    <button class="btn modal-close">Close</button>
+</div>
+
+<script src="/mustache.js"></script>
+<script src="/lib.js"></script>
+<script src="/app.js"></script>
+
+</body>
+</html>

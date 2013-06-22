@@ -1,0 +1,32 @@
+{
+  "name": "my zygote app",
+  "description": "example",
+  "version": "0.0.1",
+  "author": "Brian Hendrickson <bh@bh.ly>",
+  "contributors": [
+    {
+      "name": "Brian Hendrickson",
+      "email": "bh@bh.ly"
+    }
+  ],
+  "dependencies": {
+  },
+  "devDependencies": {
+  },
+  "keywords": [
+    "framework",
+    "web",
+    "rest",
+    "restful",
+  ],
+  "repository": "",
+  "main": "index",
+  "bin": {
+  },
+  "scripts": {
+  },
+  "engines": {
+    "node": "*"
+  }
+}
+
