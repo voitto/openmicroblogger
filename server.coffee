@@ -49,7 +49,7 @@ app.get '/', ( req, res ) ->
 app.get '/:id', ( req, res, id ) ->
   @model = new Post
   @view = new Show @model, req, res, id
-
+  
 app.post '/post/new', ( req, res ) ->
   @fullBody = '';
   req.on 'data', (chunk) =>
