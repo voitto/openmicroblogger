@@ -14,10 +14,19 @@ function get( path, f ) {
   var res = null;
   var a = document.createElement( 'a' );
   a.href = window.location;
-  if ( path = a.pathname ) {
-    console.log( 'ROUTE = ' + a.pathname );
+  if ( path == a.pathname ) {
     if ( isFunc( f ))
       f( req, res );
+  } else {
+    var myarray  = a.pathname.split(/[\/]/);
+    value = false;
+    if (!(undefined == myarray[1]))
+      if (isInt(myarray[1])) {
+        f = routes[ '/:id' + 'get' ];
+        value = myarray[1];
+      }
+    if ( isFunc( f ))
+      f( req, res, value );
   }
 }
 
@@ -104,12 +113,19 @@ Model.prototype.send = function( evt ) {
   }
 }
 
-Model.prototype.find = function() {
+Model.prototype.find = function(id) {
   var modelname = get_class(this).toLowerCase();
   var model = this;
-  $.getJSON( '/'+modelname+'.json', function(data) {
-    model.data = data;
-    model.send( 'changed' );
+  $.ajax({
+    type: "POST",
+    url: '/'+modelname+'.json',
+    dataType: 'json',
+    async: false,
+    data: id,
+    success: function (data) {
+      model.data = data;
+      model.send( 'changed' );
+    }
   });
 }
 
@@ -233,3 +249,8 @@ function is_a(obj, className){
  className = className.replace(/[^\w\$_]+/, "");
  return  get_class(obj) === className && {function:1}[eval("typeof(".concat(className,")"))] && obj instanceof eval(className)
 };
+
+function isInt(value){
+    var er = /^[0-9]+$/;
+    return ( er.test(value) ) ? true : false;
+}
