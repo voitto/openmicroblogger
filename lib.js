@@ -103,7 +103,8 @@ Model.prototype.save = function() {
   var postdata = {
     title: $('#post-title').val(),
     author: $('#post-author').val(),
-    author_url: $('#post-author_url').val()
+    author_url: $('#post-author_url').val(),
+    in_reply_to: $('#post-in_reply_to').val()
   };
   $.ajax({
     type: "POST",

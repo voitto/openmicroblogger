@@ -3,18 +3,29 @@
 
 {{#items}}
 
-    <div class="hentry">
+    <div class="h-entry">
 
       <h2 class="entry-title">{{title}}</h2>
 
-      <span class="published">Posted {{published}}</span>
+      <a title="link" href="{{{post_url}}}" class="u-url" >
 
-      <span class="updated">Updated {{updated}}</span>
+        <time class="dt-published published" datetime="{{published}}">{{published}}</time>
 
-      <a class="h-card author" href="{{{author_url}}}">
-       <img alt="{{author}}"
-            src="{{{profile_image}}}" />
+        <i class="icon-time"></i>
+
       </a>
+
+      <div class="h-card author">
+
+        <a class="u-url" href="{{{author_url}}}">
+
+          <img alt="{{author}}" class="u-photo" src="{{{profile_image}}}">
+
+        </a>
+
+        <p class="p-name">{{author}}</p>
+
+      </div>
       
     </div>
 
