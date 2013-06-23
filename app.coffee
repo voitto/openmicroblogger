@@ -1,7 +1,6 @@
 
-# Zygote Example
-# June 22, 2013
-# npm install socket.io pg mustache jquery zygote
+# Open Microblogger
+# June 23, 2013
 
 
 app = require( 'zygote' ).config
@@ -18,16 +17,12 @@ class Home extends app.View
   constructor: ->
     super
     @controller = new Posts @model, @
-    
+
 class Show extends app.View
   constructor: ( model, req, res, id ) ->
     super
     @controller = new PostsShow @model, @, id
-  render: ->
-    $.get '/post/_show.html', ( tpl ) =>
-      @template = tpl
-      $( '#content' ).html Mustache.render @template, @model.to_hash()
-    
+
 class PostsShow extends app.Controller
   constructor: ( Post, View, id ) ->
     super

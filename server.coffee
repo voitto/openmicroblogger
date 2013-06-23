@@ -1,7 +1,6 @@
 
-# Zygote Example
-# June 22, 2013
-# npm install socket.io pg mustache jquery zygote
+# Open Microblogger
+# June 23, 2013
 
 
 $ = require 'jquery'
@@ -49,7 +48,7 @@ app.get '/', ( req, res ) ->
 app.get '/:id', ( req, res, id ) ->
   @model = new Post
   @view = new Show @model, req, res, id
-  
+
 app.post '/post/new', ( req, res ) ->
   @fullBody = '';
   req.on 'data', (chunk) =>

@@ -18,11 +18,18 @@
 <div class="modal modal-medium" id="mymodal">
     <a class="modal-close close">x</a>
     <h3>New Post...</h3>
-    <form>
-      <textarea id="post-title"></textarea>
-      <button id="post-save" class="btn" onclick="return false">Save</button>
+    <form id="post-form">
+      <textarea id="post-title" placeholder-text="type your post here..."></textarea>
+      <h3>Name</h3>
+      <input id="post-author" type="text" placeholder-text="author name"/>
+      <h3>Link</h3>
+      <input id="post-author_url" type="text" placeholder-text="author url"/>
+      <h3>(In Reply To) Link (optional)</h3>
+      <input id="post-in_reply_to" type="text" placeholder-text="original url"/>
+      <br><br>
+      <button class="btn modal-close">Cancel</button><button id="post-save" class="btn" onclick="return false">Save</button>
     </form>
-    <button class="btn modal-close">Close</button>
+   
 </div>
 
 <div id="footer">

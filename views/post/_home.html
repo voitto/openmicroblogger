@@ -1,6 +1,17 @@
-<p>Posts:</p>
-<ul>
+
+<link href="http://localhost:4444/mention" rel="http://webmention.org/" />
+
+<p></p>
+
 {{#items}}
-<li>{{title}}</li>
+
+
+    <div class="hentry">
+
+      <a href="/{{id}}"><h2 class="entry-title">{{author}} {{published}}</h2></a>
+
+    </div>
+
+
 {{/items}}
-</ul>
+
