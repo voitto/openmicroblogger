@@ -1,10 +1,7 @@
 
 <link href="http://localhost:4444/mention" rel="http://webmention.org/" />
 
-<p></p>
-
 {{#items}}
-
 
     <div class="hentry">
 
@@ -14,10 +11,12 @@
 
       <span class="updated">Updated {{updated}}</span>
 
-      <a href="{{author_url}}" class="author">{{author}}</a>
-
+      <a class="h-card author" href="{{{author_url}}}">
+       <img alt="{{author}}"
+            src="{{{profile_image}}}" />
+      </a>
+      
     </div>
-
 
 {{/items}}
 
