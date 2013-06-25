@@ -25,5 +25,18 @@
       
     </article>
 
+{{#is_reply}}
+<h2>a reply to:</h2>
+<a href="{{original_url}}"><h3>{{original_url}}</h3></a>
+{{/is_reply}}
+
+
+{{#has_replies}}
+<h2>replies:</h2>
+{{#replies}}
+<a href="{{reply_url}}"><h3>{{reply_url}}</h3></a>
+{{/replies}}
+{{/has_replies}}
+
 {{/items}}
 
