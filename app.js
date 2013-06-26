@@ -55,12 +55,9 @@
 
     function PostsShow(Post, View, id) {
       PostsShow.__super__.constructor.apply(this, arguments);
-      Post.find(id);
     }
 
-    PostsShow.prototype.render = function() {
-      return this.view.render();
-    };
+    PostsShow.prototype.render = function() {};
 
     return PostsShow;
 
@@ -71,12 +68,9 @@
 
     function Posts(Post) {
       Posts.__super__.constructor.apply(this, arguments);
-      Post.find();
     }
 
-    Posts.prototype.render = function() {
-      return this.view.render();
-    };
+    Posts.prototype.render = function() {};
 
     return Posts;
 
