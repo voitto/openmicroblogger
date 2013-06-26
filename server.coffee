@@ -57,8 +57,7 @@ app.post '/post/new', ( req, res ) ->
   req.on 'end', =>
     @data = JSON.parse @fullBody
     @model = new Post
-    @post = @model.create @data
-    res.end 'ok'
+    @post = @model.create @data, res
 
 $('#post-save').click =>
   @model = new Post
