@@ -11,7 +11,8 @@
     dbuser: 'brian',
     dbpass: '',
     dbhost: 'localhost',
-    dbport: 5432
+    dbport: 5432,
+    url: 'http://localhost:4444'
   });
 
   Post = (function(_super) {
@@ -55,9 +56,12 @@
 
     function PostsShow(Post, View, id) {
       PostsShow.__super__.constructor.apply(this, arguments);
+      Post.find(id);
     }
 
-    PostsShow.prototype.render = function() {};
+    PostsShow.prototype.render = function() {
+      return this.view.render();
+    };
 
     return PostsShow;
 
@@ -68,9 +72,12 @@
 
     function Posts(Post) {
       Posts.__super__.constructor.apply(this, arguments);
+      Post.find();
     }
 
-    Posts.prototype.render = function() {};
+    Posts.prototype.render = function() {
+      return this.view.render();
+    };
 
     return Posts;
 

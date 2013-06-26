@@ -13,7 +13,8 @@ app = require( 'zygote' ).config
   dbuser: 'brian',
   dbpass: '',
   dbhost: 'localhost',
-  dbport: 5432
+  dbport: 5432,
+  url: 'http://localhost:4444'
 
 class Post extends app.Model
 

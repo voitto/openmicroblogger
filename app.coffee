@@ -9,7 +9,8 @@ app = require( 'zygote' ).config
   dbuser: 'brian',
   dbpass: '',
   dbhost: 'localhost',
-  dbport: 5432
+  dbport: 5432,
+  url: 'http://localhost:4444'
 
 class Post extends app.Model
 
@@ -26,16 +27,16 @@ class Show extends app.View
 class PostsShow extends app.Controller
   constructor: ( Post, View, id ) ->
     super
-    #Post.find( id )
+    Post.find( id )
   render: ->
-    #@view.render()
+    @view.render()
 
 class Posts extends app.Controller
   constructor: ( Post ) ->
     super
-    #Post.find()
+    Post.find()
   render: ->
-    #@view.render()
+    @view.render()
 
 app.get '/', ( req, res ) ->
   @model = new Post

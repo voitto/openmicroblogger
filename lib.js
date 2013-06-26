@@ -146,6 +146,7 @@ Model.prototype.to_hash = function() {
     recs.push(this.data[i])
   }
   json['items'] = recs;
+  json['url'] = '{{{url}}}';
   return json;
 }
 
@@ -164,6 +165,7 @@ View.prototype.response = null;
 View.prototype.template = null;
 
 View.prototype.render = function() {
+  console.log('render '+get_class(this));
   var view = this;
   var viewname = get_class(this).toLowerCase();
   var modelname = get_class(this.model).toLowerCase();
@@ -171,16 +173,12 @@ View.prototype.render = function() {
     view.template = tpl;
     $( '#content' ).html(''+ Mustache.render( view.template, view.model.to_hash() ));
   });
-  //$( 'body' ).append( '<div class="modal-bg"></div>' );
-  //$( '#mymodal' ).addClass( 'active' ).css( 'top', $(window).scrollTop() + 50 + "px" );
-  //t = fs.readFileSync(__dirname + '/../../views/index.html', 'utf-8');
-  //return eco.render( t, data );
 };
 
 View.prototype.receive = function( message ) {
   if (message == 'changed') {
+    console.log('changed '+get_class(this));
     this.controller.render();
-    //this.response.end( this.controller.render() );
   }
 }
 
