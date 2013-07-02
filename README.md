@@ -17,7 +17,7 @@ Installation Commands:
 
 ```
 
-$ git clone git@github.com:voitto/openmicroblogger.git
+$ git clone https://github.com/voitto/openmicroblogger.git
 
 $ cd openmicroblogger
 

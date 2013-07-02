@@ -1,6 +1,6 @@
 
 // Zygote
-// June 22, 2013
+// July 2, 2013
 // Brian Hendrickson <bh@bh.ly>
 
 
@@ -9,6 +9,12 @@ var app = {};
 var routes = {};
 
 var called = false;
+
+$.ajaxSetup({
+  type: 'POST',
+  dataType: 'json',
+  async: true
+});
 
 function get( path, f ) {
   if (called) return;
@@ -19,6 +25,7 @@ function get( path, f ) {
   a.href = window.location;
   if ( path == a.pathname ) {
     if ( isFunc( f )) {
+      console.log('rendering '+a.pathname);
       called = true;
       f( req, res );
     }
@@ -31,6 +38,7 @@ function get( path, f ) {
         value = myarray[1];
       }
     if ( isFunc( f )) {
+      console.log('rendering '+a.pathname);
       called = true;
       f( req, res, value );
     }
@@ -52,9 +60,11 @@ var Model,
   Model = (function() {
     function Model() {
       var m = this;
-      socket.on( 'changed', function(){
-        m.find();
-        m.send('changed');
+      socket.on( 'changed', function(f){
+        console.log('CHANGED '+JSON.stringify(f));
+        //console.log('model changed');
+        //m.find();
+        //m.send('changed');
       });
     }
     return Model;
@@ -100,21 +110,6 @@ Model.prototype.bind = function( evt, func ) {
 }
 
 Model.prototype.save = function() {
-  var postdata = {
-    title: $('#post-title').val(),
-    author: $('#post-author').val(),
-    author_url: $('#post-author_url').val(),
-    in_reply_to: $('#post-in_reply_to').val()
-  };
-  $.ajax({
-    type: "POST",
-    url: '/post/new',
-    dataType: 'json',
-    async: false,
-    data: JSON.stringify(postdata),
-    success: function (resp) {
-    }
-  });
 }
 
 Model.prototype.send = function( evt ) {
@@ -147,6 +142,7 @@ Model.prototype.to_hash = function() {
   }
   json['items'] = recs;
   json['url'] = '{{{url}}}';
+  json['signed_in'] = '{{signed_in}}';
   return json;
 }
 
@@ -155,6 +151,13 @@ Controller.prototype.model = null;
 
 Controller.prototype.view = null;
 
+Controller.prototype.bind = function(evt,selector,f) {
+  if ( isFunc( f ))
+    $(selector).bind(evt,f);
+}
+
+Controller.prototype.connect = function(route,f) {
+}
 
 View.prototype.model = null;
 
@@ -197,38 +200,6 @@ var re = function(){
 }
 var require = re;
 
-(function($) {
-    $(function () {
-      
-        $('#openbtn').click(function(e){
-          e.preventDefault();
-          var modalID = '#mymodal';
-          $('body').append('<div class="modal-bg"></div>'); // Add modal background.
-          $(modalID).addClass('active').css('top', $(window).scrollTop() + 50 + "px");
-        });
-
-        // Modal close button
-        $('.modal-close').click(function(e) {
-            e.preventDefault(); // Prevent default link behavior.
-            $('.modal').removeClass('active'); // Hide modal.
-            $('.modal-bg').remove(); // Remove modal background.
-        });
-
-        // When click outside of modal
-        $('body').on('click touchstart','.modal-bg',function() {
-            $('.modal').removeClass('active'); // Hide modal.
-            $('.modal-bg').remove(); // Remove modal background.
-        });
-
-        // When escape key pressed
-        $(document).on('keydown',function(e) {
-            if ( e.keyCode === 27 ) { // If escape key pressed
-                $('.modal').removeClass('active'); // Hide modal.
-                $('.modal-bg').remove(); // Remove modal background.
-            }
-        });
-    });
-})(jQuery);
 
 
 function get_class(obj){
@@ -388,3 +359,61 @@ dateFormat.i18n = {
 Date.prototype.format = function (mask, utc) {
 	return dateFormat(this, mask, utc);
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+(function($) {
+    $(function () {
+      
+      $('#login_btn').click(function(e){
+        e.preventDefault();
+        var modalID = '#login_modal';
+        $('body').append('<div class="modal-bg"></div>'); // Add modal background.
+        $(modalID).addClass('active').css('top', $(window).scrollTop() + 50 + "px");
+      });
+      
+      $('#signup_btn').click(function(e){
+        e.preventDefault();
+        var modalID = '#signup_modal';
+        $('body').append('<div class="modal-bg"></div>'); // Add modal background.
+        $(modalID).addClass('active').css('top', $(window).scrollTop() + 50 + "px");
+      });
+        $('#openbtn').click(function(e){
+          e.preventDefault();
+          var modalID = '#mymodal';
+          $('body').append('<div class="modal-bg"></div>'); // Add modal background.
+          $(modalID).addClass('active').css('top', $(window).scrollTop() + 50 + "px");
+        });
+
+        // Modal close button
+        $('.modal-close').click(function(e) {
+            e.preventDefault(); // Prevent default link behavior.
+            $('.modal').removeClass('active'); // Hide modal.
+            $('.modal-bg').remove(); // Remove modal background.
+        });
+
+        // When click outside of modal
+        $('body').on('click touchstart','.modal-bg',function() {
+            $('.modal').removeClass('active'); // Hide modal.
+            $('.modal-bg').remove(); // Remove modal background.
+        });
+
+        // When escape key pressed
+        $(document).on('keydown',function(e) {
+            if ( e.keyCode === 27 ) { // If escape key pressed
+                $('.modal').removeClass('active'); // Hide modal.
+                $('.modal-bg').remove(); // Remove modal background.
+            }
+        });
+    });
+})(jQuery);

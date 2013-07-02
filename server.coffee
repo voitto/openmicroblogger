@@ -1,6 +1,6 @@
 
 # Open Microblogger
-# June 23, 2013
+# July 2, 2013
 
 
 $ = require 'jquery'
@@ -17,51 +17,99 @@ app = require( 'zygote' ).config
   url: 'http://localhost:4444'
 
 class Post extends app.Model
+  save: ( f ) ->
+    $.ajax
+      url: '/post/save'
+      complete: f
+      data: JSON.stringify
+        title: $( '#post-title' ).val()
+        author: $( '#post-author' ).val()
+        author_url: $( '#post-author_url' ).val()
+        in_reply_to: $( '#post-in_reply_to' ).val()
 
-class Home extends app.View
-  constructor: ->
-    super
-    @controller = new Posts @model, @
-    
+class Person extends app.Model
+  signin: ( f ) ->
+    $.ajax
+      url: '/person/signin'
+      complete: f
+      data: JSON.stringify
+        email: $( '#user-email' ).val()
+        password: $( '#user-password' ).val()
+  signup: ( f ) ->
+    $.ajax
+      url: '/person/signup'
+      complete: f
+      data: JSON.stringify
+        email: $( '#signup-email' ).val()
+        password: $( '#signup-password' ).val()
+  signout: ( f ) ->
+    $.ajax
+      url: '/person/signout'
+      complete: f
+      data: JSON.stringify({})
+
+class Home extends  app.View
+  init: ( model, req, res, id, Person ) ->
+    @controller = new HomeController @model, @, null, Person
+
 class Show extends app.View
-  constructor: ( model, req, res, id ) ->
-    super
-    @controller = new PostsShow @model, @, id
-    
-class PostsShow extends app.Controller
-  constructor: ( Post, View, id ) ->
-    super
-    Post.find( id )
-  render: ->
-    @view.render()
+  init: ( model, req, res, id, Person ) ->
+    @controller = new HomeController @model, @, id, Person
 
-class Posts extends app.Controller
-  constructor: ( Post ) ->
-    super
-    Post.find()
+class HomeController extends app.Controller
+  init: ( Post, View, id, Person ) ->
+    Post.find( id )
+    @bind 'click', '#person-login', ->
+      socket.disconnect()
+      Person.signin ->
+        $( '#user-email' ).val ''
+        $( '#user-password' ).val ''
+        $( '.modal' ).removeClass 'active'
+        $( '.modal-bg' ).remove()
+        window.location.href = '{{{url}}}'
+    @bind 'click', '#person-save', ->
+      socket.disconnect()
+      Person.signup ->
+        $( '#signup-email' ).val ''
+        $( '#signup-password' ).val ''
+        $( '.modal' ).removeClass 'active'
+        $( '.modal-bg' ).remove()
+        window.location.href = '{{{url}}}'
+    @bind 'click', '#signout_btn', ->
+      socket.disconnect()
+      Person.signout ->
+        window.location.href = '{{{url}}}'
+    @bind 'click', '#post-save', ->
+      Post.save ->
+        $( '#post-title' ).val ''
+        $( '#post-author' ).val ''
+        $( '#post-author_url' ).val ''
+        $( '#post-in_reply_to' ).val ''
+        $( '.modal' ).removeClass 'active'
+        $( '.modal-bg' ).remove()
+    @connect '/post/save', ( req, res ) ->
+      @fullBody = '';
+      req.on 'data', (chunk) =>
+        @fullBody += chunk.toString()
+      req.on 'end', =>
+        @data = JSON.parse @fullBody
+        Post.create @data, res
+        res.end 'ok'
   render: ->
     @view.render()
 
 app.get '/', ( req, res ) ->
-  @model = new Post
-  @view = new Home @model, req, res
+  @post = new Post
+  @person = new Person
+  @view = new Home @post, req, res, null, @person
 
 app.get '/:id', ( req, res, id ) ->
   @model = new Post
-  @view = new Show @model, req, res, id
+  @person = new Person
+  @view = new Show @post, req, res, id, @person
 
-app.post '/post/new', ( req, res ) ->
-  @fullBody = '';
-  req.on 'data', (chunk) =>
-    @fullBody += chunk.toString()
-  req.on 'end', =>
-    @data = JSON.parse @fullBody
-    @model = new Post
-    @post = @model.create @data, res
 
-$('#post-save').click =>
-  @model = new Post
-  @model.save()
-  $( '#post-title' ).val ''
-  $( '.modal' ).removeClass 'active'
-  $( '.modal-bg' ).remove()
+
+
+
+

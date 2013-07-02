@@ -10,10 +10,39 @@
 <body>
 
 
-<a id="homebtn" href="/">home</a>&nbsp;&nbsp;&nbsp;&nbsp;<a id="openbtn" href="#">+ new post</a>
+<a id="homebtn" class="navlink" href="/">Home</a>{{#signed_in}}<a class="navlink" id="openbtn" href="#">+ New Post</a><a class="navlink" id="signout_btn" href="#">Sign Out</a>{{/signed_in}}{{^signed_in}}<a class="navlink" id="signup_btn" href="#">Sign Up</a><a class="navlink" id="login_btn" href="#">Log In</a>{{/signed_in}}
 
 
 <div id="content">{{{content}}}</div>
+
+
+<div class="modal modal-medium" id="login_modal">
+    <a class="modal-close close">x</a>
+    <h3>Log In</h3>
+    <form id="post-form">
+      <h3>E-mail</h3>
+      <input id="user-email" type="text" placeholder-text="email address..."/>
+      <h3>Password</h3>
+      <input type="password" id="user-password" placeholder-text="password..."/>
+      <br><br>
+      <button class="btn modal-close">Cancel</button><button id="person-login" class="btn" onclick="return false">Log In</button>
+    </form>
+   
+</div>
+
+<div class="modal modal-medium" id="signup_modal">
+    <a class="modal-close close">x</a>
+    <h3>Sign Up</h3>
+    <form id="post-form">
+      <h3>E-mail</h3>
+      <input id="signup-email" type="text" placeholder-text="email address..."/>
+      <h3>Password</h3>
+      <input type="password" id="signup-password" placeholder-text="password..."/>
+      <br><br>
+      <button class="btn modal-close">Cancel</button><button id="person-save" class="btn" onclick="return false">Sign Up</button>
+    </form>
+   
+</div>
 
 <div class="modal modal-medium" id="mymodal">
     <a class="modal-close close">x</a>
