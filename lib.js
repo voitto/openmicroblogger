@@ -25,7 +25,6 @@ function get( path, f ) {
   a.href = window.location;
   if ( path == a.pathname ) {
     if ( isFunc( f )) {
-      console.log('rendering '+a.pathname);
       called = true;
       f( req, res );
     }
@@ -38,7 +37,6 @@ function get( path, f ) {
         value = myarray[1];
       }
     if ( isFunc( f )) {
-      console.log('rendering '+a.pathname);
       called = true;
       f( req, res, value );
     }
@@ -60,11 +58,11 @@ var Model,
   Model = (function() {
     function Model() {
       var m = this;
-      socket.on( 'changed', function(f){
-        console.log('CHANGED '+JSON.stringify(f));
-        //console.log('model changed');
-        //m.find();
-        //m.send('changed');
+      socket.on( 'changed '+get_class(m).toLowerCase(), function(){
+        m.find(null,function (data) {
+          m.data = data;
+          m.send( 'changed' );
+        });
       });
     }
     return Model;
@@ -74,10 +72,11 @@ var View,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
   View = (function() {
-    function View( mod ) {
+    function View( mod, req, res, id, other ) {
       //this.response = res;
       this.model = mod;
       this.model.register( this );
+      this.init( mod, req, res, id, other );
     }
     return View;
 })();
@@ -86,10 +85,11 @@ var Controller,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
   Controller = (function() {
-    function Controller( Model, View ) {
+    function Controller( Model, View, id, Other ) {
       this.view = View;
       this.view.controller = this;
       this.model = Model;
+      this.init( Model, View, id, Other );
     }
     return Controller;
 })();
@@ -118,19 +118,14 @@ Model.prototype.send = function( evt ) {
   }
 }
 
-Model.prototype.find = function(id) {
+Model.prototype.find = function(id,f) {
   var modelname = get_class(this).toLowerCase();
   var model = this;
+  var func = f;
   $.ajax({
-    type: "POST",
     url: '/'+modelname+'.json',
-    dataType: 'json',
-    async: false,
     data: id,
-    success: function (data) {
-      model.data = data;
-      model.send( 'changed' );
-    }
+    success: func
   });
 }
 
@@ -168,19 +163,21 @@ View.prototype.response = null;
 View.prototype.template = null;
 
 View.prototype.render = function() {
-  console.log('render '+get_class(this));
   var view = this;
   var viewname = get_class(this).toLowerCase();
   var modelname = get_class(this.model).toLowerCase();
-  $.get( '/'+modelname+'/_'+viewname+'.html', function( tpl ) {
-    view.template = tpl;
-    $( '#content' ).html(''+ Mustache.render( view.template, view.model.to_hash() ));
+  $.ajax({
+    url:'/'+modelname+'/_'+viewname+'.html',
+    complete: function( tpl ){
+      view.template = tpl.responseText;
+      $( '#content' ).html(''+ Mustache.render( view.template, view.model.to_hash() ));
+    }
   });
 };
 
 View.prototype.receive = function( message ) {
   if (message == 'changed') {
-    console.log('changed '+get_class(this));
+    console.log('rendering '+get_class(this.model)+' '+get_class(this));
     this.controller.render();
   }
 }
@@ -233,6 +230,16 @@ function isInt(value){
     var er = /^[0-9]+$/;
     return ( er.test(value) ) ? true : false;
 }
+
+function in_array( needle, haystack ) {
+  for ( var key in haystack ) {
+    if ( needle === haystack[key] ) {
+      return true;
+    }
+  }
+  return false;
+}
+
 
 /*
  * Date Format 1.2.3

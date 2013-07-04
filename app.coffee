@@ -13,7 +13,7 @@ app = require( 'zygote' ).config
   url: 'http://localhost:4444'
 
 class Post extends app.Model
-  save: ( f ) ->
+  save: ( f ) -> # on the client-side, this POSTs the data
     $.ajax
       url: '/post/save'
       complete: f
@@ -83,7 +83,7 @@ class HomeController extends app.Controller
         $( '#post-in_reply_to' ).val ''
         $( '.modal' ).removeClass 'active'
         $( '.modal-bg' ).remove()
-    @connect '/post/save', ( req, res ) ->
+    @connect '/post/save', ( req, res ) -> # server: handle POST
       @fullBody = '';
       req.on 'data', (chunk) =>
         @fullBody += chunk.toString()
