@@ -1,22 +1,19 @@
 
 # Open Microblogger
 
-  web micro-blogging tool
+web micro-blogging tool
 
 ## Installation
 
 Requirements:
 
- -- Node.js
- 
- -- Postgresql
- 
- -- Coffeescript
+- Node.js
+- Postgresql
+- Coffeescript
 
 Installation Commands:
 
-```
-
+``` sh
 $ git clone https://github.com/voitto/openmicroblogger.git
 
 $ cd openmicroblogger
@@ -26,8 +23,6 @@ $ cd openmicroblogger
 $ coffee server.coffee
 
 [[[ browse to http://localhost:4444 ]]]
-
-
 
 ```
 
